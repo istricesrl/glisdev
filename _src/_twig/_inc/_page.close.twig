@@ -1,0 +1,39 @@
+
+{# FILE PER LE OPERAZIONI STANDARD DA ESEGUIRE PRIMA DELLA CHIUSURA DEL TAG <body> #}
+{# NOTA: AL NETTO DELL'EVENTUALE JAVASCRIPT DELLE SPECIFICHE PAGINE, INCLUSO NEL BLOCCO %javascript% #}
+
+<!-- Twig file included: {{ _self }} -->
+
+{% include [ 'inc/cookie.overlay.twig', '_inc/_cookie.overlay.twig' ] %}
+
+<script>
+    var siteRoot = '{{ site.root }}';
+</script>
+
+{% for j in page.js.external %}<script defer src="{{ include( template_from_string( j ) | raw ) }}"></script>{% endfor %}
+
+{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
+
+{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
+
+{% include '_inc/_recaptcha.close.twig' %}
+
+{% if facebook.messenger.page.id %}{% include '_inc/_facebook.messenger.twig' %}{% endif %}
+
+{% if criteo.account %}{% include '_inc/_criteo.twig' %}{% endif %}
+
+{% if page.contents.chartjs %}{% include '_inc/_chartjs.script.twig' %}{% endif %}
+
+{% if smartsupp.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
+
+{% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
+
+{# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
+{# vedi _src/_inc/_macro/_default.tools.php #}
+
+<!-- HTML5 W3C validator: https://validator.w3.org/nu/?doc={{ page.url[ localization.language.ietf ] }} -->
+{% for c in page.css.template %}
+<!-- CSS3 W3C validator: https://jigsaw.w3.org/css-validator/validator?uri={{ site.url }}{{ page.template.path }}{{ c }} -->
+{% endfor %}
+<!-- Google Mobile Friendly check: https://search.google.com/test/mobile-friendly?url={{ page.url[ localization.language.ietf ] }} -->
+<!-- Google Speed Test: https://developers.google.com/speed/pagespeed/insights/?url={{ page.url[ localization.language.ietf ] }} -->

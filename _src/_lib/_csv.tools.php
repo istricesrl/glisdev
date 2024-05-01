@@ -1,0 +1,175 @@
+<?php
+
+    /**
+     *
+     *
+     *
+     * TODO finire di documentare
+     *
+     *
+     */
+
+    /**
+     * legge un file CSV e restituisce un array associativo
+     *
+     *
+     * TODO documentare
+     *
+     */
+    function csvFile2array( $file, $s = ",", $c = "\"", $e = '\\' ) {
+
+        // debug
+        // die( $file );
+
+        // leggo il contenuto grezzo del file
+        $grezzo = readFromFile( $file );
+
+        // debug
+        // var_dump( $grezzo );
+        // var_dump( $s );
+
+        // auto rilevamento separatore
+        if( $s == NULL ) {
+            $vg = substr_count( $grezzo[0], ',' );            
+            $pv = substr_count( $grezzo[0], ';' );
+            $s = ( ( $vg > $pv ) ? ',' : ';' );
+            logger( 'virgole: ' . $vg . ' punti e virgola: ' . $pv . ' vince: ' . $s, 'details/csv/' . basename( $file ) );
+        }
+
+        // debug
+        // die( print_r( $grezzo, true ) );
+
+        // log
+        logger( 'grezzo (separatore "'.$s.'")' . PHP_EOL . print_r( $grezzo, true ), 'details/csv/' . basename( $file ) );
+
+        // faccio il parsing CSV di ogni riga
+        $lavorato = csv2array( $grezzo, $s, $c, $e );
+
+        // debug
+        logger( 'lavorato (separatore "'.$s.'")' . PHP_EOL . print_r( $lavorato, true ), 'details/csv/' . basename( $file ) );
+
+        // restituisco l'array associativo
+        return( $lavorato );
+
+    }
+
+    /**
+     * converte un array di stringhe CSV in un array associativo
+     * 
+     * prende in input un array di stringhe CSV e restituisce un array di array
+     * associativi usando la prima riga per le intestazioni; la riga delle intestazioni
+     * viene eliminata e non viene restituita fra i dati; le righe CSV devono avere
+     * i campi separati da virgola, e tutti i campi di testo delimitati dalle doppie
+     * virgolette
+     * 
+     * 
+     * TODO documentare
+     *
+     */
+    function csv2array( $data, $s = ",", $c = "\"", $e = '\\' ) {
+
+        // logger( 'dati pre ' . print_r( $data, true ), 'details/csv/csv2array' );
+
+        $result = array();
+
+        $head = clean_string( $data[0] );
+        $head = str_getcsv( $head, $s, $c, $e );
+        $head = array_map( 'trim', $head );
+
+        foreach( $data as &$row ) {
+            logger( 'riga: ' . $row, 'details/csv/csv2array' );
+            $row = clean_string( $row );
+            logger( 'riga dopo clean_string: ' . $row, 'details/csv/csv2array' );
+            $row = str_getcsv( $row, $s, $c, $e );
+            logger( 'riga dopo str_getcsv: ' . print_r( $row, true ), 'details/csv/csv2array' );
+            $row = array_map( 'trim', $row );
+            logger( 'riga dopo map di trim: ' . print_r( $row, true ), 'details/csv/csv2array' );
+            if( count( $head ) == count( $row ) ) {
+                $rowCombined = array_combine( $head, $row );
+                $result[] = $rowCombined;
+                logger( 'riga con intestazioni: ' . print_r( $rowCombined, true ), 'details/csv/csv2array' );
+            } else {
+                logger( 'errore nel numero delle colonne (' . count( $head ) . '/' . count( $row ) . ') ' . print_r( $head, true ) . print_r( $row, true ), 'csv', LOG_ERR );
+                logger( 'errore nel numero delle colonne (' . count( $head ) . '/' . count( $row ) . ') ' . print_r( $head, true ) . print_r( $row, true ), 'details/csv/csv2array' );
+            }
+        }
+
+        logger( 'dati post ' . print_r( $result, true ), 'details/csv/csv2array' );
+
+        array_shift( $result );
+
+        // logger( 'dati finally ' . print_r( $result, true ), 'csv' );
+        // print_r( $result );
+
+        return $result;
+
+    }
+
+    /**
+     * converte una matrice in un CSV, considerando la prima riga come intestazione
+     * 
+     * 
+     * TODO servirebbe una versione con un parametro solo $data che ritorna la stringa CSV
+     * TODO documentare
+     *
+     * function array2csv( $data, $file ) {
+     * $h = openFile( $file );
+     * fputcsv( $h, array_keys( $data[0] ) );
+     * foreach( $data as $row ) {
+     * fputcsv( $h, $row );
+     * }
+     * }
+     * 
+     */
+    function array2csvFile( $data, $file, $mode = FILE_WRITE_OVERWRITE, $s = ",", $c = "\"", $e = '\\' ) {
+
+        $h = openFile( $file, $mode );
+    
+        // $h = openFile( $file );
+        if( getFileSize( $file ) == 0 ) {
+            fputcsv( $h, array_keys( $data[0] ), $s, $c, $e );
+        } 
+    
+        foreach( $data as $row ) {
+            fputcsv( $h, $row, $s, $c, $e );
+        }
+    
+    }
+
+    /**
+     * trasforma un array associativo in un array di stringhe CSV
+     *
+     *
+     * TODO documentare
+     *
+     */
+    function array2csv( $data, $s = ",", $c = "\"", $e = '\\' ) {
+
+        $csv = array();
+
+        array_unshift( $data, array_keys( $data[0] ) );
+
+        $h = fopen('php://memory', 'r+');
+
+        foreach( $data as $row ) {
+            fputcsv( $h, $row, $s, $c, $e );
+        }
+
+        rewind($h);
+
+        while( $buf = fgets( $h ) ) {
+            $csv[] = $buf;
+        }
+
+        fclose( $h );
+
+        return $csv;
+
+    }
+
+    function array2csvString( $data, $s = ",", $c = "\"", $e = '\\' ) {
+
+        $csv = array2csv( $data, $s, $c, $e );
+        return implode( '', $csv );
+
+    }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.twig' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.twig' %}
+
+        {% block header %}
+        {% include 'inc/header.twig' %}
+        {% endblock %}
+
+        {% block nav %}
+        {% include 'inc/navbar.twig' %}
+        {% endblock %}
+
+        <main>{% block main %}{% endblock %}</main>
+
+        <footer>
+            {% block footer %}
+            {% include 'inc/footer.twig' %}
+            {% endblock %}
+        </footer>
+
+        {% include '_inc/_page.close.twig' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>

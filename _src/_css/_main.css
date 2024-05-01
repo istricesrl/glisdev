@@ -1,0 +1,172 @@
+/**
+ * INDICE
+ * - stili di base
+ * - stili dei bottoni
+ * - stili del footer
+ * - stili per i jumbotron
+ * - stili per i megamenu
+ * - stili per il banner cookie
+ * - stili per font awesome
+ * - stili per il numero verde
+ * - utility tipografiche
+ */
+
+/* stili di base */
+
+html, body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* stili dei bottoni */
+
+.btn {
+    cursor: pointer;
+}
+
+/* stili del footer */
+
+footer {
+    margin-top: auto;
+}
+
+/* stili per i jumbotron */
+
+.jumbotron {
+    border-radius: 0px;
+    margin: 0em;
+}
+
+/* stili per i megamenu */
+nav.navbar-slider-mega ul.navbar-nav {
+    display: none;
+}
+
+/* stili per FontAwesome */
+
+.font-awesome {
+    font-family: FontAwesome;
+}
+
+/* stili per reCaptcha */
+
+.grecaptcha-badge {
+    z-index: 9999;
+}
+
+/* stili per il banner cookie */
+
+#cookie {
+    bottom: 0px;
+    height: 75vh;
+    width: 100%;
+    position: fixed;
+    background-color: #000000dd;
+    color: #ffffff;
+    z-index: 7859;
+    overflow: auto;
+}
+
+#cookie .row {
+    margin: .75em 0em;
+}
+
+#cookie h4 {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#cookie a,
+#cookie a:active,
+#cookie a:hover,
+#cookie a:visited {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* stili per il numero verde */
+
+div.numero-verde {
+    border-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-left: 0px;
+    display: inline-block;
+    position: relative;
+}
+
+div.numero-verde p.etichetta {
+    position: absolute;
+    z-index: 50;
+}
+
+div.numero-verde div.telefono {
+    display: inline-block;
+    position: absolute;
+    transform: rotate(45deg);
+    z-index: 100;
+}
+
+/* utility tipografiche */
+
+.elliptic {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hidden {
+    display: none;
+}
+
+.monospace {
+    font-family: monospace;
+}
+
+.nowrap, .no-wrap {
+    white-space: nowrap;
+}
+
+.preserve-newlines {
+    white-space: pre-line;
+}
+
+.toggler {
+    cursor: pointer;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.vh-100 {
+    min-height: 100vh;
+}
+
+@keyframes fa-blink {
+    0% {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 0.25;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    75% {
+        opacity: 0.75;
+    }
+
+}
+
+.fa-blink {
+    -webkit-animation: fa-blink 1.3s linear infinite;
+    -moz-animation: fa-blink 1.3s linear infinite;
+    -ms-animation: fa-blink 1.3s linear infinite;
+    -o-animation: fa-blink 1.3s linear infinite;
+    animation: fa-blink 1.3s linear infinite;
+}
