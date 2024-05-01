@@ -235,6 +235,26 @@
 	}
 
     /**
+     * questa funzione verifica che un hash non sia presente nell'elenco delle password banali
+     * 
+     * Questa funzione viene utilizzata per verificare se una password è presente nell'elenco delle password banali.
+     * 
+     * @param   string  $p          la password da verificare codificata in md5
+     * 
+     * @return  bool                true se la password è banale, false altrimenti
+     * 
+     */
+    function bruteForceHash( $p ) {
+        $pwds = file( FILE_COMMON_PASSWORDS, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+        foreach( $pwds as $h ) {
+            if( md5( $h ) == $p ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * questa funzione restituisce true se tutti i caratteri presenti in un array sono presenti in una stringa data
      * 
      * Questa funzione cerca in una stringa un elenco di caratteri dati e restituisce true se li trova tutti, false
@@ -508,6 +528,7 @@
 
     // file per le parole e gli hosts bloccati
     define( 'FILE_BANNED_WORDS'                         , DIR_ETC_SECURITY . '_banned.words.conf' );
+    define( 'FILE_COMMON_PASSWORDS'                     , DIR_ETC_SECURITY . '_common.passwords.conf' );
     define( 'FILE_BANNED_HOSTS'                         , DIR_VAR_SPOOL_SECURITY . 'banned.hosts.conf' );
 
     // file che contengono la release e la versione corrente del framework
