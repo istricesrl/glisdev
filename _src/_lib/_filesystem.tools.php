@@ -196,12 +196,12 @@
      */
 
     // definizione delle costanti della libreria
-    if( ! defined( 'FILE_READ_AS_ARRAY' ) )     { define( 'FILE_READ_AS_ARRAY',     'READ_ARRAY' ); }
-    if( ! defined( 'FILE_READ_AS_STRING' ) )    { define( 'FILE_READ_AS_STRING',    'READ_STRING' ); }
-    if( ! defined( 'FILE_WRITE_OVERWRITE' ) )   { define( 'FILE_WRITE_OVERWRITE',   'w+' ); }
-    if( ! defined( 'FILE_WRITE_APPEND' ) )      { define( 'FILE_WRITE_APPEND',      'a+' ); }
-    if( ! defined( 'TRIM_LINES_FROM_TOP' ) )    { define( 'TRIM_LINES_FROM_TOP',    1 ); }
-    if( ! defined( 'TRIM_LINES_FROM_BOTTOM' ) ) { define( 'TRIM_LINES_FROM_BOTTOM', -1 ); }
+    if( ! defined( 'FILE_READ_AS_ARRAY' ) )     { define( 'FILE_READ_AS_ARRAY'      , 'READ_ARRAY' ); }
+    if( ! defined( 'FILE_READ_AS_STRING' ) )    { define( 'FILE_READ_AS_STRING'     , 'READ_STRING' ); }
+    if( ! defined( 'FILE_WRITE_OVERWRITE' ) )   { define( 'FILE_WRITE_OVERWRITE'    , 'w+' ); }
+    if( ! defined( 'FILE_WRITE_APPEND' ) )      { define( 'FILE_WRITE_APPEND'       , 'a+' ); }
+    if( ! defined( 'TRIM_LINES_FROM_TOP' ) )    { define( 'TRIM_LINES_FROM_TOP'     , 1 ); }
+    if( ! defined( 'TRIM_LINES_FROM_BOTTOM' ) ) { define( 'TRIM_LINES_FROM_BOTTOM'  , -1 ); }
 
     // funzioni richieste
     if( ! function_exists( 'logger' ) ) {
