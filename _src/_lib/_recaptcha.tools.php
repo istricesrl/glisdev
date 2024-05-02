@@ -57,11 +57,11 @@
         $r = restCall( 'https://www.google.com/recaptcha/api/siteverify', METHOD_GET, $dati, 'query', MIME_APPLICATION_JSON, $status );
 
         if( isset( $r['score'] ) ){
-            appendToFile(  $r['score']  . PHP_EOL, 'var/log/google_recaptcha_score.log' );
+            logger(  $r['score']  . PHP_EOL, 'recaptcha' );
             $result = $r['score'];
         }
         else{
-            appendToFile(  'nessuno score restituito'  . PHP_EOL, 'var/log/google_recaptcha_score.log' );
+            logger(  'nessuno score restituito'  . PHP_EOL, 'recaptcha' );
             $result = 0;
         }
         

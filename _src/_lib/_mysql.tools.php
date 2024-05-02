@@ -116,16 +116,16 @@
         // log
         logger( 'query ID: ' . $queryId . ' -> ' . $q, 'mysql' );
 
-    // log
-        appendToFile( $q . PHP_EOL, FILE_LATEST_MYSQL );
+        // log
+        loggerLatest( $q . PHP_EOL, FILE_LATEST_MYSQL );
 
-    // verifico se c'è connessione e se la query è preparata o meno
+        // verifico se c'è connessione e se la query è preparata o meno
         if( empty( $c ) ) {
 
-        // log
+            // log
             logger( 'chiamata a mysqlQuery() con connessione assente', 'mysql', LOG_ERR );
 
-        // restituisco false
+            // restituisco false
             return false;
 
 #        } elseif( $p !== false ) {
@@ -209,7 +209,7 @@
         // log
             if( $tElapsed > 0.5 ) {
             logger( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR ); 
-            appendToFile( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
+            logger( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query' );
             }
 
         // debug
@@ -342,7 +342,7 @@
             // log
                 if( $tElapsed > 0.5 ) {
                 logger( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR );
-                appendToFile( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
+                logger( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query' );
                 }
 
             // debug
