@@ -85,12 +85,15 @@
             // apertura file di log
             $h = fopen( DIR_VAR_SPOOL_SECURITY . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
 
+            // debug
+            // var_dump( $h );
+
             // scrittura attacco
             fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola URL ' . $word . PHP_EOL . 
                     'sorgente: '    . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
                     'url: '         . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
                     'contenuto: '   . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL )
-                or die( 'impossibile scrivere il file di log' );
+                or die( 'impossibile scrivere il file di log degli attacchi' );
 
             // chiusura file di log
             fclose( $h );
@@ -98,7 +101,7 @@
             // salvataggio elenco degli attacker
             $h = fopen( FILE_BANNED_HOSTS, 'a+' );
             fwrite( $h, $_SERVER['REMOTE_ADDR'] . PHP_EOL )
-                or die( 'impossibile scrivere il file di log' );
+                or die( 'impossibile scrivere il registro degli host banditi' );
             fclose( $h );
 
             // HTTP status di risposta (forbidden)

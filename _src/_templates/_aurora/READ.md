@@ -7,46 +7,16 @@ FILE DEL TEMPLATE
 =================
 Il template Aurora è composto da pochi file con compiti semplici.
 
-bin/default.twig
-----------------
-File per le macro di default del template.
-
-css/main.css
-------------
-Foglio di stile principale del template.
-
-css/main.print.css
-------------------
-Foglio di stile del template per il media print.
-
-css/main.screen.css
--------------------
-Foglio di stile del template per il media screen.
-
-etc/template.conf
------------------
-Il file di configurazione del template.
-
-ext/main.twig
--------------
-Il file di schema base del template; viene esteso da tutti gli schemi base.
-
-inc/footer.twig
----------------
-Il file incluso nel footer.
-
-inc/header.twig
----------------
-Il file incluso nell'header.
-
-inc/navbar.twig
----------------
-Il file che contiene la barra di navigazione.
-
-default.twig
-------------
-Lo schema di default.
-
-login.twig
-----------
-Lo schema per il login degli utenti.
+file                                    | descrizione
+----------------------------------------|-----------------------------------------------------------------------------------
+bin/default.twig                        | file per le macro di default del template
+css/main.css                            | foglio di stile principale del template
+css/main.print.css                      | foglio di stile del template per il media print
+css/main.screen.css                     | foglio di stile del template per il media screen
+etc/template.conf                       | il file di configurazione del template
+ext/main.twig                           | lo schema base del template; viene esteso da tutti gli altri schemi
+inc/footer.twig                         | il file incluso nel footer
+inc/header.twig                         | il file incluso nell'header
+inc/navbar.twig                         | il file che contiene la barra di navigazione
+default.twig                            | lo schema di default
+login.twig                              | lo schema per il login degli utenti
