@@ -6,23 +6,26 @@
      * introduzione
      * ============
      * 
+     * TODO documentare
      * 
      * 
      * il file _etc/_security/_banned.words.conf
      * -----------------------------------------
      * 
-     * 
+     * TODO documentare
      * 
      * 
      * il file var/spool/security/banned.hosts.conf
      * --------------------------------------------
      * 
+     * TODO documentare
      * 
      * 
      * 
      * i file var/spool/security/<ip>.log
      * ----------------------------------
      * 
+     * TODO documentare
      * 
      * 
      * 
@@ -44,7 +47,7 @@
      * 
      * 
      * 
-     * TODO finire di documentare
+     * TODO documentare
      *
      *
      * 

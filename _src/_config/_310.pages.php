@@ -193,7 +193,7 @@
      *
      * TODO verificare che questi commenti siano aggiornati
      * TODO verificare le tabelle di questo commento, se sono aggiornate oppure no
-     * TODO finire di documentare
+     * TODO documentare
      *
      *
      */

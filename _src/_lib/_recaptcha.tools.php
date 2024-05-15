@@ -23,7 +23,7 @@
      * 
      * 
      * 
-     * TODO finire di documentare
+     * TODO documentare
      * TODO spiegare bene i vari componenti che servono per fare funzionare reCaptcha (javascript, html, profilo, eccetera)
      * TODO scrivere un file di esempio che faccia vedere bene come funziona reCaptcha
      * 

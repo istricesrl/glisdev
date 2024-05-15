@@ -7,7 +7,7 @@
      * 
      * TODO per ora lo teniamo ma in futuro potremmo anche renderlo deprecato
      * 
-     * TODO finire di documentare
+     * TODO documentare
      *
      *
      *

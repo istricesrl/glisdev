@@ -6,7 +6,7 @@
      *
      *
      * TODO implementare in array2xml gli attributi in forma di sottoarray 'attr'
-     * TODO finire di documentare
+     * TODO documentare
      *
      *
      *

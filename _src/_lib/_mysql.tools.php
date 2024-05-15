@@ -638,7 +638,7 @@
      *      )
      * );
 
-     * TODO finire di documentare
+     * TODO documentare
      *
      */
     function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array(), &$y = array() ) {

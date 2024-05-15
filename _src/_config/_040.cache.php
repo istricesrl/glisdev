@@ -55,7 +55,7 @@
      *
      *
      * TODO implementare un sistema di compartimentazione più sicuro dell'unique seed, per lo meno in produzione
-     * TODO finire di documentare
+     * TODO documentare
      *
      *
      *

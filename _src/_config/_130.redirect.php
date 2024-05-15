@@ -22,7 +22,7 @@
      * 
      *
      * TODO $cf['redirect'] dovrebbe stare in cache, visto che elaborarlo può essere oneroso se i redirect sono tanti
-     * TODO finire di documentare
+     * TODO documentare
      *
      *
      */

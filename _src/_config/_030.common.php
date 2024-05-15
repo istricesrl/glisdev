@@ -14,8 +14,8 @@
      *
      * lorem ipsum
      * -----------
-     *
-     *
+     * 
+     * TODO documentare il file _etc/_common/_lorem.conf
      *
      * codici di stato HTTP
      * --------------------
@@ -53,14 +53,14 @@
      * repository, e indica pertanto in linea di massima quando il codice è stato aggiornato l'ultima volta; la versione può essere
      * vista come un indicatore del livello di patch dell'installazione corrente. La versione è un numero intero formato dalla
      * data corrente in formato YYYYMMDDHHIISS (anno, mese, giorno, ora, minuti, secondi) e come detto sopra viene incrementato
-     * automaticamente tramite uno script che viene eseguito ad ogni push.
+     * automaticamente tramite uno script che viene eseguito ad ogni push e salvata nel file _etc/_current.version.
      *
      *
      *
      * link alla documentazione
      * ------------------------
      *
-     *
+     * TODO documentare come viene gestita e compilata la documentazione del framework, spiegare Doxygen e il file _etc/_doxygen/_doxygen.conf
      *
      *
      *
