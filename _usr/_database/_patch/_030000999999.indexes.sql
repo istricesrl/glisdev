@@ -16,7 +16,6 @@
 -- - la chiave primaria, se intera, è dichiarata AUTO_INCREMENT
 --
 
-
 -- | 030000000100
 
 -- account

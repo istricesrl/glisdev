@@ -36,39 +36,27 @@
 -- database e gestiti tramite CMS; i dettagli degli account non vengono letti tutti, ma solo quelli
 -- relativi all'account corrente al momento del login
 --
--- id: chiave primaria
--- id_anagrafica: chiave esterna per l'anagrafica dell'utente cui appartiene l'account
--- id_mail: chiave esterna per la mail dell'utente cui appartiene l'account
--- id_affiliazione: chiave esterna (tabella contratti) che associa un dato account a un contratto di affiliazione
--- id_url: chiave esterna (tabella url) che associa un dato account a un URL
--- username: nome utente per il login
--- password: password (hash) per il login
--- se_attivo: flag di attivazione dell'account
--- token: token per il recupero password
--- timestamp_login: timestamp dell'ultimo login
--- timestamp_cambio_password: timestamp dell'ultimo cambio password
--- id_account_inserimento: chiave esterna per l'account che ha inserito l'account
--- timestamp_inserimento: timestamp di inserimento
--- id_account_aggiornamento: chiave esterna per l'account che ha aggiornato l'account
--- timestamp_aggiornamento: timestamp di aggiornamento
+CREATE TABLE IF NOT EXISTS `account` (                        -- 
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica dell'utente cui appartiene l'account
+  `id_mail` int(11) DEFAULT NULL,                             -- chiave esterna per la mail collegata all'account
+  `id_affiliazione` int(11) DEFAULT NULL,                     -- chiave esterna (contratti) che associa un dato account a un contratto di affiliazione
+  `id_url` int(11) DEFAULT NULL,                              -- chiave esterna (url) che associa un dato account a un URL
+  `username` char(64) DEFAULT NULL,                           -- nome utente per il login
+  `password` char(128) DEFAULT NULL,                          -- password (hash) per il login
+  `se_attivo` tinyint(1) DEFAULT NULL,                        -- flag che indica se l'account è attivo o meno
+  `token` char(128) DEFAULT NULL,                             -- token per il recupero password
+  `timestamp_login` int(11) DEFAULT NULL,                     -- timestamp dell'ultimo login
+  `timestamp_cambio_password` int(11) DEFAULT NULL,           -- timestamp dell'ultimo cambio password
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'account
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'account
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- NOTA la timestamp di cambio password non viene attualmente utilizzata ma è stata mantenuta per eventuali sviluppi futuri
 --
-CREATE TABLE IF NOT EXISTS `account` (
-  `id` int(11) NOT NULL,
-  `id_anagrafica` int(11) DEFAULT NULL,
-  `id_mail` int(11) DEFAULT NULL,
-  `id_affiliazione` int(11) DEFAULT NULL,
-  `id_url` int(11) DEFAULT NULL,
-  `username` char(64) DEFAULT NULL,
-  `password` char(128) DEFAULT NULL,
-  `se_attivo` tinyint(1) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `timestamp_login` int(11) DEFAULT NULL,
-  `timestamp_cambio_password` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- TODO l'hash md5 non è il massimo, in futuro migrare a un algoritmo più robusto
 
 -- | 010000000200
 
@@ -78,27 +66,17 @@ CREATE TABLE IF NOT EXISTS `account` (
 --
 -- questa tabella contiene le associazioni molti a molti tra gli account e i gruppi
 --
--- id: chiave primaria
--- id_account: chiave esterna per l'account
--- id_gruppo: chiave esterna per il gruppo
--- ordine: ordine di visualizzazione
--- se_amministratore: flag per indicare se l'account è amministratore del gruppo associato
--- id_account_inserimento: chiave esterna per l'account che ha inserito l'associazione
--- timestamp_inserimento: timestamp di inserimento
--- id_account_aggiornamento: chiave esterna per l'account che ha aggiornato l'associazione
--- timestamp_aggiornamento: timestamp di aggiornamento
---
-CREATE TABLE IF NOT EXISTS `account_gruppi` (
-  `id` int(11) NOT NULL,
-  `id_account` int(11) DEFAULT NULL,
-  `id_gruppo` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `se_amministratore` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `account_gruppi` (                 --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_account` int(11) DEFAULT NULL,                          -- chiave esterna per l'account
+  `id_gruppo` int(11) DEFAULT NULL,                           -- chiave esterna per il gruppo
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `se_amministratore` tinyint(1) DEFAULT NULL,                -- flag per indicare se l'account è amministratore del gruppo associato
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                       --
 
 -- | 010000000300
 
@@ -110,30 +88,20 @@ CREATE TABLE IF NOT EXISTS `account_gruppi` (
 -- altro gruppo su una tabella di ACL; ad esempio un account membro del gruppo commerciale italia potrebbe creare un cliente che deve
 -- essere associato anche al gruppo commerciale mondo del quale l'account non fa parte (ad esempio per motivi di controllo)
 --
--- TODO approfondire la documentazione di questa tabella con riferimenti al codice
---
--- id: chiave primaria
--- id_account: chiave esterna per l'account
--- id_gruppo: chiave esterna per il gruppo
--- ordine: ordine di visualizzazione
--- entita: entità per la quale si innesca l'associazione
--- id_account_inserimento: chiave esterna per l'account che ha inserito l'associazione
--- timestamp_inserimento: timestamp di inserimento
--- id_account_aggiornamento: chiave esterna per l'account che ha aggiornato l'associazione
--- timestamp_aggiornamento: timestamp di aggiornamento
---
-CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (
-  `id` int(11) NOT NULL,
-  `id_account` int(11) DEFAULT NULL,
-  `id_gruppo` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `entita` char(64) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (    --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_account` int(11) DEFAULT NULL,                          -- chiave esterna per l'account
+  `id_gruppo` int(11) DEFAULT NULL,                           -- chiave esterna per il gruppo
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `entita` char(64) DEFAULT NULL,                             -- entità per la quale si innesca l'associazione
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- TODO documentare meglio questa tabella con riferimenti al codice
+--
 -- TODO in futuro ragionare se aggiungere le colonne id_gruppo_inserimento e id_gruppo_aggiornamento per tenere traccia del gruppo che ha
 -- inserito o aggiornato la riga e anche per implementare un sistema di permessi più stile Linux rispetto a quello attuale delle ACL
 
@@ -146,120 +114,84 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (
 -- questa tabella contiene tutte le anagrafiche gestite tramite il CMS; le anagrafiche sono un elemento
 -- fondamentale del framework, in quanto vengono utilizzate in molte parti del sistema
 --
--- id: chiave primaria
--- id_tipologia: chiave esterna per la tipologia dell'anagrafica (persona fisica, persona giuridica, etc.)
--- id_badge: chiave esterna per il badge (RFID o simili) associato all'anagrafica
--- codice: codice univoco dell'anagrafica (questa colonna è unica per l'intera tabella e serve a evitare collisioni ad es. nelle importazioni)
--- riferimento: riferimento dell'anagrafica (usata per indicare in forma libera il contatto fisico all'interno di una persona giuridica)
--- nome: nome dell'anagrafica (persone fisiche)
--- cognome: cognome dell'anagrafica (persone fisiche)
--- denominazione: denominazione dell'anagrafica (persone giuridiche)
--- soprannome: soprannome dell'anagrafica (utilizzato solitamente per accorciare denominazioni molto lunghe nelle tendine o nelle tabelle)
--- sesso: sesso dell'anagrafica (M, F, -)
--- stato_civile: stato civile dell'anagrafica
--- codice_fiscale: codice fiscale dell'anagrafica
--- partita_iva: partita IVA dell'anagrafica
--- codice_sdi: codice SDI dell'anagrafica
--- id_pec_sdi: chiave esterna (tabella mail) per l'indirizzo PEC associato all'anagrafica
--- codice_ipa: codice IPA dell'anagrafica
--- codice_archivium: codice Archivium dell'anagrafica (utilizzato per l'archiviazione elettronica dei documenti)
--- id_regime: chiave esterna per il regime fiscale dell'anagrafica
--- note_amministrative: note amministrative sull'anagrafica
--- note_collaborazione: note sulla collaborazione con l'anagrafica (utilizzato per dipendenti e collaboratori)
--- luogo_nascita: luogo di nascita dell'anagrafica
--- stato_nascita: stato di nascita dell'anagrafica
--- id_stato_nascita: chiave esterna per lo stato di nascita dell'anagrafica
--- comune_nascita: comune di nascita dell'anagrafica
--- id_comune_nascita: chiave esterna per il comune di nascita dell'anagrafica
--- giorno_nascita: giorno di nascita dell'anagrafica
--- mese_nascita: mese di nascita dell'anagrafica
--- anno_nascita: anno di nascita dell'anagrafica
--- id_ranking: chiave esterna per il ranking dell'anagrafica (utilizzato per valutare clienti, fornitori e collaboratori)
--- id_agente: chiave esterna per l'agente associato all'anagrafica
--- id_responsabile_operativo: chiave esterna per il responsabile operativo associato all'anagrafica
--- note_commerciali: note commerciali sull'anagrafica
--- condizioni_vendita: condizioni di vendita dell'anagrafica (per i clienti)
--- condizioni_acquisto: condizioni di acquisto dell'anagrafica (per i fornitori)
--- note: note generali sull'anagrafica
--- data_archiviazione: data di archiviazione dell'anagrafica (utilizzato per archiviare l'anagrafica senza cancellarla)
--- note_archiviazione: note sull'archiviazione dell'anagrafica
--- recapiti: recapiti dell'anagrafica (utilizzato per memorizzare i recapiti in forma libera)
--- se_importata: flag per indicare se l'anagrafica è stata importata
--- se_stampa_privacy: flag per indicare se è stata stampata la privacy per l'anagrafica (TODO obsoleto, utilizzare le tabelle apposite)
--- id_account_inserimento: chiave esterna per l'account che ha inserito l'anagrafica
--- timestamp_inserimento: timestamp di inserimento
--- id_account_aggiornamento: chiave esterna per l'account che ha aggiornato l'anagrafica
--- timestamp_aggiornamento: timestamp di aggiornamento
+CREATE TABLE IF NOT EXISTS `anagrafica` (                     --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia dell'anagrafica
+  `id_badge` int(11) DEFAULT NULL,                            -- chiave esterna per il badge associato all'anagrafica
+  `codice` char(32) DEFAULT NULL,                             -- codice univoco dell'anagrafica
+  `riferimento` char(255) DEFAULT NULL,                       -- riferimento dell'anagrafica (es. persona all'interno dell'azienda)
+  `nome` char(64) DEFAULT NULL,                               -- nome dell'anagrafica
+  `cognome` char(255) DEFAULT NULL,                           -- cognome dell'anagrafica
+  `denominazione` char(255) DEFAULT NULL,                     -- denominazione dell'anagrafica
+  `soprannome` char(128) DEFAULT NULL,                        -- soprannome dell'anagrafica
+  `sesso` enum('M','F','-') DEFAULT NULL,                     -- sesso dell'anagrafica
+  `stato_civile` char(128) DEFAULT NULL,                      -- stato civile dell'anagrafica
+  `codice_fiscale` char(32) DEFAULT NULL,                     -- codice fiscale dell'anagrafica
+  `partita_iva` char(32) DEFAULT NULL,                        -- partita IVA dell'anagrafica
+  `codice_sdi` char(32) DEFAULT NULL,                         -- codice SDI dell'anagrafica
+  `id_pec_sdi` int(11) DEFAULT NULL,                          -- chiave esterna per l'indirizzo PEC per la fatturazione elettronica
+  `codice_ipa` char(32) DEFAULT NULL,                         -- codice IPA dell'anagrafica
+  `codice_archivium` char(16) DEFAULT NULL,                   -- codice Archivium dell'anagrafica (utilizzato per l'archiviazione elettronica dei documenti)
+  `id_regime` int(11) DEFAULT NULL,                           -- chiave esterna per il regime fiscale dell'anagrafica
+  `note_amministrative` text DEFAULT NULL,                    -- note amministrative sull'anagrafica
+  `note_collaborazione` text DEFAULT NULL,                    -- note sulla collaborazione con l'anagrafica (utilizzato per dipendenti e collaboratori)
+  `luogo_nascita` char(128) DEFAULT NULL,                     -- luogo di nascita dell'anagrafica
+  `stato_nascita` char(128) DEFAULT NULL,                     -- stato di nascita dell'anagrafica
+  `id_stato_nascita` int(11) DEFAULT NULL,                    -- chiave esterna per lo stato di nascita dell'anagrafica
+  `comune_nascita` char(128) DEFAULT NULL,                    -- comune di nascita dell'anagrafica
+  `id_comune_nascita` int(11) DEFAULT NULL,                   -- chiave esterna per il comune di nascita dell'anagrafica
+  `giorno_nascita` int(2) DEFAULT NULL,                       -- giorno di nascita dell'anagrafica
+  `mese_nascita` int(2) DEFAULT NULL,                         -- mese di nascita dell'anagrafica
+  `anno_nascita` int(4) DEFAULT NULL,                         -- anno di nascita dell'anagrafica
+  `id_ranking` int(11) DEFAULT NULL,                          -- chiave esterna per il ranking dell'anagrafica
+  `id_agente` int(11) DEFAULT NULL,                           -- chiave esterna per l'agente associato all'anagrafica
+  `id_responsabile_operativo` int(11) DEFAULT NULL,           -- chiave esterna per il responsabile operativo associato all'anagrafica
+  `note_commerciali` text DEFAULT NULL,                       -- note commerciali sull'anagrafica
+  `condizioni_vendita` text DEFAULT NULL,                     -- condizioni di vendita dell'anagrafica (per i clienti)
+  `condizioni_acquisto` text DEFAULT NULL,                    -- condizioni di acquisto dell'anagrafica (per i fornitori)
+  `note` text DEFAULT NULL,                                   -- note generali sull'anagrafica
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione dell'anagrafica
+  `note_archiviazione` text DEFAULT NULL,                     -- note sull'archiviazione dell'anagrafica
+  `recapiti` text DEFAULT NULL,                               -- recapiti dell'anagrafica (utilizzato per memorizzare i recapiti in forma libera)
+  `token` char(255) DEFAULT NULL,                             -- token per il lock della riga
+  `se_importata` tinyint(1) DEFAULT NULL,                     -- flag per indicare se l'anagrafica è stata importata (TODO obsoleto, eliminare)
+  `se_stampa_privacy` tinyint(1) DEFAULT NULL,                -- flag per indicare se è stata stampata la privacy per l'anagrafica (TODO obsoleto, eliminare)
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'anagrafica
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'anagrafica
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- TODO alcune associazioni fra anagrafiche (agente, responsabile operativo, eccetera) possono essere in futuro risolte con tabelle
+-- molti a molti?
 --
-CREATE TABLE IF NOT EXISTS `anagrafica` (
-  `id` int(11) NOT NULL,
-  `id_tipologia` int(11) DEFAULT NULL,
-  `id_badge` int(11) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `riferimento` char(255) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `cognome` char(255) DEFAULT NULL,
-  `denominazione` char(255) DEFAULT NULL,
-  `soprannome` char(128) DEFAULT NULL,
-  `sesso` enum('M','F','-') DEFAULT NULL,
-  `stato_civile` char(128) DEFAULT NULL,
-  `codice_fiscale` char(32) DEFAULT NULL,
-  `partita_iva` char(32) DEFAULT NULL,
-  `codice_sdi` char(32) DEFAULT NULL,
-  `id_pec_sdi` int(11) DEFAULT NULL,
-  `codice_ipa` char(32) DEFAULT NULL,
-  `codice_archivium` char(16) DEFAULT NULL,
-  `id_regime` int(11) DEFAULT NULL,
-  `note_amministrative` text DEFAULT NULL,
-  `note_collaborazione` text DEFAULT NULL,
-  `luogo_nascita` char(128) DEFAULT NULL,
-  `stato_nascita` char(128) DEFAULT NULL,
-  `id_stato_nascita` int(11) DEFAULT NULL,
-  `comune_nascita` char(128) DEFAULT NULL,
-  `id_comune_nascita` int(11) DEFAULT NULL,
-  `giorno_nascita` int(2) DEFAULT NULL,
-  `mese_nascita` int(2) DEFAULT NULL,
-  `anno_nascita` int(4) DEFAULT NULL,
-  `id_ranking` int(11) DEFAULT NULL,
-  `id_agente` int(11) DEFAULT NULL,
-  `id_responsabile_operativo` int(11) DEFAULT NULL,
-  `note_commerciali` text DEFAULT NULL,
-  `condizioni_vendita` text DEFAULT NULL,
-  `condizioni_acquisto` text DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `data_archiviazione` date DEFAULT NULL,
-  `note_archiviazione` text DEFAULT NULL,
-  `recapiti` text DEFAULT NULL,
-  `token` char(255) DEFAULT NULL,
-  `se_importata` tinyint(1) DEFAULT NULL,
-  `se_stampa_privacy` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA il campo se_importata è probabilmente obsoleto, mentre se_stampa_privacy andrebbe eliminata e l'informazione dovrebbe essere
+-- rappresentata da una riga sulla tabella attività
 
 -- | 010000000500
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
--- TODO
-CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
-  `id` int(11) NOT NULL,
-  `id_anagrafica` int(11) DEFAULT NULL,
-  `id_categoria` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: associa molti a molti le anagrafiche con le categorie dell'anagrafica
+--
+-- questa tabella contiene le associazioni molti a molti tra le anagrafiche e le categorie dell'anagrafica
+--
+CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica
+  `id_categoria` int(11) DEFAULT NULL,                        -- chiave esterna per la categoria dell'anagrafica
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000000600
 
 -- anagrafica_certificazioni
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `anagrafica_certificazioni` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -280,7 +212,7 @@ CREATE TABLE `anagrafica_certificazioni` (
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` ( 
   `id` int(11) NOT NULL,
   `codice` char(64) DEFAULT NULL,
@@ -301,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
 
 -- articoli
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `articoli` (
   `id` char(32) NOT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
@@ -336,7 +268,7 @@ CREATE TABLE `articoli` (
 
 -- attivita
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `attivita` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -396,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
 
 -- audio
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `audio` (
   `id` int(11) NOT NULL,
   `id_lingua` int(11) DEFAULT NULL,
@@ -432,7 +364,7 @@ CREATE TABLE IF NOT EXISTS `audio` (
 
 -- badge
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `badge` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) NULL,
@@ -451,7 +383,7 @@ CREATE TABLE `badge` (
 
 -- banner
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `banner` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -473,7 +405,7 @@ CREATE TABLE IF NOT EXISTS `banner` (
 
 -- caratteristiche
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `id` int(11) NOT NULL,
   `nome` char(64) DEFAULT NULL,
@@ -494,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
 
 -- carrelli
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `carrelli` (
   `id` int(11) NOT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -577,7 +509,7 @@ CREATE TABLE `carrelli` (
 
 -- carrelli_articoli
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `carrelli_articoli` (
   `id` int(11) NOT NULL,
   `id_carrello` int(11) DEFAULT NULL,
@@ -606,7 +538,7 @@ CREATE TABLE `carrelli_articoli` (
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -639,7 +571,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
 
 -- categorie_notizie
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `categorie_notizie` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -664,7 +596,7 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -689,7 +621,7 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
 
 -- categorie_progetti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `categorie_progetti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -720,7 +652,7 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (
 
 -- categorie_risorse
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -745,7 +677,7 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
 
 -- causali
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `causali` (
   `id` int(11) NOT NULL,
   `nome` char(64) NOT NULL,
@@ -760,7 +692,7 @@ CREATE TABLE IF NOT EXISTS `causali` (
 
 -- certificazioni
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `certificazioni` (
   `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -774,7 +706,7 @@ CREATE TABLE IF NOT EXISTS `certificazioni` (
 
 -- classi_energetiche
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `classi_energetiche` (
   `id` int(11) NOT NULL,
   `nome` char(8) DEFAULT NULL,
@@ -787,7 +719,7 @@ CREATE TABLE IF NOT EXISTS `classi_energetiche` (
 
 -- colori
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `colori` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -808,7 +740,7 @@ CREATE TABLE IF NOT EXISTS `colori` (
 
 -- comuni
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `comuni` (
   `id` int(11) NOT NULL,
   `id_provincia` int(11) DEFAULT NULL,
@@ -821,7 +753,7 @@ CREATE TABLE IF NOT EXISTS `comuni` (
 
 -- condizioni
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE `condizioni` (
   `id` int(11) NOT NULL,
   `nome` char(32) DEFAULT NULL,
@@ -833,7 +765,7 @@ CREATE TABLE `condizioni` (
 
 -- condizioni_pagamento
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
   `id` int(11) NOT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -845,7 +777,7 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
 
 -- contatti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `contatti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -872,7 +804,7 @@ CREATE TABLE IF NOT EXISTS `contatti` (
 
 -- contenuti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `contenuti` (
   `id` int(11) NOT NULL,
   `id_lingua` int(11) DEFAULT NULL,
@@ -944,7 +876,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
 
 -- continenti
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `continenti` (
   `id` int(11) NOT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -1014,7 +946,7 @@ CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
 
 -- coupon
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `coupon` (
   `id` char(32) NOT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -1035,7 +967,7 @@ CREATE TABLE IF NOT EXISTS `coupon` (
 
 -- disponibilita
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE `disponibilita` (
   `id` int(11) NOT NULL,
   `nome` char(32) DEFAULT NULL,
@@ -1047,7 +979,7 @@ CREATE TABLE `disponibilita` (
 
 -- documenti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `documenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -1095,7 +1027,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (
 
 -- edifici
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `edifici` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -1114,7 +1046,7 @@ CREATE TABLE IF NOT EXISTS `edifici` (
 
 -- embed
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `embed` (
   `id` int(11) NOT NULL,
   `nome` char(64) DEFAULT NULL,
@@ -1126,7 +1058,7 @@ CREATE TABLE IF NOT EXISTS `embed` (
 
 -- file
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `file` (
   `id` int(11) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
@@ -1171,7 +1103,7 @@ CREATE TABLE IF NOT EXISTS `file` (
 -- | 010000015100
 
 -- funnel
--- TODO
+-- TODO documentare
 CREATE TABLE `funnel` (
   `id` int(11) NOT NULL,
   `nome` char(128) DEFAULT NULL,
@@ -1211,7 +1143,7 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
 
 -- iban
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `iban` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -1228,7 +1160,7 @@ CREATE TABLE IF NOT EXISTS `iban` (
 
 -- immagini
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `immagini` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -1321,7 +1253,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (
 
 -- iva
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `iva` (
   `id` int(11) NOT NULL,
   `aliquota` decimal(5,2) NOT NULL,
@@ -1335,7 +1267,7 @@ CREATE TABLE IF NOT EXISTS `iva` (
 
 -- licenze
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `licenze` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -1387,7 +1319,7 @@ CREATE TABLE IF NOT EXISTS `lingue` (
 
 -- listini
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `listini` (
   `id` int(11) NOT NULL,
   `id_valuta` int(11) DEFAULT NULL,
@@ -1402,7 +1334,7 @@ CREATE TABLE IF NOT EXISTS `listini` (
 
 -- luoghi
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `luoghi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -1461,7 +1393,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
 
 -- mail_out
 -- tipolgia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `mail_out` (
   `id` int(11) NOT NULL,
   `id_mail` int(11) DEFAULT NULL,
@@ -1494,7 +1426,7 @@ CREATE TABLE IF NOT EXISTS `mail_out` (
 
 -- mail_sent
 -- tipolgia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `mail_sent` (
   `id` int(11) NOT NULL,
   `id_mail` int(11) DEFAULT NULL,
@@ -1527,7 +1459,7 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
 
 -- mailing
 -- tipolgia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `mailing` (
   `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -1543,7 +1475,7 @@ CREATE TABLE IF NOT EXISTS `mailing` (
 
 -- marchi
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `marchi` (
   `id` int(11) NOT NULL,
   `nome` char(64) DEFAULT NULL,
@@ -1558,7 +1490,7 @@ CREATE TABLE IF NOT EXISTS `marchi` (
 
 -- mastri
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `mastri` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -1579,7 +1511,7 @@ CREATE TABLE IF NOT EXISTS `mastri` (
 
 -- matricole
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `matricole` (
   `id` int(11) NOT NULL,
   `id_marchio` int(11) DEFAULT NULL,
@@ -1599,7 +1531,7 @@ CREATE TABLE `matricole` (
 
 -- modalita_pagamento
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
 `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -1631,7 +1563,7 @@ CREATE TABLE IF NOT EXISTS `notizie` (
 
 -- notizie_categorie
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `notizie_categorie` (
   `id` int(11) NOT NULL,
   `id_notizia` int(11) DEFAULT NULL,
@@ -1646,7 +1578,7 @@ CREATE TABLE IF NOT EXISTS `notizie_categorie` (
 -- | 010000022800
 
 -- organizzazioni
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `organizzazioni` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -1665,7 +1597,7 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (
 
 -- pagamenti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `pagamenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -1717,7 +1649,7 @@ CREATE TABLE IF NOT EXISTS `pagine` (
 
 -- periodi
 -- tipologia: tabella di supporto
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `periodi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -1736,7 +1668,7 @@ CREATE TABLE IF NOT EXISTS `periodi` (
 
 -- periodicita
 -- tipologia: tabella di supporto
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `periodicita` (
   `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -1747,7 +1679,7 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 
 -- pianificazioni
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -1851,7 +1783,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
 
 -- popup
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `popup` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -1876,7 +1808,7 @@ CREATE TABLE IF NOT EXISTS `popup` (
 
 -- prezzi
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `prezzi` (
   `id` int(11) NOT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
@@ -1894,7 +1826,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
 
 -- prodotti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `prodotti` (	
   `id` char(32) NOT NULL,	
   `id_tipologia` int(11) DEFAULT NULL,	
@@ -1921,7 +1853,7 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
 
 -- prodotti_categorie
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
   `id` int(11) NOT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
@@ -1938,7 +1870,7 @@ CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
 
 -- progetti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `progetti` (
   `id` char(32) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -1985,7 +1917,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (
 
 -- progetti_categorie
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `progetti_categorie` (
   `id` int(11) NOT NULL,
   `id_progetto` char(32) DEFAULT NULL,
@@ -2012,7 +1944,7 @@ CREATE TABLE IF NOT EXISTS `provincie` (
 
 -- ranking
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `ranking` (
   `id` int(11) NOT NULL,
   `nome` varchar(254) DEFAULT NULL,
@@ -2063,7 +1995,7 @@ CREATE TABLE IF NOT EXISTS `redirect` (
 
 -- regimi
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `regimi` (
   `id` int(11) NOT NULL,
   `nome` char(32) DEFAULT NULL,
@@ -2074,7 +2006,7 @@ CREATE TABLE IF NOT EXISTS `regimi` (
 
 -- regioni
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `regioni` (
   `id` int(11) NOT NULL,
   `id_stato` int(11) DEFAULT NULL,
@@ -2086,7 +2018,7 @@ CREATE TABLE IF NOT EXISTS `regioni` (
 
 -- reparti
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `reparti` (
   `id` int(11) NOT NULL,
   `id_iva` int(11) DEFAULT NULL,
@@ -2103,7 +2035,7 @@ CREATE TABLE IF NOT EXISTS `reparti` (
 
 -- rinnovi
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -2129,7 +2061,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
 
 -- risorse
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `risorse` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -2158,7 +2090,7 @@ CREATE TABLE IF NOT EXISTS `risorse` (
 
 -- ruoli_anagrafica
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2181,7 +2113,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
 
 -- ruoli_file
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2207,7 +2139,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
 
 -- ruoli_mail
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `ruoli_mail` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2227,7 +2159,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (
 
 -- ruoli_prodotti
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2240,7 +2172,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
 
 -- settori
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `settori` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2253,7 +2185,7 @@ CREATE TABLE IF NOT EXISTS `settori` (
 
 -- stati
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `stati` (
   `id` int(11) NOT NULL,
   `id_continente` int(11) DEFAULT NULL,
@@ -2268,7 +2200,7 @@ CREATE TABLE IF NOT EXISTS `stati` (
 -- | 010000042500
 
 -- step
--- TODO
+-- TODO documentare
 CREATE TABLE `step` (
   `id` int(11) NOT NULL,
   `id_funnel` int(11) DEFAULT NULL,
@@ -2281,7 +2213,7 @@ CREATE TABLE `step` (
 
 -- telefoni
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `telefoni` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -2299,7 +2231,7 @@ CREATE TABLE `telefoni` (
 
 -- template
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `template` (
   `id` int(11) NOT NULL,
   `ruolo` char(32) DEFAULT NULL,
@@ -2320,7 +2252,7 @@ CREATE TABLE IF NOT EXISTS `template` (
 -- tipologie_anagrafica
 -- tipologia: tabella standard
 -- NOTA rendere gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2343,7 +2275,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (
 
 -- tipologie_attivita
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2368,7 +2300,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
 
 -- tipologie_badge
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_badge` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2386,7 +2318,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_badge` (
 
 -- tipologie_contatti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2404,7 +2336,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
 
 -- tipologie_contratti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `tipologie_contratti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2436,7 +2368,7 @@ CREATE TABLE `tipologie_contratti` (
 
 -- tipologie_documenti
 -- tipologia: tabella di supporto
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2467,7 +2399,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
 -- | 010000052800
 
 -- tipologie_edifici
--- TODO
+-- TODO documentare
 CREATE TABLE `tipologie_edifici` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2485,7 +2417,7 @@ CREATE TABLE `tipologie_edifici` (
 
 -- tipologie_immobili
 -- tipologia: tabella di supporto
--- TODO
+-- TODO documentare
 CREATE TABLE `tipologie_immobili` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2505,7 +2437,7 @@ CREATE TABLE `tipologie_immobili` (
 
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2523,7 +2455,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
 
 -- tipologie_licenze
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2541,7 +2473,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
 
 -- tipologie_luoghi
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2559,7 +2491,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (
 
 -- tipologie_mastri
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE `tipologie_mastri` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2581,7 +2513,7 @@ CREATE TABLE `tipologie_mastri` (
 
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2599,7 +2531,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
 
 -- tipologie_prodotti
 -- tipologia: tabella di supporto
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2630,7 +2562,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
 
 -- tipologie_progetti
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2655,7 +2587,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
 
 -- tipologie_rinnovi
 -- tipologia: tabella di supporto
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2680,7 +2612,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
 -- tipologie_telefoni
 -- tipologia: tabella assistita
 -- NOTA rendere gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `tipologie_telefoni` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2698,7 +2630,7 @@ CREATE TABLE `tipologie_telefoni` (
 
 -- tipologie_todo
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_todo` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2724,7 +2656,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_todo` (
 
 -- tipologie_url
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_url` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2742,7 +2674,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (
 
 -- tipologie_zone
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `tipologie_zone` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2760,7 +2692,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_zone` (
 
 -- todo
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `todo` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -2801,7 +2733,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
 
 -- udm
 -- tipologia: tabella standard
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `udm` (
   `id` int(11) NOT NULL,
   `id_base` int(11) DEFAULT NULL,
@@ -2821,7 +2753,7 @@ CREATE TABLE IF NOT EXISTS `udm` (
 
 -- url
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `url` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -2840,7 +2772,7 @@ CREATE TABLE IF NOT EXISTS `url` (
 
 -- valutazioni
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE `valutazioni` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -2863,7 +2795,7 @@ CREATE TABLE `valutazioni` (
 
 -- valute
 -- tipologia: tabella di supporto
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `valute` (
   `id` int(11) NOT NULL,
   `iso4217` char(3) DEFAULT NULL,
@@ -2875,7 +2807,7 @@ CREATE TABLE IF NOT EXISTS `valute` (
 
 -- video
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `video` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -2915,7 +2847,7 @@ CREATE TABLE IF NOT EXISTS `video` (
 
 -- zone
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `zone` (
 `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2932,7 +2864,7 @@ CREATE TABLE IF NOT EXISTS `zone` (
 
 -- zone_indirizzi
 -- tipologia: tabella gestita
--- TODO
+-- TODO documentare
 CREATE TABLE IF NOT EXISTS `zone_indirizzi` (
   `id` int(11) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
