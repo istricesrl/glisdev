@@ -6,7 +6,7 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      * @file
      *
@@ -16,7 +16,7 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
 #    function getAccessPermission( $p ) {
@@ -63,7 +63,7 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function getAclPermission( $t, $a, &$i = NULL ) {
@@ -138,7 +138,7 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
 //    function getAclRights( $c, $t, $a, $id, &$i = NULL, $pi = NULL ) {
@@ -359,7 +359,7 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function getAclRightsAccountId() {
@@ -370,7 +370,7 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function getAclRightsTable( $c, $t ) {
@@ -423,7 +423,7 @@
 	/**
 	 * 
 	 * 
-	 * @todo documentare
+	 * TODO documentare
 	 * 
 	 * 
 	 */

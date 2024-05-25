@@ -5,7 +5,7 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      * @file
      *
@@ -13,7 +13,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function buildMenu( $menu, $tree, $pages, $active = NULL ) {
@@ -166,7 +166,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function buildBreadcrumbs( $page, $active ) {
@@ -203,7 +203,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function buildFlags( $page, $lang ) {
