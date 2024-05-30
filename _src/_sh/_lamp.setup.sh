@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO documentare
+# documentare tutto il processo di setup del framework
+#
+
 ## pulizia schermo
 clear
 

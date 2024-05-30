@@ -18,3 +18,6 @@ _src/_lib/_ext/codeception/codeception/codecept run acceptance -c _usr/_test/cod
 
 ## permessi temporanei
 chmod ug-x _src/_lib/_ext/codeception/codeception/codecept 
+
+# TODO documentare
+# qui spiegare come vengono eseguiti i test

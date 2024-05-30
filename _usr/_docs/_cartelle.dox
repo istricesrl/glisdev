@@ -115,4 +115,14 @@
     var/spool/import/           | contiene i file di importazione del framework
     var/spool/security/         | contiene i file degli eventi di sicurezza del framework
 
+    file nella cartella radice
+    --------------------------
+
+
+    file                        | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+
+
+
+
 */

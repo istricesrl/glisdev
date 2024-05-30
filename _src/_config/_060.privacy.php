@@ -13,7 +13,10 @@
      *
      *
      *
-     *
+     * TODO documentare bene tutta questa cosa della privacy e in particolare:
+     * - la gestione dei cookie (come il framework gestisce i cookie e i relativi consensi)
+     * - la gestione dei dati inseriti nei form dagli utenti e i relativi consensi
+     * - la generazione della privacy & cookie policy, come va configurato il framework per farla uscire giusta, eccetera
      *
      *
      * TODO applicare la strategia della configurazione extra per sito anche ai vari slack, google, criteo, ecc.

@@ -26,3 +26,6 @@ _src/_lib/_ext/codeception/codeception/codecept generate:cest acceptance filesys
 #             url: https://glisdev.istricesrl.com
 #         - \Helper\Acceptance
 # step_decorators: ~
+
+# TODO documentare
+# questo script è un buon posto dove mettere la documentazione su come GlisWeb utilizza Codeception

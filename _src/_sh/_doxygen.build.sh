@@ -35,3 +35,6 @@ doxygen etc/doxygen/doxygen.conf
 
 ## build del PDF
 cd _usr/_docs/_pdf/ && make
+
+# TODO documentare
+# questo è un ottimo posto dove documentare come il framework gestisce la documentazione
