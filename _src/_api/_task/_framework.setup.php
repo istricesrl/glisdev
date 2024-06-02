@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * script di installazione del framework
+     * script di configurazione guidata del framework
      * 
      * TODO implementare
      *

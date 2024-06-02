@@ -3,6 +3,8 @@
 # TODO documentare
 # documentare tutto il processo di setup del framework
 #
+# TODO aggiornare guardando cosa fa lo script va.lamp.setup.sh
+#
 
 ## pulizia schermo
 clear
@@ -80,6 +82,19 @@ apt-get install -y php-intl
 
 ## installazione di ncftp
 # apt-get install -y ncftp
+
+## installazione di python
+apt-get install -y python3 python3-pip
+apt-get install -y python3-daemon
+apt-get install -y python3-flask
+apt-get install -y python3-plyer
+apt-get install -y python3-pystray
+apt-get install -y python3-kivy
+apt-get install -y python3-venv
+apt-get install -y virtualenvwrapper
+apt-get install -y python3-virtualenvwrapper
+apt-get install -y pipenv
+apt-get install -y gradle
 
 ## installazione di mysql
 # apt-get install -y default-mysql-server
