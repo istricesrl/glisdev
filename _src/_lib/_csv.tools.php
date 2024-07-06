@@ -113,7 +113,7 @@
      * 
      * funzione                     | descrizione
      * -----------------------------|---------------------------------------------------------------
-     * guessSeparator()             | individua il separatore di un file CSV
+     * guessCsvSeparator()          | individua il separatore di un file CSV
      * csvRow2array()               | converte una riga contenente una stringa CSV in un array associativo
      * csvRow2vector()              | converte una riga contenente una stringa CSV in un array non associativo
      * 
@@ -166,35 +166,48 @@
      * legge un file CSV e restituisce un array di array associativi
      * 
      * Questa funzione legge un file CSV e restituisce un array di array associativi; se il separatore fornito è NULL o false,
-     * la funzione utilizza indirettamente guessSeparator() per individuarlo autonomamente. La funzione legge il file come array
+     * la funzione utilizza indirettamente guessCsvSeparator() per individuarlo autonomamente. La funzione legge il file come array
      * di stringhe CSV e poi utilizza csvArray2array() per convertirlo in un array associativo. La funzione assume che la prima
      * riga del file contenga le intestazioni dei campi, se non viene passato esplicitamente un array di intestazioni; in questo
      * caso la riga viene eliminata dall'array e ne viene fatto il parsing, dopodiché l'array così ottenuto viene passato alla
      * funzione csvArray2array().
      * 
      */
-    /*
     function csvFile2array( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
+
+        // log
+        logger( 'lettura file CSV: ' . $f, 'csv' );
 
         // leggo il contenuto del file in un array di righe CSV
         $a = readFromFile( $f );
+
+        // log
+        logger( 'dati letti dal file ' . $f . ': ' . print_r( $a, true ), 'details/csv' );
 
         // se non ho passato le intestazioni, le ricavo dalla prima riga
         if( empty( $h ) ) {
             $h = csvRow2vector( array_shift( $a ), $s, $c, $e );
         }
 
+        // log
+        logger( 'intestazione per il file ' . $f . ': ' . print_r( $h, true ), 'details/csv' );
+
+        // leggo le righe tramite la funzione csvArray2array()
+        $r = csvArray2array( $a, $s, $h, $c, $e );
+
+        // log
+        logger( 'righe lette dal file ' . $f . ': ' . print_r( $r, true ), 'details/csv' );
+
         // restituisco l'array di array associativi elaborato da csvArray2array()
-        return csvArray2array( $a, $s, $h, $c, $e );
+        return $r;
 
     }
-    */
 
     /**
      * legge una stringa CSV e restituisce un array di array associativi
      * 
      * Questa funzione riceve in input una stringa contenente una serie di righe in formato CSV e la converte in un array di array associativi;
-     * se il separatore fornito è NULL o false, la funzione utilizza guessSeparator() per individuarlo autonomamente. La funzione utilizza
+     * se il separatore fornito è NULL o false, la funzione utilizza guessCsvSeparator() per individuarlo autonomamente. La funzione utilizza
      * la prima riga per ricavare le intestazioni se non viene fornito esplicitamente un array di intestazioni; in questo caso la riga viene
      * eliminata dall'array e ne viene fatto il parsing, dopodiché l'array così ottenuto viene passato alla funzione csvArray2array().
      * 
@@ -220,7 +233,7 @@
      * legge un array di stringhe CSV e restituisce un array di array associativi
      * 
      * Questa funzione riceve in input un array di stringhe CSV e restituisce un array di array associativi; se il separatore
-     * fornito è NULL o false, la funzione utilizza guessSeparator() per individuarlo autonomamente. La funzione utilizza csvString2array()
+     * fornito è NULL o false, la funzione utilizza guessCsvSeparator() per individuarlo autonomamente. La funzione utilizza csvString2array()
      * per fare il parsing delle stringhe CSV. Se non è fornito un array di intestazioni, la funzione assume che la prima riga
      * contenga le intestazioni per cui ne fa il parse e la elimina dall'array. L'array delle intestazioni viene fornito a csvString2array()
      * per intestare i campi.
@@ -242,13 +255,25 @@
             $r[] = csvRow2array( $row, $h, $s, $c, $e );
         }
 
+        // restituisco il risultato
+        return $r;
+
     }
 
     /**
      * legge un file CSV e restituisce un array di array non associativi 
      * 
      */
-    function csvFile2matrix() {
+    function csvFile2matrix( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
+
+        // leggo il contenuto del file in un array di righe CSV
+        $a = readFromFile( $f );
+
+        // scompongo le righe CSV in vettori
+        $r = csvArray2matrix( $a, $s, $c, $e );
+
+        // restituisco l'array di array non associativi elaborato da csvArray2matrix()
+        return $r;
 
     }
 
@@ -256,7 +281,16 @@
      * legge una stringa CSV e restituisce un array di array non associativi
      * 
      */
-    function csvString2matrix() {
+    function csvString2matrix( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
+
+        // esplodo la stringa per newline
+        $a = explode( PHP_EOL, $f );
+
+        // scompongo le righe CSV in vettori
+        $r = csvArray2matrix( $a, $s, $c, $e );
+
+        // restituisco l'array di array non associativi elaborato da csvArray2matrix()
+        return $r;
 
     }
 
@@ -264,7 +298,18 @@
      * legge un array di stringhe CSV e restituisce un array di array non associativi
      * 
      */
-    function csvArray2matrix() {
+    function csvArray2matrix( $a, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
+
+        // array per il risultato
+        $r = array();
+
+        // faccio il parsing di ogni riga
+        foreach( $a as $row ) {
+            $r[] = csvRow2vector( $row, $s, $c, $e );
+        }
+
+        // restituisco l'array di array non associativi
+        return $r;
 
     }
 
@@ -272,7 +317,115 @@
      * FUNZIONI DI SCRITTURA
      */
 
+    /**
+     * array2csvFile()              | scrive un array di array associativi in un file CSV
+     * array2csvString()            | scrive un array di array associativi in una stringa CSV
+     * array2csvArray()             | scrive un array di array associativi in un array di stringhe CSV                  
+     * matrix2csvFile()             | scrive un array di array non associativi in un file CSV
+     * matrix2csvString()           | scrive un array di array non associativi in una stringa CSV
+     * matrix2csvArray()            | scrive un array di array non associativi in un array di stringhe CSV
+     */
 
+    /**
+     * scrive un array di array associativi in un file CSV
+     *
+     */
+    function array2csvFile( $d, $f, $s = ',', $h = NULL, $c = '"', $e = '\\', $m = FILE_WRITE_OVERWRITE ) {
+
+        // log
+        logger( 'scrittura file CSV: ' . $f, 'csv' );
+
+        // ricavo le intestazioni dalle chiavi della prima riga
+        if( empty( $h ) ) {
+            $h = array_keys( $d[0] );
+        }
+    
+        // genero la stringa da scrivere su file tramite array2csvString()
+        $t = array2csvString( $d, $s, $h, $c, $e );
+
+        // scrivo la stringa su file utilizzando writeToFile()
+        $r = writeToFile( $f, $t, $m );
+
+        // restituisco l'esito dell'operazione
+        return $r;
+
+    }
+
+    /**
+     * scrive un array di array associativi in una stringa CSV
+     * 
+     */
+    function array2csvString( $d, $s = ',', $h = NULL, $c = '"', $e = '\\' ) {
+
+        // trasformo gli array di riga in stringhe tramite la array2csvArray()
+        $a = array2csvArray( $d, $s, $h, $c, $e );
+
+        // implodo le stringhe per newline
+        if( is_array( $a ) ) {
+            $r = implode( PHP_EOL, $a );
+        }
+
+        // restituisco la stringa
+        return $r;
+
+    }
+
+    /**
+     * scrive un array di array associativi in un array di stringhe CSV
+     * 
+     */
+    function array2csvArray( $d, $s = ',', $h = NULL, $c = '"', $e = '\\' ) {
+
+        // array per il risultato
+        $a = array();
+
+        // apro un buffer in memoria
+        $h = fopen('php://memory', 'r+');
+
+        // scrivo tutte le righe nel buffer
+        foreach( $d as $r ) {
+            fputcsv( $h, $r, $s, $c, $e );
+        }
+
+        // leggo il buffer
+        rewind( $h );
+
+        // leggo tutte le righe
+        while( $buf = fgets( $h ) ) {
+            $a[] = $buf;
+        }
+
+        // chiudo il buffer
+        fclose( $h );
+
+        // restituisco l'array di stringhe
+        return $a;
+
+    }
+
+    /**
+     * scrive un array di array non associativi in un file CSV
+     * 
+     */
+    function matrix2csvFile( $d, $f, $s = ',', $c = '"', $e = '\\', $m = FILE_WRITE_OVERWRITE ) {
+
+    }
+
+    /**
+     * scrive un array di array non associativi in una stringa CSV
+     * 
+     */
+    function matrix2csvString( $d, $s = ',', $c = '"', $e = '\\' ) {
+
+    }
+
+    /**
+     * scrive un array di array non associativi in un array di stringhe CSV
+     * 
+     */
+    function matrix2csvArray( $d, $s = ',', $c = '"', $e = '\\' ) {
+
+    }
 
     /**
      * FUNZIONI DI SUPPORTO
@@ -290,7 +443,7 @@
      * @return      string              il carattere più abbondante
      * 
      */
-    function guessSeparator( $t, $s = array( ',', ';', '|', "\t" ) ) {
+    function guessCsvSeparator( $t, $s = array( ',', ';', '|', "\t" ) ) {
 
         $r = NULL;
         $m = 0;
@@ -327,7 +480,7 @@
     function csvRow2array( $t, $h, $s = NULL, $c = "\"", $e = '\\' ) {
 
         if( empty( $s ) ) {
-            $s = guessSeparator( $t );
+            $s = guessCsvSeparator( $t );
         }
 
         $t = csvRow2vector( $t, $s, $c, $e );
@@ -351,7 +504,7 @@
      * converte una riga contenente una stringa CSV in un array non associativo
      * 
      * Questa funzione riceve in input una stringa contenente una riga in formato CSV e la converte in un array non associativo; se
-     * il separatore fornito è NULL o false, la funzione utilizza guessSeparator() per individuarlo autonomamente.
+     * il separatore fornito è NULL o false, la funzione utilizza guessCsvSeparator() per individuarlo autonomamente.
      * 
      * @param       string      $t      la stringa da convertire
      * @param       string      $s      il separatore da utilizzare
@@ -364,7 +517,7 @@
     function csvRow2vector( $t, $s = NULL, $c = "\"", $e = '\\' ) {
 
         if( $s == NULL ) {
-            $s = guessSeparator( $t );
+            $s = guessCsvSeparator( $t );
         }
 
         $t = clean_string( $t );
@@ -379,49 +532,27 @@
      * ALIAS DI FUNZIONI INSERITI PER RETROCOMPATIBILITÀ
      */
 
-    /**
-     * legge un file CSV e restituisce un array associativo
-     *
-     *
-     * TODO documentare
-     *
-     */
-    function csvFile2array( $file, $s = ",", $c = "\"", $e = '\\' ) {
 
-        // debug
-        // die( $file );
 
-        // leggo il contenuto grezzo del file
-        $grezzo = readFromFile( $file );
 
-        // debug
-        // var_dump( $grezzo );
-        // var_dump( $s );
 
-        // auto rilevamento separatore
-        if( $s == NULL ) {
-            $vg = substr_count( $grezzo[0], ',' );            
-            $pv = substr_count( $grezzo[0], ';' );
-            $s = ( ( $vg > $pv ) ? ',' : ';' );
-            logger( 'virgole: ' . $vg . ' punti e virgola: ' . $pv . ' vince: ' . $s, 'details/csv/' . basename( $file ) );
-        }
 
-        // debug
-        // die( print_r( $grezzo, true ) );
 
-        // log
-        logger( 'grezzo (separatore "'.$s.'")' . PHP_EOL . print_r( $grezzo, true ), 'details/csv/' . basename( $file ) );
 
-        // faccio il parsing CSV di ogni riga
-        $lavorato = csv2array( $grezzo, $s, $c, $e );
 
-        // debug
-        logger( 'lavorato (separatore "'.$s.'")' . PHP_EOL . print_r( $lavorato, true ), 'details/csv/' . basename( $file ) );
 
-        // restituisco l'array associativo
-        return( $lavorato );
 
-    }
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * converte un array di stringhe CSV in un array associativo
@@ -435,7 +566,6 @@
      * 
      * TODO documentare
      *
-     */
     function csv2array( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
         // logger( 'dati pre ' . print_r( $data, true ), 'details/csv/csv2array' );
@@ -474,6 +604,7 @@
         return $result;
 
     }
+     */
 
     /**
      * converte una matrice in un CSV, considerando la prima riga come intestazione
@@ -493,7 +624,6 @@
      * 
      * TODO svincolare da openFile
      * 
-     */
     function array2csvFile( $data, $file, $mode = FILE_WRITE_OVERWRITE, $s = ",", $c = "\"", $e = '\\' ) {
 
         $h = openFile( $file, $mode );
@@ -508,13 +638,13 @@
         }
     
     }
+     */
 
     /**
      * trasforma un array associativo in un array di stringhe CSV
      *
      * TODO documentare
      *
-     */
     function array2csv( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
         $csv = array();
@@ -538,15 +668,16 @@
         return $csv;
 
     }
+     */
 
     /**
      *
-     * TODO documentare
+     * TODO verificare che la nuova versione funzioni e poi cancellare
      *
-     */
     function array2csvString( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
         $csv = array2csv( $data, $s, $c, $e );
         return implode( '', $csv );
 
     }
+     */
