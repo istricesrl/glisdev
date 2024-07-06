@@ -16,4 +16,6 @@ css:
       - "css/main.print.css"
     screen:
       - "css/main.screen.css"
-  
+  external:
+    all:
+      - "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"

@@ -137,6 +137,7 @@
      * logger()                         | core
      * openFile()                       | filesystem.tools
      * clean_string()                   | string.tools
+     * readFromFile()                   | filesystem.tools
      * 
      * Inoltre per funzionare correttamente la libreria richiede che siano definite le seguenti costanti globali:
      * 
@@ -167,26 +168,79 @@
      * Questa funzione legge un file CSV e restituisce un array di array associativi; se il separatore fornito è NULL o false,
      * la funzione utilizza indirettamente guessSeparator() per individuarlo autonomamente. La funzione legge il file come array
      * di stringhe CSV e poi utilizza csvArray2array() per convertirlo in un array associativo. La funzione assume che la prima
-     * riga del file contenga le intestazioni dei campi, se non viene passato esplicitamente un array di intestazioni.
+     * riga del file contenga le intestazioni dei campi, se non viene passato esplicitamente un array di intestazioni; in questo
+     * caso la riga viene eliminata dall'array e ne viene fatto il parsing, dopodiché l'array così ottenuto viene passato alla
+     * funzione csvArray2array().
      * 
      */
-#    function csvFile2array( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
-#
-#    }
+    /*
+    function csvFile2array( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
+
+        // leggo il contenuto del file in un array di righe CSV
+        $a = readFromFile( $f );
+
+        // se non ho passato le intestazioni, le ricavo dalla prima riga
+        if( empty( $h ) ) {
+            $h = csvRow2vector( array_shift( $a ), $s, $c, $e );
+        }
+
+        // restituisco l'array di array associativi elaborato da csvArray2array()
+        return csvArray2array( $a, $s, $h, $c, $e );
+
+    }
+    */
 
     /**
      * legge una stringa CSV e restituisce un array di array associativi
      * 
+     * Questa funzione riceve in input una stringa contenente una serie di righe in formato CSV e la converte in un array di array associativi;
+     * se il separatore fornito è NULL o false, la funzione utilizza guessSeparator() per individuarlo autonomamente. La funzione utilizza
+     * la prima riga per ricavare le intestazioni se non viene fornito esplicitamente un array di intestazioni; in questo caso la riga viene
+     * eliminata dall'array e ne viene fatto il parsing, dopodiché l'array così ottenuto viene passato alla funzione csvArray2array().
+     * 
      */
-    function csvString2array() {
+    function csvString2array( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
     
+        // TODO implementare guessNewline()
+
+        // esplodo la stringa per newline
+        $a = explode( PHP_EOL, $f );
+
+        // se non ho passato le intestazioni, le ricavo dalla prima riga
+        if( empty( $h ) ) {
+            $h = csvRow2vector( array_shift( $a ), $s, $c, $e );
+        }
+
+        // restituisco l'array di array associativi elaborato da csvArray2array()
+        return csvArray2array( $a, $s, $h, $c, $e );
+
     }
 
     /**
      * legge un array di stringhe CSV e restituisce un array di array associativi
      * 
+     * Questa funzione riceve in input un array di stringhe CSV e restituisce un array di array associativi; se il separatore
+     * fornito è NULL o false, la funzione utilizza guessSeparator() per individuarlo autonomamente. La funzione utilizza csvString2array()
+     * per fare il parsing delle stringhe CSV. Se non è fornito un array di intestazioni, la funzione assume che la prima riga
+     * contenga le intestazioni per cui ne fa il parse e la elimina dall'array. L'array delle intestazioni viene fornito a csvString2array()
+     * per intestare i campi.
+     * 
+     * 
      */
-    function csvArray2array() {
+    function csvArray2array( $a, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
+
+        // array per il risultato
+        $r = array();
+
+        // se non ho passato le intestazioni, le ricavo dalla prima riga
+        if( empty( $h ) ) {
+            $h = csvRow2vector( array_shift( $a ), $s, $c, $e );
+        }
+
+        // faccio il parsing di ogni riga
+        foreach( $a as $row ) {
+            $r[] = csvRow2array( $row, $h, $s, $c, $e );
+        }
 
     }
 
@@ -225,7 +279,7 @@
      */
 
     /**
-     * individua il separatore di un file CSV
+     * individua il separatore di una stringa CSV
      * 
      * Questa funzione riceve in input una stringa e trova il carattere più abbondante fra quelli indicati, e lo
      * restituisce come output.
@@ -272,7 +326,7 @@
      */
     function csvRow2array( $t, $h, $s = NULL, $c = "\"", $e = '\\' ) {
 
-        if( $s == NULL ) {
+        if( empty( $s ) ) {
             $s = guessSeparator( $t );
         }
 
