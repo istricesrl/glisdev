@@ -16,5 +16,5 @@
     // scrittura $cf
     print_r( array2censored( $cf ) );
 
-	// output
+    // output
     print_r( get_included_files() );

@@ -33,7 +33,7 @@
      */
 
     // link alla pagina corrente
-	$cf['contents']['page'] = &$cf['contents']['pages'][ $cf['parser']['page'] ];
+    $cf['contents']['page'] = &$cf['contents']['pages'][ $cf['parser']['page'] ];
 
     // TODO fare questa cosa con un ciclo per tutte le chiavi di $cf['contents']
     // in pratica $ct deve essere la scorciatoia per $cf['contents']
@@ -41,24 +41,24 @@
     // NOTA è una brutta asimmetria, ma giustificata dalla brevità di scrittura?
 
     // collego l'array delle pagine a $ct
-	$ct['pages'] = &$cf['contents']['pages'];
+    $ct['pages'] = &$cf['contents']['pages'];
 
     // collego la pagina corrente a $ct
-	$ct['page'] = &$cf['contents']['page'];
+    $ct['page'] = &$cf['contents']['page'];
 
     // versione canonica della pagina
-	if( ! in_array( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['page']['path'] ) ) {
-	    $cf['contents']['page']['canonical'] = $cf['contents']['page']['id'];
-	}
+    if( ! in_array( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['page']['path'] ) ) {
+        $cf['contents']['page']['canonical'] = $cf['contents']['page']['id'];
+    }
 
     // pulitura delle tab
-	if( isset( $ct['page']['etc']['tabs'] ) ) {
+    if( isset( $ct['page']['etc']['tabs'] ) ) {
 
         if( ! is_array( $ct['page']['etc']['tabs'] ) ) {
             $ct['page']['etc']['tabs'] = $cf['contents']['pages'][ $ct['page']['etc']['tabs'] ]['etc']['tabs'];
         }
 
-	    foreach( $ct['page']['etc']['tabs'] as $key => $tab ) {
+        foreach( $ct['page']['etc']['tabs'] as $key => $tab ) {
             if( isset( $cf['contents']['pages'][ $tab ]['auth']['groups'] ) &&
                 ( ! isset( $_SESSION['account']['gruppi'] ) ||
                 count(
@@ -71,7 +71,7 @@
             ) {
                 unset( $ct['page']['etc']['tabs'][ $key ] );
             }
-	    }
+        }
 
     }
 
@@ -81,9 +81,9 @@
         // forzatura del template corrente per one-char parameter debug
         if( isset( $_REQUEST['t'] ) ) {
             if( file_exists( DIR_BASE . '_src/_templates/_' . $_REQUEST['t'] . '/' ) ) {
-                $ct['page']['template']['path']	= '_src/_templates/_' . $_REQUEST['t'] . '/';
+                $ct['page']['template']['path']    = '_src/_templates/_' . $_REQUEST['t'] . '/';
             } elseif( file_exists( DIR_BASE . 'src/templates/' . $_REQUEST['t'] . '/' ) ) {
-                $ct['page']['template']['path']	= 'src/templates/' . $_REQUEST['t'] . '/';
+                $ct['page']['template']['path']    = 'src/templates/' . $_REQUEST['t'] . '/';
             }
             $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['default'] ) ) ? $ct['page']['template']['default'] : 'default.html';
         }
@@ -126,14 +126,14 @@
      */
 
     // log
-	logWrite( 'pagina corrente: ' . $cf['parser']['page'], 'rewrite' );
+    logWrite( 'pagina corrente: ' . $cf['parser']['page'], 'rewrite' );
 
     // debug
-	// print_r( $cf['contents']['pages']['licenza']['content'] );
-	// print_r( $cf['contents']['page']['path'] );
-	// print_r( $cf['contents']['page'] );
-	// print_r( $ct['page'] );
-	// var_dump( $_SERVER['REQUEST_URI'] );
-	// print_r( $ct['page']['etc']['tabs'] );
-	// print_r( $_SESSION['account']['gruppi'] );
-	// echo $cf['contents']['updated'];
+    // print_r( $cf['contents']['pages']['licenza']['content'] );
+    // print_r( $cf['contents']['page']['path'] );
+    // print_r( $cf['contents']['page'] );
+    // print_r( $ct['page'] );
+    // var_dump( $_SERVER['REQUEST_URI'] );
+    // print_r( $ct['page']['etc']['tabs'] );
+    // print_r( $_SESSION['account']['gruppi'] );
+    // echo $cf['contents']['updated'];

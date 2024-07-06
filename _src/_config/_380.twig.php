@@ -43,12 +43,12 @@
      */
 
     // profili di funzionamento di Twig per DEV/TEST
-	$cf['twig']['profiles'][ DEVELOPEMENT ] =
-	$cf['twig']['profiles'][ TESTING ]      = array(
-	    'debug' => true
-	);
+    $cf['twig']['profiles'][ DEVELOPEMENT ] =
+    $cf['twig']['profiles'][ TESTING ]      = array(
+        'debug' => true
+    );
 
     // profilo di funzionamento di Twig per PROD
-	$cf['twig']['profiles'][ PRODUCTION ]   = array(
-	    'cache' => DIR_VAR_CACHE_TWIG
-	);
+    $cf['twig']['profiles'][ PRODUCTION ]   = array(
+        'cache' => DIR_VAR_CACHE_TWIG
+    );

@@ -85,16 +85,16 @@
      */
 
     // debug
-	// print_r( $cf['localization']['language'] );
-	// print_r( $cf['contents']['shortcuts'] );
-	// var_dump( $_SERVER['REQUEST_URI'] );
-	// print_r( $cf['site']['home'] );
-	// print_r( array_keys( $cf['contents']['pages'] ) );
+    // print_r( $cf['localization']['language'] );
+    // print_r( $cf['contents']['shortcuts'] );
+    // var_dump( $_SERVER['REQUEST_URI'] );
+    // print_r( $cf['site']['home'] );
+    // print_r( array_keys( $cf['contents']['pages'] ) );
 
     // default
-	$cf['parser']['parent']     = NULL;
-	$cf['parser']['page']       = NULL;
-	$cf['parser']['lingua']     = $cf['localization']['language']['ietf'];
+    $cf['parser']['parent']     = NULL;
+    $cf['parser']['page']       = NULL;
+    $cf['parser']['lingua']     = $cf['localization']['language']['ietf'];
 
     /*
      * @todo perché si parte dalla pagina NULL? il default dovrebbe essere la 404, se uno cerca una
@@ -109,139 +109,139 @@
      */
 
     // forzatura della pagina corrente per one-char parameter debug
-	if( isset( $_REQUEST['p'] ) && ! empty( isset( $_REQUEST['p'] ) ) ) {
-	    $_REQUEST['__pg__'] = $_REQUEST['p'];
-	}
+    if( isset( $_REQUEST['p'] ) && ! empty( isset( $_REQUEST['p'] ) ) ) {
+        $_REQUEST['__pg__'] = $_REQUEST['p'];
+    }
 
     // verifico se la pagina corrente è indicata esplicitamente tramite $_REQUEST['__pg__']
-	if( empty( $_REQUEST['__pg__'] ) ) {
+    if( empty( $_REQUEST['__pg__'] ) ) {
 
-	    /*
-	     * TODO il meccanismo delle shortcut non è obsoleto o comunque ridondante rispetto ai redirect?
-	     * è possibile unire i due meccanismi?
-	     */
+        /*
+         * TODO il meccanismo delle shortcut non è obsoleto o comunque ridondante rispetto ai redirect?
+         * è possibile unire i due meccanismi?
+         */
 
-	    // log
-		logger( 'nessuna pagina richiesta esplicitamente', 'rewrite' );
+        // log
+        logger( 'nessuna pagina richiesta esplicitamente', 'rewrite' );
 
-	    // verifico se la pagina corrente non è una shortcut
-		if( ! array_key_exists( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['shortcuts'] ) ) {
+        // verifico se la pagina corrente non è una shortcut
+        if( ! array_key_exists( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['shortcuts'] ) ) {
 
-		    // verifico che la pagina corrente non sia già settata
-			if( empty( $cf['contents']['page'] ) && ! empty( $_SERVER['REDIRECT_URL'] ) ) {
+            // verifico che la pagina corrente non sia già settata
+            if( empty( $cf['contents']['page'] ) && ! empty( $_SERVER['REDIRECT_URL'] ) ) {
 
-			    // controllo che la lingua sia settata
-				if( ! empty( LINGUA_CORRENTE ) ) {
+                // controllo che la lingua sia settata
+                if( ! empty( LINGUA_CORRENTE ) ) {
 
-				    // log
-					logger( 'parsing di: ' . $_SERVER['REDIRECT_URL'], 'rewrite' );
+                    // log
+                    logger( 'parsing di: ' . $_SERVER['REDIRECT_URL'], 'rewrite' );
 
-				    // verifico se l'URL contiene dei nomi di pagina
-					if( isset( $_REQUEST['__rp__'] ) && is_array( $_REQUEST['__rp__'] ) && count( $_REQUEST['__rp__'] ) > 0 ) {
+                    // verifico se l'URL contiene dei nomi di pagina
+                    if( isset( $_REQUEST['__rp__'] ) && is_array( $_REQUEST['__rp__'] ) && count( $_REQUEST['__rp__'] ) > 0 ) {
 
-					    // pulisco l'array degli step dalle cartelle del path base
-						$_REQUEST['__rp__'] = array_diff( $_REQUEST['__rp__'], explode( '/', $cf['site']['root'] ) );
+                        // pulisco l'array degli step dalle cartelle del path base
+                        $_REQUEST['__rp__'] = array_diff( $_REQUEST['__rp__'], explode( '/', $cf['site']['root'] ) );
 
-					    // scorro gli elementi pagina trovati nell'URL
-						foreach( $_REQUEST['__rp__'] as $cf['parser']['step'] ) {
+                        // scorro gli elementi pagina trovati nell'URL
+                        foreach( $_REQUEST['__rp__'] as $cf['parser']['step'] ) {
 
-						    // se la pagina non viene trovata, devo restituire un errore 404
-						    // TODO questa cosa non è implementata
-							$cf['parser']['page'] = NULL;
+                            // se la pagina non viene trovata, devo restituire un errore 404
+                            // TODO questa cosa non è implementata
+                            $cf['parser']['page'] = NULL;
 
-						    // log
-							logger( 'cerco: ' . $cf['parser']['step'], 'rewrite' );
+                            // log
+                            logger( 'cerco: ' . $cf['parser']['step'], 'rewrite' );
 
-						    // verifico se l'elemento corrente è presente nell'indice delle pagine rewritate
-							if( array_key_exists( $cf['parser']['step'], $cf['contents']['index'][ LINGUA_CORRENTE ] ) ) {
+                            // verifico se l'elemento corrente è presente nell'indice delle pagine rewritate
+                            if( array_key_exists( $cf['parser']['step'], $cf['contents']['index'][ LINGUA_CORRENTE ] ) ) {
 
-							    // esamino le pagine presenti nell'indice per vedere se ce n'e' una che ha lo stesso genitore di quella corrente
-								foreach( $cf['contents']['index'][ LINGUA_CORRENTE ][ $cf['parser']['step'] ] as $cf['parser']['candidate'] ) {
+                                // esamino le pagine presenti nell'indice per vedere se ce n'e' una che ha lo stesso genitore di quella corrente
+                                foreach( $cf['contents']['index'][ LINGUA_CORRENTE ][ $cf['parser']['step'] ] as $cf['parser']['candidate'] ) {
 
-								    // se la pagina attualmente controllata ha lo stesso id genitore della pagina step, allora e' lei
-									if(
-									    $cf['contents']['pages'][ $cf['parser']['candidate'] ]['parent']['id'] == $cf['parser']['parent'] 
-									    ||
-									    empty( $cf['contents']['pages'][ $cf['parser']['candidate'] ]['parent']['title'][ $cf['parser']['lingua'] ] )
-									) {
+                                    // se la pagina attualmente controllata ha lo stesso id genitore della pagina step, allora e' lei
+                                    if(
+                                        $cf['contents']['pages'][ $cf['parser']['candidate'] ]['parent']['id'] == $cf['parser']['parent'] 
+                                        ||
+                                        empty( $cf['contents']['pages'][ $cf['parser']['candidate'] ]['parent']['title'][ $cf['parser']['lingua'] ] )
+                                    ) {
 
-									    // la pagina trovata diventa la nuova pagina corrente
-										$cf['parser']['page'] = $cf['parser']['candidate'];
+                                        // la pagina trovata diventa la nuova pagina corrente
+                                        $cf['parser']['page'] = $cf['parser']['candidate'];
 
-									    // scendo di un livello nell'analisi dell'albero: la pagina trovata diventa il nuovo genitore
-										$cf['parser']['parent'] = $cf['parser']['candidate'];
+                                        // scendo di un livello nell'analisi dell'albero: la pagina trovata diventa il nuovo genitore
+                                        $cf['parser']['parent'] = $cf['parser']['candidate'];
 
-									}
+                                    }
 
-								}
+                                }
 
-							} else {
+                            } else {
 
-							    // log
-								logger( $cf['parser']['step'] . ' non trovato in contents/index/' . LINGUA_CORRENTE, 'rewrite' );
+                                // log
+                                logger( $cf['parser']['step'] . ' non trovato in contents/index/' . LINGUA_CORRENTE, 'rewrite' );
 
-							}
+                            }
 
-						}
+                        }
 
-					} else {
+                    } else {
 
-					    // se non è stata trovata alcuna pagina, torno a NULL
-						$cf['parser']['page'] = NULL;
+                        // se non è stata trovata alcuna pagina, torno a NULL
+                        $cf['parser']['page'] = NULL;
 
-					    // log
-						logger( 'nessuna pagina ricavata da URL' , 'rewrite' );
+                        // log
+                        logger( 'nessuna pagina ricavata da URL' , 'rewrite' );
 
-					}
+                    }
 
-				} else {
+                } else {
 
-				    // se non è stata trovata alcuna pagina, torno a NULL
-					$cf['parser']['page'] = NULL;
+                    // se non è stata trovata alcuna pagina, torno a NULL
+                    $cf['parser']['page'] = NULL;
 
-				    // log
-					logger( 'impossibile fare il parsing di URL senza lingua impostata', 'rewrite' );
+                    // log
+                    logger( 'impossibile fare il parsing di URL senza lingua impostata', 'rewrite' );
 
-				}
+                }
 
-			} elseif( in_array( $cf['site']['home'], array_keys( $cf['contents']['pages'] ) ) ) {
+            } elseif( in_array( $cf['site']['home'], array_keys( $cf['contents']['pages'] ) ) ) {
 
-			    // se non è stata richiesta nessuna pagina in particolare, allora vuol dire che sono nella home page
-				$cf['parser']['page'] = $cf['site']['home'];
+                // se non è stata richiesta nessuna pagina in particolare, allora vuol dire che sono nella home page
+                $cf['parser']['page'] = $cf['site']['home'];
 
-			    // log
-				logger( 'accesso implicito alla home page', 'rewrite' );
+                // log
+                logger( 'accesso implicito alla home page', 'rewrite' );
 
-			} else {
+            } else {
 
-			    // se non è stata trovata alcuna pagina, torno a NULL
-			    // TODO vedi sopra per il discorso NULL/404
-				$cf['parser']['page'] = NULL;
+                // se non è stata trovata alcuna pagina, torno a NULL
+                // TODO vedi sopra per il discorso NULL/404
+                $cf['parser']['page'] = NULL;
 
-			    // log
-				logger( 'nessuna pagina trovata', 'rewrite' );
+                // log
+                logger( 'nessuna pagina trovata', 'rewrite' );
 
-			}
+            }
 
-		} else {
+        } else {
 
-		    // se la pagina corrente è una shortcut
-			$cf['parser']['page'] = $cf['contents']['shortcuts'][ strtok( $_SERVER['REQUEST_URI'], '?' ) ];
+            // se la pagina corrente è una shortcut
+            $cf['parser']['page'] = $cf['contents']['shortcuts'][ strtok( $_SERVER['REQUEST_URI'], '?' ) ];
 
-		    // log
-			logger( 'pagina richiesta tramite shortcut: ' . $cf['parser']['page'], 'rewrite' );
+            // log
+            logger( 'pagina richiesta tramite shortcut: ' . $cf['parser']['page'], 'rewrite' );
 
-		}
+        }
 
-	} else {
+    } else {
 
-	    // se e' stata richiesta espressamente una pagina, utilizzo quella
-		$cf['parser']['page'] = $_REQUEST['__pg__'];
+        // se e' stata richiesta espressamente una pagina, utilizzo quella
+        $cf['parser']['page'] = $_REQUEST['__pg__'];
 
-	    // log
-		logger( 'pagina richiesta esplicitamente: ' . $cf['parser']['page'], 'rewrite' );
+        // log
+        logger( 'pagina richiesta esplicitamente: ' . $cf['parser']['page'], 'rewrite' );
 
-	}
+    }
 
     // debug
-	// print_r( $cf['contents']['index'] );
+    // print_r( $cf['contents']['index'] );

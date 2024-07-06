@@ -16,5 +16,5 @@
     // scrittura $cx
     print_r( array2censored( $cx ) );
 
-	// output
+    // output
     print_r( get_included_files() );
