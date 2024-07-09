@@ -493,8 +493,10 @@
      */
     function domainFromURL( $url ) {
 
+        print_r( $url );
+
         $array = parse_url( $url );
-        return $array["host"];
+        return $array['host'];
 
     }
 

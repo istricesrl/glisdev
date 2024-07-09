@@ -17,4 +17,22 @@ class csvToolsCest
         $I->see("'col3' => string 'val3' (length=4)");
     }
 
+    // csvString2array() -> deve restituire il contenuto del CSV di test
+    public function csvString2array(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvString2array.01.php');
+        $I->see("'col1' => string 'val1' (length=4)");
+        $I->see("'col2' => string 'val2' (length=4)");
+        $I->see("'col3' => string 'val3' (length=4)");
+    }
+
+    // csvString2array() -> deve restituire il contenuto del CSV di test
+    public function csvArray2array(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvArray2array.01.php');
+        $I->see("'col1' => string 'val1' (length=4)");
+        $I->see("'col2' => string 'val2' (length=4)");
+        $I->see("'col3' => string 'val3' (length=4)");
+    }
+
 }

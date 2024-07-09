@@ -308,6 +308,8 @@
      * 
      */
 
+    /*
+
     // ...
     foreach( array( 'external', 'preload' ) as $type ) {
         if( isset( $ct['page']['css'][ $type ] ) && is_array( $ct['page']['css'][ $type ] ) ) {
@@ -363,6 +365,8 @@
 
     // log
     loggerLatest( 'fine elaborazione dati per CSP' );
+
+    */
 
     // debug
     // print_r( array_intersect( $ct['page']['csp']['script-src'], $ct['page']['csp']['style-src'] ) );

@@ -38,11 +38,14 @@
      * test e debug
      * ============
      * 
-     * NOTA testare chiamando il framework con la seguente query string:
+     * TODO controllare che $valore:
+     *
+     *  - non contenga tentativi di SQL injection
+     *  - non contenga codice di alcun tipo
      * 
-     * ?z=provaSicurezza1
      * 
-     * 
+     * NOTA
+     * testare chiamando il framework con un URL contenente una qualsiasi delle parole bloccate in _etc/_security/_banned.words.conf
      * 
      * 
      * 

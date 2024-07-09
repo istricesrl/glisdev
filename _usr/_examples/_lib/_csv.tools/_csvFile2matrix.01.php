@@ -28,7 +28,7 @@
      var_dump( file( DIR_BASE . $f ) );
 
     // leggo il file CSV in un array di array associativi
-    $a = csvFile2array( DIR_BASE . $f );
+    $a = csvFile2matrix( DIR_BASE . $f );
 
     // output
     var_dump( $a );
