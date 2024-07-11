@@ -35,4 +35,104 @@ class csvToolsCest
         $I->see("'col3' => string 'val3' (length=4)");
     }
 
+    // csvFile2matrix() -> deve restituire il contenuto del CSV di test
+    public function csvFile2matrix(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvFile2matrix.01.php');
+        $I->see("0 => string 'val1' (length=4)");
+        $I->see("1 => string 'val2' (length=4)");
+        $I->see("2 => string 'val3' (length=4)");
+    }
+
+    // csvString2matrix() -> deve restituire il contenuto del CSV di test
+    public function csvString2matrix(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvString2matrix.01.php');
+        $I->see("0 => string 'val1' (length=4)");
+        $I->see("1 => string 'val2' (length=4)");
+        $I->see("2 => string 'val3' (length=4)");
+    }
+
+    // csvArray2matrix() -> deve restituire il contenuto del CSV di test
+    public function csvArray2matrix(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvArray2matrix.01.php');
+        $I->see("0 => string 'val1' (length=4)");
+        $I->see("1 => string 'val2' (length=4)");
+        $I->see("2 => string 'val3' (length=4)");
+    }
+
+    // array2csvFile() -> deve restituire il contenuto del CSV di test
+    public function array2csvFile(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_array2csvFile.01.php');
+        $I->see("col1,col2,col3");
+        $I->see("val1,val2,val3");
+    }
+
+    // array2csvString() -> deve restituire il contenuto del CSV di test
+    public function array2csvString(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_array2csvString.01.php');
+        $I->see("col1,col2,col3");
+        $I->see("val1,val2,val3");
+    }
+
+    // array2csvArray() -> deve restituire il contenuto del CSV di test
+    public function array2csvArray(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_array2csvArray.01.php');
+        $I->see("0 => string 'col1,col2,col3'");
+        $I->see("1 => string 'val1,val2,val3'");
+    }
+
+    // matrix2csvFile() -> deve restituire il contenuto del CSV di test
+    public function matrix2csvFile(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_matrix2csvFile.01.php');
+        $I->see("col1,col2,col3");
+        $I->see("val1,val2,val3");
+    }
+
+    // matrix2csvString() -> deve restituire il contenuto del CSV di test
+    public function matrix2csvString(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_matrix2csvString.01.php');
+        $I->see("col1,col2,col3");
+        $I->see("val1,val2,val3");
+    }
+
+    // matrix2csvArray() -> deve restituire il contenuto del CSV di test
+    public function matrix2csvArray(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_matrix2csvArray.01.php');
+        $I->see("0 => string 'col1,col2,col3'");
+        $I->see("1 => string 'val1,val2,val3'");
+    }
+
+    // guessCsvSeparator() -> deve restituire il separatore del CSV di test
+    public function guessCsvSeparator(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_guessCsvSeparator.01.php');
+        $I->see("string ';' (length=1)");
+    }
+
+    // csvRow2array() -> deve restituire il contenuto del CSV di test
+    public function csvRow2array(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvRow2array.01.php');
+        $I->see("'col1' => string 'val1' (length=4)");
+        $I->see("'col2' => string 'val2' (length=4)");
+        $I->see("'col3' => string 'val3' (length=4)");
+    }
+
+    // csvRow2vector() -> deve restituire il contenuto del CSV di test
+    public function csvRow2vector(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvRow2vector.01.php');
+        $I->see("0 => string 'val1' (length=4)");
+        $I->see("1 => string 'val2' (length=4)");
+        $I->see("2 => string 'val3' (length=4)");
+    }
+
 }
