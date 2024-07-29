@@ -25,9 +25,17 @@ class filesystemToolsCest
     }
 
     // shortPath() -> deve restituire il percorso relativo partendo da quello assoluto
-    public function shortPath(AcceptanceTester $I)
+    public function shortPath01(AcceptanceTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_shortPath.01.php');
+        $I->see("'src/config.json'");
+        $I->dontSee('boolean false');
+    }
+
+    // shortPath() -> deve restituire il percorso relativo partendo da quello assoluto
+    public function shortPath02(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_shortPath.02.php');
         $I->see("'src/config.json'");
         $I->dontSee('boolean false');
     }

@@ -4,11 +4,12 @@
      *
      *
      *
-     *
+     * TODO riordinare questa libreria quando avremo ricontrollato tutto il sistema dei permessi ecc.
+     * 
+     * NOTA questa libreria per ora non è sincronizzata
      *
      * TODO documentare
      *
-     * @file
      *
      */
 

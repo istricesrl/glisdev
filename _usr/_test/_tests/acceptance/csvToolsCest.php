@@ -135,4 +135,9 @@ class csvToolsCest
         $I->see("2 => string 'val3' (length=4)");
     }
 
+    // settaggi post test
+    public function _after(AcceptanceTester $I)
+    {
+    }
+
 }

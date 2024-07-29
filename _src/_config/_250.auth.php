@@ -58,8 +58,7 @@
             CONTROL_FULL => array( 'roots','staff' )
         ),
         'attesa' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'attivita' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
@@ -67,9 +66,14 @@
         'badge' => array(
             CONTROL_FULL => array( 'roots','staff' )
         ),
+        'carrelli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'carrelli_articoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'contatti' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
 
         // TODO l'ordine alfabetico arriva fin qui
@@ -765,6 +769,14 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         '__report_avanzamento_progetti__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        '__report_abbonamenti__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        '__report_abbonamenti_attivi__' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),

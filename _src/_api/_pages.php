@@ -423,6 +423,9 @@
         // per ogni macro richiesta
         foreach( $ct['page']['macro'] as $macro ) {
 
+            // TODO a cosa servono le macro alternative?
+            // delle due servirebbero più le macro aggiuntive (pre e post)
+
             // cerco le macro alternative
             $macroAlternative = path2custom( str_replace( '.php', '.alt.php', $macro ) );
 
@@ -1160,6 +1163,16 @@
      * 
      * 
      */
+
+	// debug
+	if( ! empty( $_REQUEST['q'] ) ) {
+
+		echo '<!-- REPORT VELOCITÀ' . PHP_EOL;
+		print_r( $cf['speed'] );
+		echo '-->' . PHP_EOL;
+        echo PHP_EOL;
+
+    }
 
     // fine del buffer
     ob_end_flush();

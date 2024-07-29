@@ -51,4 +51,9 @@ class apcuToolsCest
         $I->see('TEST CONTENT');
     }
 
+    // settaggi post test
+    public function _after(AcceptanceTester $I)
+    {
+    }
+
 }
