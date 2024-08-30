@@ -11,13 +11,17 @@
 
         {% include '_inc/_page.open.twig' %}
 
-        {% block header %}
-        {% include 'inc/header.twig' %}
-        {% endblock %}
+        <header>
 
-        {% block nav %}
-        {% include 'inc/navbar.twig' %}
-        {% endblock %}
+            {% block header %}
+            {% include 'inc/header.twig' %}
+            {% endblock %}
+
+            {% block nav %}
+            {% include 'inc/navbar.twig' %}
+            {% endblock %}
+
+        </header>
 
         <main>{% block main %}{% endblock %}</main>
 

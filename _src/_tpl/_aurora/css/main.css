@@ -5,8 +5,12 @@ body {
     padding: 0.0em;
 }
 
-header, nav, main, footer {
+header, main, footer {
     padding: 1.0em 2.0em;
+}
+
+nav {
+    margin-top: 1em;
 }
 
 h1, h2, h3, h4, h5 {

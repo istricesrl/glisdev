@@ -62,7 +62,11 @@
      * TODO documentare
      *
      */
-    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = 0, &$e = array() ) {
+
+        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
 
         return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
 
@@ -73,7 +77,15 @@
      * TODO documentare
      *
      */
-    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array(), &$i = array() ) {
+    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array() ) {
+
+    // debug
+        // var_dump( $q );
+        // die();
+
+        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
 
     // calcolo la chiave della query
         $k = md5( $q . serialize( $p ) );
@@ -81,21 +93,33 @@
     // cerco il valore in cache
         $r = memcacheRead( $m, $k );
 
+    // debug
+        // var_dump( $r );
+        // die();
+
     // se il valore non è stato trovato
         if( $r === false || $t === false ) {
 
             $d = mysqlQuery( $c, $q, $p, $e );
-            memcacheWrite( $m, $k, $d, $t );
-            logger( 'query ' . $k . ' non presente in cache', 'speed' );
 
-            foreach( mysqlGetQueryTables( $q ) as $j ) {
-                $i[ $j ]['query'][ memcacheUniqueKey( $k ) ] = time();
+            if( ! empty( $m ) ) {
+
+                memcacheWrite( $m, $k, $d, $t );
+
+                logger( 'query ' . $k . ' non presente in cache', 'speed' );
+
+                foreach( mysqlGetQueryTables( $q ) as $j ) {
+                    $i[ $j ]['query'][ memcacheUniqueKey( $k ) ] = time();
+                }
+
             }
 
             return $d;
 
         } else {
+
             logger( 'query ' . $k . ' letta dalla cache', 'speed' );
+
         }
 
     // restituisco il risultato
@@ -123,9 +147,9 @@
         if( empty( $c ) ) {
 
             // log
-            logger( 'chiamata a mysqlQuery() con connessione assente', 'mysql', LOG_ERR );
+            logger( 'chiamata a mysqlQuery() con connessione assente per eseguire -> ' . $q, 'mysql', LOG_ERR );
 
-            // restituisco false
+        // restituisco false
             return false;
 
 #        } elseif( $p !== false ) {
@@ -220,8 +244,8 @@
             if( mysqli_errno( $c ) ) {
 
             // log
-                logger( 'query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                logger( 'query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $p ) ) ? '§dati -> ' . print_l( $p ) : '' ), 'details/mysql', LOG_ERR );
+                logger( __FUNCTION__ . '() query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+                logger( __FUNCTION__ . '() query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $p ) ) ? '§dati -> ' . print_l( $p ) : '' ), 'details/mysql', LOG_ERR );
 
             // gestione specifici errori
                 switch( mysqli_errno( $c ) ) {
@@ -296,7 +320,10 @@
     // verifico se c'è connessione
         if( empty( $c ) ) {
 
-        // restituisco false
+            // log
+            logger( 'chiamata a mysqlPreparedQuery() con connessione assente', 'mysql', LOG_ERR );
+
+            // restituisco false
             return false;
 
         } else {
@@ -334,6 +361,7 @@
                 }
 
             // esecuzione dello statement
+            // TODO mettere dentro un try... catch
                 $xStatement = mysqli_stmt_execute( $pq );
 
             // cronometro
@@ -341,8 +369,8 @@
 
             // log
                 if( $tElapsed > 0.5 ) {
-                logger( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR );
-                logger( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query' );
+                    logger( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR );
+                    logger( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query' );
                 }
 
             // debug
@@ -351,9 +379,9 @@
             // gestione errore
                 if( mysqli_errno( $c ) ) {
 
-                // log
-                    logger( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                    logger( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
+                    // log
+                    logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+                    logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
 
                 // gestione specifici errori
                     switch( mysqli_errno( $c ) ) {
@@ -373,7 +401,7 @@
 
                 } else {
 
-                // log
+                    // log
                     logger( md5( $q ) . ' -> OK', 'mysql' );
 
                 // valore di ritorno a seconda del tipo di query
@@ -403,9 +431,10 @@
 
             } else {
 
+                /*
                 // log
-                    logger( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                    logger( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
+                    // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+                    // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
 
                 // debug
                     // var_dump( mysqli_errno( $c ) );
@@ -414,8 +443,8 @@
                 if( mysqli_errno( $c ) ) {
 
                     // log
-                        logger( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                        logger( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
+                        logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+                        logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
 
                     // gestione specifici errori
                         switch( mysqli_errno( $c ) ) {
@@ -432,8 +461,13 @@
 
                     }
 
+                    */
+
+                // log
+                logger( __FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR );
+
                 // restituisco false
-                    return false;
+                return false;
 
             }
 
@@ -637,7 +671,7 @@
      *           )
      *      )
      * );
-
+     * 
      * TODO documentare
      *
      */
@@ -960,8 +994,8 @@
         // var_dump( $t . '/' . $i );
 
         // TODO qui bisogna trovare una soluzione più robusta
-        // memcacheCleanFromIndex( $t );
-        // memcacheCleanFromIndex( $t . '_static' );
+        memcacheCleanFromIndex( $t );
+        memcacheCleanFromIndex( $t . '_static' );
 
         $static = getStaticView( NULL, $c, $t );
 

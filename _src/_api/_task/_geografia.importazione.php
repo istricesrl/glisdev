@@ -1,18 +1,18 @@
 <?php
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        require '../../_config.php';
+    }
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
     // file da copiare
     $status['files'] = array(
         'https://dataserver.istricesrl.com/geografia/01.update.stati.csv',
         'https://dataserver.istricesrl.com/geografia/02.update.regioni.csv',
-        'https://dataserver.istricesrl.com/geografia/03.update.province.csv',
+        'https://dataserver.istricesrl.com/geografia/03.update.provincie.csv',
         'https://dataserver.istricesrl.com/geografia/04.update.comuni.csv'
     );
 
@@ -22,6 +22,6 @@
     }
 
     // output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

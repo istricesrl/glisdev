@@ -27,32 +27,60 @@
      *
      */
 
-    // lettura dei contenuti dalla cache
-    $cf['contents']['cached']               = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED );
-    $cf['contents']['updated']              = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED );
-    $cf['contents']['pages']                = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_KEY );
-    $cf['contents']['tree']                 = memcacheRead( $cf['memcache']['connection'], CONTENTS_TREE_KEY );
-    $cf['contents']['index']                = memcacheRead( $cf['memcache']['connection'], CONTENTS_INDEX_KEY );
-    $cf['contents']['reverse']              = memcacheRead( $cf['memcache']['connection'], CONTENTS_REVERSE_KEY );
-    $cf['contents']['shortcuts']            = memcacheRead( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY );
+    // se è presente la connessione a memcache
+    if( ! empty( $cf['memcache']['connection'] ) ) {
 
-    // timer
-    timerCheck( $cf['speed'], '-> fine lettura cache pagine' );
+        // tento di leggere i valori dalla cache
+        // TODO documentare tutte queste chiavi spiegando bene cosa fanno, cosa contengono e a cosa servono
+        $cf['contents']['cached']               = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED );
+        $cf['contents']['updated']              = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED );
+        $cf['contents']['pages']                = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_KEY );
+        $cf['contents']['tree']                 = memcacheRead( $cf['memcache']['connection'], CONTENTS_TREE_KEY );
+        $cf['contents']['index']                = memcacheRead( $cf['memcache']['connection'], CONTENTS_INDEX_KEY );
+        $cf['contents']['reverse']              = memcacheRead( $cf['memcache']['connection'], CONTENTS_REVERSE_KEY );
+        $cf['contents']['shortcuts']            = memcacheRead( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY );
 
-    // elegibilità della cache
-    if( $cf['contents']['updated']          === false
-        || $cf['contents']['pages']         === false
-        || $cf['contents']['tree']          === false
-        || $cf['contents']['index']         === false
-        || $cf['contents']['shortcuts']     === false
-        || $cf['contents']['cached']        <= $cf['contents']['updated']
-    ) {
-        $cf['contents']['cached'] = false;
-        if( ! empty( $cf['memcache']['connection'] ) ) {
+        // timer
+        timerCheck( $cf['speed'], '-> fine lettura cache contenuti' );
+
+        // elegibilità della cache
+        if( defined( 'MEMCACHE_REFRESH' ) ) {
+
+            // la costante MEMCACHE_REFRESH è definita, forzo il refresh
+            $cf['contents']['cached'] = false;
+
+            // log
+            logger( 'la costante MEMCACHE_REFRESH è definita, forzo il refresh della cache', 'speed', LOG_INFO );
+
+        } elseif( $cf['contents']['updated']    === false
+            || $cf['contents']['pages']         === false
+            || $cf['contents']['tree']          === false
+            || $cf['contents']['index']         === false
+            || $cf['contents']['shortcuts']     === false
+            || $cf['contents']['cached']        <= $cf['contents']['updated']
+        ) {
+
+            // i contenuti non sono in cache, forzo il refresh
+            $cf['contents']['cached'] = false;
+
+            // log
+            logger( 'cache dei contenuti non trovata', 'speed', LOG_INFO );
+
+        } else {
+
+            // log
             logger( 'cache dei contenuti trovata', 'speed' );
+
         }
+
     } else {
-            logger( 'cache dei contenuti non trovata', 'speed', LOG_NOTICE );
+
+        // memcache non è attivo, impossibile leggere la cache
+        $cf['contents']['cached'] = false;
+
+        // log
+        logger( 'nessuna connessione a memcache, controlli sulla cache dei contenuti bypassati', 'speed' );
+
     }
 
     // debug

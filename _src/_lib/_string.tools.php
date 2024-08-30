@@ -3,11 +3,39 @@
     /**
      * libreria di funzioni per le operazioni sulle stringhe
      *
+     * Questa libreria contiene funzioni per la manipolazione delle stringhe.
      *
+     * introduzione
+     * ============
+     * 
+     * constanti
+     * =========
+     * La libreria definisce le seguenti costanti 
      *
+     * costante             | spiegazione
+     * ---------------------|--------------------------------------------------------------
+     * CUT_CENTER           | 
+     * CUT_RIGHT            | 
+     * CUT_LEFT             | 
      *
-     * TODO documentare
+     * funzioni
+     * ========
+     * 
+     * dipendenze
+     * ==========
+     * 
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
      *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2024-08-13       | Sara Tullini         | documentazione
+     * 
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      *
      *
      */
@@ -18,19 +46,25 @@
     define( 'CUT_LEFT'            , 'CUT_L' );
 
     /**
-     *
-     * @questa funzione converte il peso in unità di misura byte in funzione del tipo di file. 
-     *type i : i = 0 fino alla taglia del parametro passato : filesize. finché filesize supera 1024 viene / per 1024 e i incrementa. printf di controllo : con il peso del file finale associato al tipo passato
+     * converte un intero in un numero di byte
+     * 
+     * Questa funzione prende in input un numero e attraverso divisioni successive per 1024 lo trasforma in
+     * una stringa che indica la dimensione con relativa unità di misura.
+     * 
+     * @param   int         $filesize       dimensione in byte
+     * 
+     * @return  string                      dimensione in byte, Kb, Mb, Gb, Tb
+     * 
      */
     function writeByte( $filesize ) {
 
-    $type = array( 'Bytes' , 'Kb' , 'Mb' , 'Gb' , 'Tb' );
+        $type = array( 'Bytes' , 'Kb' , 'Mb' , 'Gb' , 'Tb' );
 
-    for( $i = 0 ; $filesize > 1024 ; $i++ ) {
-        $filesize /= 1024;
-    }
+        for( $i = 0 ; $filesize > 1024 ; $i++ ) {
+            $filesize /= 1024;
+        }
 
-    return sprintf( '%0.2f', round( $filesize , 2 ) ) . ' ' . $type[ $i ];
+        return sprintf( '%0.2f', round( $filesize , 2 ) ) . ' ' . $type[ $i ];
 
     }
 
@@ -38,59 +72,56 @@
      * questa funzione riduce i caratteri ripetuti in una stringa
      * tramite l'impiego di una espressione regolare
      *
-     * @param string $t         la stringa da modificare
-     * @param string $c         il carattere ripetuto da ridurre (opzionale, di default riduce gli spazi)
-     * @return string           la stringa modificata
-     *
-     * @author                  Fabio Mosti <fabio@videoarts.eu>
-     * @version                 2012-05-10 14:39        funzione creata
-     * @version                 2012-05-12 11:09        test unit e debug
-     *
+     * @param   string      $t         la stringa da modificare
+     * @param   string      $c         il carattere ripetuto da ridurre (opzionale, di default riduce gli spazi)
+     * 
+     * @return  string                 la stringa modificata
+     * 
      */
-    function riduciCaratteriDoppi( $t , $c = " " ) {
+    function riduciCaratteriDoppi( $t, $c = " " ) {
 
-    // compongo l'espressione regolare
+        // compongo l'espressione regolare
         switch( $c ) {
 
-        case " ":
+            case " ":
 
-            $expr = '/\s+/';
-            $sost = ' ';
+                $expr = '/\s+/';
+                $sost = ' ';
 
-        break;
+            break;
 
-        case "\\":
-        case "^":
-        case "{":
-        case "}":
-        case "[":
-        case "]":
-        case "(":
-        case ")":
-        case "?":
-        case "*":
-        case "$":
-        case "+":
-        case ".":
+            case "\\":
+            case "^":
+            case "{":
+            case "}":
+            case "[":
+            case "]":
+            case "(":
+            case ")":
+            case "?":
+            case "*":
+            case "$":
+            case "+":
+            case ".":
 
-            $expr = "/[\\$c]+/";
-            $sost = $c;
+                $expr = "/[\\$c]+/";
+                $sost = $c;
 
-        break;
+            break;
 
-        default:
+            default:
 
-            $expr = "/[$c]+/";
-            $sost = $c;
+                $expr = "/[$c]+/";
+                $sost = $c;
 
-        break;
+            break;
 
         }
  
-    // eseguo l'espressione regolare
-        $t = preg_replace( $expr , $sost , $t );
+        // eseguo l'espressione regolare
+        $t = preg_replace( $expr, $sost, $t );
 
-    // restituzione risultato
+        // restituzione risultato
         return $t;
 
     }
@@ -132,19 +163,21 @@
     }
 
     /**
-     *
+     * 
      * TODO documentare
      *
      */
     function empty2null( $s, $numeric = false ) {
 
-    if( $numeric === true && is_numeric( $s ) ) {
+        if( $numeric === true && is_numeric( $s ) ) {
+            return $s;
+        }
+
+        if( empty( $s ) ) {
+            return NULL;
+        }
+        
         return $s;
-    } elseif( empty( $s ) ) {
-        return NULL;
-    } else {
-        return $s;
-    }
 
     }
 

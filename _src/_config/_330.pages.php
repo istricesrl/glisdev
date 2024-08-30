@@ -1,7 +1,7 @@
 <?php
 
     /**
-     *
+     * salvataggio in cache dei dati delle pagine
      *
      *
      *

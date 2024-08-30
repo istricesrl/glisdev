@@ -4,17 +4,17 @@
 -- di auto increment, mentre vanno specificati per tabella il CHARSET ma non il COLLATE.
 --
 -- INDICE DEGLI SCRIPT
--- 01 -> tabelle
--- 02 -> placeholder
--- 03 -> indici
--- 04 -> acl
--- 05 -> dati
--- 06 -> limiti
--- 07 -> procedure
--- 08 -> viste
--- 09 -> report
--- 10 -> statiche
--- 11 -> trigger
+-- 01xxxxxxxxxx -> tabelle
+-- 02xxxxxxxxxx -> placeholder
+-- 03xxxxxxxxxx -> indici
+-- 04xxxxxxxxxx -> acl
+-- 05xxxxxxxxxx -> dati
+-- 06xxxxxxxxxx -> limiti
+-- 07xxxxxxxxxx -> procedure
+-- 08xxxxxxxxxx -> viste
+-- 09xxxxxxxxxx -> report
+-- 10xxxxxxxxxx -> statiche
+-- 11xxxxxxxxxx -> trigger
 --
 -- CRITERI DI VERIFICA
 -- una tabella si può marcare come verificata dopo aver controllato le seguenti cose:
@@ -25,12 +25,19 @@
 -- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
 -- - non viene riportato il valore di AUTO INCREMENT
 --
+-- TODO
+-- in futuro ragionare se aggiungere le colonne id_gruppo_inserimento e id_gruppo_aggiornamento per tenere traccia del gruppo che ha
+-- inserito o aggiornato la riga e anche per implementare un sistema di permessi più stile Linux rispetto a quello attuale delle ACL
+-- 
 
--- | 010000000100
+-- | 010000001000
 
 -- account
 -- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
 -- funzione: contiene gli account degli utenti
+-- entità: questa tabella corrisponde all'entità account
 --
 -- il framework supporta diverse modalità di accesso, tra cui l'accesso tramite account registrati nel
 -- database e gestiti tramite CMS; i dettagli degli account non vengono letti tutti, ma solo quelli
@@ -58,10 +65,12 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
 --
 -- TODO l'hash md5 non è il massimo, in futuro migrare a un algoritmo più robusto
 
--- | 010000000200
+-- | 010000001200
 
 -- account_gruppi
 -- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
 -- funzioni: associa molti a molti gli account ai gruppi
 --
 -- questa tabella contiene le associazioni molti a molti tra gli account e i gruppi
@@ -78,10 +87,12 @@ CREATE TABLE IF NOT EXISTS `account_gruppi` (                 --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                       --
 
--- | 010000000300
+-- | 010000001300
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
 -- funzione: le righe di questa tabella innescano una logica applicativa di associazione fra un account, un gruppo e un'entità data
 --
 -- per vari casi d'uso può essere necessario che una riga creata da un determinato account venga automaticamente associata a un
@@ -102,7 +113,105 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (    --
 
 -- TODO documentare meglio questa tabella con riferimenti al codice
 --
--- TODO in futuro ragionare se aggiungere le colonne id_gruppo_inserimento e id_gruppo_aggiornamento per tenere traccia del gruppo che ha
--- inserito o aggiornato la riga e anche per implementare un sistema di permessi più stile Linux rispetto a quello attuale delle ACL
+
+-- | 010000006000
+
+-- consensi
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i consensi per i trattamenti dati attivi nel sistema
+-- entità: questa tabella corrisponde all'entità consensi
+--
+-- questa tabella contiene i consensi per i trattamenti dati attivi nel sistema, con le informazioni relative al nome del consenso
+-- e alle note
+--
+CREATE TABLE IF NOT EXISTS `consensi` (                       --
+  `id` char(64) NOT NULL,                                     -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome del consenso
+  `note` text DEFAULT NULL,                                   -- note sul consenso
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- TODO documentare meglio questa tabella con riferimenti al codice
+--
+
+-- | 010000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: specifica quali consensi vanno chiesti per ogni modulo attivo nel sistema
+-- 
+-- questa tabella contiene i consensi che vanno chiesti per ogni modulo attivo nel sistema, e va a integrare le informazioni già
+-- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
+-- ulteriori approfondimenti
+--
+CREATE TABLE `consensi_moduli` (                              --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_lingua` int(11) DEFAULT NULL,                           -- chiave esterna per la lingua
+  `id_consenso` char(64) DEFAULT NULL,                        -- chiave esterna per il consenso
+  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
+  `ordine` int(11) DEFAULT NULL,                              -- campo di ordinamento
+  `azione` char(32) DEFAULT NULL,                             -- etichetta per l'azione che l'utente deve compiere per accettare il consenso
+  `nome` char(128) DEFAULT NULL,                              -- nome del consenso
+  `informativa` char(128) DEFAULT NULL,                       -- testo per il link alla pagina che contiene l'informativa relativa al consenso, se presente
+  `note` text DEFAULT NULL,                                   -- note sul consenso
+  `pagina` char(32) DEFAULT NULL,                             -- ID della pagina che contiene l'informativa relativa al consenso, se presente
+  `se_richiesto` tinyint(1) DEFAULT NULL,                     -- flag che indica se il consenso è richiesto
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000016000
+
+-- lingue
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le lingue del sistema
+-- entità: questa tabella corrisponde all'entità lingue
+-- 
+-- questa tabella contiene le lingue del sistema, con i relativi codici ISO e IETF
+-- 
+CREATE TABLE IF NOT EXISTS `lingue` (                         --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `nome` char(128) DEFAULT NULL,                              -- nome della lingua  
+  `note` char(128) DEFAULT NULL,                              -- note sulla lingua (nome esteso, paese, eccetera)
+  `iso6391alpha2` char(36) DEFAULT NULL,                      -- codice ISO 639-1 alpha-2 della lingua
+  `iso6393alpha3` char(36) DEFAULT NULL,                      -- codice ISO 639-3 alpha-3 della lingua
+  `ietf` char(36) DEFAULT NULL                                -- codice IETF della lingua
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000029000
+
+-- redirect
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i redirect del sistema
+-- entità: questa tabella corrisponde all'entità redirect
+--
+-- questa tabella contiene i redirect del sistema, con le informazioni relative al codice di stato HTTP, alla
+-- sorgente e alla destinazione; per ulteriori informazioni sul funzionamento dei redirect nel framework si vedano
+-- il codice e i commenti dei file _src/_config/_130.redirect.php e _src/_config/_135.redirect.php
+--
+CREATE TABLE IF NOT EXISTS `redirect` (                       --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_sito` int(11) DEFAULT NULL,                             -- ID del sito al quale appartiene il redirect
+  `codice_stato_http` int(11) DEFAULT NULL,                   -- codice di stato HTTP del redirect
+  `sorgente` char(255) DEFAULT NULL,                          -- sorgente del redirect
+  `destinazione` char(255) DEFAULT NULL,                      -- destinazione del redirect
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il redirect
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il redirect
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | FINE FILE
