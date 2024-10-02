@@ -25,3 +25,6 @@ chmod ug-x _src/_lib/_ext/codeception/codeception/codecept
 # NOTA
 # per eseguire i test è sufficiente lanciare questo file
 # per approfondire vedi _usr/_docs/_test.dox
+#
+# per approfondire vedi anche https://codeception.com/docs/AcceptanceTests
+#

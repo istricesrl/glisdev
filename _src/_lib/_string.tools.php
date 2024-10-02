@@ -188,13 +188,13 @@
      */
     function string2boolean( $s ) {
 
-    switch( strtolower( $s ) ) {
-        case 'true':
-        case 1:
-        return true;
-        default:
-        return false;
-    }
+        switch( strtolower( $s ) ) {
+            case 'true':
+            case 1:
+                return true;
+            default:
+                return false;
+        }
 
     }
 
@@ -216,14 +216,14 @@
      */
     function riduciStringa( $s, $l, $c = '~', $t = CUT_CENTER ) {
 
-    $lm = $l - strlen( $c );
-    $lx = floor( $lm / 2 );
+        $lm = $l - strlen( $c );
+        $lx = floor( $lm / 2 );
 
-    switch( $t ) {
-        case CUT_CENTER:
-        return ( substr( $s, 0, $lx ) . $c . substr( $s, 1 - ( $lm - $lx ) ) );
-        break;
-    }
+        switch( $t ) {
+            case CUT_CENTER:
+                return ( substr( $s, 0, $lx ) . $c . substr( $s, 1 - ( $lm - $lx ) ) );
+                break;
+        }
 
     }
 
@@ -324,35 +324,35 @@
      */
     function logLvl2string( $l ) {
 
-    switch( $l ) {
-        case 0:
-            return 'LOG_EMERG';
-        break;
-        case 1:
-            return 'LOG_ALERT';
-        break;
-        case 2:
-            return 'LOG_CRIT';
-        break;
-        case 3:
-            return 'LOG_ERR';
-        break;
-        case 4:
-            return 'LOG_WARNING';
-        break;
-        case 5:
-            return 'LOG_NOTICE';
-        break;
-        case 6:
-            return 'LOG_INFO';
-        break;
-        case 7:
-            return 'LOG_DEBUG';
-        break;
-        default:
-            return NULL;
-        break;
-    }
+        switch( $l ) {
+            case 0:
+                return 'LOG_EMERG';
+            break;
+            case 1:
+                return 'LOG_ALERT';
+            break;
+            case 2:
+                return 'LOG_CRIT';
+            break;
+            case 3:
+                return 'LOG_ERR';
+            break;
+            case 4:
+                return 'LOG_WARNING';
+            break;
+            case 5:
+                return 'LOG_NOTICE';
+            break;
+            case 6:
+                return 'LOG_INFO';
+            break;
+            case 7:
+                return 'LOG_DEBUG';
+            break;
+            default:
+                return NULL;
+            break;
+        }
 
     }
 
@@ -424,7 +424,7 @@
             break;
         }
     
-        }
+    }
     
         /**
      *
@@ -433,7 +433,7 @@
      */
     function ts2string( $d ) {
 
-    return date( 'j', $d ) . ' ' . int2month( date( 'n', $d ) ) . ' ' . date( 'Y', $d );
+        return date( 'j', $d ) . ' ' . int2month( date( 'n', $d ) ) . ' ' . date( 'Y', $d );
 
     }
 
@@ -444,7 +444,7 @@
      */
     function date2string( $d ) {
 
-    return ts2string( strtotime( $d ) );
+        return ts2string( strtotime( $d ) );
 
     }
 
@@ -459,9 +459,9 @@
 
             if( strpos( $haystack, $needle ) === 0) {
                 return true;
-             } else {
-                 return false;
-             }
+            } else {
+                return false;
+            }
 
         }
 

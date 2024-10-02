@@ -17,40 +17,50 @@
     // debug
     // print_r( $cf['contents']['pages'] );
 
-    // cache della timestamp di aggiornamento
-    memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
+    // se è presente la connessione a memcache
+    if( ! empty( $cf['memcache']['connection'] ) ) {
 
-    // cache delle pagine
-    if( $cf['contents']['cached'] === false ) {
+        // cache della timestamp di aggiornamento
+        memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
 
-        // controllo connessione
-        if( ! empty( $cf['memcache']['connection'] ) ) {
+        // cache delle pagine
+        if( $cf['contents']['cached'] === false ) {
 
-            // scrittura della cache
-            memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_KEY, $cf['contents']['pages'] );
-            memcacheWrite( $cf['memcache']['connection'], CONTENTS_TREE_KEY, $cf['contents']['tree'] );
-            memcacheWrite( $cf['memcache']['connection'], CONTENTS_INDEX_KEY, $cf['contents']['index'] );
-            memcacheWrite( $cf['memcache']['connection'], CONTENTS_REVERSE_KEY, $cf['contents']['reverse'] );
-            memcacheWrite( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY, $cf['contents']['shortcuts'] );
-            memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED, time() );
+            // controllo connessione
+            if( ! empty( $cf['memcache']['connection'] ) ) {
 
-            // timer
-            timerCheck( $cf['speed'], '-> fine scrittura cache pagine' );
+                // scrittura della cache
+                memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_KEY, $cf['contents']['pages'] );
+                memcacheWrite( $cf['memcache']['connection'], CONTENTS_TREE_KEY, $cf['contents']['tree'] );
+                memcacheWrite( $cf['memcache']['connection'], CONTENTS_INDEX_KEY, $cf['contents']['index'] );
+                memcacheWrite( $cf['memcache']['connection'], CONTENTS_REVERSE_KEY, $cf['contents']['reverse'] );
+                memcacheWrite( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY, $cf['contents']['shortcuts'] );
+                memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED, time() );
 
-            // log
-            logger( 'struttura delle pagine scritta in cache', 'speed', LOG_ERR );
+                // timer
+                timerCheck( $cf['speed'], '-> fine scrittura cache pagine' );
+
+                // log
+                logger( 'struttura delle pagine scritta in cache', 'speed', LOG_ERR );
+
+            } else {
+
+                // log
+                logger( 'impossibile scrivere le pagine in cache per mancanza di connessione a memcache', 'speed' );
+
+            }
 
         } else {
 
             // log
-            logger( 'impossibile scrivere le pagine in cache per mancanza di connessione a memcache', 'speed' );
+            logger( 'pagine già presenti in cache, nessuna scrittura richiesta', 'speed' );
 
         }
 
     } else {
 
         // log
-        logger( 'pagine già presenti in cache, nessuna scrittura richiesta', 'speed' );
+        logger( 'nessuna connessione a memcache, controlli sulla cache dei contenuti bypassati', 'speed' );
 
     }
 

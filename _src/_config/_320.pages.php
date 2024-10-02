@@ -62,10 +62,10 @@
         // die( 'ERRORE: la cache dei contenuti è disabilitata' );
 
         // inizializzo l'albero
-        $cf['contents']['tree']             = array();
+        $cf['contents']['tree']            = array();
 
         // inizializzo l'indice
-        $cf['contents']['index']            = array();
+        $cf['contents']['index']        = array();
 
         // inizializzo le shortcuts
         $cf['contents']['shortcuts']        = array();
@@ -75,6 +75,10 @@
 
             // aggiungo l'id pagina
             $v['id'] = $k;
+
+            // aggiungo l'id sito
+            // NOTA cosa succede decommentando questa riga?
+            // if( ! isset( $v['id_sito'] ) ) { $v['id_sito'] = SITE_DEFAULT; }
 
             // controllo preliminare parent
             if( isset( $v['parent'] ) && is_array( $v['parent'] ) && array_key_exists( 'id', $v['parent'] ) ) {
@@ -115,11 +119,11 @@
                     // stabilisco quale chiave usare per il rewrite
                     if( ! isset( $v['rewrited'] ) || ! is_array( $v['rewrited'] ) || ! array_key_exists( $lk, $v['rewrited'] ) ) {
                         $v['rewrited'][ $lk ] = string2rewrite(
-                            ( isset( $v['custom'][ $lk ] ) && ! empty( $v['custom'][ $lk ] ) )
-                            ?
-                            $v['custom'][ $lk ]
-                            :
-                            $v['title'][ $lk ]
+                        ( isset( $v['custom'][ $lk ] ) && ! empty( $v['custom'][ $lk ] ) )
+                        ?
+                        $v['custom'][ $lk ]
+                        :
+                        $v['title'][ $lk ]
                         );
                     }
 
@@ -132,6 +136,8 @@
                 }
 
             } else {
+
+                // errore fatale nella struttura delle pagine
 
                 // log
                     logger( 'la pagina ' . $k . ' è malformata e blocca la costruzione della struttura', 'pages', LOG_EMERG );
@@ -172,9 +178,9 @@
                 $v['parents']['title'][] = $cf['contents']['pages'][ $k ]['title'];
                 $v['parents']['rewrited'][] = $cf['contents']['pages'][ $k ]['rewrited'];
                 if( isset( $cf['contents']['pages'][ $k ]['menu'] ) && is_array( $cf['contents']['pages'][ $k ]['menu'] ) ) {
-                    $parentMenu = array_keys( $cf['contents']['pages'][ $k ]['menu'] );
+                $parentMenu = array_keys( $cf['contents']['pages'][ $k ]['menu'] );
                 } else {
-                    $parentMenu = array();
+                $parentMenu = array();
                 }
                 // TODO questa cosa serve a creare le voci vuote di menù che poi diventano elementi di lista vuoti
                 // in cui nidificare le sotto voci (serve nel caso in cui venga piazzata una voce in un menù a livello
@@ -182,18 +188,18 @@
                 // TUTTAVIA la mia sensazione è che generi inefficenze e in alcuni casi bug (fa apparire voci vuote
                 // in menù dove non ha senso che appaiano...) insomma VA TESTATA E DOCUMENTATA MEGLIO
                 if( is_array( $menu ) && is_array( $parentMenu ) ) {
-                    foreach( array_diff( $menu, $parentMenu ) as $manca ) {
-                        $cf['contents']['pages'][ $k ]['menu'][ $manca ][] = array(
-                        'label' => NULL,
-                        'priority' => 'AUTO'
-                        );
-                    }
+                foreach( array_diff( $menu, $parentMenu ) as $manca ) {
+                    $cf['contents']['pages'][ $k ]['menu'][ $manca ][] = array(
+                    'label' => NULL,
+                    'priority' => 'AUTO'
+                    );
+                }
                 }
             } while( $k !== NULL );
 
             // capovolgo l'array dei parents
-            $v['parents']['id']            = array_reverse( $v['parents']['id'] );
-            $v['parents']['h1']            = array_reverse( $v['parents']['h1'] );
+            $v['parents']['id']        = array_reverse( $v['parents']['id'] );
+            $v['parents']['h1']        = array_reverse( $v['parents']['h1'] );
             $v['parents']['title']        = array_reverse( $v['parents']['title'] );
             $v['parents']['rewrited']    = array_reverse( $v['parents']['rewrited'] );
 
@@ -205,7 +211,7 @@
 
             // copio i dati del parent
             $v['parent']['title']        = $cf['contents']['pages'][ $v['parent']['id'] ]['title'];
-            $v['parent']['h1']            = $cf['contents']['pages'][ $v['parent']['id'] ]['h1'];
+            $v['parent']['h1']        = $cf['contents']['pages'][ $v['parent']['id'] ]['h1'];
             $v['parent']['rewrited']    = $cf['contents']['pages'][ $v['parent']['id'] ]['rewrited'];
 
         }
@@ -245,10 +251,9 @@
                 if( isset( $v['forced'][ $lk ] ) ) {
                     $v['url'][ $lk ]    = $v['forced'][ $lk ];
                 } else {
-                    // TODO anziché usare genericamente $cf['site']['url'], usare (se specificato) il dominio specifico per la lingua del ciclo corrente
-                    // NOTA dovrebbe essere valorizzato ad es. $cf['site']['default']['urls']['it-IT'][PROD] (o qualcosa di simile?)
+// TODO anziché usare genericamente $cf['site']['url'], usare (se specificato) il dominio specifico per la lingua del ciclo corrente
+// NOTA dovrebbe essere valorizzato ad es. $cf['site']['default']['urls']['it-IT'][PROD] (o qualcosa di simile?)
                     $v['url'][ $lk ]    = $cf['site']['url'] . $path;
-                    // L    $v['url'][ $lk ]    = $cf['site']['url'][ $lk ] . $path;
                 }
 
             }
