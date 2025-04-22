@@ -75,6 +75,22 @@
         'contatti' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'comuni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
+        'provincie' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
+        'regioni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
+        'stati' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
 
         // TODO l'ordine alfabetico arriva fin qui
 
@@ -119,6 +135,14 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'tipologie_contratti' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),        
+        'tipologie_corrispondenza' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),        
+        'pesi_tipologie_corrispondenza' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),        
@@ -616,14 +640,6 @@
         'categorie_anagrafica' => array(
             CONTROL_FULL => array( 'roots','staff' )
         ),
-        'comuni' => array(
-            CONTROL_FULL => array( 'roots' ),
-            METHOD_GET => array( 'staff', 'users', 'guests' )
-        ),
-        'stati' => array(
-            CONTROL_FULL => array( 'roots' ),
-            METHOD_GET => array( 'staff', 'users', 'guests' )
-        ),
         'contenuti' => array(
             CONTROL_FULL => array( 'roots' ,'staff'),
         ),
@@ -1055,7 +1071,11 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
-        '__report_documenti_carrelli__' => array(
+        'asset' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+       '__report_documenti_carrelli__' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED        => array( 'staff' )
         ),

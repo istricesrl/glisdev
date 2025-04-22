@@ -419,8 +419,9 @@
      * scrive un array di array associativi in un file CSV
      * 
      * Questa funzione riceve in input un array di array associativi e lo scrive su un file CSV; se non vengono fornite intestazioni,
-     * la funzione le ricava dalle chiavi del primo array. La funzione utilizza array2csvString() per generare la stringa da scrivere
-     * e writeToFile() per scriverla su file.
+     * la funzione le ricava dalle chiavi del primo array; tuttavia, se la funzione viene chiamata per l'append al file, le
+     * intestazioni non vengono comunque scritte (si badi di mantenere la consistenza fra le colonne tra una scrittura e l'altra).
+     * La funzione utilizza array2csvString() per generare la stringa da scrivere e writeToFile() per scriverla su file.
      * 
      * @param       array       $d      l'array da scrivere
      * @param       string      $f      il file su cui scrivere
@@ -436,12 +437,20 @@
     function array2csvFile( $d, $f, $s = ',', $h = NULL, $c = '"', $e = '\\', $m = FILE_WRITE_OVERWRITE ) {
 
         // log
-        logger( 'scrittura file CSV: ' . $f, 'csv' );
+        logger( 'scrittura file CSV: ' . $f . ' (modalità ' . $m . ')', 'csv' );
 
         // ricavo le intestazioni dalle chiavi della prima riga
         if( empty( $h ) ) {
             $h = array_keys( $d[0] );
         }
+
+        // decido se scrivere le intestazioni in base alla modalità di scrittura e all'esistenza del file
+        if( $m == FILE_WRITE_APPEND && file_exists( getFullPath( $f ) ) ) {
+            $h = false;
+        }
+
+        // log
+        logger( 'il file ' . $f . ( ( file_exists( getFullPath( $f ) ) ) ? ' ' : 'non ' ) . 'esiste', 'csv' );
 
         // genero la stringa da scrivere su file tramite array2csvString()
         $t = array2csvString( $d, $s, $h, $c, $e );
@@ -457,9 +466,9 @@
     /**
      * scrive un array di array associativi in una stringa CSV
      * 
-     * Questa funzione riceve in input un array di array associativi e lo scrive in una stringa CSV; se non vengono fornite intestazioni,
-     * la funzione le ricava dalle chiavi del primo array. La funzione utilizza array2csvArray() per generare l'array di stringhe da scrivere
-     * e implode() per concatenarle in una stringa.
+     * Questa funzione riceve in input un array di array associativi e lo scrive in una stringa CSV; se l'array delle intestazioni è NULL,
+     * la funzione lp ricava dalle chiavi del primo array; se è false, non vengono aggiunte intestazioni. La funzione utilizza
+     * array2csvArray() per generare l'array di stringhe da scrivere e implode() per concatenarle in una stringa.
      * 
      * @param       array       $d      l'array da scrivere
      * @param       string      $s      il separatore da utilizzare
@@ -473,7 +482,7 @@
     function array2csvString( $d, $s = ',', $h = NULL, $c = '"', $e = '\\' ) {
 
         // ricavo le intestazioni dalle chiavi della prima riga
-        if( empty( $h ) ) {
+        if( $h === NULL ) {
             $h = array_keys( $d[0] );
         }
 
@@ -512,12 +521,14 @@
         $a = array();
 
         // ricavo le intestazioni dalle chiavi della prima riga
-        if( empty( $h ) ) {
+        if( $h === NULL ) {
             $h = array_keys( $d[0] );
         }
 
         // aggiungo le intestazioni all'inizio dell'array $d
-        array_unshift( $d, $h );
+        if( ! empty( $h ) ) {
+            array_unshift( $d, $h );
+        }
 
         // apro un buffer in memoria
         $b = fopen('php://memory', 'r+');
@@ -643,6 +654,7 @@
         if( ! empty( $h ) ) {
             array_unshift( $d, $h );
         }
+
         // apro un buffer in memoria
         $b = fopen('php://memory', 'r+');
 

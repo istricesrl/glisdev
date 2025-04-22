@@ -397,10 +397,15 @@
      * @return  boolean             restituisce true se la scrittura è andata a buon fine, false altrimenti
      * 
      */
-    function writeToFile( $t, $f, $m = FILE_WRITE_OVERWRITE ) {
+    function writeToFile( $t, $f, $m = FILE_WRITE_OVERWRITE, $n = "\n" ) {
 
         // apro il file
         $h = openFile( $f, $m );
+
+        // se $t non termina con newline
+        if( substr( $t, -1 ) != $n ) {
+            $t .= $n;
+        }
 
         // se l'apertura è andata a buon fine
         if( $h ) {
@@ -1090,11 +1095,16 @@
         // inizializzo l'array
         $r = array();
 
-        // ciclo sul contenuto
-        foreach( getFolderIterator( $d ) as $f ) {
-            if( $f->isFile() ) {
-                $r[] = ( $s === true ) ? $f->getRealPath() : $f->getFileName();
+        // se la cartella è leggibile
+        if( is_dir( $d ) && is_readable( $d ) ) {
+
+            // ciclo sul contenuto
+            foreach( getFolderIterator( $d ) as $f ) {
+                if( $f->isFile() ) {
+                    $r[] = ( $s === false ) ? $f->getRealPath() : $f->getFileName();
+                }
             }
+
         }
 
         // restituisco l'array

@@ -23,7 +23,7 @@
 
         </header>
 
-        <main>{% block main %}{% endblock %}</main>
+        <main>{% block main %}<!-- nessun main specificato per la pagina -->{% endblock %}</main>
 
         <footer>
             {% block footer %}
@@ -33,7 +33,9 @@
 
         {% include '_inc/_page.close.twig' %}
 
-        {% block javascript %}{% endblock %}
+        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock %}
+
+        {% block javascript %}<!-- nessuno script Javascript per pagina specificato -->{% endblock %}
 
     </body>
 </html>
