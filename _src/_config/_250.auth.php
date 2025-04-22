@@ -94,6 +94,10 @@
 
         // TODO l'ordine alfabetico arriva fin qui
 
+        'colli' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'abbonamenti' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -234,6 +238,10 @@
         'notizie_prodotti' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
+        ),
+        'missioni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         ),
         'video' => array(
             CONTROL_FULL => array('roots'),
@@ -460,6 +468,10 @@
                 CONTROL_FILTERED => array('staff')
         ),
         'coupon_prodotti' => array(
+                CONTROL_FULL => array('roots'),
+                CONTROL_FILTERED => array('staff')
+        ),
+        'coupon_articoli' => array(
                 CONTROL_FULL => array('roots'),
                 CONTROL_FILTERED => array('staff')
         ),
@@ -1072,6 +1084,10 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'asset' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'notizie_anagrafica' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
