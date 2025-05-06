@@ -23,6 +23,9 @@ apt-get upgrade -y
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## installazione di apt-utils
+apt-get install -y apt-utils
+
 ## installazione di Apache
 apt-get install -y apache2
 
@@ -36,6 +39,7 @@ apt-get install -y php
 apt-get install -y composer
 
 ## installazione degli strumenti di sviluppo
+apt-get install -y php-common
 apt-get install -y php-dev
 
 ## installazione di PEAR
