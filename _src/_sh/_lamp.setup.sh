@@ -26,6 +26,9 @@ echo "lavoro su: $(pwd)"
 ## installazione di apt-utils
 apt-get install -y apt-utils
 
+## installazione di midnight commander
+apt-get install -y mc
+
 ## installazione di Apache
 apt-get install -y apache2
 
@@ -83,6 +86,9 @@ apt-get install -y php-zip
 
 ## installazione di php-intl
 apt-get install -y php-intl
+
+## installazione di xdebug
+apt-get install -y php-xdebug
 
 ## installazione di ncftp
 # apt-get install -y ncftp
