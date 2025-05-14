@@ -13,6 +13,13 @@
     // lingua di questo file
     $l = 'it-IT';
 
+    /**
+     * pagina 404
+     * ==========
+     * 
+     * 
+     */
+
     // pagina di default
     $p[ NULL ] = array(
         'sitemap'       => false,

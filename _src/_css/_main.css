@@ -1,4 +1,7 @@
 /**
+ * stili di default
+ * ================
+ *
  * INDICE
  * - stili di base
  * - stili dei bottoni
@@ -9,6 +12,7 @@
  * - stili per font awesome
  * - stili per il numero verde
  * - utility tipografiche
+ *
  */
 
 /* stili di base */
@@ -39,6 +43,7 @@ footer {
 }
 
 /* stili per i megamenu */
+
 nav.navbar-slider-mega ul.navbar-nav {
     display: none;
 }
