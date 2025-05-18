@@ -33,9 +33,14 @@
         // generazione del contenuto
         $json = json_encode( string2utf8( $content ) );
 
-    // log
-        if( ! empty( json_last_error() ) ) {
-        die( 'errore #'.json_last_error().' '.json_last_error_msg() );
+	    // log
+	    if( ! empty( json_last_error() ) ) {
+		    logWrite( 'errore #'.json_last_error().' '.json_last_error_msg(), 'json', LOG_ERR );
+	    }
+
+        // se non esiste il content-type
+        if( ! isset( $headers['Content-Type'] ) ) {
+            $headers['Content-Type'] = MIME_APPLICATION_JSON;
         }
 
     // genero l'output
@@ -97,9 +102,14 @@
         $document->preserveWhiteSpace = false;
         $document->formatOutput = true;
 
-        $html = $document->documentElement;
-        $head = $document->createElement( 'head' );
-        $title = $document->createElement( 'title' );
+	    $html = $document->documentElement;
+	    $head = $document->createElement( 'head' );
+	    $title = $document->createElement( 'title' );
+
+        $meta = $document->createElement( 'meta' );
+        $meta->setAttribute( 'charset', 'utf-8' );
+        $head->appendChild( $meta );
+
         $text = $document->createTextNode( ( ! empty( $name ) ) ? $name : 'documento generato ' . date( 'r' ) );
         $body = $document->createElement( 'body' );
 
@@ -142,10 +152,14 @@
      */
     function buildHeaders( $headers ) {
 
-    // invio gli headers
-        foreach( $headers as $header ) {
-        header( $header );
-        }
+	    // invio gli headers
+	    foreach( $headers as $header => $value ) {
+            if( is_string( $header ) ) {
+                header( $header . ': ' . $value );
+            } else {
+		        header( $value );
+            }
+	    }
 
     }
 

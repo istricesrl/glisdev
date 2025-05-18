@@ -1,5 +1,14 @@
-{# FILE PER LE OPERAZIONI STANDARD DA ESEGUIRE ALL'INIZIO DEL TAG <body> #}
 
-{% include '_inc/_gtm.noscript.twig' %}
+{# FILE PER LE OPERAZIONI STANDARD DA ESEGUIRE ALL'INIZIO DEL TAG BODY
+    Ci sono diverse cose da fare non appena aperto il tag <body>, tipicamente includere il codice "noscript" per le 
+    factory che lo prevedono #}
 
-{% include '_inc/_facebook.noscript.twig' %}
+<!-- file: {{ _self }} -->
+
+{# CODICE NOSCRIPT PER GOOGLE TAG MANAGER #}
+{% include '_inc/_gtm.noscript.html' %}
+
+{# CODICE NOSCRIPT PER FACEBOOK #}
+{% include '_inc/_facebook.noscript.html' %}
+
+<!-- fine file: {{ _self }} -->

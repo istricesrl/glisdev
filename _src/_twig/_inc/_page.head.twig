@@ -1,56 +1,91 @@
-{# FILE PER LA GENERAZIONE DEL TAG <head> STANDARD #}
 
-{% include '_inc/_gtm.head.twig' %}
+{# FILE PER LA GENERAZIONE DEL TAG HEAD STANDARD
+    Il contenuto del tag <head> è sostanzialmente tecnico, quindi avendo poco a che fare con l'aspetto finale del template
+    può essere standardizzato. Le operazioni da svolgere qui sono quindi comuni a tutti i template. #}
 
-{% include '_inc/_analytics.head.twig' %}
+    <!-- file: {{ _self }} -->
 
-{% include '_inc/_ads.head.twig' %}
+    {# CODICE PER GOOGLE TAG MANAGER #}
+    {% include '_inc/_gtm.head.html' %}
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    {# CODICE PER GOOGLE ANALYTICS #}
+    {% include '_inc/_analytics.head.html' %}
 
-<meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
-<meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
+    {# CODICE PER GOOGLE ADS #}
+    {% include '_inc/_ads.head.html' %}
 
-{% include '_inc/_csp.head.twig' %}
+    {# META TAG #}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
+    <meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
+    {% if page.robots %}<meta name="robots" content="{{ page.robots[ localization.language.ietf ] }}">{% endif %}
 
-{% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}{{ icon.path }}/{{ icon.file }}">{% endfor %}
+    {# FAVICONS #}
+    {% for icon in page.template.favicons %}<link
+        {% if icon.rel %} rel="{{ icon.rel }}"{% endif %}
+        {% if icon.type %} type="{{ icon.type }}"{% endif %}
+        {% if icon.sizes %} sizes="{{ icon.sizes }}"{% endif %}
+        href="{{ site.url }}{{ icon.path }}/{{ icon.file }}">
+    {% else %}
+    <!-- nessuna favicon trovata in page.template.favicons -->
+    {% endfor %}
 
-{% if page.canonical %}<link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">{% endif %}
+    {# LINK CANONICO DELLA PAGINA
+        vedi https://developers.google.com/search/docs/crawling-indexing/canonicalization?hl=it #}
+    {% if page.canonical %}
+    <link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">
+    {% else %}
+    <!-- nessun link canonico trovato in page.canonical -->
+    {% endif %}
 
-<title>{{ page.title[ localization.language.ietf ] }}</title>
+    {# TAG TITLE #}
+    <title>{{ page.title[ localization.language.ietf ] }}</title>
 
+    {# TAG OPENGRAPH #}
 {% include '_inc/_opengraph.head.twig' %}
 
-{% for m,s in page.css.preload %}
-{% for c in s %}<link rel="preload" as="style" href="{{ c }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
-{% endfor %}
-
+    {# CSS ESTERNI #}
 {% for m,s in page.css.external %}
 {% for c in s %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
 {% endfor %}
 
+    {# CSS PRELOAD #}
+{% for m,s in page.css.preload %}
+{% for c in s %}<link rel="preload" as="style" href="{{ c }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+{% endfor %}
+<noscript>
+{% for m,s in page.css.preload %}
+    {% for c in S %}<link rel="stylesheet" href="{{ c }} media="{{ m }}"">{% endfor %}
+{% endfor %}
+</noscript>
+
+    {# CSS IN CACHE #}
 {% for m,s in page.css.cached %}
 {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
 {% endfor %}
 
+    {# CSS INTERNI #}
 {% for m,s in page.css.internal %}
 {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
 {% endfor %}
 
+    {# CSS DEL TEMPLATE #}
 {% for m,s in page.css.template %}
 {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="{{ m }}">{% endfor %}
 {% endfor %}
 
+    {# CSS CUSTOM #}
 {% for m,s in page.css.custom %}
 {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
 {% endfor %}
 
-{% include '_inc/_facebook.head.twig' %}
 
-{% include '_inc/_hotjar.head.twig' %}
+    {# CODICE PER FACEBOOK #}
+    {% include '_inc/_facebook.head.html' %}
 
-<noscript>
-    {% for c in page.css.preload %}<link rel="stylesheet" href="{{ c }}">{% endfor %}
-</noscript>
+    {# CODICE PER HOTJAR #}
+    {% include '_inc/_hotjar.head.html' %}
+
+    <!-- fine file: {{ _self }} -->
