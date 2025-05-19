@@ -1,0 +1,597 @@
+# nuova release e versione standard del framework GlisWeb
+Questo file serve per orientarsi all'interno del framework GlisWeb; si tratta di una sorta di guida
+generale, da tenere sotto mano mentre si studia il framework.
+
+## descrizione dei file
+In questa sezione tutti i file e le cartelle del framework sono riportati in ordine logico, per dare un'idea dell'insieme.
+Ogni file contiene poi i commenti dettagliati sul proprio funzionamento.
+
+### /.gitignore
+Questo file (il cui contenuto cambia fra sviluppo del framework e sviluppo dei progetti) impedisce che vengano caricati
+nel repository Git del framework (o del progetto) file inutili o potenzialmente sensibili.
+
+TODO nella vecchia versione il file .gitignore per i deploy è in /_usr/_deploy/_git/.gitignore e viene gestito tramite
+/_src/_sh/_gw.upgrade.sh; valutare se è il posto giusto o se va spostato ad es. in /_usr/_examples/_config/_git/.
+
+### /.htaccess
+Questo file costituisce il punto di ingresso del framework, tutte le richieste in entrata vengono processate da questo file
+che poi le rimanda al file PHP opportuno. In pratica il file .htaccess costituisce il motore di routing principale
+del framework.
+
+### /composer.json e /composer.lock
+Il file composer.json include le dipendenze del framework che vengono gestite tramite composer; la cartella di installazione
+per le librerie esterne è /_src/_lib/_ext/
+
+strategia       | libreria                      | versione          | note
+----------------|-------------------------------|-------------------|-----------------------------
+require         | phpoffice/phpword             | *                 |
+require         | phpoffice/phpspreadsheet      | *                 |
+require         | phpoffice/phppresentation     | *                 |
+require         | html2text/html2text           | *                 |
+require         | phpmailer/phpmailer           | 6.*               |
+require         | tecnickcom/tcpdf              | *                 |
+require         | twig/twig                     | 2.*               |
+require         | predis/predis                 | *                 |
+require         | codeception/codeception       | *                 |
+require         | codeception/module-phpbrowser | *                 |
+require         | codeception/module-asserts    | *                 |
+suggest         | twig/extra-bundle             | *                 |
+
+### /_etc/_current.release e /_etc/_current.version
+Il framework viene versionato con due diverse numerazioni, le release che seguono la classica notazione a tre stage (major.minor.bugfix)
+e le versioni che sono numerate progressivamente con una timestamp (ad es. 20240502225937). La ragione di questa distinzione è che le
+versioni vengono incrementate quotidianamente, mentre le release di rado, solo quando numerose versioni si sono accumulate.
+
+L'aggiornamento della versione è fatto automaticamente tramite un git hook (/.git/hooks/pre-commit) ad ogni commit sul repository di
+sviluppo del framework:
+
+```
+#!/bin/bash
+
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+VERS=$(date '+%Y%m%d%H%M%S')
+GITNAME=`basename $(git remote get-url origin)`
+
+echo "repository: "$GITNAME
+
+if [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
+
+echo "branch: "$BRANCH
+echo "version: "$VERS
+
+    echo $VERS > _etc/_current.version
+    git add _etc/_current.version
+
+    echo "aggiornamento della versione effettuato con successo"
+
+fi
+```
+
+La versione invece viene modificata a mano quando si crea una nuova release branch.
+
+### /_etc/_common/_lorem.conf
+Questo file contiene il testo di prova del framework; si è optato per il classico Lorem Ipsum (https://lipsum.com/) dal momento che
+la maggior parte dei grafici è già familiare con questo testo. Nel file /_src/_config/_420.pages.php viene processato il comando di una lettera
+"m" per inserire il Lorem Ipsum come testo della pagina.
+
+### /_etc/_dictionaries/_<dictionary>.<lang>-<country>.conf
+Questi file contengono i dizionari per la traduzione automatica dei microcontenuti. La traduzione automatica dei microcontenuti viene
+gestita tramite la macro Twig tr() dichiarata in /_src/_twig/_lib/_translation.twig. Un utilizzo tipico di tr() considerando che la variabile
+ietf contenga la lingua corrente e che la traduzione che si desidera è presente in $ct['tr']['generic'] è il seguente:
+
+```
+{% import '_lib/_translation.twig' as trn %}
+{{ trn.tr({ 'w': '<chiave>', 'l': ietf, 'v': tr.generic }) }}
+```
+
+I file dei dizionari vengono importati in $cf nel file /_src/_config/_090.translation.php e $cf['tr] viene collegato a $ct['tr] in
+/_src/_config/_095.translation.php.
+
+### /_etc/_doxygen/_doxygen.conf
+Questo è il file di configurazione utilizzato per compilare la documentazione del framework tramite Doxygen (https://www.doxygen.nl/). La
+compilazione della documentazione viene effettuata tramite lo script /_src/_sh/_doxygen.build.sh e i documenti compilati vengono salvati in
+/_usr/_docs/_html/ per la versione HTML e in /_usr/_docs/_pdf/ per la versione PDF.
+
+La documentazione viene generata a partire dai commenti al codice e dai file dox presenti in /_usr/_docs/_dox, ed è disponibile via browser
+utilizzando il percorso /docs/index.html per l'HTML e /docs/pdf per il PDF.
+
+TODO se è possibile, le varie opzioni di questo file andrebbero commentate una per una, magari facendo qui una tabella con il significato
+di ogni opzione.
+
+### /_etc/_robots/_deny.txt e /_etc/_robots/_robots.txt
+Questi sono i file robots che vengono serviti richiedendo l'URL /robots.txt; nel file /.htaccess è presente un set di regole che in base al valore
+della variabile d'ambiente %{ENV:STATUS} eroga il file corretto (deny per DEV e TEST, robots per PROD). La variabile di ambiente viene settata nel
+file di configurazione dell'host di Apache per le varie configurazioni del sito:
+
+```
+<VirtualHost *:80>
+
+    ...
+
+    SetEnv STATUS DEV
+
+    ...
+
+</VirtualHost>
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+
+    ...
+
+    SetEnv STATUS DEV
+
+    ...
+
+</VirtualHost>
+</IfModule>
+```
+
+Nella configurazione di PROD viene vietata l'indicizzazione di tutto il ramo /admin in quanto contiene le pagine del CMS, che non devono
+per ovvi motivi apparire nei risultati di ricerca.
+
+### /_etc/_security/_banned.words.conf
+Questo file contiene una lista di parole vietate negli URL, che viene gestita da /_src/_inc/_macro/_security.php. Si tratta di un filtro
+un po' grezzo ma funzionale, che blocca molti tipi di attacchi basati su URL.
+
+### /_etc/_security/_common.passwords.conf
+Questo file contiene un piccolo dizionario di password vietate per l'utente root. Il controllo viene effettuato in /_src/_api/_status/_framework.php
+nella sezione sicurezza.
+
+### /_src/_config.php
+Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
+comunque il suo compito è quello di includere tutti i componenti del framework per renderli disponibili al successivo codice sorgente. Qualsiasi
+file PHP nel quale si desidera utilizzare il framework deve iniziare o comunque contenere la riga:
+
+```
+require '<percorso>_config.php';
+```
+
+Laddove <percorso> è il percorso necessario a raggiungere il file /_src/_config.php.
+
+### /_src/_api/_download.php
+Questo file si occupa di erogare i download, verificando che l'utente sia autorizzato a scaricare il file che sta richiedendo; riceve le richieste
+dalle regole del file .htaccess e fatti i dovuti controlli restituisce il file richiesto. Agisce in pratica come un guardiano della cartella
+/var che contiene ordinati in sottocartelle i file caricati tramite il CMS. Si noti che alcune sotto cartelle di /var (come /var/log) sono protette
+e l'accesso è impedito da regole apposite all'inizio di /.htaccess.
+
+### /_src/_api/_pages.php
+Questo file ha lo scopo di renderizzare e erogare le pagine. Svolge numerose funzioni ed è ampiamente documentato, quindi si rimanda al sorgente
+per i dettagli. In sintesi, riceve le richieste di pagina in base alle regole del file /.htaccess e le soddisfa tramite le informazioni in suo
+possesso.
+
+### /_src/_api/_status/_cf.php
+Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
+per evitare problemi di sicurezza. Tramite una regola di /.htaccess l'accesso a questa API è possibile tramite l'URL speciale /cf.
+
+### /_src/_api/_status/_framework.php
+Questa API restituisce un report di auto diagnostica del framework, indicando lo stato corrente della piattaforma ed eventuali errori o warning. Si
+tratta di un file piuttosto complesso, al cui sorgente si rimanda per approfondimenti. Una regola di /.htaccess rende disponibile questa API all'URL
+speciale /status.
+
+### /_src/_api/_task/_framework.setup.php
+TODO Questo task è ancora da implementare.
+
+### /_src/_api/_task/_geografia.importazione.php
+Questo task, piuttosto semplice, scarica i dati relativi alla geografia dalla versione corrente del framework:
+
+- https://dataserver.istricesrl.com/geografia/01.update.stati.csv
+- https://dataserver.istricesrl.com/geografia/02.update.regioni.csv
+- https://dataserver.istricesrl.com/geografia/03.update.provincie.csv
+- https://dataserver.istricesrl.com/geografia/04.update.comuni.csv
+
+e li copia nella cartella DIR_VAR_SPOOL_IMPORT per sfruttare il normale sistema di importazione automatica dei file CSV del framework
+(dev/_src/_config/_740.controller.php) e aggiornare le informazioni relative alla geografia per il deploy corrente.
+
+### /_src/_api/_task/_memcache.clean.php
+Questo task si occupa semplicemente di svuotare la memoria di memcache.
+
+### /_src/_api/_task/_mysql.patch.php
+Questo task si occupa di installare e aggiornare il database MySQL del deploy corrente. La logica di aggiornamento del database è piuttosto complessa ma
+funzionale allo scopo di tenere aggiornati tutti i database di tutti i deploy senza dover eseguire le query a mano. Le componenti del sistema sono:
+
+- l'API /_src/_api/_task/_mysql.patch.php
+- i file di patch presenti in /_usr/_database/_patch
+
+Il meccanismo di patch del database è illustrato nel dettaglio nel file /_src/_api/_task/_mysql.patch.php al quale si rimanda per approfondimenti.
+
+### /_src/_config/_000.debug.php
+Questo file di configurazione inizializza l'array $cf['debug'] e setta i default per le sue chiavi principali.
+
+### /_src/_config/_005.debug.php
+Questo file di configurazione integra $cf['debug'] con $cx['debug'] e collega $cf['debug'] a $ct['debug'].
+
+### /_src/_config/_010.site.php
+In questo file viene inizializzato l'array $cf['sites'] e viene definito il sito di default.
+
+### /_src/_config/_015.site.php
+In questo file l'array $cf['sites'] viene integrato con $cx['sites'] e $cf['sites'] viene collegato a $ct['sites']. Viene inoltre elaborato l'URL
+corrente per capire in quale sito ci si trova, e popolato di conseguenza l'array $cf['site'].
+
+### /_src/_config/_020.debug.php
+In questo file vengono applicati i settaggi relativi al debug impostati precedentemente.
+
+### /_src/_config/_025.site.php
+In questo file vengono elaborate diverse impostazioni di $cf['site'] ricavate dai dati settati in precedenza; viene anche integrato l'array $cf['site'] con
+$cx['site'] e infine $cf['site'] viene collegato a $ct['site'].
+
+### /_src/_config/_030.common.php
+In questo file vengono settate diverse variabili di utilità generale in $cf['common'] fra cui i codici di stato HTTP e il Lorem Ipsum visto sopra; vengono
+inoltre recuperati i numeri di versione e release correnti e quelli del deploy corrente.
+
+### /_src/_config/_035.common.php
+In questo file l'array $cf['common'] viene integrato con $cx['common'] e collegato successivamente a $ct['common0].
+
+### /_src/_config/_040.cache.php
+In questo file vengono definite le configurazioni per le cache in uso sul sito. GlisWeb supporta Memcache, Redis, APCU e caching su disco.
+
+### /_src/_config/_045.cache.php
+In questo file vengono integrati i dati da $cx per le varie cache, effettuate le connessioni ai server di cache, collegati i profili e gli array $cf a $ct
+relativamente alle varie cache. Da questo runlevel in poi il caching è disponibile.
+
+### /_src/_config/_050.session.php
+In questo file viene configurata la sessione PHP per utilizzare come backend in ordine di preferenza Redis, Memcache e il disco fisso.
+
+### /_src/_config/_055.session.php
+In questo file viene avviata la sessione PHP, quindi a partire da questo runlevel la sessione è disponibile. Vengono anche collegati $_SESSION a $cf['session']
+e $cf['session'] a $ct['session'].
+
+### /_src/_config/_060.privacy.php
+TODO Questo runlevel e questa factory sono da riprogettare e migliorare.
+
+### /_src/_config/_065.privacy.php
+In questo file l'array $cf['privacy'] viene integrato con $cx['privacy'], con $cf['site']['privacy'] e con $_COOKIE['privacy']; viene inoltre collegato
+a $ct['privacy']. Questo file gestisce inoltre l'invio dei moduli di consenso cookie $_REQUEST['__cookie__'] salvando le preferenze dell'utente in $cf['privacy']['cookie'].
+
+### /_src/_config/_070.cache.php
+Questo file si occupa di verificare se la risorsa richiesta dall'utente è presente nella cache statica dei contenuti, e nel caso la restituisce, interrompendo di fatto
+l'esecuzione del framework. Questo è un importante meccanismo di risparmio delle risorse server, in quanto evita che vengano svolte operazioni potenzialmente onerose e di
+fatto inutili, come la connessione al database.
+
+### /_src/_config/_080.localization.php
+In questo file viene creato e configurato l'array $cf['localization'], che contiene le informazioni relative alla localizzazione del framework. GlisWeb è nativamente
+multilingua e il supporto per la localizzazione e la traduzione fa parte delle sue caratteristiche base.
+
+### /_src/_config/_085.localization.php
+In questo file l'array $cf['localization'] viene integrato con $cx['localization'] e collegato a $ct['localization'], dopodiché viene individuata la lingua corrente
+tramite varie strategie.
+
+### /_src/_config/_090.translation.php
+In questo file viene creato l'array $cf['tr'] e vengono importati i dizionari presenti in /_etc/_dictionaries.
+
+### /_src/_config/_095.translation.php
+In questo file l'array $cf['tr'] viene integrato con $cx['tr'] e collegato a $ct['tr'].
+
+### /_src/_config/_100.security.php
+Questo file è vuoto e serve per le customizzazioni.
+
+### /_src/_config/_110.google.php
+In questo file vengono definiti i profili per i servizi Google sotto $cf['google']['profiles'].
+
+### /_src/_config/_115.google.php
+In questo file l'array $cf['google'] viene integrato con $cx['google'] e collegato a $ct['google']; inoltre viene collegato il profilo Google
+per lo status corrente a $cf['google']['profile'].
+
+### /_src/_config/_120.mysql.php
+In questo file vengono definiti i server e i profili MySQL; viene inizializzato l'array $cf['mysql'].
+
+### /_src/_config/_125.mysql.php
+In questo file l'array $cf['mysql'] viene integrato con $cx['mysql'] e collegato a $ct['mysql']; viene inoltre collegato il profilo MySQL corrente
+a $cf['mysql']['profile'], e infine vengono effettuate tutte le connessioni. Da questo runlevel in poi la connessione al database è disponibile
+tramite la chiave $cf['mysql']['connection'].
+
+### /_src/_config/_130.redirect.php
+In questo file viene inizializzato l'array $cf['redirect'] dopodiché viene popolato con i dati eventualmente presenti nel file FILE_REDIRECT e
+nella vista redirect_view del database.
+
+### /_src/_config/_135.redirect.php
+In questo file i redirect prelevati da filesystem e quelli prelevati da database vengono indicizzati in un unico array $cf['redirect']['index'].
+L'array $cf['redirect'] viene integrato con $cx['redirect']; infine, viene verificato se l'URL corrente corrisponde a un redirect, e nel caso
+la redirezione viene applicata tramite header http. In caso di redirect, l'esecuzione del framework termina qui.
+
+### /_src/_config/_140.session.php
+In questo file vengono gestiti i tag UTM in $cf['session']['utm'] e inizializzate le impostazioni per l'anti spam in $cf['session']['spam'].
+
+### /_src/_config/_180.privacy.php
+In questo file vengono lette dal database le impostazioni di privacy dei moduli e vengono riportate su $cf['privacy']['moduli']. Si noti che la parte relativa alla privacy è tuttora in costante sviluppo.
+
+### /_src/_config/_190.localization.php
+In questo file le informazioni di localizzazione vengono integrate con le informazioni presenti sul database.
+
+### /_src/_config/_195.localization.php
+In questo file vengono applicate le impostazioni relative alla lingua corrente.
+
+### /_src/_config/_200.auth.php
+In questo file vengono inizializzati gli array che servono per l'autenticazione sul framework; in particolare vengono aggiunti gli
+utenti a $cf['auth']['accounts'] e i gruppi a $cf['auth']['groups']. I privilegi vengono inseriti in $cf['auth']['privileges']. I profili
+di creazione degli account vengono inseriti in $cf['auth']['profili']. Secondariamente, viene inizializzato il salt per JWT. Ulteriori
+dettagli sul funzionamento del sistema di autenticazione del framework possono essere reperite proprio nei commenti di questo file.
+
+### /_src/_config/_205.auth.php
+In questo file l'array $cf['auth'] viene integrato con $cx['auth'].
+
+### /_src/_config/_210.auth.php
+In questo file vengono svolte le operazioni di login. Le opzioni per identificare e autenticare gli utenti nel framework sono diverse e
+comprendono:
+
+- basic HTTP auth
+- token JWT
+- bearer token
+- username e password
+
+Gli utenti e tutte le relative informazioni possono essere letti dal database o dai file di configurazione. È una prassi comune e raccomandata
+definire tramite file di configurazione l'utente root, in modo da poter accedere al framework anche in caso di malfunzionamento del database.
+
+### /_src/_config/_220.auth.php
+In questo file vengono gestiti il timeout della sessione e il logout.
+
+### /_src/_config/_250.auth.php
+In questo file viene dichiarato l'array $cf['auth']['permissions'] che definisce quali permessi hanno gli utenti su tutte le entità gestite
+dal framework.
+
+### /_src/_config/_255.auth.php
+In questo file se c'è un login in corso vengono applicati i permessi all'account che si è appena connesso, in base a quanto stabilito dal runlevel
+_250.auth.php.
+
+### /_src/_config/_300.pages.php
+In questo file viene verificato se i contenuti del sito sono già presenti in cache. Se lo sono, la chiave $cf['contents']['cached'] viene impostata
+a false e il successivo runlevel _310.pages.php viene eseguito per intero. Viceversa, il grosso delle elaborazioni del runlevel _310.pages.php
+viene saltato se i contenuti sono presenti in cache. I contenuti che vengono salvati in cache sono:
+
+- $cf['contents']['cached']
+- $cf['contents']['updated']
+- $cf['contents']['pages']
+- $cf['contents']['tree']
+- $cf['contents']['index']
+- $cf['contents']['reverse']
+- $cf['contents']['shortcuts']
+
+Per ulteriori dettagli si vedano i commenti al codice.
+
+### /_src/_config/_310.pages.php
+In questo file vengono letti tutti i file di configurazione delle pagine, popolando $cf['contents']['pages'] che viene poi successivamente integrato
+da $cx['contents'] e da $cf['site']['contents'] se presenti. Al termine di questo runlevel tutti i dati delle pagine sono caricati e pronti per
+l'indicizzazione e l'elaborazione.
+
+### /_src/_config/_320.pages.php
+In questo file l'elenco delle pagine viene elaborato per popolare alcuni indici necessari al funzionamento del sito, che sono:
+
+- $cf['contents']['tree']
+- $cf['contents']['index']
+- $cf['contents']['shortcuts']
+- $cf['contents']['reverse']
+
+Questi indici sono necessari per la decodifica dell'URL richiesto e per la creazione dell'albero delle pagine, sul quale poggiano diversi elementi
+di navigazione, fra cui i menù e le briciole di pane.
+
+### /_src/_config/_330.pages.php
+In questo file tutti i dati elaborati finora sui contenuti vengono salvati in cahce (Memcache) per utilizzi successivi.
+
+### /_src/_config/_350.mail.php
+In questo file vengono definiti i template mail utilizzati dal framework. I template vengono definiti come array PHP e integrati con
+i template presenti nel database.
+
+### /_src/_config/_355.mail.php
+In questo file $cf['mail'] viene integrato con $cx['mail'].
+
+### /_src/_config/_360.image.php
+In questo file vengono definiti i formati immagine supportati dal framework. Il framework implementa un meccanismo di auto scalamento
+delle immagini per ottimizzare la banda e supportare i tag HTML5 responsivi; i dettagli riguardanti gli orientamenti e le dimensioni di 
+scalatura sono definiti in questo file.
+
+### /_src/_config/_365.image.php
+In questo file l'array $cf['image'] viene integrato con $cx['image'] e collegato a $ct['image'].
+
+### /_src/_config/_380.twig.php
+In questo file vengono definiti i profili di funzionamento del template manager Twig.
+
+### /_src/_config/_385.twig.php
+In questo file l'array $cf['twig'] viene integrato con $cx['twig']; inoltre viene definito il profilo corrente $cf['twig']['profile'] come link a
+&$cf['twig']['profiles'][ $cf['site']['status'] ]. Infine viene verificato che la cartella della cache di Twig, se necessaria, esista.
+
+### /_src/_config/_400.rewrite.php
+In questo file viene fatto il parsing dell'URL richiesto dal client e determinata la pagina corrente. Questo è un file cruciale per il 
+funzionamento del framework e dev'essere studiato assieme a /_src/_api/_pages.php.
+
+### /_src/_config/_420.pages.php
+Questo runlevel è dedicato alle elaborazioni specifiche relative alla pagina corrente; fra le varie cose, vengono create le shortcut $ct['pages']
+come link a &$cf['contents']['pages'] e $ct['page'] come link a &$cf['contents']['page']. Vengono inoltre effettuate varie elaborazioni specifiche
+della pagina, fra cui l'elaborazione del menù a schede (se presente).
+
+In questo file vengono inoltre gestiti i comandi di una lettera, fondamentali per il debug. I comandi gestiti qui sono:
+
+comando         | effetto
+----------------|-------------------------------------------------
+t               | modifica il template della pagina (es. ?t=minerva)
+s               | modifica lo schema della pagina (es. ?s=schema-prova)
+c               | modifica il tema della pagina (es. ?c=natale)
+m               | inserisce del lorem ipsum in $ct['page']['content'][ $cf['localization']['language']['ietf'] ] (es. ?m=5)
+
+### /_src/_config/_510.smtp.php
+In questo file vengono definiti i server e i profili SMTP.
+
+### /_src/_config/_515.smtp.php
+In questo file l'array $cf['smtp'] viene integrato con $cx['smtp'] e con $cf['site']['smtp']. Viene inoltre salvato il profilo SMTP attivo
+in $cf['smtp']['profile'] e il server SMTP di default in $cf['smtp']['server'].
+
+### /_src/_css/_back2top.css
+In questo file viene definito lo stile CSS per il tasto "torna su".
+
+### /_src/_css/_main.css
+Questo file contiene gli stili di base validi per tutti i template.
+
+### /_src/_css/_selectbox.css
+Questo file contiene gli stili per la tendina intelligente (combobox).
+
+### /_src/_css/_terminale.css
+Questo file contiene gli stili per il terminale (va verificato che siano ancora necessari perché risalgono alla versione precedente del framework).
+
+### /_src/_img/_favicon.ico
+Questa è la favicon di default del framework. Riguardo alla favicon, si devono tenere presenti diversi file primo fra tutti il file /.htaccess che
+effettua il routing da /favicon.ico a /_src/_img/_favicon.ico a meno che /favicon.ico non esista. Questo è un modo deprecato di customizzare la favicon
+dato che è disponibile un meccanismo molto più avanzato che consente di fornire al browser formati diversi di favicon.
+
+Le favicon custom vanno collocate nella cartella /img/favicons/ (oppure /img/favicons/<idSito>/) dove vengono cercate dal file dev/_src/_api/_pages.php
+e in particolare vengono cercati questi file:
+
+    - android-icon-36x36.png
+    - android-icon-48x48.png
+    - android-icon-72x72.png
+    - android-icon-96x96.png
+    - android-icon-144x144.png
+    - android-icon-192x192.png
+    - apple-icon.png
+    - apple-icon-57x57.png
+    - apple-icon-60x60.png
+    - apple-icon-72x72.png
+    - apple-icon-76x76.png
+    - apple-icon-114x114.png
+    - apple-icon-120x120.png
+    - apple-icon-144x144.png
+    - apple-icon-152x152.png
+    - apple-icon-180x180.png
+    - apple-icon-precomposed.png
+    - favicon.ico
+    - favicon-16x16.png
+    - favicon-32x32.png
+    - favicon-96x96.png
+    - ms-icon-70x70.png
+    - ms-icon-144x144.png
+    - ms-icon-150x150.png
+    - ms-icon-310x310.png
+
+Dal momento che la creazione di così tante icone può risultare tediosa, è possibile avvalersi di strumenti come https://www.favicon-generator.org/ in
+attesa che il framework implementi una propria gestione della scalatura delle favicon.
+
+### /_src/_inc/_macro/_security.php
+Questo file implementa il firewall applicativo del framework ed è quindi cruciale per la sua sicurezza.
+
+### /_src/_inc/_pages/_dashboard.it-IT.php
+Questo file contiene la dichiarazione delle pagine della dashboard del CMS.
+
+### /_src/_inc/_pages/_null.it-IT.php
+Questo file contiene la dichiarazione della pagina NULL utilizzata per l'errore HTTP 404.
+
+### /_src/_inc/_pages/_site.it-IT.php
+Questo file è vuoto in modo che possa essere facilmente customizzato.
+
+### /_src/_lib/_acl.utils.php
+Questa libreria contiene le funzioni di utilità per la gestione dei permessi degli utenti.
+
+### /_src/_lib/_apcu.tools.php
+Questa libreria contiene le funzioni per l'utilizzo della cache APCU.
+
+### /_src/_lib/_array.tools.php
+Questa libreria contiene una collezione di funzioni per la manipolazione degli array.
+
+### /_src/_lib/_cryptography.tools.php
+Questa libreria contiene alcuni strumenti per la gestione della crittografia.
+
+### /_src/_lib/_csv.tools.php
+Questa libreria contiene una collezione di strumenti per la manipolazione dei file e dei dati in formato CSV.
+
+### /_src/_lib/_filesystem.tools.php
+Questa libreria contiene una collezione di funzioni per la gestione dell'I/O sul filesystem.
+
+### /_src/_lib/_fsv.tools.php
+Questa libreria è ancora da implementare e dovrebbe contenere una collezione di funzioni per la gestione dei file a larghezza fissa.
+
+### /_src/_lib/_ftp.tools.php
+Questa libreria è ancora da implementare e dovrebbe contenere una collezione di funzioni per la gestione del protocollo FTP.
+
+### /_src/_lib/_jwt.tools.php
+Questa libreria contiene le funzioni per la gestione dei token JWT.
+
+### /_src/_lib/_localization.tools.php
+Questa libreria contiene funzioni utili per la localizzazione.
+
+### /_src/_lib/_log.utils.php
+Questa libreria è inserita solo per garantire la retrocompatibilità con il vecchio sistema di log del framework.
+
+### /_src/_lib/_memcache.tools.php
+Questa libreria contiene funzioni per la gestione della cache su Memcache.
+
+### /_src/_lib/_menu.utils.php
+Questa libreria contiene funzioni per la generazione dei menu di navigazione.
+
+### /_src/_lib/_mysql.tools.php
+Questa libreria contiene le funzioni necessarie alla gestione del database MySQL.
+
+### /_src/_lib/_mysql.utils.pbp
+Questa libreria contiene funzioni di varia utilità basate su MySQL.
+
+### /_src/_lib/_output.tools.php
+Questa libreria contiene funzioni per l'output.
+
+### /_src/_lib/_recaptcha.tools.php
+Questa libreria contiene una collezione di funzioni per la gestione di Google reCaptcha.
+
+### /_src/_lib/_rest.tools.php
+Questa libreria contiene strumenti utili per la gestione delle chiamate REST.
+
+### /_src/_lib/_rewrite.tools.php
+Questa funzione contiene strumenti per il supporto alla gestione dell'URL rewriting.
+
+### /_src/_lib/_string.tools.php
+Questa libreria contiene una collezione di funzioni per la manipolazione delle stringhe.
+
+### /_src/_lib/_xml.tools.php
+Questa libreria contiene funzioni per la gestione dell'XML.
+
+### /_src/_sh/_backup.run.sh
+Questo script crea un backup del sito nella cartella genitore della document root.
+
+### /_src/_sh/_codeception.init.sh
+Questo script inizializza le cartelle e il codice per i test. TODO va riordinato e documentato.
+
+### /_src/_sh/_codeception.run.sh
+Questo script esegue i test di accettazione del framework; i test si basano sugli esempi contenuti in _usr/_examples/; per
+ulteriori dettagli sul funzionamento dei test di accettazione del framework fare riferimento alla documentazione
+presente in dev/_usr/_docs/_dox/_test.dox.
+
+### /_src/_sh/_composer.update.sh
+Questo file esegue l'aggiornamento delle librerie esterne tramite composer; può inoltre eseguire una pulizia delle librerie
+attualmente installate se lanciato in modalità hard, questo è utile per risolvere problemi di aggiornamento di composer.
+
+## FAQ
+
+### domande generali
+
+#### quali sono le operazioni da svolgere per pubblicare una nuova release?
+Per pubblicare una nuova release è necessario:
+
+- incrementare il numero di versione
+- creare una release branch da develop
+- effettuare il debug e i test sulla release branch
+- fare il merge della release branch su master e su develop
+
+#### quali sono i comandi di una lettera disponibili nel framework?
+Il framework supporta diversi comandi di una lettera che possono essere passati nell'URL per ottenere determinati effetti, solitamente utili
+agli sviluppatori e ai tester.
+
+comando     | implementato in                           | effetto
+------------|-------------------------------------------|-------------------------------------------
+c           | /_src/_config/_420.pages.php              | forza il tema della pagina
+j           | /_src/_config/_210.auth.php               | innesca il login via JWT
+m           | /_src/_config/_420.pages.php              | inserisce il Lorem Ipsum come testo della pagina
+s           | /_src/_config/_420.pages.php              | forza lo schema della pagina
+t           | /_src/_config/_420.pages.php              | forza il template della pagina
+u           | /_src/_api/_pages.php                     | crea un commento HTML con il dump dell'array $ct a partire dal nodo indicato
+
+#### come creo pagine statiche senza bisogno di configurare il framework?
+È possibile creare contenuti statici che vengono serviti tramite il framework inserendoli nella cartella /usr/pages; è anche possibile creare delle
+sottocartelle. Una pagina HTML creata in /usr/pages/test.html sarà quindi raggiungibile, tramite un'apposita regola di /.htaccess, all'URL
+/test.html e una pagina creata in /usr/pages/prova/test.html sarà raggiungibile all'URL /prova/test.html.
+
+Questo meccanismo consente di importare nel framework interi siti statici, in modo da poter utilizzare le funzioni del framework che si
+desidera senza la necessità di riscrivere tutto.
+
+#### voglio creare un nuovo template, come faccio?
+Comincia studiando la documentazione su come sono strutturati i template in /_usr/_docs/_dox/_templates.dox.
+
+#### come creo una nuova pagina da file di configurazione PHP?
+Copia in custom il file standard al quale vuoi aggiungere una pagina (ricordati di togliere l'underscore iniziale); a questo punto puoi aggiungere
+la pagina. Ad esempio se vuoi aggiungere una pagina al file /_src/_inc/_pages/_app.it-IT.php devi customizzarlo in /src/inc/pages/app.it-IT.php.
+
+#### che cos'è esattamente un'entità nel gergo del framework?
+Un'entità è l'astrazione nel contesto del framework di un insieme di oggetti o concetti della vita reale. Solitamente corrisponde a una tabella
+nel database, e gli utenti hanno diversi tipi di permessi di interazione con essa.
