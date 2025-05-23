@@ -366,6 +366,10 @@ di navigazione, fra cui i menù e le briciole di pane.
 ### /_src/_config/_330.pages.php
 In questo file tutti i dati elaborati finora sui contenuti vengono salvati in cahce (Memcache) per utilizzi successivi.
 
+### /_src/_config/_340.sms.php
+In questo file vengono definiti i template SMS utilizzati dal framework. I template vengono definiti come array PHP e integrati con
+i template presenti nel database.
+
 ### /_src/_config/_350.mail.php
 In questo file vengono definiti i template mail utilizzati dal framework. I template vengono definiti come array PHP e integrati con
 i template presenti nel database.
@@ -412,6 +416,20 @@ In questo file vengono definiti i server e i profili SMTP.
 ### /_src/_config/_515.smtp.php
 In questo file l'array $cf['smtp'] viene integrato con $cx['smtp'] e con $cf['site']['smtp']. Viene inoltre salvato il profilo SMTP attivo
 in $cf['smtp']['profile'] e il server SMTP di default in $cf['smtp']['server'].
+
+### /_src/_config/_520.mapquest.php
+In questo file vengono definiti i server e i profili Mapquest.
+
+### /_src/_config/_525.mapquest.php
+In questo file l'array $cf['mapquest'] viene integrato con $cx['mapquest'] e collegato tramite puntatore a $ct['mapquest']. Vengono inoltre
+definiti il profilo corrente in $cf['mapquest']['profile'] e il server corrente in $cf['mapquest']['server'].
+
+### /_src/_config/_540.sms.php
+In questo file vengono definiti i server e i profili SMS.
+
+### /_src/_config/_545.sms.php
+In questo file l'array $cf['sms'] viene integrato con $cx['sms']. Vengono inoltre definiti il profilo corrente in $cf['sms']['profile']
+e il server corrente in $cf['sms']['server'].
 
 ### /_src/_css/_back2top.css
 In questo file viene definito lo stile CSS per il tasto "torna su".
