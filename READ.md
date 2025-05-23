@@ -431,6 +431,9 @@ In questo file vengono definiti i server e i profili SMS.
 In questo file l'array $cf['sms'] viene integrato con $cx['sms']. Vengono inoltre definiti il profilo corrente in $cf['sms']['profile']
 e il server corrente in $cf['sms']['server'].
 
+### /_src/_config/_940.session.php
+In questo file vengono salvate diverse informazioni utili sulla sessione, fra cui la timestamp dell'ultimo utilizzo.
+
 ### /_src/_css/_back2top.css
 In questo file viene definito lo stile CSS per il tasto "torna su".
 
@@ -482,6 +485,9 @@ attesa che il framework implementi una propria gestione della scalatura delle fa
 
 ### /_src/_inc/_macro/_security.php
 Questo file implementa il firewall applicativo del framework ed è quindi cruciale per la sua sicurezza.
+
+### /_src/_inc/_pages/_app.it-IT.php
+Questo file contiene la dichiarazione delle pagine della web app standard del framework.
 
 ### /_src/_inc/_pages/_dashboard.it-IT.php
 Questo file contiene la dichiarazione delle pagine della dashboard del CMS.
