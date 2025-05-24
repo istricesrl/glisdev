@@ -23,3 +23,4 @@
 
     // debug
     // print_r( $cf['auth'] );
+    // print_r( $cx['auth'] );

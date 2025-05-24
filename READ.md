@@ -431,6 +431,13 @@ In questo file vengono definiti i server e i profili SMS.
 In questo file l'array $cf['sms'] viene integrato con $cx['sms']. Vengono inoltre definiti il profilo corrente in $cf['sms']['profile']
 e il server corrente in $cf['sms']['server'].
 
+### /_src/_config/_580.ftp.php
+In questo file vengono definiti i server e i profili FTP.
+
+### /_src/_config/_585.ftp.php
+In questo file l'array $cf['ftp'] viene integrato con $cx['ftp'] e $cx['site]['ftp']. Vengono inoltre definiti il profilo corrente
+in $cf['ftp']['profile'] e il server corrente in $cf['ftp']['server'].
+
 ### /_src/_config/_940.session.php
 In questo file vengono salvate diverse informazioni utili sulla sessione, fra cui la timestamp dell'ultimo utilizzo.
 
