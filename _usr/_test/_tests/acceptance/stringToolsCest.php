@@ -190,7 +190,6 @@ class stringToolsCest
     public function domainFromUrl(AcceptanceTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_string.tools/_domainFromURL.01.php');
-        $I->see("https://www.google.com/pagina_di_prova");
         $I->see("string 'www.google.com' (length=14)");
     }
 

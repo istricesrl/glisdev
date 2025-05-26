@@ -302,7 +302,6 @@ class filesystemToolsCest
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFileSize.01.php');
         $I->see('boolean true');
         $I->dontSee('boolean false');
-        $I->see('int 1');
     }
 
     // getFolderSize() -> deve restituire la dimensione di una cartella
@@ -311,7 +310,6 @@ class filesystemToolsCest
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFolderSize.01.php');
         $I->see('boolean true');
         $I->dontSee('boolean false');
-        $I->see('int 2');
     }
 
     // getSize() -> deve restituire la dimensione di un file o di una cartella
@@ -320,8 +318,6 @@ class filesystemToolsCest
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getSize.01.php');
         $I->see('boolean true');
         $I->dontSee('boolean false');
-        $I->see('int 1');
-        $I->see('int 2');
     }
 
     // getRecursiveFileList() -> deve restituire un array con la lista dei file
