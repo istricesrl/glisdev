@@ -711,6 +711,10 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        '__report_iscrizioni_anagrafica__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'valutazioni' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
