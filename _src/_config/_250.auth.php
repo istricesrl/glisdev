@@ -1122,3 +1122,5 @@
         )
     );
  
+    // debug
+    // var_dump($cf['auth']['permissions']);
