@@ -122,6 +122,8 @@
 
     // debug
     // print_r( $_SESSION );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
 
     /**
      * configurazioni iniziali
@@ -591,6 +593,25 @@
 
                 // TODO attribuzione dei permessi
                 // prelevare il codice da _255.auth.php
+
+                // indice delle sessioni attive
+                $cf['auth']['index']['users'][ $_REQUEST['__login__']['user'] ][ $_SESSION['id'] ] = array(
+                    'id' => $_SESSION['id'],
+                    'timestamp' => time(),
+                    'ip' => $_SERVER['REMOTE_ADDR'],
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                    'site' => $cf['site']['fqdn']
+                );
+
+                // salvataggio dell'indice delle sessioni attive
+                if( isset( $cf['redis']['connection'] ) && ! empty( REDIS_MULTISITE_SEED ) ) {
+                    $cf['redis']['connection']->set(
+                        REDIS_MULTISITE_SEED,
+                        json_encode( $cf['auth']['index'] )
+                    );
+                }
+
+                // print_r( $cf['auth']['index'] );
 
             }
 
