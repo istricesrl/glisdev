@@ -1,13 +1,13 @@
 <?php
 
     /**
-     * server e profili SMS
+     * server e profili Slack
      *
      *
      *
      *
      *
-     *
+     * https://api.slack.com/apps/
      *
      *
      * TODO documentare
@@ -23,7 +23,7 @@
      */
 
     // server disponibili
-    $cf['sms']['servers']            = array();
+    $cf['slack']['servers']                     = array();
 
     /**
      * definizione dei profili
@@ -33,6 +33,6 @@
      */
 
     // profili di funzionamento
-    $cf['sms']['profiles'][ DEVELOPEMENT ]         =
-    $cf['sms']['profiles'][ TESTING ]    =
-    $cf['sms']['profiles'][ PRODUCTION ]    = NULL;
+    $cf['slack']['profiles'][ DEVELOPEMENT ]    =
+    $cf['slack']['profiles'][ TESTING ]         =
+    $cf['slack']['profiles'][ PRODUCTION ]      = NULL;
