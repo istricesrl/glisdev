@@ -496,6 +496,13 @@ In questo file vengono definiti i server e i profili Archivium.
 In questo file l'array $cf['archivium'] viene integrato con $cx['archivium'] e $cx['site']['archivium']; viene inoltre collegato
 $cf['archivium'] a $ct['archivium'] e viene definito il profilo corrente in $cf['archivium']['profile'].
 
+### /_src/_config/_570.openai.php
+In questo file vengono definiti i server e i profili OpenAI.
+
+### /_src/_config/_575.openai.php
+In questo file viene integrato l'array $cf['openai'] con $cx['openai']; viene inoltre collegato $cf['openai'] a $ct['openai'] tramite puntatore.
+Infine vengono impostati il profilo e il server corrente rispettivamente in $cf['openai']['profile'] e $cf['openai']['server'].
+
 ### /_src/_config/_580.ftp.php
 In questo file vengono definiti i server e i profili FTP.
 
