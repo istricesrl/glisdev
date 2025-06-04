@@ -87,6 +87,54 @@ ietf contenga la lingua corrente e che la traduzione che si desidera è presente
 I file dei dizionari vengono importati in $cf nel file /_src/_config/_090.translation.php e $cf['tr] viene collegato a $ct['tr] in
 /_src/_config/_095.translation.php.
 
+### /_etc/_dictionaries/_generic.cs-CZ.conf
+Dizionario generico per la lingua ceca.
+
+### /_etc/_dictionaries/_generic.de-DE.conf
+Dizionario generico per la lingua tedesca.
+
+### /_etc/_dictionaries/_generic.en-GB.conf
+Dizionario generico per la lingua inglese britannica.
+
+### /_etc/_dictionaries/_generic.en-US.conf
+Dizionario generico per la lingua inglese statunitense.
+
+### /_etc/_dictionaries/_generic.es-ES.conf
+Dizionario generico per la lingua spagnola.
+
+### /_etc/_dictionaries/_generic.fr-FR.conf
+Dizionario generico per la lingua francese.
+
+### /_etc/_dictionaries/_generic.hr-HR.conf
+Dizionario generico per la lingua croata.
+
+### /_etc/_dictionaries/_generic.hu-HU.conf
+Dizionario generico per la lingua ungherese.
+
+### /_etc/_dictionaries/_generic.it-IT.conf
+Dizionario generico per la lingua italiana.
+
+### /_etc/_dictionaries/_generic.ja-JP.conf
+Dizionario generico per la lingua giapponese.
+
+### /_etc/_dictionaries/_generic.pl-PL.conf
+Dizionario generico per la lingua polacca.
+
+### /_etc/_dictionaries/_generic.pt-BR.conf
+Dizionario generico per la lingua portoghese brasiliana.
+
+### /_etc/_dictionaries/_generic.pt-PT.conf
+Dizionario generico per la lingua portoghese.
+
+### /_etc/_dictionaries/_generic.ro-RO.conf
+Dizionario generico per la lingua rumena.
+
+### /_etc/_dictionaries/_generic.ru-RU.conf
+Dizionario generico per la lingua russa.
+
+### /_etc/_dictionaries/_generic.sv-SE.conf
+Dizionario generico per la lingua svedese.
+
 ### /_etc/_doxygen/_doxygen.conf
 Questo è il file di configurazione utilizzato per compilare la documentazione del framework tramite Doxygen (https://www.doxygen.nl/). La
 compilazione della documentazione viene effettuata tramite lo script /_src/_sh/_doxygen.build.sh e i documenti compilati vengono salvati in
@@ -410,6 +458,9 @@ s               | modifica lo schema della pagina (es. ?s=schema-prova)
 c               | modifica il tema della pagina (es. ?c=natale)
 m               | inserisce del lorem ipsum in $ct['page']['content'][ $cf['localization']['language']['ietf'] ] (es. ?m=5)
 
+### /_src/_config/_430.security.php
+File inserito per retrocompatibilità e customizzazione.
+
 ### /_src/_config/_510.smtp.php
 In questo file vengono definiti i server e i profili SMTP.
 
@@ -490,8 +541,12 @@ e in particolare vengono cercati questi file:
 Dal momento che la creazione di così tante icone può risultare tediosa, è possibile avvalersi di strumenti come https://www.favicon-generator.org/ in
 attesa che il framework implementi una propria gestione della scalatura delle favicon.
 
+### /_src/_inc/_macro/_app.php
+Questa è la macro di pagina di default della pagina app. In standard non prevede particolari funzionalità, ma è pensata per essere customizzata.
+
 ### /_src/_inc/_macro/_security.php
-Questo file implementa il firewall applicativo del framework ed è quindi cruciale per la sua sicurezza.
+Questo file implementa il firewall applicativo del framework ed è quindi cruciale per la sua sicurezza. Viene incluso da /_src/_config.php e si occupa
+di filtrare le richieste potenzialmente dannose. Per i dettagli del suo funzionamento si vedano i commenti al codice.
 
 ### /_src/_inc/_pages/_app.it-IT.php
 Questo file contiene la dichiarazione delle pagine della web app standard del framework.
@@ -547,7 +602,7 @@ Questa libreria contiene funzioni per la generazione dei menu di navigazione.
 ### /_src/_lib/_mysql.tools.php
 Questa libreria contiene le funzioni necessarie alla gestione del database MySQL.
 
-### /_src/_lib/_mysql.utils.pbp
+### /_src/_lib/_mysql.utils.php
 Questa libreria contiene funzioni di varia utilità basate su MySQL.
 
 ### /_src/_lib/_output.tools.php
@@ -582,6 +637,42 @@ presente in dev/_usr/_docs/_dox/_test.dox.
 ### /_src/_sh/_composer.update.sh
 Questo file esegue l'aggiornamento delle librerie esterne tramite composer; può inoltre eseguire una pulizia delle librerie
 attualmente installate se lanciato in modalità hard, questo è utile per risolvere problemi di aggiornamento di composer.
+
+### /_src/_sh/_deploy.run.sh
+Questo script esegue il deploy dell'installazione corrente su un target indicato come argomento. L'argometo che specifica
+il target deve corrispondere al nome del file di configurazione da utilizzare per il deploy, fra quelli disponibili
+nella cartella /etc/deploy/; il nome del file va specificato al netto dell'estensione .properties:
+
+```
+./_src/_sh/_deploy.run.sh stable
+```
+
+### /_src/_sh/_folders.check.sh
+Questo script controlla che esistano le cartelle custom solitamente necessarie al funzionamento corretto del framework.
+
+### /_src/_sh/_gw.clean.sh
+Questo script effettua una pulitura dei file superflui del framework; può essere chiamato in modalità soft o hard a seconda
+di quanto si vuole cancellare.
+
+### /_src/_sh/_lamp.permissions.open.sh
+Questo script resetta i permessi della document root del sito in modo che i file siano accessibili a più utenti possibile,
+solitamente è una modalità utilizzata per sviluppo e debug; si noti che con i permessi aperti il framework non gira per
+motivi di sicurezza.
+
+### /_src/_sh/_lamp.permissions.secure.sh
+Questo script resetta i permessi della document root del sito in modo che siano il più restrittivi possibile. Questa è la
+modalità di funzionamento predefinita del framework.
+
+### /_src/_sh/_lamp.setup.sh
+Questo script fa il setup dell'ambiente LAMP necessario a far girare il framework.
+
+### /_src/_sh/_password.hash.sh
+Questo script genera l'hash di una password in modo che possa essere utilizzata nella configurazione o nel database del
+framework.
+
+### /_src/_sh/_lib/_functions.sh
+Questa libreria viene utilizzata dagli script shell del framework per svolgere alcuni compiti base come la gestione degli
+argomenti da linea di comando.
 
 ## FAQ
 
