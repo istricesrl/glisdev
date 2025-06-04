@@ -482,6 +482,20 @@ In questo file vengono definiti i server e i profili SMS.
 In questo file l'array $cf['sms'] viene integrato con $cx['sms']. Vengono inoltre definiti il profilo corrente in $cf['sms']['profile']
 e il server corrente in $cf['sms']['server'].
 
+### /_src/_config/_550.slack.php
+In questo file vengono definiti i server e i profili Slack.
+
+### /_src/_config/_555.slack.php
+In questo file l'array $cf['slack'] viene integrato con $cx['slack'] e $cf['site']['slack'] e collegato tramite puntatore a $ct['slack'].
+Viene inoltre definito il profilo corrente in $cf['slack']['profile'].
+
+### /_src/_config/_560.archivium.php
+In questo file vengono definiti i server e i profili Archivium.
+
+### /_src/_config/_565.archivium.php
+In questo file l'array $cf['archivium'] viene integrato con $cx['archivium'] e $cx['site']['archivium']; viene inoltre collegato
+$cf['archivium'] a $ct['archivium'] e viene definito il profilo corrente in $cf['archivium']['profile'].
+
 ### /_src/_config/_580.ftp.php
 In questo file vengono definiti i server e i profili FTP.
 
