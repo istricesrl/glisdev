@@ -510,6 +510,13 @@ In questo file vengono definiti i server e i profili FTP.
 In questo file l'array $cf['ftp'] viene integrato con $cx['ftp'] e $cx['site]['ftp']. Vengono inoltre definiti il profilo corrente
 in $cf['ftp']['profile'] e il server corrente in $cf['ftp']['server'].
 
+### /_src/_config/_600.common.php
+In questo file vengono definiti i profili di funzionamento per le integrazioni con TeamSystem e Zucchetti.
+
+### /_src/_config/_605.common.php
+In questo file vengono integrati con la configurazione da file i profili di funzionamento per le integrazioni con TeamSystem e Zucchetti,
+e vengono definiti i profili correnti.
+
 ### /_src/_config/_940.session.php
 In questo file vengono salvate diverse informazioni utili sulla sessione, fra cui la timestamp dell'ultimo utilizzo.
 
