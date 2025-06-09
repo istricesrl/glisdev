@@ -144,7 +144,12 @@
      */
 
     // verifico la challenge reCAPTCHA
-    if( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+    if( defined( 'LOGIN_VIA_API' ) ) {
+
+        // punteggio di spam
+        $cf['session']['spam']['check'] = true;
+
+    } elseif( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
         // registro il valore di bot
         $cf['session']['spam']['score'] = reCaptchaVerifyV3( $_REQUEST['__login__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
