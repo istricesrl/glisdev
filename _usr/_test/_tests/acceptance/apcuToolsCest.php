@@ -29,6 +29,22 @@ class apcuToolsCest
         $I->see('boolean true');
     }
 
+    // apcuGetKeyAge() -> deve restituire un int
+    public function apcuGetKeyAge(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_apcu.tools/_apcuGetKeyAge.01.php');
+        $I->see('boolean true');
+        $I->see('int ');
+    }
+
+    // apcuRead() -> deve restituire il valore scritto con apcuWrite()
+    public function apcuRead(AcceptanceTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_apcu.tools/_apcuRead.01.php');
+        $I->see('boolean true');
+        $I->see('TEST CONTENT');
+    }
+
     // apcuDelete() -> deve restituire true
     public function apcuDelete(AcceptanceTester $I)
     {
@@ -41,14 +57,6 @@ class apcuToolsCest
     {
         $I->amOnPage('/_usr/_examples/_lib/_apcu.tools/_apcuFlush.01.php');
         $I->see('boolean true');
-    }
-
-    // apcuRead() -> deve restituire il valore scritto con apcuWrite()
-    public function apcuRead(AcceptanceTester $I)
-    {
-        $I->amOnPage('/_usr/_examples/_lib/_apcu.tools/_apcuRead.01.php');
-        $I->see('boolean true');
-        $I->see('TEST CONTENT');
     }
 
     // settaggi post test
