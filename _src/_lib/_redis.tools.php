@@ -13,6 +13,9 @@
      * GlisWeb sfrutta in maniera marginale questa caratteristica di Redis ma è pravisto di lavorarci su in futuro. Per ulteriori informazioni
      * su Redis si veda https://github.com/phpredis/phpredis/ e https://www.html.it/guide/redis-la-guida/.
      *
+     * vedi anche https://www.freecodecamp.org/news/how-to-use-redis-with-php/
+     * vedi anche https://www.webarea.it/howto/nosql/redis-php-installazione-configurazione-esempi-utilizzo_160
+     *
      * funzioni
      * ========
      * Le funzioni di questa libreria sono divise in tre gruppi, le funzioni di utilità generale, quelle per la scrittura e quelle per
