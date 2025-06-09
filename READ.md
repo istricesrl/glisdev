@@ -639,6 +639,9 @@ Questa libreria contiene funzioni per l'output.
 ### /_src/_lib/_recaptcha.tools.php
 Questa libreria contiene una collezione di funzioni per la gestione di Google reCaptcha.
 
+### /_src/_lib/_redis.tools.php
+Questa libreria contiene funzioni utili per gestire la cache di Redis.
+
 ### /_src/_lib/_rest.tools.php
 Questa libreria contiene strumenti utili per la gestione delle chiamate REST.
 
