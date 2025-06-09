@@ -4,7 +4,8 @@
      * questo file contiene funzioni per l'utilizzo di redis
      *
      *
-     *
+     * vedi https://www.freecodecamp.org/news/how-to-use-redis-with-php/
+     * vedi https://www.webarea.it/howto/nosql/redis-php-installazione-configurazione-esempi-utilizzo_160
      *
      * TODO documentare
      *
