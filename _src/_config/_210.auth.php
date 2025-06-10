@@ -223,13 +223,14 @@
 
         // $tokenFile = DIR_BASE . 'etc/secure/tokens/' . $httpHeaders['gliswebAuthKey'];
 
-        if( file_exists( $tokenFile ) ) {
+        // if( file_exists( $tokenFile ) ) {
 
             // ...
             // $apiKeyUser = trim( file_get_contents( $tokenFile ) );
             $apiKeyUser = trim( redisRead( $cf['redis']['connection'], $httpHeaders['gliswebAuthKey'] ) );
 
             // die( 'token file trovato: ' . $tokenFile );
+            die( 'token redis trovato: ' . $httpHeaders['gliswebAuthKey'] );
 
             // ...
             if( in_array( $apiKeyUser, array_keys( $cf['auth']['accounts'] ) ) ) {
@@ -254,11 +255,11 @@
 
             }
 
-        } else {
+        // } else {
 
-            die( 'token file non trovato: ' . $tokenFile );
+            // die( 'token file non trovato: ' . $tokenFile );
 
-        }
+        // }
 
     }
 
