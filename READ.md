@@ -212,6 +212,10 @@ Questa API consente il login dell'utente, è utilizzata per le integrazioni e pe
 login è possibile ottenere un'API key temporanea per fare più rapidamente le chiamate successive. Per ulteriori dettagli sul meccanismo di login
 tramite API key si vedano i commenti a questo file e ai file dev/_src/_config/_210.auth.php e dev/_src/_config/_220.auth.php.
 
+### /_src/_api/_report/_cookie.php
+Questo report restituisce l'elenco di tutti i cookie presenti nel browser per il dominio corrente indicando se sono gestiti o meno dal
+framework, il loro scopo e altre informazioni utili.
+
 ### /_src/_api/_status/_cf.php
 Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
 per evitare problemi di sicurezza. Tramite una regola di /.htaccess l'accesso a questa API è possibile tramite l'URL speciale /cf.

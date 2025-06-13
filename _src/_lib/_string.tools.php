@@ -540,8 +540,11 @@
     function inRegexpArray( $t, $a ) {
 
         $match = false;
-
+      
         foreach( $a as $r ) {
+            if( ! preg_match( '/^\/.*\/[a-z]*$/', $r ) ) {
+                $r = '/' . $r . '/';
+            }
             if( preg_match( $r, $t ) ) {
                 $match = true;
             }
