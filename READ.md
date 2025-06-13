@@ -731,20 +731,29 @@ t           | /_src/_config/_420.pages.php              | forza il template dell
 u           | /_src/_api/_pages.php                     | crea un commento HTML con il dump dell'array $ct a partire dal nodo indicato
 
 #### come creo pagine statiche senza bisogno di configurare il framework?
-È possibile creare contenuti statici che vengono serviti tramite il framework inserendoli nella cartella /usr/pages; è anche possibile creare delle
-sottocartelle. Una pagina HTML creata in /usr/pages/test.html sarà quindi raggiungibile, tramite un'apposita regola di /.htaccess, all'URL
-/test.html e una pagina creata in /usr/pages/prova/test.html sarà raggiungibile all'URL /prova/test.html.
+È possibile creare contenuti statici che vengono serviti tramite il framework inserendoli nella cartella 
+/usr/pages; è anche possibile creare delle sottocartelle. Una pagina HTML creata in /usr/pages/test.html sarà 
+quindi raggiungibile, tramite un'apposita regola di /.htaccess, all'URL /test.html e una pagina creata in 
+/usr/pages/prova/test.html sarà raggiungibile all'URL /prova/test.html.
 
-Questo meccanismo consente di importare nel framework interi siti statici, in modo da poter utilizzare le funzioni del framework che si
-desidera senza la necessità di riscrivere tutto.
+Questo meccanismo consente di importare nel framework interi siti statici, in modo da poter utilizzare le
+funzioni del framework che si desidera senza la necessità di riscrivere tutto.
 
 #### voglio creare un nuovo template, come faccio?
 Comincia studiando la documentazione su come sono strutturati i template in /_usr/_docs/_dox/_templates.dox.
 
 #### come creo una nuova pagina da file di configurazione PHP?
-Copia in custom il file standard al quale vuoi aggiungere una pagina (ricordati di togliere l'underscore iniziale); a questo punto puoi aggiungere
-la pagina. Ad esempio se vuoi aggiungere una pagina al file /_src/_inc/_pages/_app.it-IT.php devi customizzarlo in /src/inc/pages/app.it-IT.php.
+Copia in custom il file standard al quale vuoi aggiungere una pagina (ricordati di togliere l'underscore iniziale); 
+a questo punto puoi aggiungere la pagina. Ad esempio se vuoi aggiungere una pagina al file /_src/
+_inc/_pages/_app.it-IT.php devi customizzarlo in /src/inc/pages/app.it-IT.php.
 
 #### che cos'è esattamente un'entità nel gergo del framework?
-Un'entità è l'astrazione nel contesto del framework di un insieme di oggetti o concetti della vita reale. Solitamente corrisponde a una tabella
-nel database, e gli utenti hanno diversi tipi di permessi di interazione con essa.
+Un'entità è l'astrazione nel contesto del framework di un insieme di oggetti o concetti della vita reale. 
+Solitamente corrisponde a una tabella nel database, e gli utenti hanno diversi tipi di permessi di interazione
+con essa.
+
+#### come aggiungo un nuovo metodo di pagamento al framework?
+Dopo aver studiato il nuovo metodo di pagamento occorre capire come si può interfacciare al processo di pagamento
+del framework. Tipicamente si dovrà creare una libreria per le funzioni di supporto, e almeno un listener per
+gestire le comunicazioni in ingresso dal server del gestore del pagamento. A livello di configurazione è necessario
+aggiungere il metodo di pagamento all'array dei metodi di pagamento.
