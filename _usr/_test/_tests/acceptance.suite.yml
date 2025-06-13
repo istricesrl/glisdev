@@ -10,4 +10,5 @@ modules:
         - PhpBrowser:
             url: https://glisdev.istricesrl.com
         - \Helper\Acceptance
+        - Asserts
 step_decorators: ~

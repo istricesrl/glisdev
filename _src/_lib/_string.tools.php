@@ -37,6 +37,8 @@
      * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
      * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      *
+     * 
+     * TODO documentare
      *
      */
 
