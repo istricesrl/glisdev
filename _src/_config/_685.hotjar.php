@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * server e profili Archivium
+     * profili Hotjar
      *
      *
      *
@@ -23,13 +23,13 @@
      */
 
     // configurazione extra
-    if( isset( $cx['archivium'] ) ) {
-        $cf['archivium'] = array_replace_recursive( $cf['archivium'], $cx['archivium'] );
+    if( isset( $cx['hotjar'] ) ) {
+        $cf['hotjar'] = array_replace_recursive( $cf['hotjar'], $cx['hotjar'] );
     }
 
     // configurazione extra per sito
-    if( isset( $cf['site']['archivium'] ) ) {
-        $cf['archivium'] = array_replace_recursive( $cf['archivium'], $cf['site']['archivium'] );
+    if( isset( $cf['site']['hotjar'] ) ) {
+        $cf['hotjar'] = array_replace_recursive( $cf['hotjar'], $cf['site']['hotjar'] );
     }
 
     /**
@@ -40,7 +40,7 @@
      */
 
     // collegamento all'array $ct
-    $ct['archivium']                        = &$cf['archivium'];
+    $ct['hotjar']                    = &$cf['hotjar'];
 
     /**
      * collegamento scorciatoie
@@ -50,4 +50,4 @@
      */
 
     // link al profilo corrente
-    $cf['archivium']['profile']             = &$cf['archivium']['profiles'][ $cf['site']['status'] ];
+    $cf['hotjar']['profile']            = &$cf['hotjar']['profiles'][ $cf['site']['status'] ];

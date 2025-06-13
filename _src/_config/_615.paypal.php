@@ -1,9 +1,7 @@
 <?php
 
     /**
-     * server e profili Archivium
-     *
-     *
+     * server e profili paypal
      *
      *
      *
@@ -11,7 +9,6 @@
      *
      *
      * TODO documentare
-     *
      *
      */
 
@@ -23,13 +20,13 @@
      */
 
     // configurazione extra
-    if( isset( $cx['archivium'] ) ) {
-        $cf['archivium'] = array_replace_recursive( $cf['archivium'], $cx['archivium'] );
+    if( isset( $cx['paypal'] ) ) {
+        $cf['paypal'] = array_replace_recursive( $cf['paypal'], $cx['paypal'] );
     }
 
     // configurazione extra per sito
-    if( isset( $cf['site']['archivium'] ) ) {
-        $cf['archivium'] = array_replace_recursive( $cf['archivium'], $cf['site']['archivium'] );
+    if( isset( $cf['site']['paypal'] ) ) {
+        $cf['paypal'] = array_replace_recursive( $cf['paypal'], $cf['site']['paypal'] );
     }
 
     /**
@@ -40,7 +37,7 @@
      */
 
     // collegamento all'array $ct
-    $ct['archivium']                        = &$cf['archivium'];
+    $ct['paypal']                        = &$cf['paypal'];
 
     /**
      * collegamento scorciatoie
@@ -50,4 +47,4 @@
      */
 
     // link al profilo corrente
-    $cf['archivium']['profile']             = &$cf['archivium']['profiles'][ $cf['site']['status'] ];
+    $cf['paypal']['profile']            = &$cf['paypal']['profiles'][ $cf['site']['status'] ];

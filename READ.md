@@ -207,6 +207,11 @@ Questo file ha lo scopo di renderizzare e erogare le pagine. Svolge numerose fun
 per i dettagli. In sintesi, riceve le richieste di pagina in base alle regole del file /.htaccess e le soddisfa tramite le informazioni in suo
 possesso.
 
+### /_src/_api/_user.php
+Questa API consente il login dell'utente, è utilizzata per le integrazioni e per il dialogo con app e altri sistemi esterni. Tramite il meccanismo di
+login è possibile ottenere un'API key temporanea per fare più rapidamente le chiamate successive. Per ulteriori dettagli sul meccanismo di login
+tramite API key si vedano i commenti a questo file e ai file dev/_src/_config/_210.auth.php e dev/_src/_config/_220.auth.php.
+
 ### /_src/_api/_status/_cf.php
 Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
 per evitare problemi di sicurezza. Tramite una regola di /.htaccess l'accesso a questa API è possibile tramite l'URL speciale /cf.
@@ -517,6 +522,44 @@ In questo file vengono definiti i profili di funzionamento per le integrazioni c
 In questo file vengono integrati con la configurazione da file i profili di funzionamento per le integrazioni con TeamSystem e Zucchetti,
 e vengono definiti i profili correnti.
 
+### /_src/_config/_610.paypal.php
+In questo file vengono definiti i profili di funzionamento di PayPal. Questi profili sono utilizzati dal modulo pagamenti per gestire il saldo
+dei pagamenti, e non sono collegati al modulo e-commerce.
+
+### /_src/_config/_615.paypal.php
+In questo file i dati di funzionamento di PayPal vengono integrati con le direttive da file di configurazione, generali e per sito.
+Vengono inoltre definite le scorciatoie e collegato $cf['paypal'] a $ct['paypal'].
+
+### /_src/_config/_620.amazon.php
+In questo file vengono definiti i profili di funzionamento di Amazon.
+
+### /_src/_config/_625.amazon.php
+In questo file i dati di Amazon vengono integrati con le direttive presenti nei file di configurazione generali e per sito; vengono
+create le scorciatoie e l'array $cf['amazon'] viene collegato a $ct['amazon'].
+
+### /_src/_config/_640.facebook.php
+In questo file vengono definiti i profili di funzionamento di Facebook.
+
+### /_src/_config/_645.facebook.php
+In questo file i dati di Facebook vengono integrati con le direttive di configurazione da file, generali e per sito. Vengono definite le
+scorciatoie e l'array $cf['facebook'] viene collegato a $ct['facebook'].
+
+### /_src/_config/_680.hotjar.php
+In questo file vengono definiti i profili di funzionamento di Hotjar.
+
+### /_src/_config/_685.hotjar.php
+In questo file i dati di Hotjar vengono integrati con le configurazioni da file, generiche e per sito. Vengono configurate le scorciatoie
+e l'array $cf['hotjar'] viene collegato a $ct['hotjar'].
+
+### /_src/_config/_710.session.php
+In questo file vengono inizializzati gli array $_SESSION['__view__'], $_SESSION['__work__'], $_REQUEST['__err__'] e _REQUEST['__info__'].
+
+### /_src/_config/_715.session.php
+In questo file gli array $_SESSION['__view__'] e $_SESSION['__work__'] vengono integrati e collegati a $_REQUEST['__view__'], $_REQUEST['__work__'].
+
+### /_src/_config/_720.privacy.php
+In questo file i cookie vengono indicizzati per ID.
+
 ### /_src/_config/_940.session.php
 In questo file vengono salvate diverse informazioni utili sulla sessione, fra cui la timestamp dell'ultimo utilizzo.
 
@@ -705,6 +748,10 @@ framework.
 Questa libreria viene utilizzata dagli script shell del framework per svolgere alcuni compiti base come la gestione degli
 argomenti da linea di comando.
 
+### /_src/_twig/_inc/_analytics.head.twig
+Questo file include il codice per Google Analytics posto che l'utente abbia prestato il consenso oppure che Analytics sia
+configurato in modalità anonimizzazione IP.
+
 ## FAQ
 
 ### domande generali
@@ -756,4 +803,20 @@ con essa.
 Dopo aver studiato il nuovo metodo di pagamento occorre capire come si può interfacciare al processo di pagamento
 del framework. Tipicamente si dovrà creare una libreria per le funzioni di supporto, e almeno un listener per
 gestire le comunicazioni in ingresso dal server del gestore del pagamento. A livello di configurazione è necessario
-aggiungere il metodo di pagamento all'array dei metodi di pagamento.
+aggiungere il metodo di pagamento all'array dei metodi di pagamento. Prima di iniziare il processo di integrazione
+studiare bene tutti i commenti al codice delle integrazioni già esistenti.
+
+#### come definisco quali cookie utilizza il sito?
+Per ogni cookie o gruppo di cookie che utilizzi devi definire un paragrafo di configurazione in $cf['privacy']['cookie'],
+e precisamente:
+
+- i cookie propri tecnici vanno sotto $cf['privacy']['cookie']['propri]['tecnici']
+- i cookie propri di profilazione vanno sotto $cf['privacy']['cookie']['propri]['analitici']
+- i cookie di terze parti tecnici vanno sotto $cf['privacy']['cookie']['terzi]['tecnici']
+- i cookie di terze parti di profilazione vanno sotto $cf['privacy']['cookie']['terzi]['analitici']
+
+Per una panoramica delle chiavi da inserire si vedano i commenti al codice del file /_src/_config/_060.privacy.php mentre
+per comprendere come questi dati vengono letti e scritti sui cookie si veda /_src/_config/_065.privacy.php. Le
+impostazioni dei cookie vengono poi lette dai file twig che compongono le pagine per decidere se inserire o meno il
+codice che genera i cookie.
+

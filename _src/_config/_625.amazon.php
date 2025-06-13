@@ -1,9 +1,7 @@
 <?php
 
     /**
-     * server e profili Archivium
-     *
-     *
+     * server e profili amazon
      *
      *
      *
@@ -23,13 +21,13 @@
      */
 
     // configurazione extra
-    if( isset( $cx['archivium'] ) ) {
-        $cf['archivium'] = array_replace_recursive( $cf['archivium'], $cx['archivium'] );
+    if( isset( $cx['amazon'] ) ) {
+        $cf['amazon'] = array_replace_recursive( $cf['amazon'], $cx['amazon'] );
     }
 
     // configurazione extra per sito
-    if( isset( $cf['site']['archivium'] ) ) {
-        $cf['archivium'] = array_replace_recursive( $cf['archivium'], $cf['site']['archivium'] );
+    if( isset( $cf['site']['amazon'] ) ) {
+        $cf['amazon'] = array_replace_recursive( $cf['amazon'], $cf['site']['amazon'] );
     }
 
     /**
@@ -40,7 +38,7 @@
      */
 
     // collegamento all'array $ct
-    $ct['archivium']                        = &$cf['archivium'];
+    $ct['amazon']                    = &$cf['amazon'];
 
     /**
      * collegamento scorciatoie
@@ -50,4 +48,4 @@
      */
 
     // link al profilo corrente
-    $cf['archivium']['profile']             = &$cf['archivium']['profiles'][ $cf['site']['status'] ];
+    $cf['amazon']['profile']            = &$cf['amazon']['profiles'][ $cf['site']['status'] ];
