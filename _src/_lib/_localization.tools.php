@@ -99,14 +99,17 @@
      * @return       mixed                      la stringa o l'array ricodificati
      *
      */
-    function string2utf8($mixed)
+    function string2utf8($mixed, $encoding = null)
     {
+        if ($encoding === null) {
+            $encoding = mb_detect_encoding($mixed, mb_detect_order(), true);
+        }
         if (is_array($mixed)) {
             foreach ($mixed as $key => $value) {
-                $mixed[$key] = string2utf8($value);
+                $mixed[$key] = string2utf8($value, $encoding);
             }
         } elseif (is_string($mixed)) {
-            return mb_convert_encoding($mixed, "UTF-8", "UTF-8");
+            return mb_convert_encoding($mixed, "UTF-8", $encoding);
         }
         return $mixed;
     }
