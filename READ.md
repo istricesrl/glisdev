@@ -564,6 +564,10 @@ In questo file gli array $_SESSION['__view__'] e $_SESSION['__work__'] vengono i
 ### /_src/_config/_720.privacy.php
 In questo file i cookie vengono indicizzati per ID.
 
+### /_src/_config/_730.controller.php
+In questo file vengono inclusi gli eventuali parser di pagina. I parser sono un meccanismo tramite il quale il framework pre elabora
+i dati presenti in $_REQUEST per prepararli al lavoro dei runlevel successivi.
+
 ### /_src/_config/_940.session.php
 In questo file vengono salvate diverse informazioni utili sulla sessione, fra cui la timestamp dell'ultimo utilizzo.
 
