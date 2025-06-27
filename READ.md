@@ -778,6 +778,7 @@ agli sviluppatori e ai tester.
 
 comando     | implementato in                           | effetto
 ------------|-------------------------------------------|-------------------------------------------
+b           | /_src/_config/_220.auth.php               | URL di ritorno
 c           | /_src/_config/_420.pages.php              | forza il tema della pagina
 j           | /_src/_config/_210.auth.php               | innesca il login via JWT
 m           | /_src/_config/_420.pages.php              | inserisce il Lorem Ipsum come testo della pagina
