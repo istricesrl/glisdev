@@ -216,6 +216,11 @@ tramite API key si vedano i commenti a questo file e ai file dev/_src/_config/_2
 Questo report restituisce l'elenco di tutti i cookie presenti nel browser per il dominio corrente indicando se sono gestiti o meno dal
 framework, il loro scopo e altre informazioni utili.
 
+### /_src/_api/_report/_import.php
+Questo report innesca l'importazione dei file presenti in /var/spool/import/todo/*/ e /var/spool/import, e restituisce un report dettagliato delle
+operazioni svolte. Normalmente l'importazione dei file è svolta dall'API cron, ma questo report può essere fondamentale per lo sviluppo, il test
+e il debug dei nuovi tracciati di importazione.
+
 ### /_src/_api/_status/_cf.php
 Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
 per evitare problemi di sicurezza. Tramite una regola di /.htaccess l'accesso a questa API è possibile tramite l'URL speciale /cf.
@@ -751,6 +756,10 @@ Questo script fa il setup dell'ambiente LAMP necessario a far girare il framewor
 ### /_src/_sh/_password.hash.sh
 Questo script genera l'hash di una password in modo che possa essere utilizzata nella configurazione o nel database del
 framework.
+
+### /_src/_sh/_test.import.sh
+Questo script genera dei file di test in /var/spool/import/todo e /var/spool/import per il test del sistema di importazione
+file; si veda /_src/_config/_740.controller.php per i dettagli e /_src/_api/_report/_import.php per i test del sistema.
 
 ### /_src/_sh/_lib/_functions.sh
 Questa libreria viene utilizzata dagli script shell del framework per svolgere alcuni compiti base come la gestione degli
