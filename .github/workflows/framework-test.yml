@@ -1,0 +1,35 @@
+name: Test PHP Framework
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del codice
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        coverage: xdebug
+        tools: composer:v2
+
+    - name: Ottieni la cache delle dipendenze di Composer
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Installa le dipendenze di Composer
+      run: composer install --prefer-dist --no-progress --no-interaction # Installa le dipendenze
+
+    - name: Esegui i test di PHPUnit
+      run: _src/_sh/_codeception.run.sh
