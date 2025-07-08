@@ -1162,7 +1162,7 @@
      * - file custom moduli
      * 
      * Comprendere l'ordine in cui vengono inclusi i file è essenziale per poter customizzare il framework,
-     * quindi si consiglia di prestare particolare attenzione a questa sezione.
+     * quindi si consiglia di prestare particolare attenzione a questa sezione e studiarne bene il contenuto.
      *
      */
 
