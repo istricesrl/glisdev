@@ -31,52 +31,28 @@ jobs:
     - name: Installa le dipendenze di Composer
       run: composer install --prefer-dist --no-progress --no-interaction
 
-    - name: Install Dependencies for Chromedriver Script
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable jq # <-- Aggiunto 'jq' qui
-      env:
-        DEBIAN_FRONTEND: noninteractive
-
-    - name: Get Chrome and Chromedriver versions
-      run: |
-        CHROME_VERSION=$(google-chrome-stable --version | grep -oP '\d+\.\d+\.\d+' | head -n 1)
-        echo "Detected Chrome Stable version: $CHROME_VERSION"
-        echo "CHROME_VERSION=$CHROME_VERSION" >> $GITHUB_ENV # Rendi la variabile disponibile per gli step successivi
-
-        # Trova la versione di Chromedriver compatibile
-        CHROMEDRIVER_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d'.' -f1)
-        echo "CHROMEDRIVER_MAJOR_VERSION=$CHROMEDRIVER_MAJOR_VERSION" >> $GITHUB_ENV # Rendi la variabile disponibile
-
-        # Ottieni l'URL di download
-        CHROMEDRIVER_URL=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" | \
-                           jq -r ".versions[] | select(.version | startswith(\"$CHROMEDRIVER_MAJOR_VERSION.\")) | .downloads.chromedriver[] | select(.platform == \"linux64\") | .url")
-        echo "CHROMEDRIVER_URL=$CHROMEDRIVER_URL" >> $GITHUB_ENV # Rendi la variabile disponibile
-
-        if [ -z "$CHROMEDRIVER_URL" ]; then
-          echo "Error: Could not find Chromedriver URL for Chrome major version $CHROMEDRIVER_MAJOR_VERSION"
-          exit 1
-        fi
-
-    - name: Download and Install Chromedriver
-      run: |
-        echo "Downloading Chromedriver from: ${{ env.CHROMEDRIVER_URL }}"
-        wget -q "${{ env.CHROMEDRIVER_URL }}" -O chromedriver.zip
-        unzip -o chromedriver.zip -d chromedriver_temp
-        sudo mv chromedriver_temp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-        sudo chmod +x /usr/local/bin/chromedriver
-        rm -rf chromedriver.zip chromedriver_temp
+    - name: Setup Chrome and Chromedriver
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: stable # O 'stable-1' per la penultima stabile, o una versione specifica come '137.0.7151.119'
+        # chrome-version: '137.0.7151.119' # Puoi specificare una versione precisa se 'stable-1' non basta o per maggiore controllo
+                                       # Per il momento, 'stable' potrebbe anche funzionare se il problema è stato risolto nel frattempo.
+                                       # Ma se vuoi essere sicuro, usa 'stable-1' o la versione che sai che ha un driver.
 
     - name: Start Chromedriver
       run: |
-        chromedriver --url-base=/wd/hub & # Avvia Chromedriver in background
+        # browser-actions/setup-chrome installa chromedriver e lo aggiunge al PATH
+        # quindi puoi semplicemente lanciarlo
+        chromedriver --port=9515 --url-base=/wd/hub &
         sleep 5 # Dai tempo a Chromedriver di avviarsi
+      # Assicurati che il tuo WebDriver in acceptance.suite.yml punti a questa porta (di solito 9515)
+      # Ad esempio: url: 'http://127.0.0.1:8000', port: 9515
 
     - name: Start PHP built-in web server
       run: |
-        php -S 127.0.0.1:8000 -t public/ > /dev/null 2>&1 & # Avvia il server in background
+        php -S 127.0.0.1:8000 -t public/ > /dev/null 2>&1 &
         echo "PHP web server started on 127.0.0.1:8000"
-      # Assicurati che 'public/' sia la root del tuo server web
+      # Sostituisci 'public/' con la root del tuo server web
 
     - name: Wait for web server to be ready
       run: |
