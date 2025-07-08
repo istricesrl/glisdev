@@ -31,5 +31,31 @@ jobs:
     - name: Installa le dipendenze di Composer
       run: composer install --prefer-dist --no-progress --no-interaction
 
-    - name: Esegui i test di PHPUnit
+    - name: Install Google Chrome and Chromedriver
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        CHROME_VERSION=$(google-chrome-stable --version | grep -oP '\d+\.\d+\.\d+' | head -n 1)
+        CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}" | cut -d'.' -f1-3)
+        wget "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+        unzip chromedriver_linux64.zip
+        sudo mv chromedriver /usr/local/bin/chromedriver
+        sudo chmod +x /usr/local/bin/chromedriver
+
+    - name: Start Chromedriver
+      run: |
+        chromedriver --url-base=/wd/hub & # Avvia Chromedriver in background
+        sleep 5 # Dai tempo a Chromedriver di avviarsi
+
+    - name: Start PHP built-in web server
+      run: |
+        php -S 127.0.0.1:8000 -t public/ > /dev/null 2>&1 & # Avvia il server in background
+        echo "PHP web server started on 127.0.0.1:8000"
+      # Assicurati che 'public/' sia la root del tuo server web
+
+    - name: Wait for web server to be ready
+      run: |
+        timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' 127.0.0.1:8000)" != "200" ]]; do sleep 1; done'
+
+    - name: Esegui i test di Codeception
       run: _src/_sh/_codeception.run.sh
