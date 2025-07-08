@@ -4,12 +4,11 @@
 # Perform tests in browser using the WebDriver or PhpBrowser.
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
             url: 'http://127.0.0.1:8000'
             browser: chrome
+            port: 9515
         - \Helper\Acceptance
         - Asserts
-step_decorators: ~
