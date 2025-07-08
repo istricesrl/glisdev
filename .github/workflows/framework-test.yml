@@ -31,16 +31,36 @@ jobs:
     - name: Installa le dipendenze di Composer
       run: composer install --prefer-dist --no-progress --no-interaction
 
-    - name: Install Google Chrome and Chromedriver
+    - name: Install Google Chrome and Chromedriver (for Chrome 115+)
       run: |
+        # Installa Google Chrome Stable
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
+
+        # Recupera la versione di Chrome Stable installata
         CHROME_VERSION=$(google-chrome-stable --version | grep -oP '\d+\.\d+\.\d+' | head -n 1)
-        CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}" | cut -d'.' -f1-3)
-        wget "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/local/bin/chromedriver
+        echo "Detected Chrome Stable version: $CHROME_VERSION"
+
+        # Trova la versione di Chromedriver compatibile tramite l'API di Chrome for Testing
+        # La versione di Chromedriver per Stable è l'ultima versione disponibile per quella major release di Chrome
+        CHROMEDRIVER_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d'.' -f1)
+        CHROMEDRIVER_URL=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" | \
+                           jq -r ".versions[] | select(.version | startswith(\"$CHROMEDRIVER_MAJOR_VERSION.\")) | .downloads.chromedriver[] | select(.platform == \"linux64\") | .url")
+
+        if [ -z "$CHROMEDRIVER_URL" ]; then
+          echo "Error: Could not find Chromedriver URL for Chrome version $CHROME_VERSION"
+          exit 1
+        fi
+
+        echo "Downloading Chromedriver from: $CHROMEDRIVER_URL"
+        wget -q "$CHROMEDRIVER_URL" -O chromedriver.zip
+        unzip -o chromedriver.zip -d chromedriver_temp
+        sudo mv chromedriver_temp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
         sudo chmod +x /usr/local/bin/chromedriver
+        rm -rf chromedriver.zip chromedriver_temp
+      env:
+        # Assicurati che jq sia disponibile per parsing JSON
+        DEBIAN_FRONTEND: noninteractive # Per evitare domande durante apt-get install
 
     - name: Start Chromedriver
       run: |
