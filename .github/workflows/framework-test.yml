@@ -31,36 +31,41 @@ jobs:
     - name: Installa le dipendenze di Composer
       run: composer install --prefer-dist --no-progress --no-interaction
 
-    - name: Install Google Chrome and Chromedriver (for Chrome 115+)
+    - name: Install Dependencies for Chromedriver Script
       run: |
-        # Installa Google Chrome Stable
         sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
+        sudo apt-get install -y google-chrome-stable jq # <-- Aggiunto 'jq' qui
+      env:
+        DEBIAN_FRONTEND: noninteractive
 
-        # Recupera la versione di Chrome Stable installata
+    - name: Get Chrome and Chromedriver versions
+      run: |
         CHROME_VERSION=$(google-chrome-stable --version | grep -oP '\d+\.\d+\.\d+' | head -n 1)
         echo "Detected Chrome Stable version: $CHROME_VERSION"
+        echo "CHROME_VERSION=$CHROME_VERSION" >> $GITHUB_ENV # Rendi la variabile disponibile per gli step successivi
 
-        # Trova la versione di Chromedriver compatibile tramite l'API di Chrome for Testing
-        # La versione di Chromedriver per Stable è l'ultima versione disponibile per quella major release di Chrome
+        # Trova la versione di Chromedriver compatibile
         CHROMEDRIVER_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d'.' -f1)
+        echo "CHROMEDRIVER_MAJOR_VERSION=$CHROMEDRIVER_MAJOR_VERSION" >> $GITHUB_ENV # Rendi la variabile disponibile
+
+        # Ottieni l'URL di download
         CHROMEDRIVER_URL=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" | \
                            jq -r ".versions[] | select(.version | startswith(\"$CHROMEDRIVER_MAJOR_VERSION.\")) | .downloads.chromedriver[] | select(.platform == \"linux64\") | .url")
+        echo "CHROMEDRIVER_URL=$CHROMEDRIVER_URL" >> $GITHUB_ENV # Rendi la variabile disponibile
 
         if [ -z "$CHROMEDRIVER_URL" ]; then
-          echo "Error: Could not find Chromedriver URL for Chrome version $CHROME_VERSION"
+          echo "Error: Could not find Chromedriver URL for Chrome major version $CHROMEDRIVER_MAJOR_VERSION"
           exit 1
         fi
 
-        echo "Downloading Chromedriver from: $CHROMEDRIVER_URL"
-        wget -q "$CHROMEDRIVER_URL" -O chromedriver.zip
+    - name: Download and Install Chromedriver
+      run: |
+        echo "Downloading Chromedriver from: ${{ env.CHROMEDRIVER_URL }}"
+        wget -q "${{ env.CHROMEDRIVER_URL }}" -O chromedriver.zip
         unzip -o chromedriver.zip -d chromedriver_temp
         sudo mv chromedriver_temp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
         sudo chmod +x /usr/local/bin/chromedriver
         rm -rf chromedriver.zip chromedriver_temp
-      env:
-        # Assicurati che jq sia disponibile per parsing JSON
-        DEBIAN_FRONTEND: noninteractive # Per evitare domande durante apt-get install
 
     - name: Start Chromedriver
       run: |
