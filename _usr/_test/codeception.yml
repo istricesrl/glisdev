@@ -1,10 +1,10 @@
 paths:
-    tests: _tests
-    output: _tests/_output
-    data: _tests/_data
-    support: _tests/_support
-    envs: _tests/_envs
+  tests: .
+  output: _output
+  data: _data
+  support: _support
+  envs: _envs
 actor_suffix: Tester
 extensions:
-    enabled:
-        - Codeception\Extension\RunFailed
+  enabled:
+    - Codeception\Extension\RunFailed
