@@ -152,10 +152,16 @@
     // verifico la challenge reCAPTCHA
     if( defined( 'LOGIN_VIA_API' ) ) {
 
+        // log
+        logger( 'check anti spam al login saltato per login via API', 'auth' );
+
         // punteggio di spam
         $cf['session']['spam']['check'] = true;
 
     } elseif( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+
+        // log
+        logger( 'check anti spam al login iniziato con reCAPTCHA', 'auth' );
 
         // registro il valore di bot
         $cf['session']['spam']['score'] = reCaptchaVerifyV3( $_REQUEST['__login__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
@@ -168,10 +174,16 @@
 
     } elseif( ! isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
+        // log
+        logger( 'check anti spam al login fallito per token non ricevuto', 'auth' );
+
         // punteggio di spam
         $cf['session']['spam']['check'] = false;
 
     } else {
+
+        // log
+        logger( 'login senza check anti spam', 'auth' );
 
         // punteggio di spam
         $cf['session']['spam']['check'] = true;
