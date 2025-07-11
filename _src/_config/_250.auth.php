@@ -97,6 +97,10 @@
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff', 'users', 'guests' )
         ),
+        'test' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
 
         // TODO l'ordine alfabetico arriva fin qui
 

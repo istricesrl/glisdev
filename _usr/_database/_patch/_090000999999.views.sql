@@ -85,4 +85,20 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
   FROM redirect                                               --
 ;                                                             --
 
+-- | 090000999000
+
+-- redirect_view
+CREATE OR REPLACE VIEW test_view AS                           --
+  SELECT                                                      --
+    test.id,                                                  --
+    test.codice,                                              --
+    test.nome,                                                --
+    concat_ws(                                                --
+      ' ',                                                    --
+      test.codice,                                            --
+      test.nome                                               --
+    ) AS __label__                                            -- etichetta per le tendine e le liste
+  FROM test                                                   --
+;                                                             --
+
 -- | FINE FILE
