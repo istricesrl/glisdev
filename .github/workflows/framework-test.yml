@@ -43,7 +43,7 @@ jobs:
 
     - name: Start PHP built-in web server
       run: |
-        php -S 127.0.0.1:8000 -t public/ > /dev/null 2>&1 &
+        php -S 127.0.0.1:8000 _src/_api/_pages.php
         echo "PHP web server started on 127.0.0.1:8000"
 
     - name: Wait for web server to be ready
