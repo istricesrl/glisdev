@@ -39,11 +39,11 @@ jobs:
     - name: Start Chromedriver
       run: |
         chromedriver --port=9515 --url-base=/wd/hub &
-        sleep 5 # Dai tempo a Chromedriver di avviarsi
+        sleep 5
 
     - name: Start PHP built-in web server
       run: |
-        php -S 127.0.0.1:8000 _src/_api/_pages.php
+        php -S 127.0.0.1:8000 /_src/_api/_status/_framework.php
         echo "PHP web server started on 127.0.0.1:8000"
 
     - name: Wait for web server to be ready
