@@ -573,6 +573,10 @@ In questo file i cookie vengono indicizzati per ID.
 In questo file vengono inclusi gli eventuali parser di pagina. I parser sono un meccanismo tramite il quale il framework pre elabora
 i dati presenti in $_REQUEST per prepararli al lavoro dei runlevel successivi.
 
+### /_src/_config/_750.controller.php
+Questo file si occupa di gestire i blocchi dati in entrata e passarli alla controller(). Questo è il meccanismo con cui il framework gestisce
+la maggior parte dei blocchi data in ingresso.
+
 ### /_src/_config/_940.session.php
 In questo file vengono salvate diverse informazioni utili sulla sessione, fra cui la timestamp dell'ultimo utilizzo.
 
@@ -652,6 +656,9 @@ Questa libreria contiene le funzioni per l'utilizzo della cache APCU.
 
 ### /_src/_lib/_array.tools.php
 Questa libreria contiene una collezione di funzioni per la manipolazione degli array.
+
+### /_src/_lib/_controller.tools.php
+Questa libreria contiene la funzione controller() e le sue funzioni di appoggio.
 
 ### /_src/_lib/_cryptography.tools.php
 Questa libreria contiene alcuni strumenti per la gestione della crittografia.

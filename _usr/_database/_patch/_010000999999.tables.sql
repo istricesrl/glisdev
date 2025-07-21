@@ -214,4 +214,21 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000999000
+
+-- test
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: test del database
+-- entità: questa tabella corrisponde all'entità test
+--
+-- questa tabella viene utilizzata per testare la creazione di tabelle e la loro struttura; non è una tabella di produzione
+--
+CREATE TABLE IF NOT EXISTS `test` (                           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                             -- codice univoco
+  `nome` char(255) DEFAULT NULL                               -- dato di test
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | FINE FILE
