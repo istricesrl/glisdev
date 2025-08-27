@@ -990,3 +990,57 @@ Analogamente, in JSON e in YAML si procederà aggiungendo la chiave con le relat
 #### è possibile specificare delle configurazioni di pagina solo per uno specifico sito?
 Sì certo, la chiave contents è valida anche come sotto chiave di ogni singolo sito, questo consente ad esempio di modificare il template di una
 pagina presente in più siti a seconda del sito corrente.
+
+#### come faccio a testare il meccanismo dei task ricorrenti?
+Per prima cosa sincerati che il task di test sia presente nella tabella dei task. Puoi verificarlo dal database (SELECT * FROM `task`) controllando
+che sia presente una riga per _src/_api/_task/_test.cron.php. Se la riga manca, aggiungila.
+
+Una volta controllato che la tabella dei task contenga il task di test, puoi lanciare a mano l'API cron chiamando l'endpoint /api/cron, dopodiché
+verifica che il file di test sia stato scritto correttamente nella cartella dei log.
+
+Una volta che il funzionamento del sistema è stato verificato in modalità manuale puoi utilizzare lo script _crontab.install.sh per installare il file
+di cron nella cartella /etc/cron.d/; a questo punto, il file di log dovrebbe venire scritto automaticamente ogni minuto.
+
+#### come funziona la distribuzione del framework GlisWeb tramite container Docker?
+Il container della versione di sviluppo del framework GlisWeb è disponibile su https://hub.docker.com/repository/docker/istricesrl/glisdev/general e
+può essere liberamente scaricata e lanciata. Per effettuare un test minimale è possibile predisporre un piccolo file di configurazione e lanciare
+il container mappando la cartella in cui lo si è salvato. Si supponga ad esempio di creare il seguente file YAML in una cartella chiamata ./conf/:
+
+```
+sites:
+  1:
+    __label__: "test Docker"
+    name:
+      it-IT: "test Docker"
+    protocols:
+      DEV: "https"
+    hosts: 
+      DEV: ""
+    domains:
+      DEV: "localhost"
+```
+
+A questo punto è possibile lanciare il container con:
+
+```
+docker run -dit -p 8080:80 -v ./conf/:/var/www/html/src/config/ext/ istricesrl/glisdev:$1
+```
+
+Aprendo un browser su http://localhost:8080/status si dovrebbe vedere correttamente configurato il framework. Per fermare il container in esecuzione
+è necessario conoscerne l'ID:
+
+```
+docker container list
+```
+
+e successivamente fermarlo con:
+
+```
+docker container stop <containerID>
+```
+
+Per entrare in un container ed esplorare i file (utile per vedere i file di log) utilizzare:
+
+```
+docker exec -it <containerId> bash
+```
