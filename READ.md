@@ -814,11 +814,6 @@ funzioni del framework che si desidera senza la necessità di riscrivere tutto.
 #### voglio creare un nuovo template, come faccio?
 Comincia studiando la documentazione su come sono strutturati i template in /_usr/_docs/_dox/_templates.dox.
 
-#### come creo una nuova pagina da file di configurazione PHP?
-Copia in custom il file standard al quale vuoi aggiungere una pagina (ricordati di togliere l'underscore iniziale); 
-a questo punto puoi aggiungere la pagina. Ad esempio se vuoi aggiungere una pagina al file /_src/
-_inc/_pages/_app.it-IT.php devi customizzarlo in /src/inc/pages/app.it-IT.php.
-
 #### che cos'è esattamente un'entità nel gergo del framework?
 Un'entità è l'astrazione nel contesto del framework di un insieme di oggetti o concetti della vita reale. 
 Solitamente corrisponde a una tabella nel database, e gli utenti hanno diversi tipi di permessi di interazione
@@ -845,3 +840,138 @@ per comprendere come questi dati vengono letti e scritti sui cookie si veda /_sr
 impostazioni dei cookie vengono poi lette dai file twig che compongono le pagine per decidere se inserire o meno il
 codice che genera i cookie.
 
+#### come creo una pagina tramite file di configurazione PHP?
+Per creare una pagina tramite file di configurazione PHP è necessario creare o editare un file in /src/inc/pages, ad esempio
+/src/inc/pages/site.it-IT.php e aggiungere il relativo paragrafo di configurazione. Un tipico paragrafo di configurazione
+per una pagina avrà all'incirca questo aspetto:
+
+```
+$p['pagina.test'] = array(
+    'id_sito'       => 1,
+    'sitemap'       => true,
+    'cacheable'     => true,
+    'title'         => array( $l        => 'pagina di test' ),
+    'description'   => array( $l        => 'questa è una pagina di test' ),
+    'h1'            => array( $l        => 'ciao sono la pagina di prova' ),
+    'template'      => array( 'path'    => '_src/_tpl/_aurora/', 'schema' => 'default.twig' ),
+    'parent'        => array( 'id'      => NULL ),
+    'menu'          => array( 'main'    => array( '' => array( 'label' => array( $l => 'pagina di test' ), 'priority' => '090' ) ) )
+);
+```
+
+Per un approfondimento sui valori da assegnare alle varie chiavi, e per l'elenco delle chiavi disponibili, si faccia riferimento
+alla documentazione del file /_src/_config/_310.pages.php.
+
+Se stai personalilzzando pagine standard, copia in custom il file standard al quale vuoi aggiungere una pagina (ricordati di togliere
+l'underscore iniziale); a questo punto puoi aggiungere la pagina. Ad esempio se vuoi aggiungere una pagina al file /_src/
+_inc/_pages/_app.it-IT.php devi customizzarlo in /src/inc/pages/app.it-IT.php.
+
+#### come creo una pagina tramite file di configurazione JSON o YAML?
+Per creare una pagina tramite la configurazione estesa JSON/YAML è sufficiente aggiungere alla configurazione una chiave per la pagina,
+con le relative sottochiavi. Ad esempio in JSON:
+
+```
+{
+    [...]
+    "contents": {
+        "pages": {
+            [...]
+            "prova.pagina.json": {
+                "id_sito": 1,
+                "sitemap": true,
+                "cacheable": true,
+                "title": {
+                    "it-IT": "pagina di prova da file JSON"
+                },
+                "description": {
+                    "it-IT": "pagina di prova da file JSON"
+                },
+                "h1": {
+                    "it-IT": "pagina di prova da file JSON"
+                },
+                "template": {
+                    "path": "_src/_tpl/_aurora/",
+                    "schema": "default.twig"
+                },
+                "parent": {
+                    "id": null
+                },
+                "menu": {
+                    "main": {
+                        "": {
+                            "label": {
+                                "it-IT": "prova JSON"
+                            },
+                            "priority": 190
+                        }
+                    }
+                }
+            },
+            [...]
+        }
+    }
+    [...]
+}
+```
+
+Ovviamente la stessa struttura appare molto più sintetica in YAML ma la sostanza è uguale:
+
+```
+[...]
+contents:
+  pages:
+    [...]
+    prova.pagina.yaml:
+      id_sito: 1
+      sitemap: true
+      cacheable: true
+      title:
+        it-IT: pagina di prova da file YAML
+      description:
+        it-IT: pagina di prova da file YAML
+      h1:
+        it-IT: pagina di prova da file YAML
+      template:
+        path: _src/_tpl/_aurora/
+        schema: default.twig
+      parent:
+        id: null
+      menu:
+        main:
+          "":
+            label:
+              it-IT: prova YAML
+            priority: 290
+    [...]
+[...]
+```
+
+#### come definisco staticamente i contenuti di una pagina già presente nell'array delle pagine?
+Il framework controlla la cartella src/inc/contents/ per contenuto relativo a una data pagina; puoi creare un file in src/inc/contents/
+con il nome uguale all'ID della pagina cui vuoi settare il contenuto ad es. <idPagina>.xx-XX.html. Per ulteriori dettagli su questo
+meccanismo si veda la documentazione del file /_src/_api/_pages.php.
+
+#### come definisco il contenuto di una pagina direttamente dal file di configurazione (PHP, JSON o YAML)?
+Per definire il contenuto della pagina direttamente dalla configurazione è sufficiente valorizzare la chiave content e la relativa sotto
+chiave per lingua. In PHP ad esempio questo si tradurrà in:
+
+```
+$p['pagina.test'] = array(
+    'id_sito'       => 1,
+    'sitemap'       => true,
+    'cacheable'     => true,
+    'title'         => array( $l        => 'pagina di test' ),
+    'description'   => array( $l        => 'questa è una pagina di test' ),
+    'h1'            => array( $l        => 'ciao sono la pagina di prova' ),
+    'content'       => array( $l        => 'ciao sono il contenuto della pagina di prova' ),
+    'template'      => array( 'path'    => '_src/_tpl/_aurora/', 'schema' => 'default.twig' ),
+    'parent'        => array( 'id'      => NULL ),
+    'menu'          => array( 'main'    => array( '' => array( 'label' => array( $l => 'pagina di test' ), 'priority' => '090' ) ) )
+);
+```
+
+Analogamente, in JSON e in YAML si procederà aggiungendo la chiave con le relative sotto chiavi per lingua.
+
+#### è possibile specificare delle configurazioni di pagina solo per uno specifico sito?
+Sì certo, la chiave contents è valida anche come sotto chiave di ogni singolo sito, questo consente ad esempio di modificare il template di una
+pagina presente in più siti a seconda del sito corrente.
