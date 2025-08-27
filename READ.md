@@ -196,6 +196,17 @@ require '<percorso>_config.php';
 
 Laddove <percorso> è il percorso necessario a raggiungere il file /_src/_config.php.
 
+### /_src/_api/_bookmarks.php
+Questa API si occupa di gestire la memorizzazione di elementi nello spazio di lavoro della sessione. Il meccanismo del "pin" di elementi in sessione
+è molto comodo per portarsi dietro delle informazioni da una maschera all'altra, dove previsto dalla maschera stessa. Per ulteriori informazioni su
+questo meccanismo si veda anche la documentazione dei file /_src/_config/_710.session.php e /_src/_config/_715.session.php, e dei file
+/_src/_config/_770.bookmarks.php e /_src/_config/_775.bookmarks.php.
+
+### /_src/_api/_cron.php
+Questa API si occupa di eseguire i task periodici; solitamente viene richiamata dal cron di sistema tramite un file appositamente creato nella cartella
+/etc/cron.d/. La creazione di questo file può essere eseguita in maniera semi automatica tramite lo script /_src/_sh/_crontab.install.sh. La gestione
+dei task periodici è piuttosto complessa, per ulteriori dettagli si veda la documentazione del file /_src/_api/_cron.php.
+
 ### /_src/_api/_download.php
 Questo file si occupa di erogare i download, verificando che l'utente sia autorizzato a scaricare il file che sta richiedendo; riceve le richieste
 dalle regole del file .htaccess e fatti i dovuti controlli restituisce il file richiesto. Agisce in pratica come un guardiano della cartella
@@ -255,6 +266,10 @@ funzionale allo scopo di tenere aggiornati tutti i database di tutti i deploy se
 - i file di patch presenti in /_usr/_database/_patch
 
 Il meccanismo di patch del database è illustrato nel dettaglio nel file /_src/_api/_task/_mysql.patch.php al quale si rimanda per approfondimenti.
+
+### /_src/_api/_task/_test.cron.php
+Questo è un semplice task di test, utile per verificare il funzionamento del sistema dei task ricorrenti; non fa altro che scrivere su un file di log quando
+viene eseguito, in questo modo è facile fare dei test e del debug sul meccanismo dei task.
 
 ### /_src/_config/_000.debug.php
 Questo file di configurazione inizializza l'array $cf['debug'] e setta i default per le sue chiavi principali.
