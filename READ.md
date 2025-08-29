@@ -213,6 +213,10 @@ dalle regole del file .htaccess e fatti i dovuti controlli restituisce il file r
 /var che contiene ordinati in sottocartelle i file caricati tramite il CMS. Si noti che alcune sotto cartelle di /var (come /var/log) sono protette
 e l'accesso è impedito da regole apposite all'inizio di /.htaccess.
 
+### /_src/_api/_job.php
+Questa API consente l'esecuzione dei job in foreground; per ulteriori informazioni si veda la documentazione del file stesso oltre a quella del
+file /_src/_api/_cron.php.
+
 ### /_src/_api/_pages.php
 Questo file ha lo scopo di renderizzare e erogare le pagine. Svolge numerose funzioni ed è ampiamente documentato, quindi si rimanda al sorgente
 per i dettagli. In sintesi, riceve le richieste di pagina in base alle regole del file /.htaccess e le soddisfa tramite le informazioni in suo
@@ -222,6 +226,9 @@ possesso.
 Questa API consente il login dell'utente, è utilizzata per le integrazioni e per il dialogo con app e altri sistemi esterni. Tramite il meccanismo di
 login è possibile ottenere un'API key temporanea per fare più rapidamente le chiamate successive. Per ulteriori dettagli sul meccanismo di login
 tramite API key si vedano i commenti a questo file e ai file dev/_src/_config/_210.auth.php e dev/_src/_config/_220.auth.php.
+
+### /_src/_api/_job/_test.job.php
+Questo è un job di test.
 
 ### /_src/_api/_report/_cookie.php
 Questo report restituisce l'elenco di tutti i cookie presenti nel browser per il dominio corrente indicando se sono gestiti o meno dal
@@ -270,6 +277,9 @@ Il meccanismo di patch del database è illustrato nel dettaglio nel file /_src/_
 ### /_src/_api/_task/_test.cron.php
 Questo è un semplice task di test, utile per verificare il funzionamento del sistema dei task ricorrenti; non fa altro che scrivere su un file di log quando
 viene eseguito, in questo modo è facile fare dei test e del debug sul meccanismo dei task.
+
+### /_src/_api/_task/_test.job.start.php
+Questo task avvia un job di test.
 
 ### /_src/_config/_000.debug.php
 Questo file di configurazione inizializza l'array $cf['debug'] e setta i default per le sue chiavi principali.
@@ -588,12 +598,43 @@ In questo file i cookie vengono indicizzati per ID.
 In questo file vengono inclusi gli eventuali parser di pagina. I parser sono un meccanismo tramite il quale il framework pre elabora
 i dati presenti in $_REQUEST per prepararli al lavoro dei runlevel successivi.
 
+### /_src/_config/_740.controller.php
+Questo file gestisce l'importazione di dati in batch. Il meccanismo è molto potente ma anche complesso, e si rimanda alla documentazione del
+file per i dettagli.
+
 ### /_src/_config/_750.controller.php
 Questo file si occupa di gestire i blocchi dati in entrata e passarli alla controller(). Questo è il meccanismo con cui il framework gestisce
 la maggior parte dei blocchi data in ingresso.
 
+### /_src/_config/_760.controller.php
+Questo file nel framework base è inserito solo per consentirne la customizzazione. Questo è il punto dove svolgere tutte le operazioni successive
+all'esecuzione della controller.
+
+### /_src/_config/_770.bookmarks.php
+Questo file imposta i gruppi dell'area di lavoro per cui possono essere pinnati degli elementi. Il meccanismo dei bookmarks, o elementi pinnati,
+è dettagliatamente illustrato nei commenti di questo file e del successivo /_src/_config/_775.bookmarks.php. Si vedano anche i commenti all'API
+/_src/_api/_bookmarks.php; si veda anche la documentazione dei file /_src/_config/_710.session.php e /_src/_config/_715.session.php.
+
+### /_src/_config/_775.bookmarks.php
+Questo file integra la configurazione di $cf['bookmarks'] con $cx['bookmarks'] e imposta il collegamento a puntatore fra $cf['bookmarks']
+e $ct['bookmarks'].
+
+### /_src/_config/_790.job.php
+Questo file si occupa di selezionare i job in foreground e renderli disponibili in $cf['jobs']['foreground'] e tramite link simbolico
+in $ct['jobs']['foreground'].
+
+### /_src/_config/_920.privacy.php
+Questo file è a disposizione per la customizzazione.
+
 ### /_src/_config/_940.session.php
 In questo file vengono salvate diverse informazioni utili sulla sessione, fra cui la timestamp dell'ultimo utilizzo.
+
+### /_src/_config/_980.sitemap.php
+Questo file si occupa di generare, se necessario, le sitemap. Per ulteriori informazioni si veda la documentazione del file stesso.
+
+### /_src/_config/_990.debug.php
+Questo file serve per il debug generale dei runlevel, in quanto conclude l'esecuzione del kernel space del framework. Da qui in poi l'esecuzione
+passa alle macro di pagina e dev'essere debuggata di conseguenza.
 
 ### /_src/_css/_back2top.css
 In questo file viene definito lo stile CSS per il tasto "torna su".
@@ -714,6 +755,9 @@ Questa libreria contiene funzioni di varia utilità basate su MySQL.
 ### /_src/_lib/_output.tools.php
 Questa libreria contiene funzioni per l'output.
 
+### /_src/_lib/_random.tools.php
+Questa libreria contiene funzioni utili per la generazione di dati casuali.
+
 ### /_src/_lib/_recaptcha.tools.php
 Questa libreria contiene una collezione di funzioni per la gestione di Google reCaptcha.
 
@@ -747,6 +791,11 @@ presente in dev/_usr/_docs/_dox/_test.dox.
 Questo file esegue l'aggiornamento delle librerie esterne tramite composer; può inoltre eseguire una pulizia delle librerie
 attualmente installate se lanciato in modalità hard, questo è utile per risolvere problemi di aggiornamento di composer.
 
+### /_src/_sh/_crontab.install.sh
+Questo file installa il file crontab necessario a far funzionare le operazioni pianificate del framework. Il file viene
+posizionato in /etc/cron.d/ in modo da sfruttare il cron di sistema. Per ulteriori informazioni sul sistema delle operazioni
+pianificate del framework si veda la documentazione delle API /_src/_api/_cron.php e dev/_src/_api/_job.php.
+
 ### /_src/_sh/_deploy.run.sh
 Questo script esegue il deploy dell'installazione corrente su un target indicato come argomento. L'argometo che specifica
 il target deve corrispondere al nome del file di configurazione da utilizzare per il deploy, fra quelli disponibili
@@ -755,6 +804,11 @@ nella cartella /etc/deploy/; il nome del file va specificato al netto dell'esten
 ```
 ./_src/_sh/_deploy.run.sh stable
 ```
+
+### /_src/_sh/_doxygen.build.sh
+Questo script compila la documentazione tramite Doxygen. Il framework è ampiamente documentato con commenti che Doxygen è in
+grado di trasformare in documentazione HTML e PDF, e grazie a questo meccanismo è possibile risparmiare molto tempo sulla
+scrittura di manualistica.
 
 ### /_src/_sh/_folders.check.sh
 Questo script controlla che esistano le cartelle custom solitamente necessarie al funzionamento corretto del framework.
@@ -992,14 +1046,31 @@ Sì certo, la chiave contents è valida anche come sotto chiave di ogni singolo 
 pagina presente in più siti a seconda del sito corrente.
 
 #### come faccio a testare il meccanismo dei task ricorrenti?
-Per prima cosa sincerati che il task di test sia presente nella tabella dei task. Puoi verificarlo dal database (SELECT * FROM `task`) controllando
-che sia presente una riga per _src/_api/_task/_test.cron.php. Se la riga manca, aggiungila.
+Per prima cosa sincerati che il task di test funzioni correttamente se eseguito manualmente; ad esempio chiama l'URL /task/test.cron e sincerati che
+l'esecuzione del task avvenga senza problemi. Una volta controllato questo, puoi procedere con il controllo dell'API cron.
+
+Per verificare che il task venga eseguito anche dall'API cron, devi verificare che il task sia pianificato, ovvero controllare sul database
+(SELECT * FROM `task`) che sia presente una riga per _src/_api/_task/_test.cron.php. Se la riga manca, aggiungila (vedi /_src/_api/_cron.php per i dettagli).
 
 Una volta controllato che la tabella dei task contenga il task di test, puoi lanciare a mano l'API cron chiamando l'endpoint /api/cron, dopodiché
 verifica che il file di test sia stato scritto correttamente nella cartella dei log.
 
 Una volta che il funzionamento del sistema è stato verificato in modalità manuale puoi utilizzare lo script _crontab.install.sh per installare il file
 di cron nella cartella /etc/cron.d/; a questo punto, il file di log dovrebbe venire scritto automaticamente ogni minuto.
+
+#### come faccio a testare il meccanismo dei job?
+Per testare un job devi innanzitutto inserire la riga relativa nella tabella dei job; puoi farlo manualmente oppure creare un task di avvio che lo faccia
+in modo semi automatico (esistono un job di test e il relativo task di avvio già pronti nel framework). Come primo step, testa il job in foreground.
+
+Per testare un job in foreground è necessario inserirlo nel database con il flag se_foreground settato; in questo caso, il job verrà ignorato dall'API
+cron e sarà possibile eseguirlo solo manualmente tramite l'API job, il che è ottimo per il debug. Sincerati di aver inserito il job in modalità foreground
+e chiama l'API job con l'ID del job da testare per controllare che tutto funzioni regolarmente.
+
+Una volta che il test manuale è andato a buon fine, puoi mandare il job in background settando a NULL il campo se_foreground, e chiamare manualmente
+l'API cron per verificare che venga effettivamente eseguito senza errori.
+
+Se anche il test manuale tramite l'API cron va a buon fine, puoi attivare il cron di sistema e controllare che il lavoro del job venga incrementato ogni
+minuto in modo automatico.
 
 #### come funziona la distribuzione del framework GlisWeb tramite container Docker?
 Il container della versione di sviluppo del framework GlisWeb è disponibile su https://hub.docker.com/repository/docker/istricesrl/glisdev/general e
