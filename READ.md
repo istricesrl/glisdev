@@ -69,6 +69,9 @@ fi
 
 La versione invece viene modificata a mano quando si crea una nuova release branch.
 
+### /_etc/_current.version
+Vedi /_etc/_current.release.
+
 ### /_etc/_common/_lorem.conf
 Questo file contiene il testo di prova del framework; si è optato per il classico Lorem Ipsum (https://lipsum.com/) dal momento che
 la maggior parte dei grafici è già familiare con questo testo. Nel file /_src/_config/_420.pages.php viene processato il comando di una lettera
@@ -176,6 +179,9 @@ file di configurazione dell'host di Apache per le varie configurazioni del sito:
 
 Nella configurazione di PROD viene vietata l'indicizzazione di tutto il ramo /admin in quanto contiene le pagine del CMS, che non devono
 per ovvi motivi apparire nei risultati di ricerca.
+
+### /_etc/_robots/_robots.txt
+Vedi /_etc/_robots/_deny.txt.
 
 ### /_etc/_security/_banned.words.conf
 Questo file contiene una lista di parole vietate negli URL, che viene gestita da /_src/_inc/_macro/_security.php. Si tratta di un filtro
