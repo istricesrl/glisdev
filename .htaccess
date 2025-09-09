@@ -118,6 +118,11 @@ Options -MultiViews
     # RewriteCond %{HTTP_REFERER} !^https?://([^.]+\.)?dominioN\.tld(?::[0-9]+)?/ [NC]
     # RewriteRule \.(?:gif|jpe?g|png|webp|svg|pdf)$ img/hotlink.png [L,NC]
     #
+    # volendo è possibile inserire un file analogo nella cartella /var/ avendo cura di
+    # modificare l'ultima riga per rispettare il path corretto dell'immagine:
+    #
+    # RewriteRule \.(?:gif|jpe?g|png|webp|svg|pdf)$ src/img/hotlink.png [L,NC]
+    #
 
     ## CARTELLE AD ACCESSO DIRETTO
     #
