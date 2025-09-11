@@ -851,6 +851,10 @@ argomenti da linea di comando.
 Questo file include il codice per Google Analytics posto che l'utente abbia prestato il consenso oppure che Analytics sia
 configurato in modalità anonimizzazione IP.
 
+### /_usr/_database/_patch/_010000999999.tables.sql
+Questo file contiene le patch base necessarie alla creazione delle tabelle nel database del framework; per ulteriori informazioni
+sul funzionamento del sistema di patch si vedano i commenti al file /_src/_api/_task/_mysql.patch.php.
+
 ## FAQ
 
 ### domande generali

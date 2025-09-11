@@ -1,9 +1,18 @@
 --
 -- TABELLE
+-- =======
 -- questo file contiene le query per la creazione delle tabelle; si noti che non devono essere inseriti qui i valori
 -- di auto increment, mentre vanno specificati per tabella il CHARSET ma non il COLLATE.
 --
--- INDICE DEGLI SCRIPT
+-- LEGENDA DEI COMMENTI ALLE TABELLE
+-- =================================
+-- in questa sezione viene fornita una semplice legenda per interpretare i commenti che si trovano prima di ogni tabella.
+--
+-- funzionamento del sistema di patch
+-- ----------------------------------
+-- ogni tabella ha un ID univoco di 12 caratteri che la identifica e la posiziona all'interno del sistema di patch del
+-- database del framework; le prime due cifre indicano la tipologia di patch:
+--
 -- 01xxxxxxxxxx -> tabelle
 -- 02xxxxxxxxxx -> placeholder
 -- 03xxxxxxxxxx -> indici
@@ -16,16 +25,73 @@
 -- 10xxxxxxxxxx -> statiche
 -- 11xxxxxxxxxx -> trigger
 --
--- CRITERI DI VERIFICA
--- una tabella si può marcare come verificata dopo aver controllato le seguenti cose:
--- - non è deprecata (se lo è, eliminarla)
--- - le colonne corrispondono al database master
--- - l'ordine delle colonne rispetta l'ordine master
--- - le colonne deprecate vanno eliminate
--- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
--- - non viene riportato il valore di AUTO INCREMENT
+-- per maggiori informazioni sul funzionamento del sistema di patch si vedano i commenti al file /_src/_api/_task/_mysql.patch.php.
+-- 
+-- classificazione in base all'utilizzo da parte dell'utente
+-- ---------------------------------------------------------
+-- in base alle possibilità che l'utente ha di interagire con la tabella, questa può essere:
+--
+-- - gestita
+-- - assistita
+-- - standard
+--
+-- le tabelle gestite partono vuote e il loro contenuto può essere gestito tramite l'interfaccia del CMS; le tabelle
+-- assistite partono con dei dati di default ma il loro contenuto può essere comunque gestito tramite l'interfaccia del CMS;
+-- infine le tabelle standard contengono dati fissi che non possono essere modificati tramite l'interfaccia del CMS.
+--
+-- classificazione in base alla gerarchia dei dati (rango)
+-- -------------------------------------------------------
+-- le tabelle possono contenere dati di vario rango, dove per rango si intende l'indipendenza dei dati stessi rispetto ad altri
+-- contenuti in tabelle diverse; in base a questo criterio, le tabelle possono essere:
+--
+-- - principali
+-- - secondarie
+-- - di relazione
+-- - di specifica
+--
+-- le tabelle principali contengono dati indipendenti, ossia che hanno senso in sé, indipendentemente da altri dati contenuti
+-- in tabelle diverse; le tabelle principali, come anagrafica, gruppi, file, eccetera, rappresentano normalmente le entità del
+-- framework.
+--
+-- le tabelle secondarie contengono dati che dipendono da una tabella principale, e che quindi non hanno senso in sé; ad esempio
+-- la tabella telefoni dipende dalla tabella anagrafica, e un numero di telefono non collegato a una persona non ha senso di
+-- esistere in sé.
+--
+-- le tabelle di relazione collegano fra loro due entità principali o secondarie, dunque hanno senso solo in funzione dell'esistenza
+-- delle entità che collegano, e dell'esistenza del collegamento stesso; ad esempio la tabella account_gruppi collega gli account ai gruppi,
+-- e i dati che contiene cessano di avere senso quando il gruppo o l'account collegati non esistono più.
+--
+-- le tabelle di specifica contengono dati che specificano o dettagliano i dati di una tabella principale o secondaria, e che quindi
+-- hanno senso nella misura in cui sono applicati alle relative entità; ad esempio la tabella tipologie_anagrafica specifica la
+-- tipologia di un'anagrafica.
+--
+-- classificazione in base alla struttura della tabella
+-- ----------------------------------------------------
+-- questa classificazione riguarda la struttura della tabella relativamente alle colonne che la compongono e ai relativi tipi di dato,
+-- nonché alle relazioni che la tabella stabilisce con sé stessa e con altre tabelle; da questo punto di vista, le tabelle possono essere:
+--
+-- - base
+-- - ricorsive
+--
+-- le tabelle base sono tabelle che non presentano particolari caratteristiche strutturali, e sono tipicamente costruite a partire da
+-- un campo ID intero auto incrementale che funge da chiave primaria. Solitamente una tabella base presenta al minimo i seguenti campi:
+--
+-- - id
+-- - id_tipologia
+-- - nome
+-- - note
+-- - id_account_inserimento
+-- - timestamp_inserimento
+-- - id_account_aggiornamento
+-- - timestamp_aggiornamento
+--
+-- le tabelle ricorsive sono tabelle che presentano una relazione con sé stesse, tipicamente tramite un campo id_genitore che fa riferimento
+-- al campo id della stessa tabella; in questo modo si possono creare strutture ad albero, molto potenti e flessibili; tuttavia questo
+-- approccio espone il database al rischio di creare cicli infiniti, e pertanto va usato con cautela. Solitamente le tabelle ricorsive
+-- presentano oltre ai campi di minima visti sopra anche il campo id_genitore, posizionato subito dopo il campo id.
 --
 -- TODO
+-- ====
 -- in futuro ragionare se aggiungere le colonne id_gruppo_inserimento e id_gruppo_aggiornamento per tenere traccia del gruppo che ha
 -- inserito o aggiornato la riga e anche per implementare un sistema di permessi più stile Linux rispetto a quello attuale delle ACL
 -- 
@@ -169,6 +235,163 @@ CREATE TABLE `consensi_moduli` (                              --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000015000
+
+-- file
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i file caricati nel sistema
+-- 
+-- questa tabella contiene i file caricati nel sistema, con le informazioni relative al percorso, al nome e alle
+-- entità a cui sono associati
+--
+CREATE TABLE IF NOT EXISTS `file` (                           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_ruolo` int(11) DEFAULT NULL,                            -- chiave esterna per il ruolo del file
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato il file
+  `id_anagrafica_certificazioni` int(11) DEFAULT NULL,        -- chiave esterna per l'anagrafica certificazioni a cui è associato il file
+  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associato il file
+  `id_articolo` char(32) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associato il file
+  `id_categoria_prodotti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associato il file
+  `id_todo` int(11) DEFAULT NULL,                             -- chiave esterna per la todo a cui è associato il file
+  `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associato il file
+  `id_template` int(11) DEFAULT NULL,                         -- chiave esterna per il template a cui è associato il file
+  `id_mailing` int(11) DEFAULT NULL,                          -- chiave esterna per la mailing a cui è associato il file
+  `id_notizia` int(11) DEFAULT NULL,                          -- chiave esterna per la notizia a cui è associato il file
+  `id_categoria_notizie` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di notizie a cui è associato il file
+  `id_annuncio` int(11) DEFAULT NULL,                         -- chiave esterna per l'annuncio a cui è associato il file
+  `id_categoria_annunci` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di annunci a cui è associato il file
+  `id_risorsa` int(11) DEFAULT NULL,                          -- chiave esterna per la risorsa a cui è associato il file
+  `id_categoria_risorse` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di risorse a cui è associato il file
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associato il file
+  `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti a cui è associato il file
+  `id_documento` int(11) DEFAULT NULL,                        -- chiave esterna per il documento a cui è associato il file
+  `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo a cui è associato il file
+  `id_edificio` int(11) DEFAULT NULL,                         -- chiave esterna per l'edificio a cui è associato il file
+  `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile a cui è associato il file
+  `id_contratto` int(11) DEFAULT NULL,                        -- chiave esterna per il contratto a cui è associato il file
+  `id_rinnovo` int(11) DEFAULT NULL,                          -- chiave esterna per il rinnovo a cui è associato il file
+  `id_valutazione` int(11) DEFAULT NULL,                      -- chiave esterna per la valutazione a cui è associato il file
+  `id_valutazione_certificazioni` int(11) DEFAULT NULL,       -- chiave esterna per la valutazione certificazioni a cui è associato il file
+  `id_mail_out` int(11) DEFAULT NULL,                         -- chiave esterna per la mail in uscita a cui è associato il file
+  `id_mail_sent` int(11) DEFAULT NULL,                        -- chiave esterna per la mail inviata a cui è associato il file
+  `id_licenza` int(11) DEFAULT NULL,                          -- chiave esterna per la licenza a cui è associato il file
+  `id_attivita` int(11) DEFAULT NULL,                         -- chiave esterna per l'attività a cui è associato il file
+  `id_lingua` int(11) DEFAULT NULL,                           -- chiave esterna per la lingua del file
+  `nome` char(255) DEFAULT NULL,                              -- nome del file
+  `path` char(255) DEFAULT NULL,                              -- percorso del file
+  `url` char(255) DEFAULT NULL,                               -- URL del file
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il file
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il file
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000015200
+
+-- gruppi
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i gruppi del framework
+--
+-- questa tabella contiene i gruppi degli utenti del framework, ed è in relazione molti a molti con la tabella account
+-- tramite la tabella di relazione account_gruppi
+--
+CREATE TABLE IF NOT EXISTS `gruppi` (                         --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna ricorsiva per il gruppo genitore
+  `id_organizzazione` int(11) DEFAULT NULL,                   -- chiave esterna per l'organizzazione a cui appartiene il gruppo
+  `nome` char(32) DEFAULT NULL,                               -- nome del gruppo
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il gruppo
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il gruppo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000015600
+
+-- immagini
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le immagini caricate nel sistema
+-- 
+-- questa tabella contiene le immagini caricate nel sistema, con le informazioni relative al percorso, al nome e alle
+-- entità a cui sono associate
+--
+CREATE TABLE IF NOT EXISTS `immagini` (                       --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_ruolo` int(11) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'immagine
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associata l'immagine
+  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associata l'immagine
+  `id_articolo` char(32) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associata l'immagine
+  `id_categoria_prodotti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associata l'immagine
+  `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associata l'immagine
+  `id_notizia` int(11) DEFAULT NULL,                          -- chiave esterna per la notizia a cui è associata l'immagine
+  `id_categoria_notizie` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di notizie a cui è associata l'immagine
+  `id_annuncio` int(11) DEFAULT NULL,                         -- chiave esterna per l'annuncio a cui è associata l'immagine
+  `id_categoria_annunci` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di annunci a cui è associata l'immagine
+  `id_risorsa` int(11) DEFAULT NULL,                          -- chiave esterna per la risorsa a cui è associata l'immagine
+  `id_categoria_risorse` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di risorse a cui è associata l'immagine
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associata l'immagine
+  `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti a cui è associata l'immagine
+  `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo a cui è associata l'immagine
+  `id_edificio` int(11) DEFAULT NULL,                         -- chiave esterna per l'edificio a cui è associata l'immagine
+  `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile a cui è associata l'immagine
+  `id_contratto` int(11) DEFAULT NULL,                        -- chiave esterna per il contratto a cui è associata l'immagine
+  `id_rinnovo` int(11) DEFAULT NULL,                          -- chiave esterna per il rinnovo a cui è associata l'immagine
+  `id_valutazione` int(11) DEFAULT NULL,                      -- chiave esterna per la valutazione a cui è associata l'immagine
+  `id_file` int(11) DEFAULT NULL,                             -- chiave esterna per il file a cui è associata l'immagine
+  `id_banner` int(11) DEFAULT NULL,                           -- chiave esterna per il banner a cui è associata l'immagine
+  `id_lingua` int(11) DEFAULT NULL,                           -- chiave esterna per la lingua dell'immagine
+  `nome` char(255) DEFAULT NULL,                              -- nome dell'immagine
+  `orientamento` enum('L','P','S') DEFAULT NULL,              -- orientamento dell'immagine: L=landscape, P=portrait, S=square
+  `taglio` char(64) DEFAULT NULL,                             -- taglio dell'immagine
+  `path` char(255) DEFAULT NULL,                              -- percorso dell'immagine
+  `path_alternativo` char(255) DEFAULT NULL,                  -- percorso alternativo dell'immagine
+  `token` char(128) DEFAULT NULL,                             -- token per il lock dell'immagine
+  `timestamp_scalamento` int(11) DEFAULT NULL,                -- timestamp dell'ultimo scalamento
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'immagine
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'immagine
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000016200
+
+-- job
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i job di sistema
+--
+-- questa tabella contiene i job di sistema, per maggiori informazioni si veda la documentazione relativa ai file
+-- /_src/_api/_cron.php e /_src/_api/_job.php
+-- 
+CREATE TABLE IF NOT EXISTS `job` (                            --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome del job
+  `job` char(255) NOT NULL,                                   -- percorso del file del job
+  `timestamp_apertura` int(11) DEFAULT NULL,                  -- timestamp di apertura del job
+  `totale` int(11) DEFAULT NULL,                              -- totale elementi da processare
+  `corrente` int(11) DEFAULT NULL,                            -- elemento corrente
+  `iterazioni` int(11) DEFAULT NULL,                          -- numero di iterazioni per ogni esecuzione del job
+  `delay` int(11) DEFAULT NULL,                               -- delay in secondi tra un'esecuzione e l'altra del job
+  `workspace` longtext DEFAULT NULL,                          -- workspace JSON del job
+  `se_foreground` tinyint(1) DEFAULT NULL,                    -- flag che indica se il job è in foreground
+  `token` char(254) DEFAULT NULL,                             -- token di lock del job
+  `timestamp_esecuzione` int(11) DEFAULT NULL,                -- timestamp dell'ultima esecuzione del job
+  `timestamp_completamento` int(11) DEFAULT NULL,             -- timestamp del completamento del job
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il job
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il job
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000016000
 
 -- lingue
@@ -211,6 +434,62 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il redirect
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il redirect
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000043000
+
+-- task
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i task pianificati del sistema
+--
+-- questa tabella contiene i task pianificati del sistema, per maggiori informazioni si veda la documentazione relativa ai file
+-- /_src/_api/_cron.php e /_src/_api/_job.php
+-- 
+CREATE TABLE IF NOT EXISTS `task` (                           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `minuto` int(11) DEFAULT NULL,                              -- minuto di esecuzione (0-59, NULL sta per ogni minuto)
+  `ora` int(11) DEFAULT NULL,                                 -- ora di esecuzione (0-23, NULL sta per ogni ora)
+  `giorno_del_mese` int(11) DEFAULT NULL,                     -- giorno del mese di esecuzione (1-31, NULL sta per ogni giorno del mese)
+  `mese` int(11) DEFAULT NULL,                                -- mese di esecuzione (1-12, NULL sta per ogni mese)
+  `giorno_della_settimana` int(11) DEFAULT NULL,              -- giorno della settimana di esecuzione (0-6, NULL sta per ogni giorno della settimana)
+  `settimana` int(11) DEFAULT NULL,                           -- settimana di esecuzione (1-53, NULL sta per ogni settimana)
+  `task` char(255) DEFAULT NULL,                              -- percorso del file del task
+  `iterazioni` int(11) DEFAULT NULL,                          -- numero di iterazioni del task per ogni esecuzione
+  `delay` int(11) DEFAULT NULL,                               -- delay in secondi tra un'esecuzione e l'altra del task
+  `token` char(254) DEFAULT NULL,                             -- token di lock del task
+  `timestamp_esecuzione` int(11) DEFAULT NULL,                -- timestamp dell'ultima esecuzione del task
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il task
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il task
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+
+-- | 010000044000
+
+-- template
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i template per le comunicazioni automatiche
+--
+-- questa tabella contiene i template per mail e sms
+-- 
+CREATE TABLE IF NOT EXISTS `template` (                       --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `nome` char(128) DEFAULT NULL,                              -- nome del template
+  `ruolo` char(32) DEFAULT NULL,                              -- ruolo del template
+  `tipo` char(32) DEFAULT NULL,                               -- tipo di template
+  `note` text DEFAULT NULL,                                   -- note sul template
+  `latenza_invio` int(11) DEFAULT NULL,                       -- latenza in secondi per l'invio del template
+  `se_mail` tinyint(1) DEFAULT NULL,                          -- flag che indica se il template è per le mail
+  `se_sms` tinyint(1) DEFAULT NULL,                           -- flag che indica se il template è per gli SMS
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il template
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il template
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
