@@ -710,6 +710,9 @@ Questo file contiene la dichiarazione della pagina NULL utilizzata per l'errore 
 ### /_src/_inc/_pages/_site.it-IT.php
 Questo file è vuoto in modo che possa essere facilmente customizzato.
 
+### /_src/_js/_main.js
+Questa libreria Javascript contiene le funzioni di utilità generale del framework, nonché le operazioni da eseguire al caricamento del DOM.
+
 ### /_src/_lib/_acl.utils.php
 Questa libreria contiene le funzioni di utilità per la gestione dei permessi degli utenti.
 
@@ -1125,3 +1128,55 @@ Per entrare in un container ed esplorare i file (utile per vedere i file di log)
 ```
 docker exec -it <containerId> bash
 ```
+
+#### come creo una patch per il database?
+Una patch per il database è un file contenente uno o più comandi SQL, opportunamente commentati per far capire al framework come deve considerarli.
+Per mantenere la consistenza fra database e applicazione è necessario attenersi strettamente alle seguenti regole ogni volta che si desidera
+modificare il database del framework:
+
+- per prima cosa, modificare opportunamente i file di patch base in modo che la modifica si propaghi ai NUOVI database
+- secondariamente, creare i file di patch necessari a propagare la modifica ai database ESISTENTI
+
+Per creare un file di patch finalizzato al deploy di una modifica ai database esistenti, è necessario rispettare le seguenti regole:
+
+- il file va inserito nella cartella /_usr/_database/_patch/
+- il nome del file deve corrispondere alla timestamp corrente seguita da quattro nove al posto dell'orario (YYYYMMDD9999)
+- i comandi all'interno del file vanno separati da un progressivo formato dalla timestamp corrente seguita da quattro cifre (vedi sotto)
+- i simboli dei commenti e i pipe sono significativi e vengono utilizzati dal framework per decodificare il file, attenersi all'esempio
+
+Per comprendere la struttura del file di patch, si osservi il seguente codice:
+
+\code{.sql}
+--
+-- PATCH
+-- aggiornamento della tabella matadati 2022/10/07
+-- file 202210079999.sql
+--
+
+-- | 202210070010
+ALTER TABLE `metadati`
+    ADD COLUMN `id_tipologia_todo` int(11) DEFAULT NULL AFTER `id_pianificazione`,
+    ADD UNIQUE KEY `unica_tipologia_todo` (`id_lingua`,`id_tipologia_todo`,`nome`),
+    ADD KEY `id_tipologia_todo` (`id_tipologia_todo`);
+
+-- | 202210070020
+ALTER TABLE `metadati`
+    ADD CONSTRAINT `metadati_ibfk_27` FOREIGN KEY (`id_tipologia_todo`) REFERENCES `tipologie_todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- | 202210070030
+CREATE OR REPLACE VIEW `metadati_view` AS
+    SELECT
+        [...]
+    FROM metadati
+        LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+;
+
+-- | FINE FILE
+\endcode
+
+Come si vede, il file inizia con una testatina commentata (in forma libera) nella quale è possibile inserire note e commenti alla patch. Seguono
+tre sezioni introdotte dalla sequenza -- | seguita dalla timestamp più il progressivo, e infine la chiusura -- | FINE FILE. Ogni comando SQL
+è contenuto in una sezione separata.
+
+Per ulteriori informazioni sul funzionamento del sistema di patch del database si faccia riferimento alla documentazione del file
+/_src/_api/_task/_mysql.patch.php.
