@@ -483,7 +483,7 @@ In questo file vengono definiti i profili di funzionamento del template manager 
 
 ### /_src/_config/_385.twig.php
 In questo file l'array $cf['twig'] viene integrato con $cx['twig']; inoltre viene definito il profilo corrente $cf['twig']['profile'] come link a
-&$cf['twig']['profiles'][ $cf['site']['status'] ]. Infine viene verificato che la cartella della cache di Twig, se necessaria, esista.
+$cf['twig']['profiles'][ $cf['site']['status'] ]. Infine viene verificato che la cartella della cache di Twig, se necessaria, esista.
 
 ### /_src/_config/_400.rewrite.php
 In questo file viene fatto il parsing dell'URL richiesto dal client e determinata la pagina corrente. Questo è un file cruciale per il 
@@ -491,7 +491,7 @@ funzionamento del framework e dev'essere studiato assieme a /_src/_api/_pages.ph
 
 ### /_src/_config/_420.pages.php
 Questo runlevel è dedicato alle elaborazioni specifiche relative alla pagina corrente; fra le varie cose, vengono create le shortcut $ct['pages']
-come link a &$cf['contents']['pages'] e $ct['page'] come link a &$cf['contents']['page']. Vengono inoltre effettuate varie elaborazioni specifiche
+come link a $cf['contents']['pages'] e $ct['page'] come link a $cf['contents']['page']. Vengono inoltre effettuate varie elaborazioni specifiche
 della pagina, fra cui l'elaborazione del menù a schede (se presente).
 
 In questo file vengono inoltre gestiti i comandi di una lettera, fondamentali per il debug. I comandi gestiti qui sono:
@@ -1146,7 +1146,7 @@ Per creare un file di patch finalizzato al deploy di una modifica ai database es
 
 Per comprendere la struttura del file di patch, si osservi il seguente codice:
 
-\code{.sql}
+```
 --
 -- PATCH
 -- aggiornamento della tabella matadati 2022/10/07
@@ -1172,7 +1172,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 ;
 
 -- | FINE FILE
-\endcode
+```
 
 Come si vede, il file inizia con una testatina commentata (in forma libera) nella quale è possibile inserire note e commenti alla patch. Seguono
 tre sezioni introdotte dalla sequenza -- | seguita dalla timestamp più il progressivo, e infine la chiusura -- | FINE FILE. Ogni comando SQL
