@@ -283,7 +283,7 @@
         {% if field.id %}id="{{ field.id }}"{% endif %}
         {% if field.onclick %}onclick="{{ field.onclick }}"{% endif%}
         {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
-        {% if disabled %}disabled{% endif %}>{{ options.text|raw }}</button>
+        {% if disabled %}disabled{% endif %}>{{ options.field.text|raw }}</button>
 
 {% endmacro button %}
 

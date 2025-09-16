@@ -223,6 +223,9 @@ e l'accesso è impedito da regole apposite all'inizio di /.htaccess.
 Questa API consente l'esecuzione dei job in foreground; per ulteriori informazioni si veda la documentazione del file stesso oltre a quella del
 file /_src/_api/_cron.php.
 
+### /_src/_api/_osm.php
+Questa API funge da proxy per le tele OSM, in modo da non sovraccaricare i server OSM.
+
 ### /_src/_api/_pages.php
 Questo file ha lo scopo di renderizzare e erogare le pagine. Svolge numerose funzioni ed è ampiamente documentato, quindi si rimanda al sorgente
 per i dettagli. In sintesi, riceve le richieste di pagina in base alle regole del file /.htaccess e le soddisfa tramite le informazioni in suo
