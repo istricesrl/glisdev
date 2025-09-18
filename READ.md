@@ -241,12 +241,12 @@ Questo è un job di test.
 
 ### /_src/_api/_report/_cookie.php
 Questo report restituisce l'elenco di tutti i cookie presenti nel browser per il dominio corrente indicando se sono gestiti o meno dal
-framework, il loro scopo e altre informazioni utili.
+framework, il loro scopo e altre informazioni utili. Per accedere al report utilizzare il percorso /report/cookie.
 
 ### /_src/_api/_report/_import.php
 Questo report innesca l'importazione dei file presenti in /var/spool/import/todo/*/ e /var/spool/import, e restituisce un report dettagliato delle
 operazioni svolte. Normalmente l'importazione dei file è svolta dall'API cron, ma questo report può essere fondamentale per lo sviluppo, il test
-e il debug dei nuovi tracciati di importazione.
+e il debug dei nuovi tracciati di importazione. Per accedere al report utilizzare il percorso /report/import.
 
 ### /_src/_api/_status/_cf.php
 Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
@@ -697,9 +697,18 @@ attesa che il framework implementi una propria gestione della scalatura delle fa
 ### /_src/_inc/_macro/_app.php
 Questa è la macro di pagina di default della pagina app. In standard non prevede particolari funzionalità, ma è pensata per essere customizzata.
 
+### /_src/_inc/_macro/_dashboard.php
+Questa è la macro di pagina della dashboard, la pagina principale dell'area admin.
+
+### /_src/_inc/_macro/_dashboard.tools.php
+Questa è la macro di pagina della dashboard tools, la pagina di strumenti della dashboard.
+
 ### /_src/_inc/_macro/_security.php
 Questo file implementa il firewall applicativo del framework ed è quindi cruciale per la sua sicurezza. Viene incluso da /_src/_config.php e si occupa
 di filtrare le richieste potenzialmente dannose. Per i dettagli del suo funzionamento si vedano i commenti al codice.
+
+### /_src/_inc/_macro/_default/_default.tools.php
+Questo file è una macro di default inclusa soprattutto da pagine che utilizzano lo schema metro.
 
 ### /_src/_inc/_pages/_app.it-IT.php
 Questo file contiene la dichiarazione delle pagine della web app standard del framework.

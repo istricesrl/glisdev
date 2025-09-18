@@ -1,5 +1,6 @@
 --
 -- DATI
+-- ====
 -- questo file contiene le query per l'inserimento dei dati standard nelle tabelle
 --
 

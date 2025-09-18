@@ -1,5 +1,6 @@
 --
 -- VISTE
+-- =====
 -- questo file contiene le query per la creazione delle viste
 --
 -- CRITERI DI VERIFICA
@@ -10,6 +11,44 @@
 -- - la view non fa riferimento a tabelle o colonne deprecate
 -- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
 --
+
+-- | 090000003100
+
+-- categorie_anagrafica_view
+CREATE OR REPLACE VIEW categorie_anagrafica_view AS           --
+	SELECT                                                    --
+		categorie_anagrafica.id,                              --
+		categorie_anagrafica.id_genitore,                     --
+		categorie_anagrafica.ordine,                          --
+		categorie_anagrafica.nome,                            --
+		categorie_anagrafica.se_prospect,                     --
+		categorie_anagrafica.se_lead,                         --
+		categorie_anagrafica.se_cliente,                      --
+		categorie_anagrafica.se_fornitore,                    --
+		categorie_anagrafica.se_produttore,                   --
+		categorie_anagrafica.se_collaboratore,                --
+		categorie_anagrafica.se_interno,                      --
+		categorie_anagrafica.se_esterno,                      --
+		categorie_anagrafica.se_concorrente,                  --
+		categorie_anagrafica.se_gestita,                      --
+		categorie_anagrafica.se_amministrazione,              --
+		categorie_anagrafica.se_produzione,                   --
+		categorie_anagrafica.se_commerciale,                  --
+		categorie_anagrafica.se_notizie,                      --
+		categorie_anagrafica.se_corriere,                     --
+		count( c1.id ) AS figli,                              -- conteggio dei figli
+		count( ac.id ) AS membri,                             -- conteggio dei membri
+		categorie_anagrafica.id_account_inserimento,          --
+		categorie_anagrafica.id_account_aggiornamento,        --
+	 	categorie_anagrafica_path(                            --
+            categorie_anagrafica.id ) AS __label__            -- etichetta per le tendine e le liste
+	FROM categorie_anagrafica                                 --
+		LEFT JOIN categorie_anagrafica AS c1                  --
+            ON c1.id_genitore = categorie_anagrafica.id       --
+		LEFT JOIN anagrafica_categorie AS ac                  --
+            ON ac.id_categoria = categorie_anagrafica.id      --
+	GROUP BY categorie_anagrafica.id                          --
+;                                                             --
 
 -- | 090000006000
 
@@ -85,9 +124,35 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
   FROM redirect                                               --
 ;                                                             --
 
+-- | 090000050401
+
+-- tipologie_attivita_view
+CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
+	SELECT                                                    --
+		tipologie_attivita.id,                                --
+		tipologie_attivita.id_genitore,                       --
+		tipologie_attivita.ordine,                            --
+		tipologie_attivita.codice,                            --
+		tipologie_attivita.nome,                              --
+		tipologie_attivita.html_entity,                       --
+		tipologie_attivita.font_awesome,                      --
+		tipologie_attivita.se_anagrafica,                     --
+		tipologie_attivita.se_agenda,                         --
+		tipologie_attivita.se_sistema,                        --
+		tipologie_attivita.se_stampa,                         --
+		tipologie_attivita.se_cartellini,                     --
+		tipologie_attivita.se_corsi,                          --
+		tipologie_attivita.se_accesso,                        --
+		tipologie_attivita.id_account_inserimento,            --
+		tipologie_attivita.id_account_aggiornamento,          --
+		tipologie_attivita_path(                              --
+            tipologie_attivita.id ) AS __label__              -- etichetta per le tendine e le liste
+	FROM tipologie_attivita                                   --
+;                                                             --
+
 -- | 090000999000
 
--- redirect_view
+-- test_view
 CREATE OR REPLACE VIEW test_view AS                           --
   SELECT                                                      --
     test.id,                                                  --

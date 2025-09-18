@@ -2,55 +2,78 @@
     Questo file contiene una libreria di macro Twig specificamente legate al template Athena. Si raccomanda di includere sempre
     la libreria sotto il prefisso tpl. #}
 
-
-
-
-
-
-
-
-{# MACRO DI DEFAULT PER IL TEMPLATE STANDARD #}
-
+{# controls() - crea la bottoniera di controllo per il piè di pagina
+    Questa macro crea i bottoni per il salvataggio, la cancellazione e la navigazione dei form. #}
 {% macro controls( page, pages, lang, session, table, request, localization, download, short, etc ) %}
-{% import '_bin/_form.html' as frm %}
-{% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ lang ] %}{% endif %}
-<div class="row no-gutters d-print-none">
-    <div class="col-auto col-md-5">
-    {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-rotate-left"></i>', 'type': 'button', 'onclick': 'window.open("' ~ back ~ '","_self")' } } ) }}
+    <!-- macro {{ _self }}::controls() -->
+
+    {# importazione librerie #}
+    {% import '_bin/_form.html' as frm %}
+
+    {# gestione del backurl #}
+    {% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ lang ] %}{% endif %}
+
+    {# riga dei bottoni #}
+    <div class="row no-gutters d-print-none">
+
+        {# colonna di sinistra - bottone torna indietro #}
+        <div class="col-auto col-md-5">
+            {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-rotate-left"></i>', 'type': 'button', 'onclick': 'window.open("' ~ back ~ '","_self")' } } ) }}
+        </div>
+
+        {# colonna centrale - bottone elimina #}
+        <div class="col col-md-2 text-center">
+            {% if request[ table ].id and short != 2 %}
+            {{ frm.trashButton( table, '', page, pages, '', lang, request, back ) }}
+            {% endif %}
+        </div>
+
+        {# colonna di destra - bottoni di salvataggio e navigazione #}
+        <div class="col-auto col-md-5 text-right">
+            <div class="row">
+                <div class="col">
+                    {% if short == 2 %}
+
+                        {# bottone torna indietro #}
+                        {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+
+                    {% elseif request.__backurl__ %}
+
+                        {# bottone torna indietro #}
+                        {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-left"></i>', 'onclick': 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");' } } ) }}
+                        {% endif %}
+
+                        {# costruzione della stringa dei preset #}
+                        {% set presets = '' %}{% for fld,val in etc.preset.fields %}{% set presets = presets ~ '&__preset__[' ~ table ~ '][' ~ fld ~ ']=' ~ val %}{% endfor %}
+
+                        {# bottone salva e rimani nella pagina attuale #}
+                        {{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e rimani nella pagina corrente' ) }}
+
+                        {# bottone salva e crea un nuovo oggetto #}
+                        {{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ presets ~ '");','salva e inserisci altri dati' ) }}
+
+                    {% else %}
+
+                        {# bottone salva e torna indietro #}
+                        {{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
+
+                        {# bottone salva e rimani nella pagina attuale #}
+                        {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+
+                        {# bottone salva e crea un nuovo oggetto #}
+                        {% if not short %}
+                        {{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '");','salva e crea un nuovo oggetto' ) }}
+                        {% endif %}
+
+                        {# bottone scarica #}
+                        {% if download %}
+                        {{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}
+                        {% endif %}
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col col-md-2 text-center">
-	{% if request[ table ].id and short != 2 %}
-	{# TODO 'sta cosa è provvisoria, dovremo farglieli cancellare in qualche modo i file #}
-	{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
-	{{ frm.trashButton( table, '', page, pages, '', lang, request, back ) }}
-	{% endif %}
-    </div>
-    <div class="col-auto col-md-5 text-right">
-	<div class="row">
-	<div class="col">
-		{% if short == 2 %}
-	    {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
-		{% elseif request.__backurl__ %}
-	    {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
-        {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-left"></i>', 'onclick': 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");' } } ) }}
-	    {% endif %}
-		{% set presets = '' %}{% for fld,val in etc.preset.fields %}{% set presets = presets ~ '&__preset__[' ~ table ~ '][' ~ fld ~ ']=' ~ val %}{% endfor %}
-	    {{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e inserisci altri dati' ) }}
-		{{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ presets ~ '");','salva e inserisci altri dati' ) }}
-		{% else %}
-	    {{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
-	    {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
-		{# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}
-		{% if not short %}
-	    {{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '");','salva e crea un nuovo oggetto' ) }}
-		{# if page.parents.path|length() > 1 #}{# frm.button( '<i class="fa fa-area-chart" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.parents.path[1][ lang ] ~ '");','salva e vai alle statistiche' ) #}{# endif #}
-	    {# frm.button( '<i class="fa fa-object-group" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ pages.dashboard.path[ lang ] ~ '");','salva e torna alla dashboard' ) #}
-		{% endif %}
-		{# gdl #}
-	    {% if download %}{{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}{% endif %}
-	    {% endif %}
-	</div>
-	</div>
-    </div>
-</div>
 {% endmacro %}

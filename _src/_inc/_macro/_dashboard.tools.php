@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro dashboard
+     * macro dashboard tools
      *
      *
      *
@@ -11,10 +11,13 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    '00.notifiche' => array(
-			'label' => 'notifiche'
+	    '00.esportazioni' => array(
+			'label' => 'esportazioni'
+		),
+	    '01.importazioni' => array(
+			'label' => 'importazioni'
 		)
 	);
 
-    // gestione default
+    // gestione di default dei tools
 	require DIR_SRC_INC_MACRO . '_default/_default.tools.php';

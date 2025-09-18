@@ -1114,3 +1114,93 @@
             'DELETE FROM anagrafica_view_static'
         );
     }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaStati() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM stati_view ORDER BY __label__'
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaAnni( $start = 2014 ) {
+
+        $r = array();
+
+        foreach( range( date( 'Y' ) + 1, $start ) as $y ) {
+            $r[] = array( 'id' => $y, '__label__' => $y );
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaMesi() {
+
+        $r = array();
+
+        foreach( range( 1, 12 ) as $m ) {
+            $r[] = array( 'id' => $m, '__label__' => str_pad( $m, 2, '0', STR_PAD_LEFT ) . ' - ' . ucfirst( strftime( '%B', mktime( 0, 0, 0, $m, 1 ) ) ) );
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSettimane() {
+
+        $r = array();
+
+        foreach( range( 1, 53 ) as $s ) {
+            $r[] = array( 'id' => $s, '__label__' => str_pad( $s, 2, '0', STR_PAD_LEFT ) );
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaProvincie( $idStato = 1 ) {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM provincie_view WHERE id_stato = ? ORDER BY __label__',
+            array(
+                array( 's' => $idStato )
+            )
+        );
+
+    }   

@@ -96,6 +96,27 @@
 -- inserito o aggiornato la riga e anche per implementare un sistema di permessi più stile Linux rispetto a quello attuale delle ACL
 -- 
 
+-- | 010000000500
+
+-- anagrafica_categorie
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: associa molti a molti le anagrafiche alle categorie
+--
+-- questa tabella contiene le associazioni molti a molti tra le anagrafiche e le categorie
+-- 
+CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica
+  `id_categoria` int(11) DEFAULT NULL,                        -- chiave esterna per la categoria
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000001000
 
 -- account
@@ -179,6 +200,44 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (    --
 
 -- TODO documentare meglio questa tabella con riferimenti al codice
 --
+
+-- | 010000003100
+
+-- categorie_anagrafica
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le categorie delle anagrafiche
+-- 
+-- questa tabella contiene le categorie delle anagrafiche
+-- 
+CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                             -- codice della categoria
+  `nome` char(64) DEFAULT NULL,                               -- nome della categoria
+  `note` text DEFAULT NULL,                                   -- note sulla categoria
+  `se_lead` tinyint(1) DEFAULT NULL,                          -- flag che indica se la categoria è un lead
+  `se_prospect` tinyint(1) DEFAULT NULL,                      -- flag che indica se la categoria è un prospect
+  `se_cliente` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è un cliente
+  `se_fornitore` tinyint(1) DEFAULT NULL,                     -- flag che indica se la categoria è un fornitore
+  `se_produttore` tinyint(1) DEFAULT NULL,                    -- flag che indica se la categoria è un produttore
+  `se_collaboratore` tinyint(1) DEFAULT NULL,                 -- flag che indica se la categoria è un collaboratore
+  `se_interno` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è un interno
+  `se_esterno` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è un esterno
+  `se_concorrente` tinyint(1) DEFAULT NULL,                   -- flag che indica se la categoria è un concorrente
+  `se_gestita` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è gestita
+  `se_amministrazione` tinyint(1) DEFAULT NULL,               -- flag che indica se la categoria è in amministrazione
+  `se_produzione` tinyint(1) DEFAULT NULL,                    -- flag che indica se la categoria è in produzione
+  `se_commerciale` tinyint(1) DEFAULT NULL,                   -- flag che indica se la categoria è nel commerciale
+  `se_notizie` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è collegata alle notizie
+  `se_corriere` tinyint(1) DEFAULT NULL,                      -- flag che indica se la categoria è un corriere
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la categoria
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la categoria
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006000
 
@@ -490,6 +549,38 @@ CREATE TABLE IF NOT EXISTS `template` (                       --
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il template
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il template
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000050400
+
+-- tipologie_attivita
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di attività
+-- 
+-- questa tabella contiene le tipologie di attività, con le informazioni relative al nome, al codice e alle
+-- funzionalità associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                             -- codice della tipologia
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `se_anagrafica` tinyint(1) DEFAULT NULL,                    -- flag che indica se la tipologia è associabile alle anagrafiche
+  `se_agenda` tinyint(1) DEFAULT NULL,                        -- flag che indica se la tipologia è associabile all'agenda
+  `se_sistema` tinyint(1) DEFAULT NULL,                       -- flag che indica se la tipologia è una tipologia di sistema
+  `se_stampa` tinyint(1) DEFAULT NULL,                        -- flag che indica se la tipologia è associabile alle stampe
+  `se_cartellini` tinyint(1) DEFAULT NULL,                    -- flag che indica se la tipologia è associabile ai cartellini
+  `se_corsi` tinyint(1) DEFAULT NULL,                         -- flag che indica se la tipologia è associabile ai corsi
+  `se_accesso` tinyint(1) DEFAULT NULL,                       -- flag che indica se la tipologia è associabile agli accessi
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
