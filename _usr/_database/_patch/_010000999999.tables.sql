@@ -96,6 +96,64 @@
 -- inserito o aggiornato la riga e anche per implementare un sistema di permessi più stile Linux rispetto a quello attuale delle ACL
 -- 
 
+-- | 010000000400
+
+-- anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le anagrafiche di persone e aziende
+-- 
+-- questa tabella contiene le anagrafiche di persone e aziende, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `anagrafica` (                     --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di anagrafica
+  `id_badge` int(11) DEFAULT NULL,                            -- chiave esterna per il badge associato all'anagrafica
+  `codice` char(32) DEFAULT NULL,                             -- codice dell'anagrafica
+  `riferimento` char(255) DEFAULT NULL,                       -- riferimento interno per l'anagrafica
+  `nome` char(64) DEFAULT NULL,                               -- nome della persona
+  `cognome` char(255) DEFAULT NULL,                           -- cognome della persona
+  `denominazione` char(255) DEFAULT NULL,                     -- denominazione dell'azienda
+  `soprannome` char(128) DEFAULT NULL,                        -- soprannome o nome commerciale
+  `sesso` enum('M','F','-') DEFAULT NULL,                     -- sesso della persona
+  `stato_civile` char(128) DEFAULT NULL,                      -- stato civile della persona
+  `codice_fiscale` char(32) DEFAULT NULL,                     -- codice fiscale della persona o dell'azienda
+  `partita_iva` char(32) DEFAULT NULL,                        -- partita IVA della persona o dell'azienda
+  `codice_sdi` char(32) DEFAULT NULL,                         -- codice SDI per la fatturazione elettronica
+  `id_pec_sdi` int(11) DEFAULT NULL,                          -- chiave esterna per la PEC associata al codice SDI
+  `codice_ipa` char(32) DEFAULT NULL,                         -- codice IPA per la fatturazione elettronica verso la pubblica amministrazione
+  `codice_archivium` char(16) DEFAULT NULL,                   -- codice per l'integrazione con Archivium
+  `id_regime` int(11) DEFAULT NULL,                           -- chiave esterna per il regime fiscale
+  `note_amministrative` text DEFAULT NULL,                    -- note amministrative
+  `note_collaborazione` text DEFAULT NULL,                    -- note di collaborazione
+  `luogo_nascita` char(128) DEFAULT NULL,                     -- luogo di nascita
+  `stato_nascita` char(128) DEFAULT NULL,                     -- stato di nascita
+  `id_stato_nascita` int(11) DEFAULT NULL,                    -- chiave esterna per lo stato di nascita
+  `comune_nascita` char(128) DEFAULT NULL,                    -- comune di nascita
+  `id_comune_nascita` int(11) DEFAULT NULL,                   -- chiave esterna per il comune di nascita
+  `giorno_nascita` int(2) DEFAULT NULL,                       -- giorno di nascita
+  `mese_nascita` int(2) DEFAULT NULL,                         -- mese di nascita
+  `anno_nascita` int(4) DEFAULT NULL,                         -- anno di nascita
+  `id_ranking` int(11) DEFAULT NULL,                          -- chiave esterna per il ranking
+  `id_agente` int(11) DEFAULT NULL,                           -- chiave esterna per l'agente
+  `id_responsabile_operativo` int(11) DEFAULT NULL,           -- chiave esterna per il responsabile operativo
+  `note_commerciali` text DEFAULT NULL,                       -- note commerciali
+  `condizioni_vendita` text DEFAULT NULL,                     -- condizioni di vendita
+  `condizioni_acquisto` text DEFAULT NULL,                    -- condizioni di acquisto
+  `note` text DEFAULT NULL,                                   -- note
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
+  `recapiti` text DEFAULT NULL,                               -- recapiti
+  `token` char(255) DEFAULT NULL,                             -- token
+  `se_importata` tinyint(1) DEFAULT NULL,                     -- flag per importazione
+  `se_stampa_privacy` tinyint(1) DEFAULT NULL,                -- flag per stampa privacy
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000000500
 
 -- anagrafica_categorie
@@ -111,6 +169,34 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (           --
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica
   `id_categoria` int(11) DEFAULT NULL,                        -- chiave esterna per la categoria
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000000900
+
+-- anagrafica_indirizzi
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: associa molti a molti le anagrafiche agli indirizzi
+--
+-- questa tabella contiene le associazioni molti a molti tra le anagrafiche e gli indirizzi
+--
+CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `codice` char(64) DEFAULT NULL,                             -- codice dell'indirizzo
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica
+  `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo
+  `id_ruolo` int(11) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'indirizzo
+  `interno` char(8) DEFAULT NULL,                             -- interno dell'indirizzo
+  `indirizzo` char(255) DEFAULT NULL,                         -- indirizzo
+  `note` text DEFAULT NULL,                                   -- note sull'indirizzo
+  `timestamp_elaborazione` int(11) DEFAULT NULL,              -- timestamp dell'ultima elaborazione
+  `note_elaborazione` text DEFAULT NULL,                      -- note sull'ultima elaborazione
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
@@ -188,9 +274,9 @@ CREATE TABLE IF NOT EXISTS `account_gruppi` (                 --
 --
 CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (    --
   `id` int(11) NOT NULL,                                      -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `id_account` int(11) DEFAULT NULL,                          -- chiave esterna per l'account
   `id_gruppo` int(11) DEFAULT NULL,                           -- chiave esterna per il gruppo
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `entita` char(64) DEFAULT NULL,                             -- entità per la quale si innesca l'associazione
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
@@ -237,6 +323,27 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (           --
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la categoria
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000005300
+
+-- comuni
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i comuni italiani
+--
+-- questa tabella contiene i comuni italiani, con le informazioni relative al nome, al codice ISTAT, al codice catastale,
+-- all'ID della provincia di appartenenza, e ad un eventuale URL di riferimento
+--
+CREATE TABLE IF NOT EXISTS `comuni` (                         --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_provincia` int(11) DEFAULT NULL,                        -- chiave esterna per la provincia di appartenenza
+  `nome` varchar(254) DEFAULT NULL,                           -- nome del comune
+  `codice_istat` char(12) DEFAULT NULL,                       -- codice ISTAT del comune
+  `codice_catasto` char(4) DEFAULT NULL,                      -- codice catastale del comune
+  `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento del comune
+  `note` text DEFAULT NULL                                    -- note sul comune
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006000
@@ -436,6 +543,37 @@ CREATE TABLE IF NOT EXISTS `immagini` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000015800
+
+-- indirizzi
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli indirizzi
+--
+-- questa tabella contiene gli indirizzi, con le informazioni relative alla tipologia, al comune, alla località,
+-- all'indirizzo, al civico, al CAP, alle note, alla latitudine e alla longitudine
+--
+CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia dell'indirizzo
+  `id_comune` int(11) DEFAULT NULL,                           -- chiave esterna per il comune
+  `localita` char(128) DEFAULT NULL,                          -- località
+  `indirizzo` char(128) DEFAULT NULL,                         -- indirizzo
+  `civico` char(16) DEFAULT NULL,                             -- civico
+  `cap` char(11) DEFAULT NULL,                                -- CAP
+  `note` text DEFAULT NULL,                                   -- note sull'indirizzo
+  `latitudine` decimal(11,7) DEFAULT NULL,                    -- latitudine
+  `longitudine` decimal(11,7) DEFAULT NULL,                   -- longitudine
+  `token` char(128) DEFAULT NULL,                             -- token per il lock dell'indirizzo
+  `timestamp_geolocalizzazione` int(11) DEFAULT NULL,         -- timestamp dell'ultima geolocalizzazione
+  `note_geolocalizzazione` text DEFAULT NULL,                 -- note sulla geolocalizzazione dell'indirizzo
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'indirizzo
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'indirizzo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000016200
 
 -- job
@@ -487,6 +625,32 @@ CREATE TABLE IF NOT EXISTS `lingue` (                         --
   `ietf` char(36) DEFAULT NULL                                -- codice IETF della lingua
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000018600
+
+-- mail
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene gli indirizzi mail collegati alle anagrafiche
+--
+-- questa tabella contiene gli indirizzi mail collegati alle anagrafiche, con le informazioni relative al ruolo
+-- dell'indirizzo, alle notifiche, alla PEC, al server di posta e alle
+-- 
+CREATE TABLE IF NOT EXISTS `mail` (                           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_ruolo` int(11) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'indirizzo mail
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è collegata la mail
+  `indirizzo` char(128) DEFAULT NULL,                         -- indirizzo mail
+  `note` char(128) DEFAULT NULL,                              -- note sull'indirizzo mail
+  `se_notifiche` tinyint(1) DEFAULT NULL,                     -- se l'indirizzo mail è utilizzato per le notifiche
+  `se_pec` tinyint(1) DEFAULT NULL,                           -- se l'indirizzo mail è una PEC
+  `server` char(128) DEFAULT NULL,                            -- server di posta in uscita (SMTP)
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,             -- timestamp di aggiornamento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'indirizzo mail
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_inserimento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha inserito l'indirizzo mail
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000028000
 
 -- provincie
@@ -506,6 +670,32 @@ CREATE TABLE IF NOT EXISTS `provincie` (                      --
   `codice_istat` char(3) DEFAULT NULL,                        -- codice ISTAT della provincia
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della provincia
   `note` text DEFAULT NULL                                    -- note sulla provincia
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000028600
+
+-- ranking
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i ranking per anagrafiche e progetti
+--
+-- questa tabella contiene i ranking per anagrafiche e progetti, con le informazioni relative al nome, alle note,
+-- all'ordine di visualizzazione e alle entità a cui si applica (clienti
+-- e fornitori, progetti)
+--
+CREATE TABLE IF NOT EXISTS `ranking` (                        --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `nome` varchar(254) DEFAULT NULL,                           -- nome del ranking
+  `note` text DEFAULT NULL,                                   -- note sul ranking
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `se_cliente` tinyint(1) DEFAULT NULL,                       -- se anagrafica cliente
+  `se_fornitore` tinyint(1) DEFAULT NULL,                     -- se anagrafica fornitore
+  `se_progetti` tinyint(1) DEFAULT NULL,                      -- se progetti
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il ranking
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il ranking
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000029000
@@ -630,6 +820,29 @@ CREATE TABLE IF NOT EXISTS `task` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000043600
+
+-- telefoni
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene i numeri di telefono delle anagrafiche
+--
+-- questa tabella contiene i numeri di telefono delle anagrafiche, con le informazioni relative alla tipologia,
+-- al numero, alle notifiche e alle anagrafiche a cui sono associati
+--
+CREATE TABLE `telefoni` (                                     --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato il numero di telefono
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia del numero di telefono
+  `numero` char(32) DEFAULT NULL,                             -- numero di telefono
+  `note` text DEFAULT NULL,                                   -- note sul numero di telefono
+  `se_notifiche` tinyint(1) DEFAULT NULL,                     -- flag che indica se il numero di telefono è abilitato alle notifiche
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il numero di telefono
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il numero di telefono
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000044000
 

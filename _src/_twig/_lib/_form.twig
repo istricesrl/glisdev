@@ -246,7 +246,7 @@
 
     {# creazione del campo input #}
     <textarea name="{{ nm }}" id="{{ id }}" class="{{ field.class }}"
-        style="min-height: {{ rows * 30 }}px;"
+        style="min-height: {{ field.rows * 30 }}px;"
         {% if field.default %}default="{{ field.default }}"{% endif %} 
         {% if form.step %}step="{{ form.step }}"{% endif %}
         {% if field.disabled %}disabled{% endif %} 

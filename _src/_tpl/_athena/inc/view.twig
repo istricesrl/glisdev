@@ -8,6 +8,8 @@
 {% set back = page.parent.path[ localization.language.ietf ] %}
 {% endif %}
 
+{# TODO DOCUMENTARE #}
+
 <!-- file {{ _self }} -->
 <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 
@@ -15,11 +17,11 @@
     {% if etc.include.filters %}
     {% include etc.include.filters %}
     {% else %}
-    <div class="form-row view-filters d-print-none">
-        <div class="col">
+    <div class="form-group row view-filters d-print-none">
+        <div class="col form-col">
             {{ frm.input({ "form": { "table": "__view__", "subtable": view.id }, "field": { "name": "__search__", "autofocus": 1 }, "request": request, "page": page }) }}
         </div>
-        <div class="col-auto">
+        <div class="col-auto form-col">
 
             {{ frm.button({ "field": { "text": '<i class="fa fa-search"></i>', "class": "btn btn-secondary btn-sqr btn-sm" } }) }}
 
@@ -131,7 +133,7 @@
         {% endif %}
         
         {% if not session.__view__[ view.id ].__filesystem_mode__ %}
-        <div class="col-auto text-left">
+        <div class="col-auto text-start">
             {% if view.data %}
             <div class="input-group">
                 <input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
@@ -171,8 +173,8 @@
             di
             {{ session.__view__[ view.id ].__pager__.total }}
         </div>
-        <div class="col-2 text-right">
-            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('/print/default.csv?t={{ view.table }}&v={{ session.__view__[ view.id ]|json_encode() }}','_blank');"><i class="fa fa-file-excel-o"></i></button>
+        <div class="col-2 text-end">
+            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('/print/default.csv?t={{ view.table }}&v={{ session.__view__[ view.id ]|json_encode() }}','_blank');"><i class="fa fa-file-excel"></i></button>
             {% if view.insert.path %}
             <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
             {% endif %}

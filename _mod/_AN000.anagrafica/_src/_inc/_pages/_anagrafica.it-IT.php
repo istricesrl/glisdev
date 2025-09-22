@@ -8,6 +8,7 @@
      * 
      * 
      * TODO documentare
+	 * TODO finire di mettere tutte le schede dell'anagrafica
      * 
      */
 
@@ -51,6 +52,7 @@
 															'anagrafica.form.cliente',
 															'anagrafica.form.fornitore',
 															'anagrafica.form.collaboratore',
+															'anagrafica.form.attivita',
 															'anagrafica.form.immagini',
 															'anagrafica.form.video',
 															'anagrafica.form.audio',

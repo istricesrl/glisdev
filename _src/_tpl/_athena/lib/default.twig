@@ -8,7 +8,8 @@
     <!-- macro {{ _self }}::controls() -->
 
     {# importazione librerie #}
-    {% import '_bin/_form.html' as frm %}
+    {% import '_lib/_form.twig' as frm %}
+    {% import _self as def %}
 
     {# gestione del backurl #}
     {% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ lang ] %}{% endif %}
@@ -17,21 +18,22 @@
     <div class="row no-gutters d-print-none">
 
         {# colonna di sinistra - bottone torna indietro #}
-        <div class="col-auto col-md-5">
+        <div class="col-auto col-md-5 text-start">
+             {# bottone torna indietro #}
             {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-rotate-left"></i>', 'type': 'button', 'onclick': 'window.open("' ~ back ~ '","_self")' } } ) }}
         </div>
 
         {# colonna centrale - bottone elimina #}
         <div class="col col-md-2 text-center">
             {% if request[ table ].id and short != 2 %}
-            {{ frm.trashButton( table, '', page, pages, '', lang, request, back ) }}
+            {{ def.trashButton( table, '', page, pages, '', lang, request, back ) }}
             {% endif %}
         </div>
 
         {# colonna di destra - bottoni di salvataggio e navigazione #}
-        <div class="col-auto col-md-5 text-right">
+        <div class="col-auto col-md-5">
             <div class="row">
-                <div class="col">
+                <div class="col text-end">
                     {% if short == 2 %}
 
                         {# bottone torna indietro #}
@@ -51,19 +53,19 @@
                         {{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e rimani nella pagina corrente' ) }}
 
                         {# bottone salva e crea un nuovo oggetto #}
-                        {{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ presets ~ '");','salva e inserisci altri dati' ) }}
+                        {{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ presets ~ '");$("#form-' ~ table ~ '").submit();','salva e inserisci altri dati' ) }}
 
                     {% else %}
 
                         {# bottone salva e torna indietro #}
-                        {{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-caret-left"></i><i class="fa fa-floppy-disk"></i>', 'type': 'button', 'onclick': '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;$("#form-' ~ table ~ '").submit();' } } ) }}
 
                         {# bottone salva e rimani nella pagina attuale #}
-                        {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
 
                         {# bottone salva e crea un nuovo oggetto #}
                         {% if not short %}
-                        {{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '");','salva e crea un nuovo oggetto' ) }}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i><i class="fa fa-caret-right"></i>', 'type': 'button', 'onclick': 'submitFormOkay = true;$("#reset").val(1);$("#form-' ~ table ~ '").submit();' } } ) }}
                         {% endif %}
 
                         {# bottone scarica #}
@@ -76,4 +78,26 @@
             </div>
         </div>
     </div>
+    {# TODO fare delle funzioni Js qui per l'onclick dei bottoni anziché scriverci dei papiri dentro #}
+{% endmacro %}
+
+{# TODO DOCUMENTARE #}
+{% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}
+{% import '_lib/_form.twig' as frm %}
+{% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
+{% if not subtable %}
+    {% set submitOk = 'submitFormOkay = true;' %}
+    {% set subtable = table %}
+    {% set class = ' remove-on-duplicate' %}
+{% else %}
+    {% set query = '?' ~ table ~ '[id]=' ~ request[ table ].id %}
+{% endif %}
+{% if r %}
+    {% set id = r.id %}
+{% else %}
+    {% set id = request[ table ].id %}
+{% endif %}
+{% if not back %}{% set back = page.path[ lang ] ~ query ~ backurl %}{% endif %}
+{% if not rollback %}{% set rollback = page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ backurl %}{% endif %}
+{{ frm.button( { 'field': { 'text': '<i class="fa fa-trash"></i>', 'type': 'button', 'onclick': submitOk ~ 'window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|replace({'[': "(", ']': ")"}) ~ '&__delete__[rollback]=' ~ rollback|replace({'[': "(", ']': ")"}) ~ '","_self")' } } ) }}
 {% endmacro %}

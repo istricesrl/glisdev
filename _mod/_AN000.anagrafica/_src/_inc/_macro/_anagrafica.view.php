@@ -17,6 +17,9 @@
      * =========================
      * 
      * 
+     * TODO documentare
+     * TODO fare una tabella con tutte le chiavi possibili spiegate
+     * 
      * 
      */
 
@@ -45,8 +48,8 @@
             'id' => 'd-none',
             'nome' => 'd-none',
             'cognome' => 'd-none',
-            '__label__' => 'd-none',
-            'denominazione' => 'text-left no-wrap',
+            '__label__' => 'text-left no-wrap',
+            'denominazione' => 'd-none',
             'telefoni' => 'text-left d-none d-md-table-cell',
             'mail' => 'text-left d-none d-md-table-cell',
             'id_stato' => 'd-none',
@@ -59,7 +62,10 @@
         ),
         '__restrict__' => array(
             'data_archiviazione' => array( 'NL' => true )
-        )
+        ),
+        '__sort__' => array(
+            '__label__' => 'ASC'
+        ),
     );
 
     /**
@@ -135,8 +141,6 @@
     // elaborazione righe
 	foreach( $ct['view']['data'] as &$row ) {
 		if( is_array( $row ) ) {
-
-            $row['denominazione'] = implode( ' ', array( $row['denominazione'], $row['nome'], $row['cognome'] ) );
 
             $onclickBookmark = "$(this).metroWs('/api/bookmarks?".
                 "__work__[anagrafica][items][".$row['id']."][id]=".$row['id'].

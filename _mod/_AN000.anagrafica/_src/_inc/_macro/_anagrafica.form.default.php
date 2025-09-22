@@ -7,12 +7,21 @@
      * 
      * 
      * TODO documentare
+     * TODO finire di implementare
      * 
      */
 
     // die('TEST');
     // print_r( $_REQUEST );
     // print_r( $ct['page']['etc']['tabs'] );
+
+    /**
+     * disattivazione delle tab in base alle categorie dell'anagrafica
+     * ===============================================================
+     * 
+     * 
+     * 
+     */
 
     $seCliente = ( empty( $_REQUEST['anagrafica']['se_cliente'] ) )                 ? false : true;
     $seLead = ( empty( $_REQUEST['anagrafica']['se_lead'] ) )                       ? false : true;
@@ -59,3 +68,19 @@
     }
 
     // print_r( $ct['page']['etc']['tabs'] );
+
+    /**
+     * disattivazione delle tab in base ai moduli attivi
+     * =================================================
+     * 
+     * 
+     * 
+     * 
+     */
+
+    if( ! in_array( "AT000.attivita", $cf['mods']['active']['array'] ) ) {
+        $ct['page']['etc']['tabs'] = array_diff(
+            $ct['page']['etc']['tabs'],
+            ['anagrafica.form.attivita']
+        );
+    }
