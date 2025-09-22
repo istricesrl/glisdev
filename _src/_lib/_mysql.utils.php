@@ -1203,4 +1203,83 @@
             )
         );
 
-    }   
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSesso() {
+
+        return array( 
+            array( 'id' => '-', '__label__' => '-' ),
+            array( 'id' => 'M', '__label__' => 'uomo' ),
+            array( 'id' => 'F', '__label__' => 'donna' ),
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSiNo() {
+
+        return array(
+            array( 'id' => 0, '__label__' => 'no' ),
+            array( 'id' => 1, '__label__' => 'si' )
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSePec() {
+
+        return array(
+            array( 'id' => 0, '__label__' => 'mail' ),
+            array( 'id' => 1, '__label__' => 'PEC' )
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaTipologieAnagrafica() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY __label__ ASC'
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaTipologieTelefoni() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM tipologie_telefoni_view'
+        );
+
+    }

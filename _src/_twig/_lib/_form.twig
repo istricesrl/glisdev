@@ -92,7 +92,8 @@
         'class': 'form-control form-control-sm',
         'placeholder': '',
         'pattern': '',
-        'required': ''
+        'required': '',
+        'autofocus': ''
     }|merge( options.field ) %}
 
     {# valori di default per l'array tooltip #}
@@ -110,11 +111,16 @@
     }|merge( options.page ) %}
 
     {# calcolo valori di base #}
-    {% if form.subtable %}
+    {% if form.subtable and form.counter %}
         {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
         {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% elseif form.subtable %}
+        {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ form.subtable ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
     {% elseif form.counter %}
         {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
@@ -153,6 +159,7 @@
         {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %} 
         {% if field.required %}required{% endif %} 
         {% if field.type == 'password' %}autocomplete="new-password"{% endif %} 
+        {% if field.autofocus %}autofocus{% endif %} 
         {% if options.extras %}{{ options.extras|raw }}{% endif %}>
 
 {% endmacro input %}

@@ -294,6 +294,22 @@ CREATE TABLE `consensi_moduli` (                              --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000007100
+
+-- continenti
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i continenti
+--
+-- questa tabella contiene i continenti, con il loro codice e il loro nome
+--
+CREATE TABLE IF NOT EXISTS `continenti` (                     --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                             -- codice del continente
+  `nome` char(32) DEFAULT NULL                                -- nome del continente
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000015000
 
 -- file
@@ -471,6 +487,27 @@ CREATE TABLE IF NOT EXISTS `lingue` (                         --
   `ietf` char(36) DEFAULT NULL                                -- codice IETF della lingua
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000028000
+
+-- provincie
+-- tipologia: tabella di supporto
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le provincie italiane
+--
+-- questa tabella contiene le provincie italiane, con le informazioni relative alla regione di appartenenza, al nome,
+-- alla sigla, al codice ISTAT, all'URL di riferimento e alle note
+--
+CREATE TABLE IF NOT EXISTS `provincie` (                      --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_regione` int(11) DEFAULT NULL,                          -- chiave esterna per la regione di appartenenza
+  `nome` varchar(254) DEFAULT NULL,                           -- nome della provincia
+  `sigla` char(8) DEFAULT NULL,                               -- sigla della provincia
+  `codice_istat` char(3) DEFAULT NULL,                        -- codice ISTAT della provincia
+  `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della provincia
+  `note` text DEFAULT NULL                                    -- note sulla provincia
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000029000
 
 -- redirect
@@ -494,6 +531,73 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il redirect
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000030200
+
+-- regioni
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le regioni italiane
+--
+-- questa tabella contiene le regioni italiane, con le informazioni relative allo stato di appartenenza, al nome,
+-- al codice ISTAT, all'URL di riferimento e alle note
+--
+CREATE TABLE IF NOT EXISTS `regioni` (                        --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_stato` int(11) DEFAULT NULL,                            -- chiave esterna per lo stato di appartenenza
+  `nome` char(64) DEFAULT NULL,                               -- nome della regione
+  `codice_istat` char(2) DEFAULT NULL,                        -- codice ISTAT della regione
+  `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della regione
+  `note` text DEFAULT NULL                                    -- note sulla regione
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000034800
+
+-- ruoli_indirizzi
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli degli indirizzi
+--
+-- questa tabella contiene i ruoli degli indirizzi, con le informazioni relative al nome, alle entità HTML e Font Awesome associate
+-- e ai vari tipi di indirizzo (sede legale, sede operativa, residenza, domicilio); i ruoli degli indirizzi qualificano il ruolo
+-- di un indirizzo rispetto a una data anagrafica
+--
+CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (                --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna ricorsiva per il ruolo genitore
+  `nome` char(32) DEFAULT NULL,                               -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML associata al ruolo
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome associata al ruolo
+  `se_sede_legale` tinyint(1) DEFAULT NULL,                   -- se l'indirizzo è una sede legale
+  `se_sede_operativa` tinyint(1) DEFAULT NULL,                -- se l'indirizzo è una sede operativa
+  `se_residenza` tinyint(1) DEFAULT NULL,                     -- se l'indirizzo è una residenza
+  `se_domicilio` tinyint(1) DEFAULT NULL                      -- se l'indirizzo è un domicilio
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000042000
+
+-- stati
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli stati del mondo
+-- 
+-- questa tabella contiene gli stati del mondo, con le informazioni relative al continente di appartenenza, al nome,
+-- ai codici ISO e ISTAT, all'URL di riferimento e alle note
+--
+CREATE TABLE IF NOT EXISTS `stati` (                          --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_continente` int(11) DEFAULT NULL,                       -- chiave esterna per il continente di appartenenza
+  `nome` char(128) DEFAULT NULL,                              -- nome dello stato
+  `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento dello stato
+  `note` text DEFAULT NULL,                                   -- note sullo stato
+  `iso31661alpha2` char(2) DEFAULT NULL,                      -- codice ISO 3166-1 alpha-2 dello stato
+  `iso31661alpha3` char(3) DEFAULT NULL,                      -- codice ISO 3166-1 alpha-3 dello stato
+  `codice_istat` char(4) DEFAULT NULL,                        -- codice ISTAT dello stato
+  `data_archiviazione` date DEFAULT NULL                      -- data di archiviazione dello stato
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000043000
@@ -552,6 +656,35 @@ CREATE TABLE IF NOT EXISTS `template` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000050000
+
+-- tipologie_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di anagrafica
+--
+-- questa tabella contiene le tipologie di anagrafica, con le informazioni relative al nome, alla sigla e alle
+-- funzionalità associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `sigla` char(32) DEFAULT NULL,                              -- sigla della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `se_persona_fisica` tinyint(1) DEFAULT NULL,                -- flag che indica se la tipologia rappresenta persone fisiche
+  `se_persona_giuridica` tinyint(1) DEFAULT NULL,             -- flag che indica se la tipologia rappresenta persone giuridiche
+  `se_pubblica_amministrazione` tinyint(1) DEFAULT NULL,      -- flag che indica se la tipologia rappresenta pubbliche amministrazioni
+  `se_ecommerce` tinyint(1) DEFAULT NULL,                     -- flag che indica se la tipologia è associabile all'e-commerce
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000050400
 
 -- tipologie_attivita
@@ -578,6 +711,52 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
   `se_cartellini` tinyint(1) DEFAULT NULL,                    -- flag che indica se la tipologia è associabile ai cartellini
   `se_corsi` tinyint(1) DEFAULT NULL,                         -- flag che indica se la tipologia è associabile ai corsi
   `se_accesso` tinyint(1) DEFAULT NULL,                       -- flag che indica se la tipologia è associabile agli accessi
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000056200
+
+-- tipologie_telefoni
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di telefoni
+-- 
+-- questa tabella contiene le tipologie di telefoni, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE `tipologie_telefoni` (                           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(32) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000056800
+
+-- tipologie_url
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di URL
+-- 
+-- questa tabella contiene le tipologie di URL, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_url` (                  --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia

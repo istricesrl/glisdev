@@ -34,3 +34,30 @@
 	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'anagrafica' ),
 																			'priority'	=> '050' ) ) )
 	);
+
+    // gestione anagrafica
+	$p['anagrafica.form'] = array(
+	    'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gestione' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.form',
+															'anagrafica.form.informazioni',
+															'anagrafica.form.relazioni',
+															'anagrafica.form.amministrazione',
+															'anagrafica.form.cliente',
+															'anagrafica.form.fornitore',
+															'anagrafica.form.collaboratore',
+															'anagrafica.form.immagini',
+															'anagrafica.form.video',
+															'anagrafica.form.audio',
+															'anagrafica.form.file',
+															'anagrafica.form.metadati',
+															'anagrafica.form.archiviazione',
+															'anagrafica.form.stats',
+															'anagrafica.form.stampe',
+															'anagrafica.form.tools' ) )
+	);

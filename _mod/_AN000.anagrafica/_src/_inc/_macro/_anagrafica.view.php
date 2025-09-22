@@ -72,12 +72,14 @@
      */
 
     // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
+// TODO reimplementare
+//	$ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
 
     // inclusione modal
     $ct['page']['contents']['modals']['metro'] = array(
-        array( 'schema' => 'inc/anagrafica.view.modal.attivita.html' ),
-        array( 'schema' => 'inc/anagrafica.view.modal.promemoria.html' )
+// TODO reimplementare
+//        array( 'schema' => 'inc/anagrafica.view.modal.attivita.html' ),
+//        array( 'schema' => 'inc/anagrafica.view.modal.promemoria.html' )
     );
 
     /**
@@ -117,7 +119,7 @@
      */
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default.view.php';
+	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     /**
      * elaborazione risultati della vista
@@ -128,7 +130,7 @@
      */
 
     // tendina provincie
-    $ct['etc']['select']['provincie'] = tendinaProvincie( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] );
+    $ct['etc']['select']['provincie'] = tendinaProvincie( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] ?? 1 );
 
     // elaborazione righe
 	foreach( $ct['view']['data'] as &$row ) {
@@ -142,7 +144,8 @@
 
             $buttons = '<a href="#" onclick="'.$onclickBookmark.'">'.
                 '<span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>';
-/*
+
+/* TODO reimplementare
             if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
                 $buttons .= '<a href="#" 
                     data-toggle="modal"
