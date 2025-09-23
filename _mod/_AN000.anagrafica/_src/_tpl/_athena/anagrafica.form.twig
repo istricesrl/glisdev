@@ -2,6 +2,7 @@
 {% import '_lib/_default.twig' as cms %}
 {% import '_lib/_form.twig' as frm %}
 {% import 'lib/default.twig' as def %}
+{% import 'lib/anagrafica.form.sub.twig' as sub %}
 
 {# ESTENSIONE DELLO SCHEMA DI BASE #}
 {% extends 'ext/main.twig' %}
@@ -67,13 +68,13 @@
 
 	    	</fieldset>
 
+            {# SUBFORM INDIRIZZI E-MAIL #}
+            {{ sub.mail( form.table, 'mail', 'e-mail', site, page, pages, ietf, etc, request, session ) }}
 
 
 
 
 
-		{# SUBFORM INDIRIZZI E-MAIL #}
-	    {# sub.mail( table, 'mail', 'e-mail', site, page, pages, ietf, etc, request, session ) #}
 
 	    {# SUBFORM NUMERI DI TELEFONO #}
 	    {# sub.telefoni( table, 'telefoni', 'telefoni', site, page, pages, ietf, etc, request, session ) #}

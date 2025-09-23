@@ -767,6 +767,33 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (                --
   `se_domicilio` tinyint(1) DEFAULT NULL                      -- se l'indirizzo è un domicilio
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000034850
+
+-- ruoli_mail
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli delle mail
+--
+-- questa tabella contiene i ruoli delle mail, con le informazioni relative al nome, alle entità HTML e Font Awesome associate
+-- e ai vari tipi di mail (XML, commerciale, produzione, amministrazione, acquisti, ordini, helpdesk); i ruoli delle mail qualificano
+-- il ruolo di un indirizzo mail rispetto a una data anagrafica
+--
+CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna ricorsiva per il ruolo genitore
+  `nome` char(128) DEFAULT NULL,                              -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML associata al ruolo
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome associata al ruolo
+  `se_xml` tinyint(1) DEFAULT NULL,                           -- se l'indirizzo mail è di tipo XML
+  `se_commerciale` tinyint(1) DEFAULT NULL,                   -- se l'indirizzo mail è di tipo commerciale
+  `se_produzione` tinyint(1) DEFAULT NULL,                    -- se l'indirizzo mail è di tipo produzione
+  `se_amministrazione` tinyint(1) DEFAULT NULL,               -- se l'indirizzo mail è di tipo amministrazione
+  `se_acquisti` tinyint(1) DEFAULT NULL,                      -- se l'indirizzo mail è di tipo acquisti
+  `se_ordini` tinyint(1) DEFAULT NULL,                        -- se l'indirizzo mail è di tipo ordini
+  `se_helpdesk` tinyint(1) DEFAULT NULL                       -- se l'indirizzo mail è di tipo helpdesk
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000042000
 
 -- stati

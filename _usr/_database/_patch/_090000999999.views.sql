@@ -103,11 +103,39 @@ CREATE OR REPLACE VIEW lingue_view AS                         --
   FROM lingue                                                 --
   ;                                                           --
 
+-- | 090000018600
+
+-- mail_view
+CREATE OR REPLACE VIEW `mail_view` AS                         --
+	SELECT                                                    --
+		mail.id,                                              --
+		mail.id_anagrafica,                                   --
+		coalesce(                                             --
+            a1.denominazione,                                 --
+            concat( a1.cognome, ' ', a1.nome ), ''            --
+        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
+		mail.indirizzo,                                       --
+		mail.se_notifiche,                                    --
+		mail.se_pec,                                          --
+		mail.server,                                          --
+		mail.id_account_inserimento,                          --
+		mail.id_account_aggiornamento,                        --
+		concat(                                               --
+			coalesce(                                         --
+                a1.denominazione,                             --
+                concat( a1.cognome, ' ', a1.nome ), ''        --
+            ),                                                --
+			' ',                                              --
+			mail.indirizzo                                    --
+		) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM mail                                                 --
+		LEFT JOIN anagrafica AS a1                            --
+            ON a1.id = mail.id_anagrafica                     --
+;                                                             --
+
 -- | 090000028000
 
 -- provincie_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-08 15:07 Fabio Mosti
 CREATE OR REPLACE VIEW provincie_view AS                      --
 	SELECT                                                    --
 		provincie.id,                                         --

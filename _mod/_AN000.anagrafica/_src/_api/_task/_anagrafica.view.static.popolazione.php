@@ -1,11 +1,28 @@
 <?php
 
 	/**
+	 * task di aggiornamento della anagrafica_view_static
+	 * 
+	 * Questo task aggiorna la tabella anagrafica_view_static in base al contenuto della tabella anagrafica
+	 * e delle tabelle collegate
+	 * 
+	 * introduzione
+	 * ============
+	 * 
+	 * 
+	 * 
+	 * la funzione updateAnagraficaViewStatic()
+	 * ----------------------------------------
 	 * 
 	 * 
 	 * 
 	 * 
-	 * questo task può essere chiamato come /task/AN000.anagrafica/anagrafica.view.static.popolazione
+	 * 
+	 * modalità di utilizzo del task
+	 * -----------------------------
+	 * 
+	 * 
+	 * [...] questo task può essere chiamato come /task/AN000.anagrafica/anagrafica.view.static.popolazione
 	 * e decide lui quale anagrafica sincronizzare, oppure come
 	 * /task/AN000.anagrafica/anagrafica.view.static.popolazione?idAnagrafica=<idAnagrafica>
 	 * e in questo caso l'anagrafica da aggiornare è quella passata come parametro
