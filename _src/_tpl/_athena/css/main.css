@@ -351,6 +351,17 @@ legend {
     margin-bottom: 1em;
 }
 
+legend .btn-sm {
+    width: 1.95em;
+    height: 1.95em;
+    border-radius: 1.95em;
+    font-size: 0.5em;
+    font-weight: bolder;
+    padding: 0px;
+    padding-top: 2px;
+    margin-bottom: 3px;
+}
+
 /* stile delle tendine dei form */
 select {
     cursor: pointer;

@@ -2,6 +2,8 @@
 -- VISTE STATICHE
 -- ==============
 -- questo file contiene le query per la creazione delle tabelle per le view statiche
+-- 
+-- TODO documentare
 --
 
 -- | 080000000400

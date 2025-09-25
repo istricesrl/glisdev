@@ -271,6 +271,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (           --
 --
 CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
   `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di indirizzo
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `codice` char(64) DEFAULT NULL,                             -- codice dell'indirizzo
   `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica
@@ -278,7 +279,15 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
   `id_ruolo` int(11) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'indirizzo
   `interno` char(8) DEFAULT NULL,                             -- interno dell'indirizzo
   `indirizzo` char(255) DEFAULT NULL,                         -- indirizzo
+  `civico` char(16) DEFAULT NULL,                             -- civico dell'indirizzo
+  `id_comune` int(11) DEFAULT NULL,                           -- chiave esterna per il comune
+  `localita` char(128) DEFAULT NULL,                          -- località
+  `cap` char(11) DEFAULT NULL,                                -- CAP
   `note` text DEFAULT NULL,                                   -- note sull'indirizzo
+  `latitudine` decimal(11,7) DEFAULT NULL,                    -- latitudine
+  `longitudine` decimal(11,7) DEFAULT NULL,                   -- longitudine
+  `token` char(128) DEFAULT NULL,                             -- token per geolocalizzazione
+  `timestamp_geolocalizzazione` int(11) DEFAULT NULL,         -- timestamp dell'ultima geolocalizzazione
   `timestamp_elaborazione` int(11) DEFAULT NULL,              -- timestamp dell'ultima elaborazione
   `note_elaborazione` text DEFAULT NULL,                      -- note sull'ultima elaborazione
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
@@ -415,6 +424,34 @@ CREATE TABLE IF NOT EXISTS `continenti` (                     --
   `id` int(11) NOT NULL,                                      -- chiave primaria
   `codice` char(32) DEFAULT NULL,                             -- codice del continente
   `nome` char(32) DEFAULT NULL                                -- nome del continente
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000007200
+
+-- contratti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i contratti di affiliazione
+--
+-- questa tabella contiene i contratti di affiliazione, con le informazioni principali
+--
+CREATE TABLE `contratti` (                                    --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di contratto
+  `codice` char(32) DEFAULT NULL,                             -- codice del contratto
+  `codice_affiliazione` char(32) DEFAULT NULL,                -- codice di affiliazione
+  `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile associato al contratto
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto associato al contratto
+  `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti associata al contratto
+  `id_badge` int(11) DEFAULT NULL,                            -- chiave esterna per il badge associato al contratto
+  `nome` char(128) DEFAULT NULL,                              -- nome del contratto
+  `note` text DEFAULT NULL,                                   -- note sul contratto
+  `note_cliente` text DEFAULT NULL,                           -- note per il cliente
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il contratto
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il contratto
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000015000
@@ -809,6 +846,7 @@ CREATE TABLE IF NOT EXISTS `stati` (                          --
   `id` int(11) NOT NULL,                                      -- chiave primaria
   `id_continente` int(11) DEFAULT NULL,                       -- chiave esterna per il continente di appartenenza
   `nome` char(128) DEFAULT NULL,                              -- nome dello stato
+  `nome_esteso` char(128) DEFAULT NULL,                       -- nome esteso dello stato
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento dello stato
   `note` text DEFAULT NULL,                                   -- note sullo stato
   `iso31661alpha2` char(2) DEFAULT NULL,                      -- codice ISO 3166-1 alpha-2 dello stato
@@ -957,6 +995,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000053000
+
+-- tipologie_indirizzi
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di indirizzi
+--
+-- questa tabella contiene le tipologie di indirizzi, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000056200
 
 -- tipologie_telefoni
@@ -1000,6 +1061,32 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (                  --
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000062600
+
+-- url
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene gli URL delle anagrafiche
+--
+-- questa tabella contiene gli URL delle anagrafiche, con le informazioni relative alla tipologia, al nome,
+-- al nome utente e alla password, oltre che all'URL vero e proprio
+--
+CREATE TABLE IF NOT EXISTS `url` (                            --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia dell'URL
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato l'URL
+  `url` char(255) DEFAULT NULL,                               -- URL
+  `nome` char(128) DEFAULT NULL,                              -- nome dell'URL
+  `username` char(128) DEFAULT NULL,                          -- nome utente per l'accesso all'URL
+  `password` char(128) DEFAULT NULL,                          -- password per l'accesso all'URL
+  `note` text DEFAULT NULL,                                   -- note sull'URL
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'URL
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'URL
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 

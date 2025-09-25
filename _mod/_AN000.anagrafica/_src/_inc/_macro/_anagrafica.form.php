@@ -64,7 +64,15 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM ruoli_indirizzi_view'
 	);
-	
+
+	// tendina tipologie indirizzi
+	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_indirizzi_view'
+	);
+
     /**
      * macro di default
      * ================

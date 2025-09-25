@@ -2,15 +2,176 @@
 -- VISTE
 -- =====
 -- questo file contiene le query per la creazione delle viste
+-- 
+-- TODO documentare
 --
--- CRITERI DI VERIFICA
--- una definizione di view si può definire verificata se:
--- - riporta esplicitamente tutte e sole le colonne significative (evitare SELECT * FROM)
--- - le colonne appaiono nell'ordine in cui si trovano nella tabella, al netto delle colonne aggiunte dalla view
--- - la view si riferisce a una tabella non deprecata e non contengono colonne deprecate
--- - la view non fa riferimento a tabelle o colonne deprecate
--- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
---
+
+-- | 090000000101
+
+-- account_view
+CREATE OR REPLACE VIEW account_view AS                        --
+	SELECT                                                    --
+		account.id,                                           --
+		account.id_anagrafica,                                --
+		coalesce(                                             --
+            anagrafica.denominazione,                         --
+            concat(                                           --
+                anagrafica.cognome, ' ', anagrafica.nome      --
+            ), NULL                                           --
+        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
+		account.id_mail,                                      --
+		mail.indirizzo AS mail,                               -- indirizzo email
+		account.id_affiliazione,                              --
+		contratti.codice_affiliazione,                        -- codice affiliazione
+		account.username,                                     --
+		account.password,                                     --
+		account.se_attivo,                                    --
+		account.token,                                        --
+		account.timestamp_login,                              --
+		account.timestamp_cambio_password,                    --
+		group_concat(                                         --
+            gruppi.nome ORDER BY gruppi.id SEPARATOR '|'      --
+        ) AS gruppi,                                          -- nomi dei gruppi separati da |
+		concat(                                               --
+            '|', group_concat(                                --
+                gruppi.id ORDER BY gruppi.id SEPARATOR '|'    --
+            ), '|'                                            --
+        ) AS id_gruppi,                                       -- id dei gruppi separati da | e racchiusi tra |
+		group_concat(                                         --
+			DISTINCT                                          --
+			concat(                                           --
+                aga.entita,                                   --
+                '#',                                          --
+                aga.id_gruppo                                 --
+            )                                                 --
+			ORDER BY                                          --
+                aga.entita,                                   --
+                aga.id_gruppo                                 --
+			SEPARATOR '|'                                     --
+        ) AS id_gruppi_attribuzione,                          -- entita#id_gruppo separati da |
+		account.id_account_inserimento,                       --
+		account.id_account_aggiornamento,                     --
+		account.username AS __label__                         -- etichetta per le tendine e le liste
+	FROM account                                              --
+		LEFT JOIN anagrafica                                  --
+            ON anagrafica.id = account.id_anagrafica          --
+		LEFT JOIN mail                                        --
+            ON mail.id = account.id_mail                      --
+		LEFT JOIN contratti                                   --
+            ON contratti.id = account.id_affiliazione         --
+		LEFT JOIN account_gruppi                              --
+            ON account_gruppi.id_account = account.id         --
+		LEFT JOIN account_gruppi_attribuzione AS aga          --
+            ON aga.id_account = account.id                    --
+		LEFT JOIN gruppi                                      --
+            ON gruppi.id = account_gruppi.id_gruppo           --
+	GROUP BY account.id                                       --
+;                                                             --
+
+-- | 090000000501
+
+-- anagrafica_categorie_view
+CREATE OR REPLACE VIEW anagrafica_categorie_view AS           --
+	SELECT                                                    --
+		anagrafica_categorie.id,                              --
+		anagrafica_categorie.id_anagrafica,                   --
+		anagrafica_categorie.id_categoria,                    --
+		anagrafica_categorie.id_account_inserimento,          --
+		anagrafica_categorie.id_account_aggiornamento,        --
+		concat(                                               --
+			coalesce(                                         --
+                a1.denominazione,                             --
+                concat( a1.cognome, ' ', a1.nome ),           --
+                ''                                            --
+            ),                                                --
+			' / ',                                            --
+			categorie_anagrafica_path(                        --
+                anagrafica_categorie.id_categoria             --
+            )                                                 --
+		) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM anagrafica_categorie                                 --
+		LEFT JOIN anagrafica AS a1                            --
+            ON a1.id = anagrafica_categorie.id_anagrafica     --
+;                                                             --
+
+-- | 090000000900
+
+-- anagrafica_indirizzi_view
+CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
+	SELECT                                                    --
+		anagrafica_indirizzi.id,                              --
+		anagrafica_indirizzi.id_anagrafica,                   --
+		coalesce(                                             --
+            a1.denominazione,                                 --
+            concat(                                           --
+                a1.cognome, ' ', a1.nome                      --
+            ),                                                --
+            ''                                                --
+        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
+        a1.codice AS codice_anagrafica,                       -- codice dell'anagrafica
+		anagrafica_indirizzi.id_indirizzo,                    --
+		anagrafica_indirizzi.id_ruolo,                        --
+		ri1.nome AS ruolo,                                    -- nome del ruolo dell'indirizzo
+        anagrafica_indirizzi.interno,                         --
+        anagrafica_indirizzi.indirizzo,                       --
+        anagrafica_indirizzi.civico,                          --
+        anagrafica_indirizzi.id_comune,                       --
+        comuni.nome AS comune,                                -- nome del comune
+        comuni.id_provincia AS id_provincia,                  -- chiave esterna per la provincia
+        provincie.sigla AS sigla_provincia,                   -- sigla della provincia
+        provincie.nome AS provincia,                          -- nome della provincia
+        provincie.codice_istat AS codice_istat_provincia,     -- codice ISTAT della provincia
+        comuni.codice_istat AS codice_istat_comune,           -- codice ISTAT del comune
+        anagrafica_indirizzi.localita,                        --
+        anagrafica_indirizzi.cap,                             --
+        anagrafica_indirizzi.latitudine,                      --
+        anagrafica_indirizzi.longitudine,                     --
+        anagrafica_indirizzi.timestamp_geolocalizzazione,     --
+        from_unixtime(                                        --
+            anagrafica_indirizzi.timestamp_geolocalizzazione, --
+            '%Y-%m-%d %H:%i'                                  --
+        ) AS data_ora_geolocalizzazione,                      -- data e ora dell'ultima geolocalizzazione
+		anagrafica_indirizzi.timestamp_elaborazione,          --
+        from_unixtime(                                        --
+            anagrafica_indirizzi.timestamp_elaborazione,      --
+            '%Y-%m-%d %H:%i'                                  --
+        ) AS data_ora_elaborazione,                           -- data e ora dell'ultima elaborazione
+		anagrafica_indirizzi.id_account_inserimento,          --
+		anagrafica_indirizzi.id_account_aggiornamento,        --
+        concat(                                               --
+            coalesce(                                         --
+                a1.denominazione,                             --
+                concat( a1.cognome, ' ', a1.nome ),           --
+                ''                                            --
+            ),                                                --
+            ' - ',                                            --
+            concat_ws(                                        --
+                ' ',                                          --
+                ri1.nome,                                     --
+                anagrafica_indirizzi.indirizzo,               --
+                anagrafica_indirizzi.civico,                  --
+                comuni.nome,                                  --
+                provincie.sigla,                              --
+                anagrafica_indirizzi.cap                      --
+            )                                                 --
+        ) AS __label__                                        -- etichetta per le tendine e le liste
+    FROM anagrafica_indirizzi                                 --
+		INNER JOIN anagrafica AS a1                           --
+            ON a1.id = anagrafica_indirizzi.id_anagrafica     --
+		LEFT JOIN anagrafica_categorie AS ac1                 --
+            ON ac1.id_anagrafica = a1.id                      --
+		LEFT JOIN categorie_anagrafica AS ca1                 --
+            ON ca1.id = ac1.id_categoria                      --
+		LEFT JOIN ruoli_indirizzi AS ri1                      --
+            ON ri1.id = anagrafica_indirizzi.id_ruolo         --
+		LEFT JOIN tipologie_indirizzi AS ti1                  --
+            ON ti1.id = anagrafica_indirizzi.id_tipologia     --
+		LEFT JOIN comuni                                      --
+            ON comuni.id = anagrafica_indirizzi.id_comune     --
+		LEFT JOIN provincie                                   --
+            ON provincie.id = comuni.id_provincia             --
+    GROUP BY anagrafica_indirizzi.id                          --
+;                                                             --
 
 -- | 090000003100
 
@@ -48,6 +209,39 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS           --
 		LEFT JOIN anagrafica_categorie AS ac                  --
             ON ac.id_categoria = categorie_anagrafica.id      --
 	GROUP BY categorie_anagrafica.id                          --
+;                                                             --
+
+-- | 090000005300
+
+-- comuni_view
+CREATE OR REPLACE VIEW comuni_view AS                         --
+	SELECT                                                    --
+		comuni.id,                                            --
+		comuni.id_provincia,                                  --
+		provincie.nome AS provincia,                          --
+		provincie.sigla AS sigla_provincia,                   --
+		provincie.id_regione,                                 --
+		regioni.nome AS regione,                              --
+		regioni.id_stato,                                     --
+		stati.nome AS stato,                                  --
+		comuni.nome,                                          --
+		comuni.codice_istat,                                  --
+		comuni.codice_catasto,                                --
+		concat(                                               --
+			comuni.nome, ' ',                                 --
+			coalesce(                                         --
+                concat( '(', provincie.sigla, ') '),          --
+                ' '                                           --
+            ),                                                --
+			stati.nome                                        --
+		) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM comuni                                               --
+		INNER JOIN provincie                                  --
+            ON provincie.id = comuni.id_provincia             --
+		INNER JOIN regioni                                    --
+            ON regioni.id = provincie.id_regione              --
+		INNER JOIN stati                                      --
+            ON stati.id = regioni.id_stato                    --
 ;                                                             --
 
 -- | 090000006000
@@ -222,6 +416,43 @@ CREATE OR REPLACE VIEW stati_view AS                          --
             ON continenti.id = stati.id_continente            --
 ;                                                             --
 
+-- | 090000043601
+
+-- telefoni_view
+CREATE OR REPLACE VIEW telefoni_view AS                       --
+	SELECT                                                    --
+		telefoni.id,                                          --
+		telefoni.id_anagrafica,                               --
+		coalesce(                                             --
+            a1.denominazione,                                 --
+            concat(                                           --
+                a1.cognome, ' ', a1.nome                      --
+            ),                                                --
+            ''                                                --
+        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
+		telefoni.id_tipologia,                                --
+		t1.nome AS tipologia,                                 -- nome della tipologia
+		telefoni.numero,                                      --
+		telefoni.se_notifiche,                                --
+		telefoni.id_account_inserimento,                      --
+		telefoni.id_account_aggiornamento,                    --
+		concat_ws(                                            --
+			' ',                                              --
+			coalesce(                                         --
+                a1.denominazione,                             --
+                concat( a1.cognome, ' ', a1.nome ),           --
+                ''                                            --
+            ),                                                --
+			t1.nome,                                          --
+			telefoni.numero                                   --
+		) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM telefoni                                             --
+		LEFT JOIN anagrafica AS a1                            --
+            ON a1.id = telefoni.id_anagrafica                 --
+		LEFT JOIN tipologie_telefoni AS t1                    --
+            ON t1.id = telefoni.id_tipologia                  --
+;                                                             --
+
 -- | 090000050000
 
 -- tipologie_anagrafica_view
@@ -270,6 +501,25 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
 	FROM tipologie_attivita                                   --
 ;                                                             --
 
+-- | 090000053000
+
+-- tipologie_indirizzi_view
+CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
+	SELECT                                                    --
+		tipologie_indirizzi.id,                               --
+		tipologie_indirizzi.id_genitore,                      --
+		tipologie_indirizzi.ordine,                           --
+		tipologie_indirizzi.nome,                             --
+		tipologie_indirizzi.html_entity,                      --
+		tipologie_indirizzi.font_awesome,                     --
+		tipologie_indirizzi.id_account_inserimento,           --
+		tipologie_indirizzi.id_account_aggiornamento,         --
+		tipologie_indirizzi_path(                             --
+            tipologie_indirizzi.id                            --
+        ) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM tipologie_indirizzi                                  --
+;                                                             --
+
 -- | 090000056200
 
 -- tipologie_telefoni_view
@@ -303,6 +553,43 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS                --
 		tipologie_url.id_account_aggiornamento,               --
 		tipologie_url_path( tipologie_url.id ) AS __label__   -- etichetta per le tendine e le liste
 	FROM tipologie_url                                        --
+;                                                             --
+
+-- | 090000062601
+
+-- url_view
+CREATE OR REPLACE VIEW url_view AS                            --
+	SELECT                                                    --
+		url.id,                                               --
+		url.id_tipologia,                                     --
+		tipologie_url.nome AS tipologia,                      -- nome della tipologia
+		url.id_anagrafica,                                    --
+		coalesce(                                             --
+            a1.denominazione,                                 --
+            concat( a1.cognome, ' ', a1.nome ),               --
+            ''                                                --
+        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
+		url.url,                                              --
+		url.nome,                                             --
+		url.username,                                         --
+		url.password,                                         --
+		url.id_account_inserimento,                           --
+		url.id_account_aggiornamento,                         --
+		concat_ws(                                            --
+			' ',                                              --
+			url.url,                                          --
+			tipologie_url.nome,                               --
+			coalesce(                                         --
+                a1.denominazione,                             --
+                concat( a1.cognome, ' ', a1.nome ),           --
+                ''                                            --
+            )                                                 --
+		) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM url                                                  --
+		LEFT JOIN anagrafica AS a1                            --
+            ON a1.id = url.id_anagrafica                      --
+		LEFT JOIN tipologie_url                               --
+            ON tipologie_url.id = url.id_tipologia            --
 ;                                                             --
 
 -- | 090000999000

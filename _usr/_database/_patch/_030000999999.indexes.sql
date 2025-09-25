@@ -1,6 +1,8 @@
 --
 -- INDICI
 -- questo file contiene le query per la creazione degli indici delle tabelle
+-- 
+-- TODO documentare
 --
 
 -- | 030000000100
@@ -210,5 +212,18 @@ ALTER TABLE `consensi_moduli`
 
 -- consensi_moduli
 ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000062600
+
+-- url
+ALTER TABLE `url`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_anagrafica`,`url`),
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `url` (`url`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`url`); 
 
 -- | FINE FILE

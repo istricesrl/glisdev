@@ -36,6 +36,19 @@
 																			'priority'	=> '050' ) ) )
 	);
 
+    // tools anagrafica
+	$p['anagrafica.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['anagrafica.view']['etc']['tabs'] )
+	);
+
     // gestione anagrafica
 	$p['anagrafica.form'] = array(
 	    'sitemap'			=> false,
@@ -63,3 +76,17 @@
 															'anagrafica.form.stampe',
 															'anagrafica.form.tools' ) )
 	);
+
+    // gestione anagrafica form tools
+	$p['anagrafica.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni form anagrafica' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
