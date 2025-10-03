@@ -235,13 +235,11 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
         ) AS data_riferimento,                                -- data di riferimento per ordinamento
 		coalesce(                                             --
             attivita.ora_inizio,                              --
-            attivita.ora_inizio_programmazione,               --
-            ''                                                --
+            attivita.ora_inizio_programmazione                --
         ) AS ora_inizio_riferimento,                          -- ora di inizio di riferimento
 		coalesce(                                             --
             attivita.ora_fine,                                --
-            attivita.ora_fine_programmazione,                 --
-            ''                                                --
+            attivita.ora_fine_programmazione                  --
         ) AS ora_fine_riferimento,                            -- ora di fine di riferimento
 		coalesce(                                             --
             a1.denominazione,                                 --
