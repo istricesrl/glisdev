@@ -27,8 +27,8 @@
             <div class="row widget no-gutters linea" style=" border-bottom: 5px solid #343A40;">
                 
                 {% block header %}
-                
-                {% endblock %}
+
+                {% endblock header %}
 
                 {{ nav.sheets( page, pages, localization.language.ietf, etc, form, request ) }}
 
@@ -36,15 +36,15 @@
 
                 {% block line %}
 
-                {% endblock %}
+                {% endblock line %}
 
         </header>
         {% endif %}
 
         {# CONTENUTO PRINCIPALE DELLA PAGINA #}
         <main class="d-flex flex-column container-fluid w-100 vh-100 m-0">
-            
-            {% block main %}{% endblock %}
+
+            {% block main %}{% endblock main %}
 
         </main>
 
@@ -52,7 +52,7 @@
         {% include '_inc/_page.close.twig' %}
 
         {# SCRIPT JAVASCRIPT DELLA PAGINA #}
-        {% block javascript %}{% endblock %}
+        {% block javascript %}{% endblock javascript %}
 
     </body>
 </html>

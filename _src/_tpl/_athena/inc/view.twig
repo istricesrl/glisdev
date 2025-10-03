@@ -23,7 +23,7 @@
         </div>
         <div class="col-auto form-col">
 
-            {{ frm.button({ "field": { "text": '<i class="fa fa-search"></i>', "class": "btn btn-secondary btn-sqr btn-sm" } }) }}
+            {{ frm.button({ "field": { "text": '<i class="fa fa-search"></i>', "class": "btn btn-secondary btn-sqr btn-sm", "onclick": 'submitFormOkay = true;' } }) }}
 
             {% if view.insert.path %}
             {% set url = view.insert.path ~ '?' %}
@@ -124,106 +124,121 @@
     {% endif %}
 
     {# CONTROLLI DELLA VISTA #}
-    <div class="row view-controls mt-auto no-gutters d-print-none">
+	<fieldset class="form-controls mt-auto">
+        <div class="row no-gutters d-print-none">
 
-        {% if form.table %}
-        <div class="col-auto mr-1">
-            {{ frm.button( '<i class="fa fa-undo"></i>', 'button', 'btn-secondary', 'window.open("' ~ back ~ '","_self")','torna indietro senza salvare le modifiche' ) }}
-        </div>
-        {% endif %}
-        
-        {% if not session.__view__[ view.id ].__filesystem_mode__ %}
-        <div class="col-auto text-start">
-            {% if view.data %}
-            <div class="input-group">
-                <input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
-                <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submit(); }"><i class="fa fa-chevron-left"></i></button>
-                <select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submit();">
-                    {% set spage = session.__view__[ view.id ].__pager__.page - 25 %}
-                    {% set lpage = session.__view__[ view.id ].__pager__.page + 25 %}
-                    {% if lpage > session.__view__[ view.id ].__pager__.pages %}{% set lpage = session.__view__[ view.id ].__pager__.pages %}{% endif %}
-                    {% if spage < 0 %}
-                    {% set spage = 0 %}
-                    {% else %}
-                    {% set pag = 0 %}
-                    <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
-                    {% endif %}
-                    {% for pag in range( spage, lpage - 1 ) %}
-                    <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
-                    {% endfor %}
-                    {% if session.__view__[ view.id ].__pager__.pages > lpage %}
-                    {% set pag = session.__view__[ view.id ].__pager__.pages - 1 %}
-                    <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
-                    {% endif %}
-                </select>
-                <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() < {{ session.__view__[ view.id ].__pager__.pages - 1 }} ){ $('#pager').get(0).value++; submit(); }"><i class="fa fa-chevron-right"></i></button>
+            {% if form.table %}
+            <div class="col-auto mr-1">
+                {{ frm.button({ "field": { "type": "button", "text": '<i class="fa fa-undo"></i>', "class": "btn btn-secondary btn-sqr btn-sm", "onclick": "window.open('" ~ back ~ "','_self');" } }) }}
             </div>
             {% endif %}
-        </div>
+            
+            {% if not session.__view__[ view.id ].__filesystem_mode__ %}
+            <div class="col-auto text-start">
+                {% if view.data %}
+                <div class="input-group">
+                    <input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submit(); }"><i class="fa fa-chevron-left"></i></button>
+                    <select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submit();">
+                        {% set spage = session.__view__[ view.id ].__pager__.page - 25 %}
+                        {% set lpage = session.__view__[ view.id ].__pager__.page + 25 %}
+                        {% if lpage > session.__view__[ view.id ].__pager__.pages %}{% set lpage = session.__view__[ view.id ].__pager__.pages %}{% endif %}
+                        {% if spage < 0 %}
+                        {% set spage = 0 %}
+                        {% else %}
+                        {% set pag = 0 %}
+                        <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
+                        {% endif %}
+                        {% for pag in range( spage, lpage - 1 ) %}
+                        <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
+                        {% endfor %}
+                        {% if session.__view__[ view.id ].__pager__.pages > lpage %}
+                        {% set pag = session.__view__[ view.id ].__pager__.pages - 1 %}
+                        <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
+                        {% endif %}
+                    </select>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() < {{ session.__view__[ view.id ].__pager__.pages - 1 }} ){ $('#pager').get(0).value++; submit(); }"><i class="fa fa-chevron-right"></i></button>
+                </div>
+                {% endif %}
+            </div>
 
-        {% if session.__view__[ view.id ].__pager__.total > 0 %}
-        <div class="col col-form-label text-center">
-            {{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + 1 ) }}
-            -
-            {% if session.__view__[ view.id ].__pager__.total < ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) %}
-            {{ session.__view__[ view.id ].__pager__.total }}
+            {% if session.__view__[ view.id ].__pager__.total > 0 %}
+            <div class="col col-form-label text-center">
+                {{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + 1 ) }}
+                -
+                {% if session.__view__[ view.id ].__pager__.total < ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) %}
+                {{ session.__view__[ view.id ].__pager__.total }}
+                {% else %}
+                {{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) }}
+                {% endif %}
+                di
+                {{ session.__view__[ view.id ].__pager__.total }}
+            </div>
+            <div class="col-2 text-end">
+                <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('/print/default.csv?t={{ view.table }}&v={{ session.__view__[ view.id ]|json_encode() }}','_blank');"><i class="fa fa-file-excel"></i></button>
+                {% if view.insert.path %}
+                <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
+                {% endif %}
+            </div>
             {% else %}
-            {{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) }}
+            <div class="col col-form-label text-center p-0">
+                <p class="m-0">nessun dato trovato</p>
+            </div>
             {% endif %}
-            di
-            {{ session.__view__[ view.id ].__pager__.total }}
-        </div>
-        <div class="col-2 text-end">
-            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('/print/default.csv?t={{ view.table }}&v={{ session.__view__[ view.id ]|json_encode() }}','_blank');"><i class="fa fa-file-excel"></i></button>
-            {% if view.insert.path %}
-            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
-            {% endif %}
-        </div>
-        {% else %}
-        <div class="col col-form-label text-center">
-            nessun dato trovato
-        </div>
-        {% endif %}
-        {% endif %}
-
-        {% if request[ table ].id and not session.__view__[ view.id ].__filesystem_mode__ %}
-        <div class="col text-center">
-            {{ frm.trashButton( table, '', page, pages, '', localization.language.ietf, request, back ) }}
-        </div>
-        {% endif %}
-
-        {% if form.table %}
-        <div class="col-auto ml-1">
-            {% if session.__view__[ view.id ].__filesystem_mode__ %}
-
-            {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
-
-            {% elseif request.__backurl__ %}
-
-            {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
-            {{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}
             {% endif %}
 
-            {{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e inserisci altri dati' ) }}
-            {{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ localization.language.ietf ] ~ '?__backurl__=' ~ request.__backurl__ ~ '");','salva e inserisci altri dati' ) }}
-
-            {% else %}
-
-            {{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ localization.language.ietf ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
-            {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
-
-            {% if not short %}
-            {{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ localization.language.ietf ] ~ '");','salva e crea un nuovo oggetto' ) }}
+            {% if request[ table ].id and not session.__view__[ view.id ].__filesystem_mode__ %}
+            <div class="col text-center">
+                {{ frm.trashButton( table, '', page, pages, '', localization.language.ietf, request, back ) }}
+            </div>
             {% endif %}
 
-            {% if download %}{{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}{% endif %}
+            {% if form.table %}
+            <div class="col-auto ml-1">
+                {% if session.__view__[ view.id ].__filesystem_mode__ %}
 
+                    {# bottone salva e rimani nella pagina attuale #}
+                    {{ frm.button({ "field": { "text": '<i class="fa fa-floppy-o"></i>', "class": "btn btn-secondary btn-sqr btn-sm", "onclick": 'submitFormOkay = true;' } }) }}
+
+                {% elseif short == 2 %}
+
+                    {# bottone salva e rimani nella pagina attuale #}
+                    {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
+
+                {% elseif request.__backurl__ %}
+
+                    {# bottone torna indietro #}
+                    {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
+                    {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-left"></i>', 'onclick': 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ form.table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");' } } ) }}
+                    {% endif %}
+
+                    {# costruzione della stringa dei preset #}
+                    {% set presets = '' %}{% for fld,val in etc.preset.fields %}{% set presets = presets ~ '&__preset__[' ~ form.table ~ '][' ~ fld ~ ']=' ~ val %}{% endfor %}
+
+                    {# bottone salva e rimani nella pagina attuale #}
+                    {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-down"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
+
+                {% else %}
+
+                    {# bottone salva e torna indietro #}
+                    {{ frm.button( { 'field': { 'text': '<i class="fa fa-caret-left"></i><i class="fa fa-floppy-disk"></i>', 'type': 'button', 'onclick': '$("#form-' ~ form.table ~ '").attr("action", "' ~ page.parent.path[ localization.language.ietf ] ~ '"); submitFormOkay = true;$("#form-' ~ form.table ~ '").submit();' } } ) }}
+
+                    {# bottone salva e rimani nella pagina attuale #}
+                    {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
+
+                    {# bottone scarica #}
+                    {% if download %}
+                    {{ frm.button( { 'field': { 'text': '<i class="fa fa-download"></i>', 'onclick': 'window.open("' ~ download ~ '","_self")' } } ) }}
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
             {% endif %}
 
         </div>
-        {% endif %}
 
-    </div>
+    </fieldset>
 
 </form>
 <!-- fine file {{ _self }} -->

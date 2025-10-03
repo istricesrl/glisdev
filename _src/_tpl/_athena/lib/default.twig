@@ -36,8 +36,8 @@
                 <div class="col text-end">
                     {% if short == 2 %}
 
-                        {# bottone torna indietro #}
-                        {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+                        {# bottone salva e rimani nella pagina attuale #}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
 
                     {% elseif request.__backurl__ %}
 
@@ -50,10 +50,7 @@
                         {% set presets = '' %}{% for fld,val in etc.preset.fields %}{% set presets = presets ~ '&__preset__[' ~ table ~ '][' ~ fld ~ ']=' ~ val %}{% endfor %}
 
                         {# bottone salva e rimani nella pagina attuale #}
-                        {{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e rimani nella pagina corrente' ) }}
-
-                        {# bottone salva e crea un nuovo oggetto #}
-                        {{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ presets ~ '");$("#form-' ~ table ~ '").submit();','salva e inserisci altri dati' ) }}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-down"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
 
                     {% else %}
 
@@ -63,14 +60,9 @@
                         {# bottone salva e rimani nella pagina attuale #}
                         {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
 
-                        {# bottone salva e crea un nuovo oggetto #}
-                        {% if not short %}
-                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i><i class="fa fa-caret-right"></i>', 'type': 'button', 'onclick': 'submitFormOkay = true;$("#reset").val(1);$("#form-' ~ table ~ '").submit();' } } ) }}
-                        {% endif %}
-
                         {# bottone scarica #}
                         {% if download %}
-                        {{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-download"></i>', 'onclick': 'window.open("' ~ download ~ '","_self")' } } ) }}
                         {% endif %}
 
                     {% endif %}

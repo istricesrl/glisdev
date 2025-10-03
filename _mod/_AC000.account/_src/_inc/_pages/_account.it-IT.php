@@ -56,6 +56,20 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_account.form.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'account.form',
-															'account.form.attribuzione',
+															// 'account.form.attribuzione',
 															'account.form.tools' ) )
 	);
+
+    // tools account
+	$p['account.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni account' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'account.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_account.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['account.form']['etc']['tabs'] )
+	);
+

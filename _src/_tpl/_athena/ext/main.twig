@@ -24,7 +24,7 @@
         <header class="fixed-top">
 
             {# HEADER DI PAGINA DI DEFAULT #}
-            {% block header %}{% include 'inc/header.twig' %}{% endblock %}
+            {% block header %}{% include 'inc/header.twig' %}{% endblock header %}
 
         </header>
 
@@ -36,7 +36,7 @@
                 <div class="col-md-2 d-none sidebar d-md-flex d-print-none sticky h-100">
 
                     {# NAVBAR DI PAGINA DI DEFAULT #}
-                    {% block nav %}{% include 'inc/navbar.twig' %}{% endblock %}
+                    {% block nav %}{% include 'inc/navbar.twig' %}{% endblock nav %}
 
                 </div>
 
@@ -47,16 +47,16 @@
                     {{ nav.tabs( page, pages, localization.language.ietf, etc, form, request ) }}
 
                     {# CONTENUTO PRINCIPALE DI PAGINA #}
-                    {% block main %}{% endblock %}
+                    {% block main %}{% endblock main %}
 
                 </main>
 
                 {# TODO DOCUMENTARE #}
-                {% block info %}{% include 'inc/widget.info.twig' %}{% endblock %}
-                {% block jobs %}{% include 'inc/widget.jobs.twig' %}{% endblock %}
-                {% block cart %}{% include 'inc/widget.cart.twig' %}{% endblock %}
-                {% block alert %}{% include 'inc/widget.alert.twig' %}{% endblock %}
-                {% block bookmarks %}{% include 'inc/widget.bookmarks.twig' %}{% endblock %}
+                {% block info %}{% include 'inc/widget.info.twig' %}{% endblock info %}
+                {% block jobs %}{% include 'inc/widget.jobs.twig' %}{% endblock jobs %}
+                {% block cart %}{% include 'inc/widget.cart.twig' %}{% endblock cart %}
+                {% block alert %}{% include 'inc/widget.alert.twig' %}{% endblock alert %}
+                {% block bookmarks %}{% include 'inc/widget.bookmarks.twig' %}{% endblock bookmarks %}
 
             </div>
 
@@ -67,12 +67,12 @@
 
         {# MODAL DELLA PAGINA #}
         {% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
-        {% block modals %}{% endblock %}
+        {% block modals %}{% endblock modals %}
         {# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
         {# vedi _src/_inc/_macro/_default.tools.php #}
 
         {# SCRIPT JAVASCRIPT DELLA PAGINA #}
-        {% block javascript %}{% endblock %}
+        {% block javascript %}{% endblock javascript %}
 
     </body>
 </html>

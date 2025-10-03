@@ -270,24 +270,29 @@ nav ul ul ul {
     padding: .0em .5em;
 }
 
-/* stile dei link attivi degli elementi della navigazione a tab */
-.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-    border-color: #dddddd #dddddd #ffffff;
-}
-
 /* stile dei link degli elementi della navigazione a tab */
 ul.nav-tabs li.nav-item > a.nav-link,
 ul.nav-tabs li.nav-item > a.nav-link:visited {
     color: #333333;
     font-weight: bold;
+    background-color: #eeeeee;
+    border-color: #dddddd #dddddd;
+}
+
+/* stile dei link attivi degli elementi della navigazione a tab */
+ul.nav-tabs li.nav-item > a.nav-link.active {
+    border-color: #dddddd #dddddd #ffffff;
+    background-color: #ffffff!important;
 }
 
 /* stile dei link attivi al passaggio del mouse degli elementi della navigazione a tab */
 ul.nav-tabs li.nav-item.active > a.nav-link,
 ul.nav-tabs li.nav-item > a.nav-link:hover,
 ul.nav-tabs li.nav-item > a.nav-link:active {
+    border-color: #dddddd #dddddd #ffffff;
     color: #333333;
     font-weight: bold;
+    background-color: #ffffff;
 }
 
 /**

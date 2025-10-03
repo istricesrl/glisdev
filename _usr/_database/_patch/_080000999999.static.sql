@@ -55,4 +55,87 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   UNIQUE KEY `codice` (`codice`)                              --
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
 
+-- | 080000001800
+
+-- attivita_view_static
+CREATE TABLE `attivita_view_static` (                         --
+  `id` int(11) PRIMARY KEY NOT NULL,                          --
+  `id_tipologia` int(11) DEFAULT NULL,                        --
+  `tipologia` char(64) DEFAULT NULL,                          --
+  `codice` char(64) DEFAULT NULL,                             --
+  `id_cliente` int(11) DEFAULT NULL,                          --
+  `codice_cliente` char(64) DEFAULT NULL,                     --
+  `cliente` char(255) DEFAULT NULL,                           --
+  `id_contatto`	int(11) DEFAULT NULL,                         --
+  `contatto`	char(255) DEFAULT NULL,	                      --
+  `id_indirizzo` int(11) DEFAULT NULL,                        --
+  `indirizzo` text,                                           --
+  `id_luogo` int(11) DEFAULT NULL,                            --
+  `luogo` char(255) DEFAULT NULL,                             --
+  `id_messaggio` int(11) DEFAULT NULL,                        --
+  `id_oggetto` int(11) DEFAULT NULL,                          --
+  `oggetto` char(255) DEFAULT NULL,                           --
+  `data_riferimento` date DEFAULT NULL,                       --
+  `ora_inizio_riferimento` time DEFAULT NULL,                 --
+  `ora_fine_riferimento` time DEFAULT NULL,                   --
+  `anagrafica_riferimento` char(255) DEFAULT NULL,            --
+  `data_scadenza` date DEFAULT NULL,                          --
+  `ora_scadenza` time DEFAULT NULL,                           --
+  `data_programmazione` date DEFAULT NULL,                    --
+  `ora_inizio_programmazione` time DEFAULT NULL,              --
+  `ora_fine_programmazione` time DEFAULT NULL,                --
+  `id_anagrafica_programmazione` int(11) DEFAULT NULL,        --
+  `anagrafica_programmazione` char(255) DEFAULT NULL,         --
+  `ore_programmazione` decimal(5,2) DEFAULT NULL,             --
+  `se_confermata` int(1) DEFAULT NULL,                        --
+  `data_attivita` date DEFAULT NULL,                          --
+  `giorno_attivita` int(2) DEFAULT NULL,                      --
+  `mese_attivita` int(2) DEFAULT NULL,                        --
+  `anno_attivita` int(4) DEFAULT NULL,                        --
+  `ora_inizio` time DEFAULT NULL,                             --
+  `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,         --
+  `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL,        --
+  `data_fine` date DEFAULT NULL,                              --
+  `ora_fine` time DEFAULT NULL,                               --
+  `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,           --
+  `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,          --
+  `id_anagrafica` int(11) DEFAULT NULL,                       --
+  `anagrafica` char(255) DEFAULT NULL,                        --
+  `id_account` int(11) DEFAULT NULL,                          --
+  `id_asset` int(11) DEFAULT NULL,                            --
+  `asset` char(255) DEFAULT NULL,                             --
+  `ore` decimal(5,2) DEFAULT NULL,                            --
+  `id_articolo` char(32) DEFAULT NULL,                        --
+  `quantita_prevista` decimal(9,2) DEFAULT NULL,              --
+  `nome` char(255) DEFAULT NULL,                              --
+  `id_documento` int(11) DEFAULT NULL,                        --
+  `documento` char(255) DEFAULT NULL,                         --
+  `id_corrispondenza` int(11) DEFAULT NULL,                   --
+  `corrispondenza` char(255) DEFAULT NULL,                    --
+  `id_progetto` char(32) DEFAULT NULL,                        --
+  `progetto` char(255) DEFAULT NULL,                          --
+  `id_contratto` int(11) DEFAULT NULL,                        --
+  `contratto` char(255) DEFAULT NULL,                         --
+  `discipline` char(255) DEFAULT NULL,                        --
+  `id_matricola` int(11) DEFAULT NULL,                        --
+  `id_immobile` int(11) DEFAULT NULL,                         --
+  `id_step` int(11) DEFAULT NULL,                             --
+  `step` char(255) DEFAULT NULL,                              --
+  `id_pianificazione`	int(11) DEFAULT NULL,                 --
+  `id_todo` int(11) DEFAULT NULL,                             --
+  `todo` char(255) DEFAULT NULL,                              --
+  `id_mastro_provenienza` int(11) DEFAULT NULL,               --
+  `mastro_provenienza` char(64) DEFAULT NULL,                 --
+  `id_mastro_destinazione` int(11) DEFAULT NULL,              --
+  `mastro_destinazione` char(64) DEFAULT NULL,                --
+  `codice_archivium` char(128) DEFAULT NULL,                  --
+  `token` char(128) DEFAULT NULL,                             --
+  `id_account_inserimento` int(11) DEFAULT NULL,              --
+  `timestamp_inserimento` int(11) DEFAULT NULL,               --
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            --
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
+  `timestamp_archiviazione` int(11) DEFAULT NULL,             --
+  `__label__` text                                            --
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
+
 -- | FINE FILE

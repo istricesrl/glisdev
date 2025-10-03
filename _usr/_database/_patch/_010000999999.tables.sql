@@ -296,6 +296,104 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000001700
+
+-- asset
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli asset (beni aziendali)
+--
+-- questa tabella contiene gli asset (beni aziendali) che possono essere collegati a molte altre entità del framework
+--
+CREATE TABLE IF NOT EXISTS `asset` (                            --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                          -- chiave esterna per la tipologia di asset
+  `codice` int(11) DEFAULT NULL,                                -- codice dell'asset
+  `nome` char(128) DEFAULT NULL,                                -- nome dell'asset
+  `hostname` char(128) DEFAULT NULL,                            -- hostname dell'asset
+  `ip_address` char(32) DEFAULT NULL,                           -- indirizzo IP dell'asset
+  `cespite` char(32) DEFAULT NULL,                              -- codice cespite dell'asset
+  `note` text DEFAULT NULL,                                     -- note sull'asset
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'asset
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'asset
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
+
+-- | 010000001800
+
+-- attivita
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le attività
+--
+-- questa tabella contiene le attività, che possono essere collegate a molte altre entità del framework
+--
+CREATE TABLE IF NOT EXISTS `attivita` (                       --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per l'attività genitore
+  `codice` char(32) DEFAULT NULL,                             -- codice dell'attività
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di attività
+  `id_cliente` int(11) DEFAULT NULL,                          -- chiave esterna per il cliente collegato all'attività
+  `id_contatto` int(11) DEFAULT NULL,                         -- chiave esterna per il contatto collegato all'attività
+  `referenti` char(255) DEFAULT NULL,                         -- referenti dell'attività
+  `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo collegato all'attività
+  `id_luogo` int(11) DEFAULT NULL,                            -- chiave esterna per il luogo collegato all'attività
+  `id_messaggio` int(11) DEFAULT NULL,                        -- chiave esterna per il messaggio collegato all'attività
+  `id_oggetto` int(11) DEFAULT NULL,                          -- chiave esterna per l'oggetto collegato all'attività
+  `data_scadenza` date DEFAULT NULL,                          -- data di scadenza
+  `ora_scadenza` time DEFAULT NULL,                           -- ora di scadenza
+  `note_scadenza` text DEFAULT NULL,                          -- note sulla scadenza
+  `data_programmazione` date DEFAULT NULL,                    -- data di programmazione
+  `ora_inizio_programmazione` time DEFAULT NULL,              -- ora di inizio programmazione
+  `ora_fine_programmazione` time DEFAULT NULL,                -- ora di fine programmazione
+  `id_anagrafica_programmazione` int(11) DEFAULT NULL,        -- chiave esterna per l'anagrafica di programmazione
+  `note_programmazione` text DEFAULT NULL,                    -- note sulla programmazione
+  `ore_programmazione` decimal(5,2) DEFAULT NULL,             -- ore di programmazione
+  `se_confermata` int(1) DEFAULT NULL,                        -- flag che indica se l'attività è confermata
+  `data_attivita` date DEFAULT NULL,                          -- data dell'attività
+  `ora_inizio` time DEFAULT NULL,                             -- ora di inizio dell'attività
+  `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,         -- latitudine al momento dell'inizio dell'attività
+  `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL,        -- longitudine al momento dell'inizio dell'attività
+  `data_fine` date DEFAULT NULL,                              -- data di fine dell'attività
+  `ora_fine` time DEFAULT NULL,                               -- ora di fine dell'attività
+  `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,           -- latitudine al momento della fine dell'attività
+  `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,          -- longitudine al momento della fine dell'attività
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica collegata all'attività
+  `id_account` int(11) DEFAULT NULL,                          -- chiave esterna per l'account collegato all'attività
+  `id_asset` int(11) DEFAULT NULL,                            -- chiave esterna per l'asset collegato all'attività
+  `ore` decimal(5,2) DEFAULT NULL,                            -- ore effettive dell'attività
+  `nome` char(255) DEFAULT NULL,                              -- nome dell'attività
+  `note` text DEFAULT NULL,                                   -- note sull'attività
+  `note_cliente` text DEFAULT NULL,                           -- note per il cliente
+  `id_mailing` int(11) DEFAULT NULL,                          -- chiave esterna per il mailing collegato all'attività
+  `id_mail` int(11) DEFAULT NULL,                             -- chiave esterna per la mail collegata all'attività
+  `id_documento` int(11) DEFAULT NULL,                        -- chiave esterna per il documento collegato all'attività
+  `id_corrispondenza` int(11) DEFAULT NULL,                   -- chiave esterna per la corrispondenza collegata all'attività
+  `id_pagamento` int(11) DEFAULT NULL,                        -- chiave esterna per il pagamento collegato all'attività
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto collegato all'attività
+  `id_contratto` int(11) DEFAULT NULL,                        -- chiave esterna per il contratto collegato all'attività
+  `id_matricola` int(11) DEFAULT NULL,                        -- chiave esterna per la matricola collegata all'attività
+  `id_todo` int(11) DEFAULT NULL,                             -- chiave esterna per il todo collegato all'attività
+  `id_mastro_provenienza` int(11) DEFAULT NULL,               -- chiave esterna per il mastro di provenienza
+  `id_mastro_destinazione` int(11) DEFAULT NULL,              -- chiave esterna per il mastro di destinazione
+  `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile collegato all'attività
+  `id_step` int(11) DEFAULT NULL,                             -- chiave esterna per lo step collegato all'attività
+  `id_pianificazione` int(11) DEFAULT NULL,                   -- chiave esterna per la pianificazione collegata all'attività
+  `codice_archivium` char(32) DEFAULT NULL,                   -- codice per l'integrazione con Archivium
+  `token` char(128) DEFAULT NULL,                             -- token per geolocalizzazione
+  `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,         -- timestamp dell'ultimo calcolo dei sostituti
+  `timestamp_archiviazione` int(11) DEFAULT NULL,             -- timestamp di archiviazione
+  `id_account_archiviazione` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha archiviato l'attività
+  `note_archiviazione` text NULL,                             -- note di archiviazione
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'attività
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'attività
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000003100
 
 -- categorie_anagrafica
@@ -328,6 +426,42 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (           --
   `se_commerciale` tinyint(1) DEFAULT NULL,                   -- flag che indica se la categoria è nel commerciale
   `se_notizie` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è collegata alle notizie
   `se_corriere` tinyint(1) DEFAULT NULL,                      -- flag che indica se la categoria è un corriere
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la categoria
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la categoria
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000004300
+
+-- categorie_progetti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le categorie dei progetti
+--
+-- questa tabella contiene le categorie dei progetti
+--
+CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                             -- codice della categoria
+  `nome` char(255) DEFAULT NULL,                              -- nome della categoria
+  `note` text DEFAULT NULL,                                   -- note sulla categoria
+  `template` char(255) DEFAULT NULL,                          -- template associato alla categoria
+  `schema_html` char(128) DEFAULT NULL,                       -- schema HTML associato alla categoria
+  `tema_css` char(128) DEFAULT NULL,                          -- tema CSS associato alla categoria
+  `se_sitemap` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria deve essere inclusa nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                     -- flag che indica se la categoria è cacheable
+  `id_sito` int(11) DEFAULT NULL,                             -- chiave esterna per il sito di appartenenza
+  `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina di appartenenza
+  `se_ordinario` tinyint(1) DEFAULT NULL,                     -- flag che indica se la categoria è ordinaria
+  `se_straordinario` tinyint(1) DEFAULT NULL,                 -- flag che indica se la categoria è straordinaria
+  `se_disciplina` tinyint(1) DEFAULT NULL,                    -- flag che indica se la categoria è disciplinare
+  `se_classe` tinyint(1) DEFAULT NULL,                        -- flag che indica se la categoria è di classe
+  `se_fascia` tinyint(1) DEFAULT NULL,                        -- flag che indica se la categoria è di fascia
+  `se_periodo` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è di periodo
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la categoria
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la categoria
@@ -410,6 +544,38 @@ CREATE TABLE `consensi_moduli` (                              --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000006700
+
+-- contatti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i contatti acquisiti
+--
+-- questa tabella contiene i contatti acquisiti, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `contatti` (                       --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di contatto
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica collegata al contatto
+  `id_inviante` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica dell'inviante
+  `id_ranking` int(11) DEFAULT NULL,                          -- chiave esterna per il ranking
+  `utm_id` char(128) DEFAULT NULL,                            -- UTM id
+  `utm_source` char(128) DEFAULT NULL,                        -- UTM source
+  `utm_medium` char(128) DEFAULT NULL,                        -- UTM medium
+  `utm_campaign` char(128) DEFAULT NULL,                      -- UTM campaign
+  `utm_term` char(128) DEFAULT NULL,                          -- UTM term
+  `utm_content` char(128) DEFAULT NULL,                       -- UTM content
+  `nome` char(255) DEFAULT NULL,                              -- nome del contatto
+  `note` text DEFAULT NULL,                                   -- note sul contatto
+  `json` text DEFAULT NULL,                                   -- campo JSON per informazioni aggiuntive
+  `timestamp_contatto` int(11) DEFAULT NULL,                  -- timestamp del contatto
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il contatto
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,             -- timestamp di aggiornamento
+  `id_account_aggiornamento` int(11) DEFAULT NULL             -- chiave esterna per l'account che ha aggiornato il contatto
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000007100
 
 -- continenti
@@ -453,6 +619,177 @@ CREATE TABLE `contratti` (                                    --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il contratto
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000007800
+
+-- corrispondenza
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene la corrispondenza in uscita
+--
+-- questa tabella contiene la corrispondenza in uscita, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `corrispondenza` (                   --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                          -- chiave esterna per la tipologia di corrispondenza
+  `codice` char(64) DEFAULT NULL,                               -- codice della corrispondenza
+  `id_peso` int(11) DEFAULT NULL,                               -- chiave esterna per il peso
+  `peso` decimal(5,2) DEFAULT NULL,                             -- peso della corrispondenza
+  `id_formato` int(11) DEFAULT NULL,                            -- chiave esterna per il formato
+  `id_distinta` int(11) DEFAULT NULL,                           -- chiave esterna per la distinta
+  `quantita` int(11) DEFAULT NULL,                              -- quantità della corrispondenza
+  `id_mittente` int(11) DEFAULT NULL,                           -- chiave esterna per l'anagrafica mittente
+  `id_organizzazione_mittente` int(11) DEFAULT NULL,            -- chiave esterna per l'organizzazione mittente
+  `id_commesso` int(11) DEFAULT NULL,                           -- chiave esterna per il commesso
+  `nome` char(255) DEFAULT NULL,                                -- nome del mittente
+  `destinatario_nome` char(155) DEFAULT NULL,                   -- nome del destinatario
+  `destinatario_cognome` char(255) DEFAULT NULL,                -- cognome del destinatario
+  `destinatario_denominazione` char(255) DEFAULT NULL,          -- denominazione del destinatario
+  `destinatario_codice_fiscale` char(255) DEFAULT NULL,         -- codice fiscale del destinatario
+  `destinatario_partita_iva` char(255) DEFAULT NULL,            -- partita IVA del destinatario
+  `destinatario_id_tipologia_anagrafica` int(11) DEFAULT NULL,  -- chiave esterna per la tipologia di anagrafica del destinatario
+  `destinatario_id_anagrafica` int(11) DEFAULT NULL,            -- chiave esterna per l'anagrafica del destinatario
+  `destinatario_indirizzo` char(255) DEFAULT NULL,              -- indirizzo del destinatario
+  `destinatario_civico` char(16) DEFAULT NULL,                  -- civico del destinatario
+  `destinatario_cap` char(16) DEFAULT NULL,                     -- CAP del destinatario
+  `destinatario_citta` char(255) DEFAULT NULL,                  -- città del destinatario
+  `destinatario_id_comune` int(11) DEFAULT NULL,                -- chiave esterna per il comune del destinatario
+  `destinatario_id_provincia` int(11) DEFAULT NULL,             -- chiave esterna per la provincia del destinatario
+  `destinatario_id_stato` int(11) DEFAULT NULL,                 -- chiave esterna per lo stato del destinatario
+  `id_tipologia_certificazione_consegna` int(11) DEFAULT NULL,  -- chiave esterna per la tipologia di certificazione di consegna
+  `numero_certificazione_consegna` char(255) DEFAULT NULL,      -- numero della certificazione di consegna
+  `id_tipologia_consegna` int(11) DEFAULT NULL,                 -- chiave esterna per la tipologia di consegna
+  `nome_consegna` char(255) DEFAULT NULL,                       -- nome per la consegna
+  `cognome_consegna` char(255) DEFAULT NULL,                    -- cognome per la consegna
+  `timestamp_consegna` int(11) DEFAULT NULL,                    -- timestamp di consegna
+  `requisiti_consegna` text DEFAULT NULL,                       -- requisiti per la consegna
+  `note_consegna` text DEFAULT NULL,                            -- note sulla consegna
+  `timestamp_elaborazione` int(11) DEFAULT NULL,                -- timestamp dell'ultima elaborazione
+  `note_elaborazione` text DEFAULT NULL,                        -- note sull'ultima elaborazione
+  `timestamp_gestione` int(11) DEFAULT NULL,                    -- timestamp dell'ultima gestione
+  `note_gestione` text DEFAULT NULL,                            -- note sull'ultima gestione
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la corrispondenza
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la corrispondenza
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000009800
+
+-- documenti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i documenti emessi
+--
+-- questa tabella contiene i documenti emessi, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `documenti` (                      --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di documento
+  `codice` char(32) DEFAULT NULL,                             -- codice del documento
+  `numero` char(32) DEFAULT NULL,                             -- numero del documento
+  `sezionale` char(32) DEFAULT NULL,                          -- sezionale del documento
+  `data` date DEFAULT NULL,                                   -- data del documento
+  `nome` char(255) DEFAULT NULL,                              -- nome del documento
+  `id_emittente` int(11) DEFAULT NULL,                        -- chiave esterna per l'anagrafica emittente
+  `id_referente_emittente` int(11) DEFAULT NULL,              -- chiave esterna per il referente dell'anagrafica emittente
+  `id_sede_emittente` int(11) DEFAULT NULL,                   -- chiave esterna per la sede dell'anagrafica emittente
+  `id_destinatario` int(11) DEFAULT NULL,                     -- chiave esterna per l'anagrafica destinataria
+  `id_sede_destinatario` int(11) DEFAULT NULL,                -- chiave esterna per la sede dell'anagrafica destinataria
+  `id_condizione_pagamento` int(11) DEFAULT NULL,             -- chiave esterna per la condizione di pagamento
+  `esigibilita`	enum('I','D','S') DEFAULT NULL,               -- esigibilità del documento
+  `codice_archivium` char(64) DEFAULT NULL ,                  -- codice per Archivium
+  `codice_sdi` char(64) DEFAULT NULL,                         -- codice SDI per fatturazione elettronica
+  `cig` char(16) DEFAULT NULL,                                -- codice CIG
+  `cup` char(16) DEFAULT NULL,                                -- codice CUP
+  `riferimento` char(255) DEFAULT NULL,                       -- riferimento del documento
+  `timestamp_invio` int(11) DEFAULT NULL,                     -- timestamp di invio del documento
+  `progressivo_invio` char(5) DEFAULT NULL,                   -- progressivo di invio del documento
+  `id_coupon` char(32) DEFAULT NULL,                          -- chiave esterna per il coupon associato al documento
+  `id_mastro_provenienza` int(11) DEFAULT NULL,               -- chiave esterna per il mastro di provenienza
+  `id_mastro_destinazione` int(11) DEFAULT NULL,              -- chiave esterna per il mastro di destinazione
+  `porto` enum('franco','assegnato','-') DEFAULT NULL,        -- modalità di consegna
+  `id_causale` int(11) DEFAULT NULL,                          -- chiave esterna per la causale del documento
+  `id_trasportatore` int(11) DEFAULT NULL,                    -- chiave esterna per l'anagrafica del trasportatore
+  `id_carrello` int(11) DEFAULT NULL,                         -- chiave esterna per il carrello collegato al documento
+  `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile collegato al documento
+  `id_pianificazione` int(11) DEFAULT NULL,                   -- chiave esterna per la pianificazione collegata al documento
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto collegato al documento
+  `xml` longtext DEFAULT NULL,                                -- contenuto XML per fatturazione elettronica
+  `data_consegna` date DEFAULT NULL,                          -- data di consegna
+  `note_consegna` text DEFAULT NULL,                          -- note sulla consegna
+  `note` text DEFAULT NULL,                                   -- note sul documento
+  `note_cliente` text DEFAULT NULL,                           -- note per il cliente
+  `note_invio` text DEFAULT NULL,                             -- note per l'invio
+  `timestamp_chiusura` int(11) DEFAULT NULL,                  -- timestamp di chiusura del documento
+  `note_chiusura` text DEFAULT NULL,                          -- note per la chiusura del documento
+  `token` char(128) DEFAULT NULL,                             -- token per la gestione del documento
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il documento
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento del documento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il documento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento del documento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000010000
+
+-- documenti_articoli
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene gli articoli associati ai documenti emessi
+--
+-- questa tabella contiene gli articoli associati ai documenti emessi, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna per l'articolo genitore (per articoli composti)
+  `id_tipologia` int(11) DEFAULT NULL,                          -- chiave esterna per la tipologia di articolo
+  `codice` char(32) DEFAULT NULL,                               -- codice dell'articolo
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_documento` int(11) DEFAULT NULL,                          -- chiave esterna per il documento di appartenenza
+  `data` date DEFAULT NULL,                                     -- data dell'articolo
+  `id_missione`	int(11) DEFAULT NULL,                           -- chiave esterna per la missione collegata all'articolo
+  `id_packing_list`	int(11) DEFAULT NULL,                       -- chiave esterna per la packing list collegata all'articolo
+  `id_destinatario` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica destinataria
+  `id_emittente` int(11) DEFAULT NULL,                          -- chiave esterna per l'anagrafica emittente
+  `id_reparto` int(11) DEFAULT NULL,                            -- chiave esterna per il reparto collegato all'articolo
+  `id_progetto` char(32) DEFAULT NULL,                          -- chiave esterna per il progetto collegato all'articolo
+  `id_todo` int(11) DEFAULT NULL,                               -- chiave esterna per la todo collegata all'articolo
+  `id_attivita` int(11) DEFAULT NULL,                           -- chiave esterna per l'attività collegata all'articolo
+  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato
+  `id_collo` int(11) DEFAULT NULL,                              -- chiave esterna per il collo collegato all'articolo
+  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato
+  `id_mastro_provenienza` int(11) DEFAULT NULL,                 -- chiave esterna per il mastro di provenienza
+  `id_mastro_destinazione` int(11) DEFAULT NULL,                -- chiave esterna per il mastro di destinazione
+  `id_udm` int(11) DEFAULT NULL,                                -- chiave esterna per l'unità di misura
+  `id_matricola` int(11) DEFAULT NULL,                          -- chiave esterna per la matricola collegata
+  `id_rinnovo` int(11) DEFAULT NULL,                            -- chiave esterna per il rinnovo collegato
+  `id_carrelli_articoli` int(11) DEFAULT NULL,                  -- chiave esterna per l'articolo del carrello collegato
+  `quantita_prevista` decimal(9,2) DEFAULT NULL,                -- quantità prevista
+  `quantita` decimal(9,2) DEFAULT NULL,                         -- quantità dell'articolo
+  `id_listino` int(11) DEFAULT NULL,                            -- chiave esterna per il listino applicato
+  `costo_netto_unitario` decimal(16,2) DEFAULT NULL,            -- costo netto unitario
+  `costo_netto_totale` decimal(16,2) DEFAULT NULL,              -- costo netto totale
+  `prezzo_netto_unitario` decimal(16,2) DEFAULT NULL,           -- prezzo netto unitario
+  `prezzo_netto_totale` decimal(16,2) DEFAULT NULL,             -- prezzo netto totale
+  `importo_netto_totale` decimal(16,2) DEFAULT NULL,            -- importo netto totale
+  `importo_lordo_totale` decimal(16,2) DEFAULT NULL,            -- importo lordo totale
+  `sconto_percentuale` decimal(9,2) DEFAULT NULL,               -- sconto percentuale
+  `sconto_valore` decimal(9,2) DEFAULT NULL,                    -- sconto in valore assoluto
+  `importo_lordo_finale` decimal(16,2) DEFAULT NULL,            -- importo lordo finale
+  `nome` char(255) DEFAULT NULL,                                -- nome dell'articolo
+  `specifiche` char(255) DEFAULT NULL,                          -- specifiche dell'articolo
+  `note` text DEFAULT NULL,                                     -- note sull'articolo
+  `data_consegna` date DEFAULT NULL,                            -- data di consegna
+  `note_consegna` text DEFAULT NULL,                            -- note sulla consegna
+  `id_pianificazione` int(11) DEFAULT NULL,                     -- chiave esterna per la pianificazione collegata all'articolo
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'articolo
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'articolo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           -- tabella articoli
 
 -- | 010000015000
 
@@ -688,6 +1025,137 @@ CREATE TABLE IF NOT EXISTS `mail` (                           --
   `id_account_inserimento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha inserito l'indirizzo mail
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000020600
+
+-- mastri
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i mastri contabili
+--
+-- questa tabella contiene i mastri contabili, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `mastri` (                           --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna ricorsiva per il mastro genitore
+  `id_tipologia` int(11) DEFAULT NULL,                          -- chiave esterna per la tipologia del mastro
+  `codice` char(64) DEFAULT NULL,                               -- codice del mastro
+  `prefisso_modula` char(64) DEFAULT NULL,                      -- prefisso per il codice modula
+  `codice_modula` char(64) DEFAULT NULL,                        -- codice modula
+  `id_anagrafica_indirizzi` int(11) DEFAULT NULL,               -- chiave esterna per l'anagrafica indirizzi collegata al mastro
+  `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata al mastro
+  `id_account` int(11) DEFAULT NULL,                            -- chiave esterna per l'account collegato al mastro
+  `id_progetto` char(32) DEFAULT NULL,                          -- chiave esterna per il progetto collegato al mastro
+  `nome` char(64) DEFAULT NULL,                                 -- nome del mastro
+  `note` text DEFAULT NULL,                                     -- note sul mastro
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito il mastro
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato il mastro
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000022800
+
+-- organizzazioni
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le organizzazioni
+--
+-- questa tabella contiene le organizzazioni, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `organizzazioni` (                   --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna ricorsiva per l'organizzazione genitore
+  `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata all'organizzazione
+  `id_ruolo` int(11) DEFAULT NULL,                              -- chiave esterna per il ruolo dell'organizzazione
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `nome` char(128) DEFAULT NULL,                                -- nome dell'organizzazione
+  `note` text DEFAULT NULL,                                     -- note sull'organizzazione
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'organizzazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'organizzazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000027000
+
+-- progetti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i progetti
+--
+-- questa tabella contiene i progetti, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `progetti` (                       --
+  `id` char(32) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di progetto
+  `id_pianificazione` int(11) DEFAULT NULL,                   -- chiave esterna per la pianificazione del progetto
+  `id_cliente` int(11) DEFAULT NULL,                          -- chiave esterna per l'anagrafica del cliente
+  `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo del progetto
+  `id_ranking` int(11) DEFAULT NULL,                          -- chiave esterna per il ranking del progetto
+  `id_articolo` char(32) DEFAULT NULL,                        -- chiave esterna per l'articolo collegato al progetto
+  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato al progetto
+  `id_periodo` int(11) DEFAULT NULL,                          -- chiave esterna per il periodo del progetto
+  `nome` char(255) DEFAULT NULL,                              -- nome del progetto
+  `data_consegna` date DEFAULT NULL,                          -- data di consegna prevista
+  `note_consegna` text DEFAULT NULL,                          -- note sulla consegna
+  `note` text DEFAULT NULL,                                   -- note sul progetto
+  `template` char(255) DEFAULT NULL,                          -- template associato al progetto
+  `schema_html` char(128) DEFAULT NULL,                       -- schema HTML associato al progetto
+  `tema_css` char(128) DEFAULT NULL,                          -- tema CSS associato al progetto
+  `se_sitemap` tinyint(1) DEFAULT NULL,                       -- se il progetto deve essere incluso nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                     -- se il progetto è cacheable
+  `id_sito` int(11) DEFAULT NULL,                             -- chiave esterna per il sito collegato al progetto
+  `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina collegata al progetto
+  `entrate_previste` decimal(16,2) DEFAULT NULL,              -- entrate previste per il progetto
+  `ore_previste` decimal(16,2) DEFAULT NULL,                  -- ore previste per il progetto
+  `costi_previsti` decimal(16,2) DEFAULT NULL,                -- costi previsti per il progetto
+  `id_periodicita_prevista` int(11) DEFAULT NULL,             -- chiave esterna per la periodicità prevista del progetto
+  `note_previsioni` text DEFAULT NULL,                        -- note sulle previsioni
+  `entrate_accettazione` decimal(16,2) DEFAULT NULL,          -- entrate alla data di accettazione del progetto
+  `data_accettazione` date DEFAULT NULL,                      -- data di accettazione del progetto
+  `id_periodicita_accettazione` int(11) DEFAULT NULL,	      -- chiave esterna per la periodicità alla data di accettazione del progetto
+  `note_accettazione` text DEFAULT NULL,                      -- note sull'accettazione
+  `data_apertura` date DEFAULT NULL,                          -- data di apertura del progetto
+  `note_apertura` text DEFAULT NULL,                          -- note sull'apertura
+  `data_chiusura` date DEFAULT NULL,                          -- data di chiusura del progetto
+  `note_chiusura` text DEFAULT NULL,                          -- note sulla chiusura
+  `entrate_totali` decimal(16,2) DEFAULT NULL,                -- entrate totali del progetto
+  `ore_totali` decimal(16,2) DEFAULT NULL,                    -- ore totali del progetto
+  `uscite_totali` decimal(16,2) DEFAULT NULL,                 -- uscite totali del progetto
+  `note_totali` text DEFAULT NULL,                            -- note sui totali
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del progetto
+  `note_archiviazione` text DEFAULT NULL,                     -- note sull'archiviazione
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il progetto
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il progetto
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000027400
+
+-- progetti_categorie
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: tabella di relazione molti a molti tra progetti e categorie
+--
+-- questa tabella contiene la relazione molti a molti tra progetti e categorie, con le informazioni relative
+-- all'ordine di visualizzazione e ai dati di inserimento e aggiornamento
+--
+CREATE TABLE IF NOT EXISTS `progetti_categorie` (             --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto
+  `id_categoria` int(11) DEFAULT NULL,                        -- chiave esterna per la categoria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la relazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,             -- timestamp di aggiornamento
+  `id_account_aggiornamento` int(11) DEFAULT NULL             -- chiave esterna per l'account che ha aggiornato la relazione
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000028000
 
 -- provincie
@@ -855,6 +1323,25 @@ CREATE TABLE IF NOT EXISTS `stati` (                          --
   `data_archiviazione` date DEFAULT NULL                      -- data di archiviazione dello stato
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000042500
+
+-- step
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene gli step dei funnel
+--
+-- questa tabella contiene gli step dei funnel, con le informazioni relative al funnel di appartenenza, all'ordine,
+-- al nome e alle note
+--
+CREATE TABLE `step` (                                         --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_funnel` int(11) DEFAULT NULL,                           -- chiave esterna per il funnel di appartenenza
+  `ordine` char(32) DEFAULT NULL,                             -- ordine dello step nel funnel
+  `nome` char(128) DEFAULT NULL,                              -- nome dello step
+  `note` text DEFAULT NULL                                    -- note sullo step
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000043000
 
 -- task
@@ -995,6 +1482,110 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000050900
+
+-- tipologie_contratti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di contratti
+--
+-- questa tabella contiene le tipologie di contratti, con le informazioni relative al nome, al prodotto collegato
+-- e alle funzionalità associate (tesseramento, abbonamento, iscrizione, immobili, acquisto, locazione, libero, prenotazione, scalare,
+-- affiliazione, online)
+--
+CREATE TABLE `tipologie_contratti` (                          --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto collegato
+  `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti collegata
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `se_tesseramento` tinyint(1) DEFAULT NULL,                  -- se tesseramento
+  `se_abbonamento` tinyint(1) DEFAULT NULL,                   -- se abbonamento
+  `se_iscrizione` tinyint(1) DEFAULT NULL,                    -- se iscrizione
+  `se_immobili` tinyint(1) DEFAULT NULL,                      -- se immobili
+  `se_acquisto` tinyint(1) DEFAULT NULL,                      -- se acquisto
+  `se_locazione` tinyint(1) DEFAULT NULL,                     -- se locazione
+  `se_libero` tinyint(1) DEFAULT NULL,                        -- se libero
+	`se_prenotazione` tinyint(1) DEFAULT NULL,                -- se prenotazione
+	`se_scalare` tinyint(1) DEFAULT NULL,                     -- se scalare
+  `se_affiliazione` tinyint(1) DEFAULT NULL,                  -- se affiliazione
+  `se_online` tinyint(1) DEFAULT NULL,                        -- se online
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000051000
+
+-- tipologie_corrispondenza
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di corrispondenza
+--
+-- questa tabella contiene le tipologie di corrispondenza, con le informazioni relative
+-- al nome e alle funzionalità associate (massivo, corrispondenza, pesata, atto, ricevuta di ritorno)
+--
+CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (         --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna per la tipologia genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome della tipologia
+  `se_massivo` tinyint(1) DEFAULT NULL,                         -- se massivo
+  `se_corrispondenza` tinyint(1) DEFAULT NULL,                  -- se corrispondenza
+  `se_pesata` tinyint(1) DEFAULT NULL,                          -- se pesata
+  `se_atto` tinyint(1) DEFAULT NULL,                            -- se atto
+  `se_ricevuta_ritorno` tinyint(1) DEFAULT NULL,                -- se ricevuta di ritorno
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
+
+-- | 010000052600
+
+-- tipologie_documenti
+-- tipologia: tabella di supporto
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di documenti
+--
+-- questa tabella contiene le tipologie di documenti, con le informazioni relative al nome,
+-- al codice, alle funzionalità associate e ai modelli di stampa
+--
+CREATE TABLE IF NOT EXISTS `tipologie_documenti` (            --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                             -- codice della tipologia
+  `numerazione` char(1) DEFAULT NULL,                         -- tipo di numerazione (A=automatica, M=manuale, N=nessuna)
+  `nome` char(255) DEFAULT NULL,                              -- nome della tipologia
+  `sigla` char(16) DEFAULT NULL,                              -- sigla della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `se_fattura` tinyint(1) DEFAULT NULL,                       -- se fattura
+  `se_nota_credito` tinyint(1) DEFAULT NULL,                  -- se nota di credito
+  `se_nota_debito` tinyint(1) DEFAULT NULL,                   -- se nota di debito
+  `se_trasporto` tinyint(1) DEFAULT NULL,                     -- se trasporto
+  `se_pro_forma` tinyint(1) DEFAULT NULL,                     -- se pro forma
+  `se_offerta` tinyint(1) DEFAULT NULL,                       -- se offerta
+  `se_ordine` tinyint(1) DEFAULT NULL,                        -- se ordine
+  `se_missione` tinyint(1) DEFAULT NULL,                      -- se missione
+  `se_ricevuta` tinyint(1) DEFAULT NULL,                      -- se ricevuta
+  `se_ecommerce` tinyint(1) DEFAULT NULL,                     -- se e-commerce
+  `stampa_xml` char(255) DEFAULT NULL,                        -- modello di stampa XML
+  `stampa_pdf` char(255) DEFAULT NULL,                        -- modello di stampa PDF
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000053000
 
 -- tipologie_indirizzi
@@ -1005,18 +1596,18 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
 --
 -- questa tabella contiene le tipologie di indirizzi, con le informazioni relative al nome e alle icone associate
 --
-CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
-  `id` int(11) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(32) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000056200
 
@@ -1061,6 +1652,58 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (                  --
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000060000
+
+-- todo
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i todo del sistema
+--
+-- questa tabella contiene i todo del sistema, con le informazioni relative alla tipologia, al codice, all'anagrafica,
+-- al cliente, all'indirizzo, al luogo, alla data di apertura, alla scadenza, alla programmazione, alla chiusura,
+-- al nome, al testo, al contatto, al progetto, al documento, all'istruzione, alla pianificazione, all'immobile,
+-- all'archiviazione, alle note e agli account di inserimento e aggiornamento
+--
+CREATE TABLE IF NOT EXISTS `todo` (                           --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia del todo
+  `codice` char(32) DEFAULT NULL,                             -- codice univoco del todo
+  `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica associata al todo
+  `id_cliente` int(11) DEFAULT NULL,                          -- chiave esterna per il cliente associato al todo
+  `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo associato al todo
+  `id_luogo` int(11) DEFAULT NULL,                            -- chiave esterna per il luogo associato al todo
+  `timestamp_apertura` int(11) DEFAULT NULL,                  -- timestamp di apertura del todo
+  `data_scadenza` date DEFAULT NULL,                          -- data di scadenza del todo
+  `ora_scadenza` time DEFAULT NULL,                           -- ora di scadenza del todo
+  `note_scadenza` text DEFAULT NULL,                          -- note sulla scadenza del todo
+  `data_programmazione` date DEFAULT NULL,                    -- data di programmazione del todo
+  `ora_inizio_programmazione` time DEFAULT NULL,              -- ora di inizio della programmazione del todo
+  `ora_fine_programmazione` time DEFAULT NULL,                -- ora di fine della programmazione del todo
+  `anno_programmazione` year(4) DEFAULT NULL,                 -- anno di programmazione del todo
+  `settimana_programmazione` int(11) DEFAULT NULL,            -- settimana di programmazione del todo
+  `ore_programmazione` decimal(5,2) DEFAULT NULL,             -- ore di programmazione del todo
+  `note_programmazione` text DEFAULT NULL,                    -- note sulla programmazione del todo
+  `data_chiusura` date DEFAULT NULL,                          -- data di chiusura del todo
+  `note_chiusura` text DEFAULT NULL,                          -- note sulla chiusura del todo
+  `nome` char(255) DEFAULT NULL,                              -- nome del todo 
+  `testo` text DEFAULT NULL,                                  -- testo del todo
+  `id_contatto` int(11) DEFAULT NULL,                         -- chiave esterna per il contatto associato al todo
+  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto associato al todo
+  `id_documento` int(11) DEFAULT NULL,                        -- chiave esterna per il documento associato al todo
+  `id_documenti_articoli` int(11) DEFAULT NULL,               -- chiave esterna per l'articolo del documento associato al todo
+  `id_istruzione` int(11) DEFAULT NULL,                       -- chiave esterna per l'istruzione associata al todo
+  `id_pianificazione` int(11) DEFAULT NULL,                   -- chiave esterna per la pianificazione associata al todo
+  `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile associato al todo
+  `note_pianificazione` text DEFAULT NULL,                    -- note sulla pianificazione del todo
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del todo
+  `note_archiviazione` text DEFAULT NULL,                     -- note sull'archiviazione del todo
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il todo
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il todo
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 

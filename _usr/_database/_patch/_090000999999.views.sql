@@ -68,6 +68,32 @@ CREATE OR REPLACE VIEW account_view AS                        --
 	GROUP BY account.id                                       --
 ;                                                             --
 
+-- | 090000000200
+
+-- account_gruppi_view
+CREATE OR REPLACE VIEW account_gruppi_view AS                 --
+	SELECT                                                    --
+		account_gruppi.id,                                    --
+		account_gruppi.id_account,                            --
+		account.username AS account,                          -- username dell'account
+		account_gruppi.id_gruppo,                             --
+		gruppi.nome AS gruppo,                                -- nome del gruppo
+		account_gruppi.ordine,                                --
+		account_gruppi.se_amministratore,                     --
+		account_gruppi.id_account_inserimento,                --
+		account_gruppi.id_account_aggiornamento,              --
+		concat(                                               --
+			account.username,                                 --
+			' / ',                                            --
+			gruppi.nome                                       --
+		) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM account_gruppi                                       --
+		LEFT JOIN account                                     --
+            ON account.id = account_gruppi.id_account         --
+		LEFT JOIN gruppi                                      --
+            ON gruppi.id = account_gruppi.id_gruppo           --
+;                                                             --
+
 -- | 090000000501
 
 -- anagrafica_categorie_view
@@ -171,6 +197,248 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
 		LEFT JOIN provincie                                   --
             ON provincie.id = comuni.id_provincia             --
     GROUP BY anagrafica_indirizzi.id                          --
+;                                                             --
+
+-- | 090000001800
+
+-- attivita_view
+CREATE OR REPLACE VIEW `attivita_view` AS                     --
+	SELECT	                                                  --
+		attivita.id,                                          --
+		attivita.id_tipologia,                                --
+		tipologie_attivita.nome AS tipologia,                 -- nome della tipologia
+		attivita.codice,                                      --
+		attivita.id_cliente,                                  --
+		a2.codice AS codice_cliente,                          -- codice del cliente
+		coalesce(                                             --
+            a2.denominazione,                                 --
+            concat(                                           --
+                a2.cognome, ' ', a2.nome                      --
+            ), ''                                             --
+        ) AS cliente,                                         -- denominazione o cognome e nome del cliente
+		attivita.id_contatto,                                 --
+		c1.nome AS contatto,                                  -- nome del contatto
+		attivita.id_indirizzo,                                --
+		indirizzi.indirizzo AS indirizzo,                     -- indirizzo
+		attivita.id_luogo,                                    --
+		luoghi_path(                                          --
+            coalesce(                                         --
+                attivita.id_luogo, todo.id_luogo              --
+            )                                                 --
+        ) AS luogo,                                           -- percorso del luogo
+		attivita.id_messaggio,                                --
+		attivita.id_oggetto,                                  --
+		concat( asset1.id, ' ', asset1.nome ) AS oggetto,     -- id e nome dell'oggetto
+        coalesce(                                             --
+            attivita.data_attivita,                           --
+            attivita.data_programmazione                      --
+        ) AS data_riferimento,                                -- data di riferimento per ordinamento
+		coalesce(                                             --
+            attivita.ora_inizio,                              --
+            attivita.ora_inizio_programmazione,               --
+            ''                                                --
+        ) AS ora_inizio_riferimento,                          -- ora di inizio di riferimento
+		coalesce(                                             --
+            attivita.ora_fine,                                --
+            attivita.ora_fine_programmazione,                 --
+            ''                                                --
+        ) AS ora_fine_riferimento,                            -- ora di fine di riferimento
+		coalesce(                                             --
+            a1.denominazione,                                 --
+            concat(                                           --
+                a1.cognome, ' ', a1.nome                      --
+            ),                                                --
+            a3.denominazione,                                 --
+            concat(                                           --
+                a3.cognome, ' ', a3.nome                      --
+            ),                                                --
+            ''                                                --
+        ) AS anagrafica_riferimento,                          -- denominazione o cognome e nome dell'anagrafica di programmazione o di esecuzione
+		attivita.data_scadenza,                               --
+		attivita.ora_scadenza,                                --
+		attivita.data_programmazione,                         --
+		attivita.ora_inizio_programmazione,                   --
+		attivita.ora_fine_programmazione,                     --
+		attivita.id_anagrafica_programmazione,                --
+		coalesce(                                             --
+            a3.denominazione,                                 --
+            concat(                                           --
+                a3.cognome, ' ', a3.nome                      --
+            ),                                                --
+            ''                                                --
+        ) AS anagrafica_programmazione,                       -- denominazione o cognome e nome dell'anagrafica di programmazione
+		attivita.ore_programmazione,                          --
+		attivita.se_confermata,                               --
+		attivita.data_attivita,                               --
+		day( data_attivita ) as giorno_attivita,              -- giorno di attivita
+		month( data_attivita ) as mese_attivita,              -- mese di attivita
+		year( data_attivita ) as anno_attivita,               -- anno di attivita
+		attivita.ora_inizio,                                  --
+		attivita.latitudine_ora_inizio,                       --
+		attivita.longitudine_ora_inizio,                      --
+		attivita.data_fine,                                   --
+		attivita.ora_fine,                                    --
+		attivita.latitudine_ora_fine,                         --
+		attivita.longitudine_ora_fine,                        --
+		attivita.id_anagrafica,                               --
+		coalesce(                                             --
+            a1.denominazione,                                 --
+            concat( a1.cognome, ' ', a1.nome ),               --
+            ''                                                --
+        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
+		attivita.id_account,                                  --
+		attivita.id_asset,                                    --
+		concat( asset2.id, ' ', asset2.nome ) AS asset,       -- id e nome dell'asset
+		attivita.ore,                                         --
+        da.id_articolo,                                       -- id dell'articolo previsto
+        da.quantita AS quantita_prevista,                     -- quantità prevista
+		attivita.nome,                                        --
+		attivita.id_documento,                                --
+		concat(                                               --
+			td.sigla,                                         --
+			' ',                                              --
+			documenti.numero,                                 --
+			'/',                                              --
+			documenti.sezionale,                              --
+			' del ',                                          --
+			documenti.data                                    --
+		) AS documento,                                       -- tipologia, numero, sezionale e data del documento
+		attivita.id_corrispondenza,                           --
+		concat_ws(                                            --
+            ' ',                                              --
+            'da',                                             --
+            coalesce(                                         --
+                a4.denominazione,                             --
+                concat( a4.cognome, ' ', a4.nome ),           --
+                ''                                            --
+            ),                                                --
+            concat(                                           --
+                '(',                                          --
+                organizzazioni_path(                          --
+                    cr.id_organizzazione_mittente             --
+                ),                                            --   
+                ')'                                           --
+            ),                                                --
+            tipologie_corrispondenza_path(                    --
+                cr.id_tipologia                               --
+            ),                                                --
+            'per',                                            --
+            coalesce(                                         --
+                cr.destinatario_denominazione,                --
+                concat(                                       --
+                    cr.destinatario_cognome,                  --
+                    ' ',                                      --
+                    cr.destinatario_nome                      --
+                ),                                            --
+                ''                                            --
+            )                                                 --
+        ) AS corrispondenza,                                  -- descrizione della corrispondenza
+		attivita.id_progetto,                                 --
+		progetti.nome AS progetto,                            -- nome del progetto
+		attivita.id_contratto,                                --
+		concat_ws(                                            --
+            ' ',                                              --
+            tc.nome,                                          --
+            c.nome                                            --
+        ) AS contratto,                                       -- tipologia e nome del contratto
+		group_concat(                                         --
+            DISTINCT                                          --
+            if(                                               --
+                d.id,                                         --
+                categorie_progetti_path( d.id ),              --
+                null                                          --
+            )                                                 --
+            SEPARATOR ' | '                                   --
+        ) AS discipline,                                      -- elenco delle discipline del progetto separate da |
+		attivita.id_matricola,                                --
+        attivita.id_immobile,                                 --
+        attivita.id_step,                                     --
+        step.nome AS step,                                    -- nome dello step
+		attivita.id_pianificazione,                           --
+		attivita.id_todo,                                     --
+		todo.nome AS todo,                                    -- nome del todo
+		attivita.id_mastro_provenienza,                       --
+		m1.nome AS mastro_provenienza,                        --
+		attivita.id_mastro_destinazione,                      --
+		m2.nome AS mastro_destinazione,                       --
+		attivita.codice_archivium,                            --
+		attivita.token,                                       --
+		attivita.id_account_inserimento,                      --
+		attivita.timestamp_inserimento,                       --
+		attivita.id_account_aggiornamento,                    --
+		attivita.timestamp_aggiornamento,                     --
+		attivita.timestamp_archiviazione,                     --
+		concat(                                               --
+			attivita.nome,                                    --
+			' / ',                                            --
+			attivita.ore,                                     --
+			' / ',                                            --
+			coalesce(                                         --
+                a1.denominazione,                             --
+                concat(                                       --
+                    a1.cognome,                               --
+                    ' ',                                      --
+                    a1.nome                                   --
+                ),                                            --
+                ''                                            --
+            )                                                 --
+		) AS __label__                                        -- etichetta per le tendine e le liste
+	FROM attivita                                             --
+		LEFT JOIN tipologie_attivita                          --
+            ON tipologie_attivita.id = attivita.id_tipologia  --
+		LEFT JOIN anagrafica AS a1                            --
+            ON a1.id = attivita.id_anagrafica                 --
+		LEFT JOIN anagrafica AS a2                            --
+            ON a2.id = attivita.id_cliente                    --
+		LEFT JOIN anagrafica AS a3                            --
+            ON a3.id = attivita.id_anagrafica_programmazione  --
+		LEFT JOIN anagrafica AS a4                            --
+            ON a4.id = attivita.id_corrispondenza             --
+		LEFT JOIN contatti AS c1                              --
+            ON c1.id = attivita.id_contatto                   --
+		LEFT JOIN todo                                        --
+            ON todo.id = attivita.id_todo                     --
+		LEFT JOIN step                                        --
+            ON step.id = attivita.id_step                     --
+		LEFT JOIN progetti_categorie AS pc                    --
+            ON pc.id_progetto = attivita.id_progetto          --
+		LEFT JOIN progetti                                    --
+            ON progetti.id = coalesce(                        --
+                attivita.id_progetto,                         --
+                todo.id_progetto                              --
+            )                                                 --
+		LEFT JOIN categorie_progetti                          --
+            ON categorie_progetti.id = pc.id_categoria        --
+		LEFT JOIN categorie_progetti AS d                     --
+            ON d.id = pc.id_categoria                         --
+                AND d.se_disciplina = 1                       --
+		LEFT JOIN indirizzi                                   --
+            ON indirizzi.id = attivita.id_indirizzo           --
+		LEFT JOIN mastri AS m1                                --
+            ON m1.id = attivita.id_mastro_provenienza         --
+		LEFT JOIN mastri AS m2                                --
+            ON m2.id = attivita.id_mastro_destinazione        --
+		LEFT JOIN documenti                                   --
+            ON documenti.id = attivita.id_documento           --
+		LEFT JOIN tipologie_documenti AS td                   --
+            ON td.id = documenti.id_tipologia                 --
+		LEFT JOIN contratti AS c                              --
+            ON c.id = attivita.id_contratto                   --
+		LEFT JOIN tipologie_contratti AS tc                   --
+            ON tc.id = c.id_tipologia                         --
+		LEFT JOIN corrispondenza AS cr                        --
+            ON cr.id = attivita.id_corrispondenza             --
+		LEFT JOIN organizzazioni AS o                         --
+            ON o.id = cr.id_organizzazione_mittente           --
+		LEFT JOIN tipologie_corrispondenza AS tc2             --
+            ON tc2.id = cr.id_tipologia                       --
+		LEFT JOIN asset AS asset1                             --
+            ON asset1.id = attivita.id_asset                  --
+		LEFT JOIN asset AS asset2                             --
+            ON asset2.id = attivita.id_asset                  --
+        LEFT JOIN documenti_articoli AS da                    --
+            ON da.id = todo.id_documenti_articoli             --
+	GROUP BY attivita.id                                      --
 ;                                                             --
 
 -- | 090000003100

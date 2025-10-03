@@ -28,9 +28,9 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.view',
-															'anagrafica.archivio.view',
-															'anagrafica.stats',
-															'anagrafica.stampe',
+															// 'anagrafica.archivio.view',
+															// 'anagrafica.stats',
+															// 'anagrafica.stampe',
 															'anagrafica.tools' ) ),
 	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'anagrafica' ),
 																			'priority'	=> '050' ) ) )
@@ -46,7 +46,7 @@
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['anagrafica.view']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.view' )
 	);
 
     // gestione anagrafica
@@ -59,21 +59,21 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.form',
-															'anagrafica.form.informazioni',
-															'anagrafica.form.relazioni',
-															'anagrafica.form.amministrazione',
-															'anagrafica.form.cliente',
-															'anagrafica.form.fornitore',
-															'anagrafica.form.collaboratore',
-															'anagrafica.form.attivita',
-															'anagrafica.form.immagini',
-															'anagrafica.form.video',
-															'anagrafica.form.audio',
-															'anagrafica.form.file',
-															'anagrafica.form.metadati',
-															'anagrafica.form.archiviazione',
-															'anagrafica.form.stats',
-															'anagrafica.form.stampe',
+															// 'anagrafica.form.informazioni',
+															// 'anagrafica.form.relazioni',
+															// 'anagrafica.form.amministrazione',
+															// 'anagrafica.form.cliente',
+															// 'anagrafica.form.fornitore',
+															// 'anagrafica.form.collaboratore',
+															// 'anagrafica.form.attivita',
+															// 'anagrafica.form.immagini',
+															// 'anagrafica.form.video',
+															// 'anagrafica.form.audio',
+															// 'anagrafica.form.file',
+															// 'anagrafica.form.metadati',
+															// 'anagrafica.form.archiviazione',
+															// 'anagrafica.form.stats',
+															// 'anagrafica.form.stampe',
 															'anagrafica.form.tools' ) )
 	);
 
@@ -87,6 +87,6 @@
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.form' )
 	);
 
