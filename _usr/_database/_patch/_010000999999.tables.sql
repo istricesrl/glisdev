@@ -1632,6 +1632,38 @@ CREATE TABLE `tipologie_telefoni` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000056600
+
+-- tipologie_todo
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di todo
+--
+-- questa tabella contiene le tipologie di todo, con le informazioni relative al nome, alle icone associate
+-- e ai vari ambiti di utilizzo (agenda, ticket, ordinaria, straordinaria, commerciale, produzione, amministrazione, corsi)
+--
+CREATE TABLE IF NOT EXISTS `tipologie_todo` (                   --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                                 -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome per la tipologia
+  `se_agenda` tinyint(1) DEFAULT NULL,                          -- se agenda
+  `se_ticket` tinyint(1) DEFAULT NULL,                          -- se ticket
+  `se_ordinaria` tinyint(1) DEFAULT NULL,                       -- se ordinaria
+  `se_straordinaria` tinyint(1) DEFAULT NULL,                   -- se straordinaria
+  `se_commerciale` tinyint(1) DEFAULT NULL,                     -- se commerciale
+  `se_produzione` tinyint(1) DEFAULT NULL,                      -- se produzione
+  `se_amministrazione` tinyint(1) DEFAULT NULL,                 -- se amministrazione
+  `se_corsi` tinyint(1) DEFAULT NULL,                           -- se corsi
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000056800
 
 -- tipologie_url
