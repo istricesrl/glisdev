@@ -549,6 +549,63 @@ CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
   FROM consensi_moduli                                        --
 ;                                                             --
 
+-- | 090000015600
+
+-- immagini_view
+CREATE OR REPLACE VIEW `immagini_view` AS                       --
+	SELECT                                                      --
+		immagini.id,                                            --
+		immagini.id_anagrafica,                                 --
+		immagini.id_pagina,                                     --
+		immagini.id_file,                                       --
+		immagini.id_prodotto,                                   --
+		immagini.id_articolo,                                   --
+		immagini.id_categoria_prodotti,                         --
+		immagini.id_risorsa,                                    --
+		immagini.id_categoria_risorse,                          --
+		immagini.id_notizia,                                    --
+		immagini.id_annuncio,                                   --
+		immagini.id_categoria_notizie,                          --
+		immagini.id_categoria_annunci,                          --
+		immagini.id_progetto,                                   --
+		immagini.id_categoria_progetti,                         --
+		immagini.id_indirizzo,                                  --
+		immagini.id_edificio,                                   --
+		immagini.id_immobile,                                   --
+		immagini.id_contratto,                                  --
+        immagini.id_valutazione,                                --
+		immagini.id_banner,                                     --
+        immagini.id_rinnovo,                                    --
+		immagini.id_lingua,                                     --
+		lingue.nome AS lingua,                                  --
+		immagini.id_ruolo,                                      --
+		ruoli_immagini.nome AS ruolo,                           --
+		immagini.ordine,                                        --
+		immagini.orientamento,                                  --
+		immagini.taglio,                                        --
+		immagini.nome,                                          --
+		immagini.path,                                          --
+		immagini.path_alternativo,                              --
+		immagini.token,                                         --
+		immagini.timestamp_scalamento,                          --
+		immagini.id_account_inserimento,                        --
+		immagini.id_account_aggiornamento,                      --
+		concat(                                                 --
+			ruoli_immagini.nome,                                --
+			' # ',                                              --
+			immagini.ordine,                                    --
+			' / ',                                              --
+			immagini.nome,                                      --
+			' / ',                                              --
+			immagini.path                                       --
+		) AS __label__                                          -- etichetta per le tendine e le liste
+	FROM immagini                                               --
+		LEFT JOIN lingue                                        --
+            ON lingue.id = immagini.id_lingua                   --
+		LEFT JOIN ruoli_immagini                                --
+            ON ruoli_immagini.id = immagini.id_ruolo            --
+;                                                               --
+
 -- | 090000016000
 
 -- lingue_view
@@ -640,7 +697,34 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
   FROM redirect                                               --
 ;                                                             --
 
--- | 090000034801
+-- | 090000034600
+
+-- ruoli_immagini_view
+-- tipologia: tabella di supporto
+CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
+	SELECT                                                      --
+		ruoli_immagini.id,                                      --
+		ruoli_immagini.id_genitore,                             --
+		ruoli_immagini.ordine_scalamento,                       --
+		ruoli_immagini.nome,                                    --
+		ruoli_immagini.html_entity,                             --
+		ruoli_immagini.font_awesome,                            --
+		ruoli_immagini.se_anagrafica,                           --
+		ruoli_immagini.se_pagine,                               --
+		ruoli_immagini.se_prodotti,                             --
+		ruoli_immagini.se_articoli,                             --
+		ruoli_immagini.se_categorie_prodotti,                   --
+		ruoli_immagini.se_notizie,                              --
+		ruoli_immagini.se_categorie_notizie,                    --
+		ruoli_immagini.se_risorse,                              --
+		ruoli_immagini.se_categorie_risorse,                    --
+		ruoli_immagini.se_immobili,                             --
+	 	ruoli_immagini_path(                                    --
+            ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
+	FROM ruoli_immagini                                         --
+;
+
+-- | 090000034800
 
 -- ruoli_indirizzi_view
 CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --

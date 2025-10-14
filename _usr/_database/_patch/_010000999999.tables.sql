@@ -1248,6 +1248,36 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `note` text DEFAULT NULL                                    -- note sulla regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000034600
+
+-- ruoli_immagini
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli delle immagini
+--
+-- questa tabella contiene i ruoli delle immagini, con le informazioni relative al nome, alle
+-- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere associate le immagini
+--
+CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna ricorsiva per il ruolo genitore
+  `ordine_scalamento` int(11) DEFAULT NULL,                     -- ordine di scalamento delle immagini con questo ruolo
+  `nome` char(64) DEFAULT NULL,                                 -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML associata al ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome associata al ruolo
+  `se_anagrafica` tinyint(1) DEFAULT NULL,                      -- se anagrafica
+  `se_pagine` tinyint(1) DEFAULT NULL,                          -- se pagine
+  `se_prodotti` tinyint(1) DEFAULT NULL,                        -- se prodotti
+  `se_articoli` tinyint(1) DEFAULT NULL,                        -- se articoli
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- se categorie prodotti
+  `se_notizie` tinyint(1) DEFAULT NULL,                         -- se notizie
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- se categorie notizie
+  `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- se categorie risorse
+  `se_immobili` tinyint(1) DEFAULT NULL                         -- se immobili
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000034800
 
 -- ruoli_indirizzi
