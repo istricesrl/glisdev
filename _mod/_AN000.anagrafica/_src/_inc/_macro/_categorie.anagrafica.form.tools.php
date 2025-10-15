@@ -4,10 +4,15 @@
      *
      *
      *
-     * TODO implementare
+     *
      * TODO documentare
      *
      */
+
+    // tabella gestita
+    $ct['form'] = array(
+        'table' => 'categorie_anagrafica',
+    );
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
@@ -24,3 +29,10 @@
 			'label' => 'viste statiche'
 		)
 	);
+
+	// gestione default
+	require DIR_SRC_INC_MACRO . '_default/_default.tools.php';
+
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default/_default.form.php';
+

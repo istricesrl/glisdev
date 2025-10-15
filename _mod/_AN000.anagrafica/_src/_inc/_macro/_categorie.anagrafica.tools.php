@@ -4,7 +4,7 @@
      *
      *
      *
-     * TODO implementare
+     *
      * TODO documentare
      *
      */
@@ -24,3 +24,6 @@
 			'label' => 'viste statiche'
 		)
 	);
+
+	// gestione default
+	require DIR_SRC_INC_MACRO . '_default/_default.tools.php';

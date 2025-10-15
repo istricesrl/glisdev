@@ -28,9 +28,10 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_account.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'account.view',
+                                                            'gruppi.view',
 															'account.tools' ) ),
 	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'account' ),
-																			'priority'	=> '010' ) ) )
+																			'priority'	=> '800' ) ) )
 	);
 
     // tools account
@@ -43,7 +44,7 @@
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_account.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['account.view']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> 'account.view' )
 	);
 
     // gestione account
@@ -70,6 +71,45 @@
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_account.form.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['account.form']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> 'account.form' )
+	);
+
+    // tools account
+	$p['gruppi.view'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gruppi' ),
+	    'h1'				=> array( $l		=> 'gruppi' ),
+	    'parent'			=> array( 'id'		=> 'account.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_gruppi.view.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'account.view' )
+	);
+
+    // gestione account
+	$p['gruppi.form'] = array(
+	    'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gestione gruppi' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'gruppi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'gruppi.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_gruppi.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'gruppi.form',
+															// 'gruppi.form.attribuzione',
+															'gruppi.form.tools' ) )
+	);
+
+    // tools account
+	$p['gruppi.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni gruppo' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'gruppi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_gruppi.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'gruppi.form' )
 	);
 
