@@ -43,12 +43,11 @@
 				{{ frm.select({ 'field': { 'name': 'orientamento', 'disabled': disabled }, 'source': { 'values': etc.select.orientamenti }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col-auto col-md-auto form-col">
-                {# frm.uploader( table, subtable, i, 'path', '', '', request, 'var/contenuti/', site, 'immagini.form', pages, lang, '', '', '1', '', disabled ) #}
 				{{ frm.uploader({ 'field': { 'name': 'path', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages, 'site': site }) }}
             </div>
             {% if r.id %}
             <div class="col-auto form-col p-0 pl-1">
-                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['mail.form'].url[ lang ] }}?mail[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['contenuti.archivio.immagini.form'].url[ lang ] }}?immagini[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
             </div>
             <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
                 {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}

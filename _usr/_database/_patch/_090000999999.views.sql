@@ -150,6 +150,17 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
         comuni.codice_istat AS codice_istat_comune,           -- codice ISTAT del comune
         anagrafica_indirizzi.localita,                        --
         anagrafica_indirizzi.cap,                             --
+        concat_ws(                                            --
+            ' ',                                              --
+            tipologie_indirizzi_path(                         --
+                anagrafica_indirizzi.id_tipologia             --
+            ),                                                -- tipologia dell'indirizzo
+            anagrafica_indirizzi.indirizzo,                   --
+            anagrafica_indirizzi.civico,                      --
+            anagrafica_indirizzi.cap,                         --
+            comuni.nome,                                      --
+            provincie.sigla                                   --
+        ) AS indirizzo_completo,                              -- indirizzo completo
         anagrafica_indirizzi.latitudine,                      --
         anagrafica_indirizzi.longitudine,                     --
         anagrafica_indirizzi.timestamp_geolocalizzazione,     --

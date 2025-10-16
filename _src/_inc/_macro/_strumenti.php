@@ -36,7 +36,7 @@
 	    $ct['page']['contents']['metro']['04.cache'][] = array(
 		'ws' => 'task/memcache.clean',
 		'icon' => NULL,
-		'fa' => 'fa-clock',
+		'fa' => 'fa-regular fa-clock',
 		'title' => 'aggiornamento memcache',
 		'text' => 'forza il flush della cache dati'
 	    );

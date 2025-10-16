@@ -25,21 +25,21 @@
 
     // informazioni della vista
 	$ct['view'] = array(
-        'table' => 'telefoni',
+        'table' => 'anagrafica_indirizzi',
         'open' => array(
-            'page' => 'anagrafica.archivio.telefoni.form',
-            'table' => 'telefoni'
+            'page' => 'anagrafica.archivio.anagrafica.indirizzi.form',
+            'table' => 'anagrafica_indirizzi'
         ),
         'cols' => array(
             'id' => '#',
             'anagrafica' => 'anagrafica',
-            'numero' => 'telefono',
+            'indirizzo_completo' => 'indirizzo',
             NULL => 'azioni'
         ),
         'class' => array(
             'id' => 'd-none',
             'anagrafica' => 'text-start no-wrap',
-            'numero' => 'text-start no-wrap',
+            'indirizzo_completo' => 'text-start no-wrap',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
@@ -48,7 +48,7 @@
         '__restrict__' => array(
         ),
         '__sort__' => array(
-            'numero' => 'ASC'
+            'indirizzo_completo' => 'ASC'
         ),
     );
 
