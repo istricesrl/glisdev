@@ -26,6 +26,14 @@
 	    array( 'id' => NULL, '__label__' => 'automatico' ),
 	    array( 'id' => 'L', '__label__' => 'landscape' ),
 	    array( 'id' => 'P', '__label__' => 'portrait' ),
+	    array( 'id' => 'S', '__label__' => 'square' ),
+	);
+
+    // tendina dei tagli
+	$ct['etc']['select']['tagli'] = array(
+	    array( 'id' => 'START', '__label__' => 'peso iniziale' ),
+	    array( 'id' => 'MIDDLE', '__label__' => 'peso centrale' ),
+	    array( 'id' => 'END', '__label__' => 'peso finale' )
 	);
 
     // tendina lingue

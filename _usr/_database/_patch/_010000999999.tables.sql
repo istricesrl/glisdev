@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `codice_archivium` char(32) DEFAULT NULL,                   -- codice per l'integrazione con Archivium
   `token` char(128) DEFAULT NULL,                             -- token per geolocalizzazione
   `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,         -- timestamp dell'ultimo calcolo dei sostituti
-  `timestamp_archiviazione` int(11) DEFAULT NULL,             -- timestamp di archiviazione
+  `data_archiviazione` date DEFAULT NULL,                  -- data di archiviazione
   `id_account_archiviazione` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha archiviato l'attività
   `note_archiviazione` text NULL,                             -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'attività
@@ -1076,6 +1076,36 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (                   --
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'organizzazione
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000023200
+
+-- pagine
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le pagine del sito
+--
+-- questa tabella contiene le pagine del sito, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `pagine` (                           --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna ricorsiva per la pagina genitore
+  `id_sito` int(11) DEFAULT NULL,                               -- chiave esterna per il sito collegato alla pagina
+  `nome` char(255) DEFAULT NULL,                                -- nome della pagina
+  `note` text DEFAULT NULL,                                     -- note sulla pagina
+  `template` char(255) DEFAULT NULL,                            -- template della pagina
+  `schema_html` char(128) DEFAULT NULL,                         -- schema HTML della pagina
+  `tema_css` char(32) DEFAULT NULL,                             -- tema CSS della pagina
+  `id_contenuti` int(11) DEFAULT NULL,                          -- chiave esterna per i contenuti della pagina
+  `se_sitemap` tinyint(1) DEFAULT NULL,                         -- se la pagina deve essere inclusa nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                       -- se la pagina è cacheable
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text NULL,                               -- note di archiviazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la pagina
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,               -- timestamp di aggiornamento
+  `id_account_aggiornamento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha aggiornato la pagina
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000027000

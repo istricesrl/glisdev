@@ -19,6 +19,7 @@
     {% else %}
     <div class="form-group row view-filters d-print-none">
         <div class="col form-col">
+            <span class="label-top">ricerca per parola chiave</span>
             {{ frm.input({ "form": { "table": "__view__", "subtable": view.id }, "field": { "name": "__search__", "autofocus": 1 }, "request": request, "page": page }) }}
         </div>
         <div class="col-auto form-col">
@@ -82,7 +83,7 @@
                 <th class="{{ view.class[key] }}">
                     {% if view.cols[ key ] %}
                     <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
-                    <select class="fa-select form-control form-control-sm hidden-print {{ view.class[key] }}" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                    <select class="fa-select form-select form-select-sm hidden-print {{ view.class[key] }}" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
                     <option value="">{{ view.cols[ key ] }}</option>
                     <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
                     <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
@@ -139,7 +140,7 @@
                 <div class="input-group">
                     <input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
                     <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submit(); }"><i class="fa fa-chevron-left"></i></button>
-                    <select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submit();">
+                    <select class="form-select form-select-sm" onchange="$('#pager').val( $(this).val() ); submit();">
                         {% set spage = session.__view__[ view.id ].__pager__.page - 25 %}
                         {% set lpage = session.__view__[ view.id ].__pager__.page + 25 %}
                         {% if lpage > session.__view__[ view.id ].__pager__.pages %}{% set lpage = session.__view__[ view.id ].__pager__.pages %}{% endif %}

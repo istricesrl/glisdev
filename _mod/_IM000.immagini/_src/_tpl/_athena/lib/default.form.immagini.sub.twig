@@ -42,6 +42,10 @@
                 <span class="label-top">orientamento</span>
 				{{ frm.select({ 'field': { 'name': 'orientamento', 'disabled': disabled }, 'source': { 'values': etc.select.orientamenti }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
+            <div class="col-auto form-col">
+                <span class="label-top">taglio</span>
+				{{ frm.select({ 'field': { 'name': 'taglio', 'disabled': disabled }, 'source': { 'values': etc.select.tagli }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            </div>
             <div class="col-auto col-md-auto form-col">
 				{{ frm.uploader({ 'field': { 'name': 'path', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages, 'site': site }) }}
             </div>

@@ -24,48 +24,37 @@
      */
 
     // informazioni della vista
-	$ct['view'] = array(
-        'table' => 'attivita',
+    $ct['view'] = array(
+        'table' => 'pagine',
         'open' => array(
-            'page' => 'produzione.attivita.form',
-            'table' => 'attivita'
+            'page' => 'contenuti.pagine.form',
+            'table' => 'pagine'
         ),
         'cols' => array(
             'id' => '#',
-            'codice' => 'codice',
-            'tipologia' => 'tipologia',
-            'data_riferimento' => 'data',
-            'ora_inizio_riferimento' => 'inizio',
-            'ora_fine_riferimento' => 'fine',
-            'anagrafica_riferimento' => 'riferimento',
-            'cliente' => 'cliente',
-            'nome' => 'attività',
-            'ore' => 'ore',
-            '__label__' => 'attività',
+            'id_sito' => 'sito',
+            '__label__' => 'pagina',
+            'template' => 'template',
+            'schema_html' => 'schema',
+            'tema_css' => 'tema',
             NULL => 'azioni'
         ),
         'class' => array(
             'id' => 'd-none',
-            'data_riferimento' => 'no-wrap',
-            'anagrafica_riferimento' => 'no-wrap',
-            'cliente' => 'no-wrap',
-            'ora_inizio_riferimento' => 'no-wrap',
-            'ora_fine_riferimento' => 'no-wrap',
-            'nome' => 'no-wrap text-start',
-            'tipologia' => 'no-wrap',
-            'codice' => 'no-wrap',
-            'ore' => 'no-wrap',
-            '__label__' => 'd-none',
+            '__label__' => 'no-wrap text-start',
+            'template' => 'no-wrap text-start',
+            'schema_html' => 'no-wrap text-start',
+            'tema_css' => 'no-wrap text-start',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array( 'NL' => true )
+            'data_archiviazione' => array('NN' => true)
         ),
         '__sort__' => array(
-            'data_riferimento' => 'DESC'
+            '__label__' => 'ASC'
         ),
     );
 
@@ -78,6 +67,8 @@
      * 
      */
 
+    $ct['etc']['include']['filters'] = 'inc/contenuti.pagine.view.filters.twig';
+
     /**
      * dati delle tendine
      * ==================
@@ -86,6 +77,9 @@
      * 
      * 
      */
+
+    // tendina siti
+    $ct['etc']['select']['siti'] = $cf['sites'];
 
     /**
      * macro di default
@@ -97,7 +91,7 @@
      */
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     /**
      * elaborazione risultati della vista
@@ -108,13 +102,21 @@
      */
 
     // elaborazione righe
-	foreach( $ct['view']['data'] as &$row ) {
-		if( is_array( $row ) ) {
+    foreach ($ct['view']['data'] as &$row) {
+        if (is_array($row)) {
+
+            if( ! empty( $row['id_sito'] ) ) {
+                if( isset( $cf['sites'][ $row['id_sito'] ] ) )
+                    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
+                else
+                    $row['id_sito'] = 'sito non definito';
+            } else {
+                $row['id_sito'] = 'nessun sito';
+            }
 
             $buttons = [];
 
-            $row[ NULL ] = implode( $buttons );
+            $row[NULL] = implode($buttons);
 
         }
-
     }

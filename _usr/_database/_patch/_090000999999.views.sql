@@ -376,7 +376,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 		attivita.timestamp_inserimento,                       --
 		attivita.id_account_aggiornamento,                    --
 		attivita.timestamp_aggiornamento,                     --
-		attivita.timestamp_archiviazione,                     --
+		attivita.data_archiviazione,                          --
 		concat(                                               --
 			attivita.nome,                                    --
 			' / ',                                            --
@@ -660,6 +660,28 @@ CREATE OR REPLACE VIEW `mail_view` AS                         --
 		LEFT JOIN anagrafica AS a1                            --
             ON a1.id = mail.id_anagrafica                     --
 ;                                                             --
+
+-- | 090000023200
+
+-- pagine_view
+CREATE OR REPLACE VIEW `pagine_view` AS						  --
+	SELECT													  --
+		pagine.id,							  				  --
+		pagine.id_genitore,								  	  --
+		pagine.id_sito,									  	  --
+		pagine.nome,										  --
+		pagine.template,									  --
+		pagine.schema_html,								  	  --
+		pagine.tema_css,									  --
+		pagine.id_contenuti,							  	  --
+		pagine.se_sitemap,								  	  --
+		pagine.se_cacheable,							  	  --
+		pagine.data_archiviazione,                            --
+		pagine.id_account_inserimento,					  	  --
+		pagine.id_account_aggiornamento,					  --
+		pagine_path( pagine.id ) AS __label__			  	  -- etichetta per le tendine e le liste
+	FROM pagine										  		  --
+;															  --
 
 -- | 090000028000
 
