@@ -190,25 +190,82 @@
      * TODO documentare
      *
      */
-    function memcacheFlush( $conn ) {
+    function memcacheFlush($conn) {
 
-        if( empty( $conn ) ) {
-
-        logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
-
-        return false;
-
-        } elseif( ! is_object( $conn ) ) {
-
-            logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
-
+        if (empty($conn) || !is_object($conn)) {
+            logWrite('connessione al server assente per il flush', 'memcache');
             return false;
+        }
 
-        } else {
+        if (!defined('MEMCACHE_UNIQUE_SEED') || MEMCACHE_UNIQUE_SEED === '') {
+            logWrite('MEMCACHE_UNIQUE_SEED non definito o vuoto', 'memcache');
+            return false;
+        }
 
-            return $conn->flush();
+        if (!method_exists($conn, 'getAllKeys')) {
+            logWrite('getAllKeys non disponibile su questa connessione', 'memcache');
+            return false;
+        }
+
+        $keys = @$conn->getAllKeys();
+
+        if (!is_array($keys) || empty($keys)) {
+            logWrite('getAllKeys fallita o nessuna chiave presente', 'memcache');
+            return false;
+        }
+
+        $prefix    = (string) MEMCACHE_UNIQUE_SEED;
+        $prefixLen = strlen($prefix);
+        $batch     = [];
+        $deleted   = 0;
+        $batchSize = 500;
+
+        foreach ($keys as $k) {
+
+            if (!is_string($k)) {
+                continue;
+            }
+
+            if (strncmp($k, $prefix, $prefixLen) === 0) {
+
+                $batch[] = $k;
+
+                if (count($batch) >= $batchSize) {
+                    if (method_exists($conn, 'deleteMulti')) {
+                        @ $conn->deleteMulti($batch);
+                        $deleted += count($batch);
+                    } else {
+                        foreach ($batch as $bk) {
+                            if (@$conn->delete($bk)) {
+                                $deleted++;
+                            }
+                        }
+                    }
+                    $batch = [];
+                }
+
+            }
 
         }
+
+        if (!empty($batch)) {
+
+            if (method_exists($conn, 'deleteMulti')) {
+                @ $conn->deleteMulti($batch);
+                $deleted += count($batch);
+            } else {
+                foreach ($batch as $bk) {
+                    if (@$conn->delete($bk)) {
+                        $deleted++;
+                    }
+                }
+            }
+
+        }
+
+        logWrite("flush per prefisso '{$prefix}': eliminate {$deleted} chiavi", 'memcache');
+
+        return true;
 
     }
 
