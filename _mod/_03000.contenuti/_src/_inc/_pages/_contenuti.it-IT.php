@@ -73,4 +73,3 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'contenuti.archivio' )
 	);
-

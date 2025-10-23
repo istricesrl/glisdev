@@ -576,6 +576,86 @@ CREATE TABLE IF NOT EXISTS `contatti` (                       --
   `id_account_aggiornamento` int(11) DEFAULT NULL             -- chiave esterna per l'account che ha aggiornato il contatto
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000006900
+
+-- contenuti
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene i contenuti associati a varie entità del sistema
+--
+-- questa tabella contiene i contenuti associati a varie entità del sistema, come prodotti, articoli, pagine, ecc.
+--
+CREATE TABLE IF NOT EXISTS `contenuti` (                        --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_lingua` int(11) DEFAULT NULL,                             -- chiave esterna per la lingua
+  `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica
+  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto
+  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo
+  `id_categoria_prodotti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria dei prodotti
+  `id_caratteristica` int(11) DEFAULT NULL,                     -- chiave esterna per la caratteristica
+  `id_marchio` int(11) DEFAULT NULL,                            -- chiave esterna per il marchio
+  `id_file` int(11) DEFAULT NULL,                               -- chiave esterna per il file
+  `id_immagine` int(11) DEFAULT NULL,                           -- chiave esterna per l'immagine
+  `id_video` int(11) DEFAULT NULL,                              -- chiave esterna per il video
+  `id_audio` int(11) DEFAULT NULL,                              -- chiave esterna per l'audio
+  `id_risorsa` int(11) DEFAULT NULL,                            -- chiave esterna per la risorsa
+  `id_categoria_risorse` int(11) DEFAULT NULL,                  -- chiave esterna per la categoria delle risorse
+  `id_pagina` int(11) DEFAULT NULL,                             -- chiave esterna per la pagina
+  `id_popup` int(11) DEFAULT NULL,                              -- chiave esterna per il popup
+  `id_indirizzo` int(11) DEFAULT NULL,                          -- chiave esterna per l'indirizzo
+  `id_edificio` int(11) DEFAULT NULL,                           -- chiave esterna per l'edificio
+  `id_immobile` int(11) DEFAULT NULL,                           -- chiave esterna per l'immobile
+  `id_notizia` int(11) DEFAULT NULL,                            -- chiave esterna per la notizia
+  `id_annuncio` int(11) DEFAULT NULL,                           -- chiave esterna per l'annuncio
+  `id_categoria_notizie` int(11) DEFAULT NULL,                  -- chiave esterna per la categoria delle notizie
+  `id_categoria_annunci` int(11) DEFAULT NULL,                  -- chiave esterna per la categoria degli annunci
+  `id_template` int(11) DEFAULT NULL,                           -- chiave esterna per il template
+  `id_mailing` int(11) DEFAULT NULL,                            -- chiave esterna per il mailing
+  `id_colore` int(11) DEFAULT NULL,                             -- chiave esterna per il colore
+  `id_progetto` char(32) DEFAULT NULL,                          -- chiave esterna per il progetto
+  `id_categoria_progetti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria dei progetti
+  `id_banner` int(11) DEFAULT NULL,                             -- chiave esterna per il banner
+  `path_custom` char(255) DEFAULT NULL,                         -- path custom
+  `url_custom` char(255) DEFAULT NULL,                          -- URL custom
+  `rewrite_custom` char(255) DEFAULT NULL,                      -- rewrite custom
+  `title` char(255) DEFAULT NULL,                               -- titolo SEO
+  `keywords` text DEFAULT NULL,                                 -- parole chiave SEO
+  `description` text DEFAULT NULL,                              -- descrizione SEO
+  `robots` text DEFAULT NULL,                                   -- direttive per i motori di ricerca
+  `alt` char(255) DEFAULT NULL,                                 -- testo alternativo per immagini
+  `og_title` char(255) DEFAULT NULL,                            -- titolo Open Graph
+  `og_type` char(255) DEFAULT NULL,                             -- tipo Open Graph
+  `og_image` char(255) DEFAULT NULL,                            -- immagine Open Graph
+  `og_audio` char(255) DEFAULT NULL,                            -- audio Open Graph
+  `og_video` char(255) DEFAULT NULL,                            -- video Open Graph
+  `og_determiner` char(255) DEFAULT NULL,                       -- determinante Open Graph
+  `og_description` char(255) DEFAULT NULL,                      -- descrizione Open Graph
+  `cappello` text DEFAULT NULL,                                 -- cappello
+  `h1` char(255) DEFAULT NULL,                                  -- intestazione H1
+  `h2` char(255) DEFAULT NULL,                                  -- intestazione H2
+  `h3` char(255) DEFAULT NULL,                                  -- intestazione H3
+  `abstract` text DEFAULT NULL,                                 -- abstract
+  `testo` text DEFAULT NULL,                                    -- testo
+  `applicazioni` text DEFAULT NULL,                             -- applicazioni
+  `specifiche` text DEFAULT NULL,                               -- specifiche
+  `label_menu` char(255) DEFAULT NULL,                          -- label menu
+  `mittente_nome` char(128) DEFAULT NULL,                       -- mittente nome
+  `mittente_numero` char(128) DEFAULT NULL,                     -- mittente numero
+  `mittente_mail` char(128) DEFAULT NULL,                       -- mittente mail
+  `destinatario_nome` char(128) DEFAULT NULL,                   -- destinatario nome
+  `destinatario_numero` char(128) DEFAULT NULL,                 -- destinatario numero
+  `destinatario_mail` char(128) DEFAULT NULL,                   -- destinatario mail
+  `destinatario_cc_nome` char(128) DEFAULT NULL,                -- destinatario cc nome
+  `destinatario_cc_mail` char(128) DEFAULT NULL,                -- destinatario cc mail
+  `destinatario_ccn_nome` char(128) DEFAULT NULL,               -- destinatario ccn nome
+  `destinatario_ccn_mail` char(128) DEFAULT NULL,               -- destinatario ccn mail
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito il contenuto
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,               -- timestamp di aggiornamento
+  `id_account_aggiornamento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha aggiornato il contenuto
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000007100
 
 -- continenti

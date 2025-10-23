@@ -560,6 +560,54 @@ CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
   FROM consensi_moduli                                        --
 ;                                                             --
 
+-- | 090000006901
+
+-- contenuti_view
+CREATE OR REPLACE VIEW contenuti_view AS                        --
+	SELECT                                                      --
+		contenuti.id,                                           --
+		contenuti.id_lingua,                                    --
+		contenuti.id_anagrafica,                                --
+		contenuti.id_prodotto,                                  --
+		contenuti.id_articolo,                                  --
+		contenuti.id_categoria_prodotti,                        --
+		contenuti.id_caratteristica,                            --
+		contenuti.id_marchio,                                   --
+		contenuti.id_file,                                      --
+		contenuti.id_immagine,                                  --
+		contenuti.id_video,                                     --
+		contenuti.id_audio,                                     --
+		contenuti.id_risorsa,                                   --
+		contenuti.id_categoria_risorse,                         --
+		contenuti.id_pagina,                                    --
+		contenuti.id_popup,                                     --
+		contenuti.id_indirizzo,                                 --
+		contenuti.id_edificio,                                  --
+		contenuti.id_immobile,                                  --
+		contenuti.id_notizia,                                   --
+		contenuti.id_annuncio,                                  --
+		contenuti.id_categoria_notizie,                         --
+		contenuti.id_categoria_annunci,                         --
+		contenuti.id_template,                                  --
+		contenuti.id_colore,                                    --
+		contenuti.id_progetto,                                  --
+		contenuti.id_categoria_progetti,                        --
+		contenuti.id_banner,                                    --
+		contenuti.title,                                        --
+		contenuti.h1,                                           --
+		contenuti.robots,                                       --
+		contenuti.id_account_inserimento,                       --
+		contenuti.id_account_aggiornamento,                     --
+		concat(                                                 --
+			contenuti.h1,                                       --
+			' / ',                                              --
+			lingue.nome                                         --
+		) AS __label__                                          -- etichetta per le tendine e le liste
+	FROM contenuti                                              --
+		INNER JOIN lingue                                       --
+            ON lingue.id = contenuti.id_lingua                  --
+;                                                               --
+
 -- | 090000015600
 
 -- immagini_view

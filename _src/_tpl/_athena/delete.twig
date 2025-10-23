@@ -1,4 +1,4 @@
-{% extends 'ext/blank.html' %}
+{% extends 'ext/blank.twig' %}
 
 {% block main %}
 {% if request.__delete__.conferma != 1 %}
@@ -22,7 +22,7 @@
     </fieldset>
 
     <fieldset class="w-100 form-controls">
-	<div class="form-group form-row">
+	<div class="form-group row">
 	    <div class="col-6 text-center">
 		<input type="submit" class="btn btn-secondary btn-sm" value="sì">
 	    </div>
