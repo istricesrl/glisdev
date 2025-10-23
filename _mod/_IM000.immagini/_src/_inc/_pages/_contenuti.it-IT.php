@@ -71,3 +71,16 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'contenuti.archivio.immagini.form' )
 	);
+
+	// gestione pagine form immagini
+	$p['contenuti.pagine.form.immagini'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-image" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'immagini' ),
+	    'h1'				=> array( $l		=> 'immagini' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.pagine.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.immagini.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.pagine.form.immagini.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.pagine.form' )
+	);

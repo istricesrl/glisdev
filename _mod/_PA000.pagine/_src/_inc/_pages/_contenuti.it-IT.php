@@ -72,6 +72,11 @@
 															'contenuti.pagine.form.tools' ) )
 	);
 
+	// RELAZIONI CON IL MODULO IMMAGINI
+    if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.immagini' );
+	}
+
     // tools archivio produzione
 	$p['contenuti.pagine.form.archiviazione'] = array(
 		'sitemap'			=> false,
