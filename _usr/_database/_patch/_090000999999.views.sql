@@ -709,6 +709,39 @@ CREATE OR REPLACE VIEW `mail_view` AS                         --
             ON a1.id = mail.id_anagrafica                     --
 ;                                                             --
 
+-- | 090000021601
+
+-- menu_view
+CREATE OR REPLACE VIEW `menu_view` AS                           --
+    SELECT                                                      --
+		menu.id,                                                --
+		menu.id_lingua,                                         --
+		menu.id_pagina,                                         --
+		menu.id_categoria_prodotti,                             --
+		menu.id_categoria_notizie,                              --
+		menu.id_categoria_annunci,                              --
+		menu.id_categoria_risorse,                              --
+		menu.id_categoria_progetti,                             --
+		menu.ordine,                                            --
+		menu.menu,                                              --
+		menu.nome,                                              --
+		menu.target,                                            --
+		menu.ancora,                                            --
+		menu.sottopagine,                                       --
+		menu.id_account_inserimento,                            --
+		menu.id_account_aggiornamento,                          --
+		concat_ws(                                              --
+			' / ',                                              --
+			menu.menu,                                          --
+			menu.ordine,                                        --
+			lingue.ietf,                                        --
+			menu.nome                                           --
+		) AS __label__                                          -- etichetta per le tendine e le liste
+    FROM menu                                                   --
+		INNER JOIN lingue                                       --
+            ON lingue.id = menu.id_lingua                       --
+;                                                               --
+
 -- | 090000023200
 
 -- pagine_view
@@ -756,6 +789,41 @@ CREATE OR REPLACE VIEW provincie_view AS                      --
 		INNER JOIN stati                                      --
             ON stati.id = regioni.id_stato                    --
 ;                                                             --
+
+-- | 090000028401
+
+-- pubblicazioni_view
+CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
+    SELECT                                                      --
+		pubblicazioni.id,                                       --
+		pubblicazioni.id_tipologia,                             --
+		tp.nome AS tipologia,                                   --
+		pubblicazioni.ordine,                                   --
+		pubblicazioni.id_prodotto,                              --
+		pubblicazioni.id_articolo,                              --
+		pubblicazioni.id_categoria_prodotti,                    --
+		pubblicazioni.id_notizia,                               --
+		pubblicazioni.id_categoria_notizie,                     --
+		pubblicazioni.id_categoria_annunci,                     --
+		pubblicazioni.id_pagina,                                --
+		pubblicazioni.id_popup,                                 --
+		pubblicazioni.id_risorsa,                               --
+		pubblicazioni.id_categoria_risorse,                     --
+		pubblicazioni.id_progetto,                              --
+		pubblicazioni.id_categoria_progetti,                    --
+		pubblicazioni.id_banner,                                --
+		pubblicazioni.timestamp_inizio,                         --
+		pubblicazioni.timestamp_fine,                           --
+		concat_ws(                                              --
+			' ',                                                --
+			tp.nome,                                            --
+			pubblicazioni.timestamp_inizio,                     --
+			pubblicazioni.timestamp_fine                        --
+		) AS __label__                                          -- etichetta per le tendine e le liste
+    FROM pubblicazioni                                          --
+		LEFT JOIN tipologie_pubblicazioni AS tp                 --
+            ON tp.id = pubblicazioni.id_tipologia               --
+;                                                               --
 
 -- | 090000029000
 
@@ -950,6 +1018,25 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
         ) AS __label__                                        -- etichetta per le tendine e le liste
 	FROM tipologie_indirizzi                                  --
 ;                                                             --
+
+-- | 090000055401
+
+-- tipologie_pubblicazioni_view
+CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS        --
+	SELECT                                                      --
+		tipologie_pubblicazioni.id,                             --
+		tipologie_pubblicazioni.id_genitore,                    --
+		tipologie_pubblicazioni.ordine,                         --
+		tipologie_pubblicazioni.nome,                           --
+		tipologie_pubblicazioni.html_entity,                    --
+		tipologie_pubblicazioni.font_awesome,                   --
+		tipologie_pubblicazioni.id_account_inserimento,         --
+		tipologie_pubblicazioni.id_account_aggiornamento,       --
+		tipologie_pubblicazioni_path(                           --
+            tipologie_pubblicazioni.id                          --
+        ) AS __label__                                          -- etichetta per le tendine e le liste
+	FROM tipologie_pubblicazioni                                --
+;                                                               --
 
 -- | 090000056200
 

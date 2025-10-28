@@ -190,7 +190,7 @@
      * TODO documentare
      *
      */
-    function memcacheFlush($conn) {
+    function memcacheFlush( $conn, $allSites = false ) {
 
         if (empty($conn) || !is_object($conn)) {
             logWrite('connessione al server assente per il flush', 'memcache');
@@ -214,7 +214,7 @@
             return false;
         }
 
-        $prefix    = (string) MEMCACHE_UNIQUE_SEED;
+        $prefix    = (string) ( $allSites === false ) ? MEMCACHE_UNIQUE_SEED : strtoupper( str_replace( '.', '_', $allSites ) ) . '_';
         $prefixLen = strlen($prefix);
         $batch     = [];
         $deleted   = 0;
@@ -226,7 +226,7 @@
                 continue;
             }
 
-            if (strncmp($k, $prefix, $prefixLen) === 0) {
+            if (strpos($k, $prefix) !== false) {
 
                 $batch[] = $k;
 

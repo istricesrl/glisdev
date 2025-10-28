@@ -219,6 +219,23 @@ INSERT IGNORE INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`,
 (40,	NULL,	NULL,	'viuzza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (41,	NULL,	NULL,	'viuzzo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000055400
+
+-- tipologie_pubblicazioni
+INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_bozza`, `se_pubblicato`, `se_evidenza`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'bozza',	    NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'pubblicato',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'in evidenza',	    NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000056200
+
+-- tipologie_telefoni
+INSERT IGNORE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	NULL,   10,     'telefono',	    '&#xf095;',     ''),
+(2,	NULL,   20,     'mobile',	    '&#xf10b;',     ''),
+(3,	NULL,   30,     'fax',	        '&#xf02f;',     ''),
+(4,	NULL,   40,     'telefono/fax',	'&#xf1ac;',     '');
+
 -- | 050000056800
 
 -- tipologie_url
@@ -238,14 +255,5 @@ INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity
 (13,	2,	NULL,	'YouTube',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (14,	2,	NULL,	'TikTok',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (15,	3,	NULL,	'FTP',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
-
--- | 050000056200
-
--- tipologie_telefoni
-INSERT IGNORE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`) VALUES
-(1,	NULL,   10,     'telefono',	    '&#xf095;',     ''),
-(2,	NULL,   20,     'mobile',	    '&#xf10b;',     ''),
-(3,	NULL,   30,     'fax',	        '&#xf02f;',     ''),
-(4,	NULL,   40,     'telefono/fax',	'&#xf1ac;',     '');
 
 -- | FINE FILE

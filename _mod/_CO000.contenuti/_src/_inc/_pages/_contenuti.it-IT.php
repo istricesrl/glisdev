@@ -34,6 +34,19 @@
 	}
 
 	// gestione pagine form contenuti
+	$p['contenuti.pagine.form.sem'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-brands fa-google" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'seo/sem' ),
+	    'h1'				=> array( $l		=> 'SEO/SEM' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.pagine.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.sem.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.pagine.form.sem.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.pagine.form' )
+	);
+
+    // gestione pagine form contenuti
 	$p['contenuti.pagine.form.contenuti'] = array(
 	    'sitemap'			=> false,
 	    'icon'				=> '<i class="fa fa-regular fa-file-lines" aria-hidden="true"></i>',

@@ -68,12 +68,14 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.pagine.form.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'contenuti.pagine.form',
+                                                            'contenuti.pagine.form.menu',
                                                             'contenuti.pagine.form.archiviazione',
 															'contenuti.pagine.form.tools' ) )
 	);
 
 	// RELAZIONI CON IL MODULO CONTENUTI
     if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.sem' );
 		arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.contenuti' );
 	}
 
@@ -81,6 +83,19 @@
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.immagini' );
 	}
+
+    // tools archivio produzione
+	$p['contenuti.pagine.form.menu'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-bars" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'contenuti pagine form menu' ),
+	    'h1'				=> array( $l		=> 'menu' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.pagine.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.menu.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.pagine.form.menu.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.pagine.form' )
+	);
 
     // tools archivio produzione
 	$p['contenuti.pagine.form.archiviazione'] = array(

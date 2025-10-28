@@ -1134,6 +1134,37 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000021600
+
+-- menu
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene le voci di menu del sito
+--
+-- questa tabella contiene le voci di menu del sito, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `menu` (                             --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_lingua` int(11) DEFAULT NULL,                             -- chiave esterna per la lingua della voce di menu
+  `id_pagina` int(11) DEFAULT NULL,                             -- chiave esterna per la pagina collegata alla voce di menu
+  `id_categoria_prodotti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria di prodotti collegata alla voce di menu
+  `id_categoria_notizie` int(11) DEFAULT NULL,                  -- chiave esterna per la categoria di notizie collegata alla voce di menu
+  `id_categoria_annunci` int(11) DEFAULT NULL,                  -- chiave esterna per la categoria di annunci collegata alla voce di menu
+  `id_categoria_risorse` int(11) DEFAULT NULL,                  -- chiave esterna per la categoria di risorse collegata alla voce di menu
+  `id_categoria_progetti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria di progetti collegata alla voce di menu
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione della voce di menu
+  `menu` char(32) DEFAULT NULL,                                 -- nome del menu a cui appartiene la voce
+  `nome` char(128) DEFAULT NULL,                                -- nome della voce di menu
+  `target` char(16) DEFAULT NULL,                               -- target del link della voce di menu
+  `ancora` char(64) DEFAULT NULL,                               -- ancora del link della voce di menu
+  `sottopagine` char(32) DEFAULT NULL,                          -- se la voce di menu deve mostrare le sottopagine della pagina collegata
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la voce di menu
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la voce di menu
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000022800
 
 -- organizzazioni
@@ -1286,6 +1317,44 @@ CREATE TABLE IF NOT EXISTS `provincie` (                      --
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della provincia
   `note` text DEFAULT NULL                                    -- note sulla provincia
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000028400
+
+-- pubblicazioni
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene le pubblicazioni delle entità del sistema
+--
+-- questa tabella contiene le pubblicazioni delle entità del sistema, con le informazioni relative alla tipologia,
+-- all'ordine di visualizzazione, all'entità pubblicata, alle note e ai timestamp di inizio e fine pubblicazione
+--
+CREATE TABLE IF NOT EXISTS `pubblicazioni` (                    --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_tipologia` int(11) DEFAULT NULL,                          -- chiave esterna per la tipologia di pubblicazione
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_pagina` int(11) DEFAULT NULL,                             -- ID della pagina
+  `id_popup` int(11) DEFAULT NULL,                              -- ID del popup
+  `id_prodotto` char(32) DEFAULT NULL,                          -- ID del prodotto
+  `id_articolo` char(32) DEFAULT NULL,                          -- ID dell'articolo
+  `id_categoria_prodotti` int(11) DEFAULT NULL,                 -- ID della categoria prodotti
+  `id_notizia` int(11) DEFAULT NULL,                            -- ID della notizia
+  `id_annuncio` int(11) DEFAULT NULL,                           -- ID dell'annuncio
+  `id_categoria_notizie` int(11) DEFAULT NULL,                  -- ID della categoria notizie
+  `id_categoria_annunci` int(11) DEFAULT NULL,                  -- ID della categoria annunci
+  `id_risorsa` int(11) DEFAULT NULL,                            -- ID della risorsa
+  `id_categoria_risorse` int(11) DEFAULT NULL,                  -- ID della categoria risorse
+  `id_progetto` char(32) DEFAULT NULL,                          -- ID del progetto
+  `id_categoria_progetti` INT(11) DEFAULT NULL,                 -- ID della categoria progetti
+  `id_banner` INT(11) DEFAULT NULL,                             -- ID del banner
+  `note` char(254) DEFAULT NULL,                                -- note sulla pubblicazione
+  `timestamp_inizio` int(11) DEFAULT NULL,                      -- timestamp di inizio pubblicazione
+  `timestamp_fine` int(11) DEFAULT NULL,                        -- timestamp di fine pubblicazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- ID dell'account che ha inserito
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,               -- timestamp di aggiornamento
+  `id_account_aggiornamento` int(11) DEFAULT NULL               -- ID dell'account che ha aggiornato
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000028600
 
@@ -1748,6 +1817,33 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000055400
+
+-- tipologie_pubblicazioni
+-- tipologia: tabella di supporto
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di pubblicazioni
+--
+-- questa tabella contiene le tipologie di pubblicazioni, con le informazioni relative al nome, alle icone associate
+-- e ai vari stati di pubblicazione (bozza, pubblicato, evidenza)
+--
+CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (          --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                           -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `nome` char(32) DEFAULT NULL,                                 -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome per la tipologia
+  `se_bozza` tinyint(1) DEFAULT NULL,                           -- se bozza
+  `se_pubblicato` tinyint(1) DEFAULT NULL,                      -- se pubblicato
+  `se_evidenza` tinyint(1) DEFAULT NULL,                        -- se evidenza
+  `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000056200
 
