@@ -1079,6 +1079,41 @@ CREATE TABLE IF NOT EXISTS `lingue` (                         --
   `ietf` char(36) DEFAULT NULL                                -- codice IETF della lingua
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000018200
+
+-- macro
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene le macro associate alle entità
+--
+-- questa tabella contiene le macro associate alle entità del sistema, per l'inserimento dinamico di contenuti
+-- nelle pagine, nei prodotti, negli articoli, nelle notizie, negli annunci,
+-- nelle risorse, nei progetti e nelle pianificazioni
+--
+CREATE TABLE IF NOT EXISTS `macro` (                            --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL, 
+  `ordine` int(11) DEFAULT NULL,
+  `macro` char(255) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000018600
 
 -- mail
@@ -1164,6 +1199,66 @@ CREATE TABLE IF NOT EXISTS `menu` (                             --
   `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la voce di menu
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000021800
+
+-- metadati
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene i metadati per le entità del sistema
+--
+-- questa tabella contiene i metadati per le entità del sistema, come pagine, prodotti, articoli, notizie, annunci,
+-- risorse, progetti, indirizzi, edifici, immobili, contratti, valut
+-- azioni, rinnovi, attività, todo, banner, pianificazioni, carrelli, tipologie di corrispondenza e stati
+--
+CREATE TABLE IF NOT EXISTS `metadati` (                         --
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `id_lingua` int(11) DEFAULT NULL,                             -- chiave esterna per la lingua del metadato
+  `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata al metadato
+  `id_account` int(11) DEFAULT NULL,                            -- chiave esterna per l'account collegato al metadato
+  `id_pagina` int(11) DEFAULT NULL,                             -- chiave esterna per la pagina collegata al metadato
+  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato al metadato
+  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato al metadato
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_immagine` int(11) DEFAULT NULL,
+  `id_video` int(11) DEFAULT NULL,
+  `id_audio` int(11) DEFAULT NULL,
+  `id_file` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documenti_articoli` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL, 
+  `id_valutazione` int(11) DEFAULT NULL,
+  `id_rinnovo` int(11) DEFAULT NULL,
+  `id_attivita` int(11) DEFAULT NULL,
+  `id_tipologia_attivita` int(11) DEFAULT NULL,
+  `id_banner` int(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_tipologia_todo` int(11) DEFAULT NULL,
+  `id_tipologia_contratti` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_tipologia_corrispondenza` int(11) DEFAULT NULL,
+  `id_peso_tipologie_corrispondenza` int(11) DEFAULT NULL,
+  `id_stato` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `testo` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022800
 
@@ -1382,6 +1477,38 @@ CREATE TABLE IF NOT EXISTS `ranking` (                        --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000028900
+
+-- recensioni
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le recensioni per prodotti, articoli, notizie e pagine
+--
+-- questa tabella contiene le recensioni per prodotti, articoli, notizie e pagine
+--
+CREATE TABLE `recensioni` (
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` char(32) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_notizie` char(32) DEFAULT NULL,
+  `id_notizia` char(32) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `data` date DEFAULT NULL,
+  `autore` char(128) DEFAULT NULL,
+  `valutazione` int(11) DEFAULT NULL,
+  `titolo` char(255) DEFAULT NULL,
+  `testo` text DEFAULT NULL,
+  `se_approvata` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000029000
 
 -- redirect
@@ -1426,6 +1553,38 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della regione
   `note` text DEFAULT NULL                                    -- note sulla regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000034400
+
+-- ruoli_file
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei file
+--
+-- questa tabella contiene i ruoli dei file, con le informazioni relative al nome, alle
+-- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere associati i file
+--
+CREATE TABLE IF NOT EXISTS `ruoli_file` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_anagrafica` tinyint(1) DEFAULT NULL,
+  `se_pagine` tinyint(1) DEFAULT NULL,
+  `se_template` tinyint(1) DEFAULT NULL,
+  `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_articoli` tinyint(1) DEFAULT NULL,
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_notizie` tinyint(1) DEFAULT NULL,
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,
+  `se_risorse` tinyint(1) DEFAULT NULL,
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,
+  `se_mail` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_documenti` tinyint(1) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034600
 
@@ -1507,6 +1666,36 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
   `se_ordini` tinyint(1) DEFAULT NULL,                        -- se l'indirizzo mail è di tipo ordini
   `se_helpdesk` tinyint(1) DEFAULT NULL                       -- se l'indirizzo mail è di tipo helpdesk
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000035200
+
+-- ruoli_video
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei video
+--
+-- questa tabella contiene i ruoli dei video, con le informazioni relative al nome, alle
+-- entità HTML e Font Awesome associate e ai vari tipi di video (promozionale, tutorial, informativo);
+-- i ruoli dei video qualificano il ruolo di un video rispetto a una data anagrafica
+--
+CREATE TABLE IF NOT EXISTS `ruoli_video` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_anagrafica` tinyint(1) DEFAULT NULL,
+  `se_pagine` tinyint(1) DEFAULT NULL,
+  `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_articoli` tinyint(1) DEFAULT NULL,
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_notizie` tinyint(1) DEFAULT NULL,
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,
+  `se_risorse` tinyint(1) DEFAULT NULL,
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000042000
 
@@ -2000,6 +2189,59 @@ CREATE TABLE IF NOT EXISTS `url` (                            --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'URL
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000065000
+
+-- video
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene i video collegati a varie entità del sistema
+--
+-- questa tabella contiene i video collegati a varie entità del sistema, con le informazioni relative
+-- all'anagrafica, alla pagina, al file, al prodotto, all'articolo,
+-- alla categoria prodotti, alla risorsa, alla categoria risorse, alla notizia, all'annuncio,
+-- alla categoria notizie, alla categoria annunci, alla lingua, al ruolo, al progetto,
+-- alla categoria progetti, all'indirizzo, all'edificio, all'immobile, alla valutazione, oltre che ai dati specifici del video come
+-- l'ordine, il nome, il path, l'ID embed, il codice embed, l'embed custom, il target, l'orientamento, il ratio,
+-- e agli account di inserimento e aggiornamento
+--
+CREATE TABLE IF NOT EXISTS `video` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_file` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_valutazione` int(11) DEFAULT NULL, 
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `path` char(255) DEFAULT NULL,
+  `id_embed` int(11) DEFAULT NULL,
+  `codice_embed` char(128) DEFAULT NULL,
+  `embed_custom` char(128) DEFAULT NULL,
+  `target` char(255) DEFAULT NULL,
+  `orientamento` enum('L','P','S') DEFAULT NULL,
+  `ratio` char(8) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000999000
 

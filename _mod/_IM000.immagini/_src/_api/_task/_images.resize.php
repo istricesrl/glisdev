@@ -5,9 +5,8 @@
      *
      *
      *
-     * @todo commentare
+     * TODO documentare
      *
-     * @file
      *
      */
 
@@ -98,7 +97,7 @@
 			$j = $dm['o'];
 
             // ...
-            $k = ( $j == 'l' ) ? 'l' : ( ( ( $j == 'p' ) ) ? 'p' : 's' );
+            $k = ( $j == 'l' ) ? 'p' : ( ( ( $j == 'p' ) ) ? 'l' : 's' );
 
 		    // array dei formati
 			$ks = array_flip( $cf['image']['formats'][ $j ] );

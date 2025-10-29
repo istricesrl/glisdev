@@ -6,7 +6,7 @@
 -- TODO documentare
 --
 
--- | 090000000101
+-- | 090000000100
 
 -- account_view
 CREATE OR REPLACE VIEW account_view AS                        --
@@ -94,7 +94,7 @@ CREATE OR REPLACE VIEW account_gruppi_view AS                 --
             ON gruppi.id = account_gruppi.id_gruppo           --
 ;                                                             --
 
--- | 090000000501
+-- | 090000000500
 
 -- anagrafica_categorie_view
 CREATE OR REPLACE VIEW anagrafica_categorie_view AS           --
@@ -560,7 +560,7 @@ CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
   FROM consensi_moduli                                        --
 ;                                                             --
 
--- | 090000006901
+-- | 090000006900
 
 -- contenuti_view
 CREATE OR REPLACE VIEW contenuti_view AS                        --
@@ -679,6 +679,33 @@ CREATE OR REPLACE VIEW lingue_view AS                         --
   FROM lingue                                                 --
   ;                                                           --
 
+-- | 090000018200
+
+-- macro_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 19:40 Fabio Mosti
+CREATE OR REPLACE VIEW `macro_view` AS
+	SELECT
+		macro.id,
+		macro.id_pagina,
+		macro.id_prodotto,
+		macro.id_articolo,
+		macro.id_categoria_prodotti,
+		macro.id_notizia,
+		macro.id_annuncio,
+		macro.id_categoria_notizie,
+		macro.id_categoria_annunci,
+		macro.id_risorsa,
+		macro.id_categoria_risorse,
+		macro.id_progetto,
+		macro.id_categoria_progetti,
+		macro.id_pianificazione,
+		macro.ordine,
+		macro.macro,
+		macro.macro AS __label__
+	FROM macro
+;
+
 -- | 090000018600
 
 -- mail_view
@@ -709,7 +736,7 @@ CREATE OR REPLACE VIEW `mail_view` AS                         --
             ON a1.id = mail.id_anagrafica                     --
 ;                                                             --
 
--- | 090000021601
+-- | 090000021600
 
 -- menu_view
 CREATE OR REPLACE VIEW `menu_view` AS                           --
@@ -790,7 +817,7 @@ CREATE OR REPLACE VIEW provincie_view AS                      --
             ON stati.id = regioni.id_stato                    --
 ;                                                             --
 
--- | 090000028401
+-- | 090000028400
 
 -- pubblicazioni_view
 CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
@@ -915,7 +942,7 @@ CREATE OR REPLACE VIEW stati_view AS                          --
             ON continenti.id = stati.id_continente            --
 ;                                                             --
 
--- | 090000043601
+-- | 090000043600
 
 -- telefoni_view
 CREATE OR REPLACE VIEW telefoni_view AS                       --
@@ -1019,7 +1046,7 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
 	FROM tipologie_indirizzi                                  --
 ;                                                             --
 
--- | 090000055401
+-- | 090000055400
 
 -- tipologie_pubblicazioni_view
 CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS        --
@@ -1073,7 +1100,7 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS                --
 	FROM tipologie_url                                        --
 ;                                                             --
 
--- | 090000062601
+-- | 090000062600
 
 -- url_view
 CREATE OR REPLACE VIEW url_view AS                            --

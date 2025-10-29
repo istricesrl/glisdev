@@ -139,7 +139,7 @@
                 logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
                 logger( 'scrittura effettuata, chiave: ' . $key, 'memcache' );
-                $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
+                $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), serialize( time() ), $ttl );
                 if( $r === false ) {
                     logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache', LOG_ERR );
                 } else {
@@ -284,37 +284,35 @@
 
         memcacheUniqueKey( $key );
 
-        if( empty( $conn ) ) {
-
-            logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
-
+        // Connessione valida?
+        if (!($conn instanceof Memcached)) {
+            logger('connessione al server assente per leggere la chiave: ' . $key, 'memcache');
+            $err = Memcached::RES_FAILURE;
             return false;
-
-            } elseif( ! is_object( $conn ) ) {
-
-            logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
-
-            return false;
-
-        } else {
-
-            if( empty( $err ) ) {
-                $err = Memcached::RES_FAILURE;
-            }
-
-            $r = $conn->get( $key );
-
-            $err = $conn->getResultCode();
-
-            if( $r === false ) {
-                logger( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
-            } else {
-                logger( 'lettura effettuata, chiave: ' . $key, 'memcache' );
-            }
-
-            return unserialize( $r );
-
         }
+
+        // Lettura
+        $value = $conn->get($key);
+        $code  = $conn->getResultCode();
+        $err   = $code;
+
+        if ($code !== Memcached::RES_SUCCESS) {
+            // RES_NOTFOUND, RES_TIMEOUT, ecc.
+            logger('impossibile (' . $code . ') leggere la chiave: ' . $key, 'memcache');
+            return false;
+        }
+
+        // Se è stringa "probabilmente serializzata", prova a deserializzare una sola volta
+        if (is_string($value) && $value !== '' && preg_match('/^(?:a|O|s|i|d|b|N|C):/', $value)) {
+            $un = @unserialize($value);
+            if ($un !== false || $value === 'b:0;') {
+                return $un;
+            }
+        }
+
+        // Valore grezzo (stringa non serializzata, numeri, array già nativo se usi igbinary, bool, ecc.)
+        logger('lettura effettuata, chiave: ' . $key, 'memcache');
+        return $value;
 
     }
 
