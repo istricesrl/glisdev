@@ -188,9 +188,13 @@
             {% endif %}
             {% endif %}
 
-            {% if request[ table ].id and not session.__view__[ view.id ].__filesystem_mode__ %}
+            {% if request[ table ].id and not session.__view__[ view.id ].__filesystem_mode__ and not form.__filesystem_mode__ %}
             <div class="col text-center">
                 {{ frm.trashButton( table, '', page, pages, '', localization.language.ietf, request, back ) }}
+            </div>
+            {% else %}
+            <div class="col text-center">
+                <p>file system mode attivo</p>
             </div>
             {% endif %}
 
@@ -199,7 +203,7 @@
                 {% if session.__view__[ view.id ].__filesystem_mode__ %}
 
                     {# bottone salva e rimani nella pagina attuale #}
-                    {{ frm.button({ "field": { "text": '<i class="fa fa-floppy-o"></i>', "class": "btn btn-secondary btn-sqr btn-sm", "onclick": 'submitFormOkay = true;' } }) }}
+                    {{ frm.button({ "field": { "text": '<i class="fa fa-floppy-disk"></i>', "class": "btn btn-secondary btn-sqr btn-sm", "onclick": 'submitFormOkay = true;' } }) }}
 
                 {% elseif short == 2 %}
 

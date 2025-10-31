@@ -394,6 +394,77 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000003050
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: contiene gli articoli dei carrelli
+--
+-- questa tabella contiene gli articoli dei carrelli, con tutte le informazioni necessarie per la gestione e l'evasione
+-- degli ordini
+--
+CREATE TABLE `carrelli_articoli` (
+  `id` int(11) NOT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `categorie` char(255) DEFAULT NULL,
+  `prodotto` char(255) DEFAULT NULL,
+  `descrizione` char(255) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `id_pagamento` int(11) DEFAULT NULL,
+  `destinatario_nome` char(255) DEFAULT NULL,
+  `destinatario_cognome` char(255) DEFAULT NULL,
+  `destinatario_denominazione` char(255) DEFAULT NULL,
+  `destinatario_id_tipologia_anagrafica` INT(11) DEFAULT NULL,
+  `destinatario_id_anagrafica` int(11) DEFAULT NULL,
+  `destinatario_id_account` int(11) DEFAULT NULL,
+  `destinatario_indirizzo` char(255) DEFAULT NULL,
+  `destinatario_cap` char(16) DEFAULT NULL,
+  `destinatario_citta` char(255) DEFAULT NULL,
+  `destinatario_id_comune` int(11) DEFAULT NULL, 
+  `destinatario_id_provincia` int(11) DEFAULT NULL,
+  `destinatario_id_stato` int(11) DEFAULT NULL,
+  `destinatario_id_comune_nascita` int(11) DEFAULT NULL,
+  `destinatario_giorno_nascita` int(2) DEFAULT NULL,
+  `destinatario_mese_nascita` int(2) DEFAULT NULL, 
+  `destinatario_anno_nascita` int(2) DEFAULT NULL, 
+  `destinatario_id_provincia_nascita` int(11) DEFAULT NULL,
+  `destinatario_id_stato_nascita` int(11) DEFAULT NULL,
+  `destinatario_telefono` char(255) DEFAULT NULL,
+  `destinatario_mobile` char(255) DEFAULT NULL,
+  `destinatario_fax` char(255) DEFAULT NULL,
+  `destinatario_mail` char(255) DEFAULT NULL,
+  `destinatario_codice_fiscale` char(255) DEFAULT NULL,
+  `destinatario_partita_iva` char(255) DEFAULT NULL,
+  `id_rinnovo` int(11) DEFAULT NULL,
+  `prezzo_netto_unitario` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_unitario` decimal(16,5) DEFAULT NULL,
+  `quantita` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
+  `costo_spedizione_netto` decimal(16,5) DEFAULT NULL,
+  `costo_spedizione_lordo` decimal(16,5) DEFAULT NULL,
+  `sconto_percentuale` decimal(16,5) DEFAULT NULL,
+  `sconto_valore` decimal(16,5) DEFAULT NULL,
+  `id_coupon` char(32) DEFAULT NULL,
+  `coupon_percentuale` decimal(16,5) DEFAULT NULL,
+  `coupon_valore` decimal(16,6) DEFAULT NULL,
+  `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
+  `id_account_evasione` int(11) DEFAULT NULL,
+  `timestamp_evasione` int(11) DEFAULT NULL,
+  `note_evasione` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000003100
 
 -- categorie_anagrafica
@@ -468,6 +539,33 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000005050
+
+-- colli
+-- tipologia: tabella gestita
+CREATE TABLE `colli` (
+  `id` int(11) NOT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `larghezza` decimal(7,2) DEFAULT NULL,
+  `lunghezza` decimal(7,2) DEFAULT NULL,
+  `altezza` decimal(7,2) DEFAULT NULL,
+  `id_udm_dimensioni` int(11) DEFAULT NULL,
+  `peso` decimal(7,2) DEFAULT NULL,
+  `id_udm_peso` int(11) DEFAULT NULL,
+  `volume` decimal(7,2) DEFAULT NULL,
+  `id_udm_volume` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_chiusura`	int(11) DEFAULT NULL,
+  `note_chiusura`	text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000005300
 
 -- comuni
@@ -490,6 +588,23 @@ CREATE TABLE IF NOT EXISTS `comuni` (                         --
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006000
+
+-- condizioni_pagamento
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le condizioni di pagamento
+--
+-- questa tabella contiene le condizioni di pagamento, con le informazioni relative al codice, al nome e alle note
+--
+CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
+  `id` int(11) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000006200
 
 -- consensi
 -- tipologia: tabella assistita
@@ -755,6 +870,37 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (                   --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000008000
+
+-- coupon
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i coupon di sconto
+--
+-- questa tabella contiene i coupon di sconto, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `coupon` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
+  `sconto_fisso` decimal(15,2) DEFAULT NULL,
+  `se_multiuso` tinyint(1) DEFAULT NULL,
+  `se_globale` tinyint(1) DEFAULT NULL,
+  `se_vincolato` tinyint(1) DEFAULT NULL,
+  `causale` text DEFAULT NULL,
+  `causale_id_contratto` int(11) DEFAULT NULL,
+  `causale_id_rinnovo` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000009800
 
 -- documenti
@@ -805,6 +951,8 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
   `note_invio` text DEFAULT NULL,                             -- note per l'invio
   `timestamp_chiusura` int(11) DEFAULT NULL,                  -- timestamp di chiusura del documento
   `note_chiusura` text DEFAULT NULL,                          -- note per la chiusura del documento
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
+  `note_archiviazione` text DEFAULT NULL,                     -- note per l'archiviazione del documento
   `token` char(128) DEFAULT NULL,                             -- token per la gestione del documento
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il documento
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento del documento
@@ -947,6 +1095,29 @@ CREATE TABLE IF NOT EXISTS `gruppi` (                         --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000015400
+
+-- iban
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene gli IBAN associati alle anagrafiche
+--
+-- questa tabella contiene gli IBAN associati alle anagrafiche, con le informazioni relative all'intestazione e
+-- alle note
+--
+CREATE TABLE IF NOT EXISTS `iban` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `intestazione` char(255) DEFAULT NULL,
+  `iban` char(27) NOT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000015600
 
 -- immagini
@@ -1078,6 +1249,32 @@ CREATE TABLE IF NOT EXISTS `lingue` (                         --
   `iso6393alpha3` char(36) DEFAULT NULL,                      -- codice ISO 639-3 alpha-3 della lingua
   `ietf` char(36) DEFAULT NULL                                -- codice IETF della lingua
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000017200
+
+-- listini
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i listini prezzi
+--
+-- questa tabella contiene i listini prezzi, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `listini` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_valuta` int(11) DEFAULT NULL,
+  `codice` char(64) DEFAULT NULL,
+  `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
+  `se_default_su_genitore` tinyint(1) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000018200
 
@@ -1260,6 +1457,24 @@ CREATE TABLE IF NOT EXISTS `metadati` (                         --
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000021900
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le modalità di pagamento
+-- entità: questa tabella corrisponde all'entità modalità di pagamento
+--
+-- questa tabella contiene le modalità di pagamento, con le informazioni relative al nome, al provider e al codice
+--
+CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
+  `id` int(11) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `provider` char(64) DEFAULT NULL,
+  `codice` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000022800
 
 -- organizzazioni
@@ -1283,6 +1498,53 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (                   --
   `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'organizzazione
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000023100
+
+-- pagamenti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i pagamenti
+--
+-- questa tabella contiene i pagamenti, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `pagamenti` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `id_modalita_pagamento` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `note_pagamento` text DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_rinnovo` int(11) DEFAULT NULL,
+  `id_carrelli_articoli` int(11) DEFAULT NULL,
+  `id_creditore` int(11) DEFAULT NULL,
+  `id_debitore` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_iban` int(11) DEFAULT NULL,
+  `importo_lordo_totale` decimal(9,2) DEFAULT NULL,
+  `id_coupon` char(32) DEFAULT NULL,
+  `coupon_valore` decimal(9,2) DEFAULT NULL,
+  `importo_lordo_finale` decimal(9,2) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL, 
+  `provider_pagamento` char(128) DEFAULT NULL,
+  `timestamp_pagamento` int(11) DEFAULT NULL,
+  `token_pagamento` char(128) DEFAULT NULL,
+  `ordine_pagamento` char(128) DEFAULT NULL,
+  `codice_pagamento` char(128) DEFAULT NULL,
+  `status_pagamento` char(128) DEFAULT NULL,
+  `importo_pagamento` decimal(16,5) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000023200
 
@@ -2007,6 +2269,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000054000
+
+-- tipologie_pagamenti
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:00 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000055400
 
 -- tipologie_pubblicazioni
@@ -2163,6 +2443,26 @@ CREATE TABLE IF NOT EXISTS `todo` (                           --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il todo
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000062000
+
+-- udm
+-- tipologia: tabella standard
+CREATE TABLE IF NOT EXISTS `udm` (
+  `id` int(11) NOT NULL,
+  `id_base` int(11) DEFAULT NULL,
+  `conversione` float DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `sigla` char(8) DEFAULT NULL,
+  `url_riferimento` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `se_lunghezza` tinyint(1) DEFAULT NULL,
+  `se_volume` tinyint(1) DEFAULT NULL,
+  `se_peso` tinyint(1) DEFAULT NULL,
+  `se_tempo` tinyint(1) DEFAULT NULL,
+  `se_quantita` tinyint(1) DEFAULT NULL,
+  `se_area` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000062600
 

@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'attivita';
+    $ct['form']['table'] = 'documenti_articoli';
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
@@ -36,16 +36,8 @@
 		)
 	);
 
-    $ct['page']['contents']['metro']['05.static'][] = array(
-        'lws' => '/task/AT000.attivita/attivita.view.static.popolazione?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-        'icon' => NULL,
-        'fa' => 'fa-refresh',
-        'title' => 'ripopola attivita view static',
-        'text' => 'ripopola la view static delle attivita'
-    );
-
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.tools.php';
 
-	// macro di default
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default/_default.form.php';

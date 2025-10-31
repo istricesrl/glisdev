@@ -29,7 +29,7 @@
 														'catalogo.tools'
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'catalogo' ),
-																		'priority'	=> '1000' ) ) )														
+																		'priority'	=> '4000' ) ) )														
 	);
 
     // tools catalogo

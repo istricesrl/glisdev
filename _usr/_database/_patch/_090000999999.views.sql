@@ -521,7 +521,21 @@ CREATE OR REPLACE VIEW comuni_view AS                         --
             ON stati.id = regioni.id_stato                    --
 ;                                                             --
 
--- | 090000006000
+-- | 010000006000
+
+-- condizioni_pagamento_view
+CREATE OR REPLACE VIEW condizioni_pagamento_view AS
+	SELECT
+		condizioni_pagamento.id,
+		condizioni_pagamento.codice,
+		condizioni_pagamento.nome,
+		condizioni_pagamento.note,
+		concat( condizioni_pagamento.codice, ' - ', condizioni_pagamento.nome) AS __label__
+	FROM
+		condizioni_pagamento
+;
+
+-- | 090000006200
 
 -- consensi_view
 CREATE OR REPLACE VIEW `consensi_view` AS                     --   
@@ -607,6 +621,234 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
 		INNER JOIN lingue                                       --
             ON lingue.id = contenuti.id_lingua                  --
 ;                                                               --
+
+-- | 090000009800
+
+-- documenti_view
+CREATE OR REPLACE VIEW `documenti_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.codice,
+		documenti.numero,
+		documenti.sezionale,
+        concat_ws(
+            '/',
+            documenti.numero,
+            documenti.sezionale
+        ) AS numero_sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.esigibilita, 
+		sum( coalesce( pagamenti.importo_lordo_finale, pagamenti.importo_lordo_totale, 0 ) ) AS totale_lordo_finale,
+		sum( coalesce( pagamenti.coupon_valore, 0 ) ) AS totale_coupon,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.porto,
+		documenti.id_causale,
+		documenti.id_trasportatore,
+		documenti.id_immobile,
+		documenti.id_pianificazione,
+		documenti.data_consegna,
+		documenti.timestamp_chiusura,
+		documenti.data_archiviazione,
+		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.sigla,
+			' ',
+            concat_ws(
+                '/',
+                documenti.numero,
+                documenti.sezionale
+            ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
+	GROUP BY
+		documenti.id
+;
+
+-- | 090000010000
+
+-- documenti_articoli_view
+CREATE OR REPLACE VIEW `documenti_articoli_view` AS
+    SELECT
+		documenti_articoli.id,
+		documenti_articoli.id_genitore,
+        documenti_articoli.codice,
+		coalesce( documenti_articoli.id_tipologia, documenti.id_tipologia ) AS id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti_articoli.ordine,
+		documenti_articoli.id_documento,
+        concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			documenti.sezionale,
+			' del ',
+			documenti.data
+		) AS documento,
+		coalesce( documenti_articoli.data, documenti.data ) AS data,
+		documenti_articoli.id_packing_list,
+		documenti_articoli.id_missione,
+		coalesce( documenti_articoli.id_emittente, documenti.id_emittente ) AS id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario ) AS id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti_articoli.id_reparto,
+		documenti_articoli.id_progetto,
+		documenti_articoli.id_todo,
+		documenti_articoli.id_attivita,
+		documenti_articoli.id_articolo,
+		udm_riga.sigla AS udm,
+				concat_ws(
+			' ',
+			articoli.id,
+			'/',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					' ',
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+					' ',
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+					' ',
+					udm_volume.sigla
+				),
+				concat(
+					articoli.capacita,
+					' ',
+					udm_capacita.sigla
+				),
+				concat(
+					articoli.durata,
+					' ',
+					udm_durata.sigla
+				),
+				''
+			)
+		) AS articolo,
+		documenti_articoli.id_prodotto,
+		IF( documenti_articoli.id_articolo IS NOT NULL ,prodotti.nome, p.nome ) AS prodotto,
+		documenti_articoli.id_mastro_provenienza,
+		mastri_path( m1.id ) AS mastro_provenienza,
+		documenti_articoli.id_mastro_destinazione,
+		mastri_path( m2.id ) AS mastro_destinazione,
+		documenti_articoli.id_udm,
+		documenti_articoli.quantita,
+        sum( coalesce( sotto_righe.quantita, 0 ) ) AS sotto_righe_quantita,
+		documenti_articoli.id_listino,		
+		documenti_articoli.id_pianificazione,
+		listini.id_valuta,
+		valute.utf8 AS valuta,
+		documenti_articoli.importo_netto_totale,
+		documenti_articoli.sconto_percentuale,
+		documenti_articoli.sconto_valore,
+		documenti_articoli.id_matricola,
+		matricole.matricola AS matricola,
+		documenti_articoli.id_rinnovo,
+		documenti_articoli.id_collo,
+		colli.codice AS codice_collo,
+		colli.nome AS nome_collo,
+        colli.ordine AS ordine_collo,
+		matricole.data_scadenza,
+		documenti_articoli.nome,
+		documenti_articoli.data_consegna,
+		documenti_articoli.id_account_inserimento,
+		documenti_articoli.id_account_aggiornamento,
+		concat_ws(
+            ' / ',
+			coalesce( documenti_articoli.data, documenti.data, NULL ),
+			coalesce( tipologie_documenti.sigla, NULL ),
+            concat(
+			    coalesce( documenti.numero, NULL ),
+                '/',
+                coalesce( documenti.sezionale, NULL )
+            ),
+            concat(
+                coalesce( documenti_articoli.quantita, 0 ),
+                ' x ',
+                coalesce( documenti_articoli.id_articolo, '' )
+            ),
+			coalesce( documenti_articoli.nome, NULL ),
+            concat(
+                coalesce( documenti_articoli.importo_netto_totale, NULL ),
+                ' ',
+                coalesce( valute.utf8, '' )
+            )
+		) AS __label__
+	FROM
+		documenti_articoli
+        LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti_articoli.id_emittente, documenti.id_emittente )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario )
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = coalesce( documenti_articoli.id_tipologia, documenti.id_tipologia )
+		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
+		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN prodotti AS p ON p.id = documenti_articoli.id_prodotto
+		LEFT JOIN colli ON colli.id = documenti_articoli.id_collo
+		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
+		LEFT JOIN udm AS udm_riga ON udm_riga.id = documenti_articoli.id_udm
+        LEFT JOIN documenti_articoli AS sotto_righe ON sotto_righe.id_genitore = documenti_articoli.id
+    GROUP BY
+        documenti_articoli.id
+;
 
 -- | 090000015600
 
@@ -768,6 +1010,99 @@ CREATE OR REPLACE VIEW `menu_view` AS                           --
 		INNER JOIN lingue                                       --
             ON lingue.id = menu.id_lingua                       --
 ;                                                               --
+
+-- | 090000023100
+
+-- pagamenti_view
+CREATE OR REPLACE VIEW `pagamenti_view` AS
+	SELECT
+		pagamenti.id,
+		pagamenti.id_tipologia,
+		pagamenti.id_modalita_pagamento,
+		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
+		tipologie_pagamenti.nome AS tipologia,
+		pagamenti.ordine,
+		pagamenti.nome,
+		pagamenti.note,
+		pagamenti.note_pagamento,
+		pagamenti.id_documento,
+		pagamenti.id_carrelli_articoli,
+        concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data
+		) AS documento,
+		tipologie_documenti.id AS id_tipologia_documento,
+		group_concat( DISTINCT carrelli_articoli.id_articolo SEPARATOR '|' ) AS id_articoli,
+		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
+		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
+		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
+		group_concat( DISTINCT aree.nome ) AS aree,
+		group_concat( DISTINCT concat( pagamenti.id_coupon, ':', pagamenti.coupon_valore ) SEPARATOR '|' ) AS dettagli_coupon,
+		pagamenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		pagamenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		coalesce( documenti.id_emittente, pagamenti.id_creditore ) AS id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		coalesce( documenti.id_destinatario, pagamenti.id_debitore ) AS id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		pagamenti.id_iban,
+		iban.iban AS iban,
+		pagamenti.importo_lordo_totale,
+		pagamenti.id_coupon,
+		pagamenti.coupon_valore,
+		pagamenti.importo_lordo_finale,
+		pagamenti.id_listino,
+		listini.nome AS listino,
+		pagamenti.id_pianificazione,
+		pagamenti.data_scadenza,
+		day( pagamenti.data_scadenza ) as giorno_scadenza,
+		month( pagamenti.data_scadenza ) as mese_scadenza,
+		year( pagamenti.data_scadenza ) as anno_scadenza,
+		pagamenti.timestamp_pagamento,
+		from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
+		day( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as giorno_pagamento,
+		month( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as mese_pagamento,
+		year( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as anno_pagamento,
+		pagamenti.id_account_inserimento,
+		pagamenti.id_account_aggiornamento,
+		pagamenti.nome AS __label__
+	FROM pagamenti
+		LEFT JOIN tipologie_pagamenti ON tipologie_pagamenti.id = pagamenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = pagamenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
+		LEFT JOIN listini ON listini.id = pagamenti.id_listino
+		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
+		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
+		LEFT JOIN iban ON iban.id = pagamenti.id_iban
+		LEFT JOIN coupon ON coupon.id = pagamenti.id_coupon
+		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
+		-- LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
+		LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN progetti ON IF( prodotti.id IS NOT NULL, progetti.id_prodotto = prodotti.id, progetti.id = contratti.id_progetto )
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
+		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
+--	WHERE
+--		tipologie_documenti.se_fattura = 1
+--		OR
+--		tipologie_documenti.se_nota_credito = 1
+--		OR
+--		tipologie_documenti.se_ricevuta = 1
+--		OR
+--		tipologie_documenti.se_pro_forma = 1
+	GROUP BY pagamenti.id
+;
 
 -- | 090000023200
 
@@ -1026,6 +1361,36 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
             tipologie_attivita.id ) AS __label__              -- etichetta per le tendine e le liste
 	FROM tipologie_attivita                                   --
 ;                                                             --
+
+-- | 090000052601
+
+-- tipologie_documenti_view
+CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
+	SELECT
+		tipologie_documenti.id,
+		tipologie_documenti.id_genitore,
+		tipologie_documenti.ordine,
+		tipologie_documenti.codice,
+		tipologie_documenti.numerazione,
+		tipologie_documenti.nome,
+		tipologie_documenti.sigla,
+		tipologie_documenti.html_entity,
+		tipologie_documenti.font_awesome,
+		tipologie_documenti.se_fattura,
+		tipologie_documenti.se_nota_credito,
+		tipologie_documenti.se_nota_debito,
+		tipologie_documenti.se_trasporto,
+		tipologie_documenti.se_pro_forma,
+		tipologie_documenti.se_offerta,
+		tipologie_documenti.se_ordine,
+		tipologie_documenti.se_missione,
+		tipologie_documenti.se_ricevuta,
+		tipologie_documenti.se_ecommerce,
+		tipologie_documenti.id_account_inserimento,
+		tipologie_documenti.id_account_aggiornamento,
+		tipologie_documenti_path( tipologie_documenti.id ) AS __label__
+	FROM tipologie_documenti
+;
 
 -- | 090000053000
 

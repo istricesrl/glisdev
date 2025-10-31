@@ -1,18 +1,13 @@
 <?php
 
     /**
-     * 
-     * 
-     * 
-     * 
-     * 
+     *
+     *
+     *
+     * TODO implementare
      * TODO documentare
-     * 
-     * 
+     *
      */
-
-    // tabella gestita
-    $ct['form']['table'] = 'tipologie_attivita';
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
@@ -29,10 +24,3 @@
 			'label' => 'viste statiche'
 		)
 	);
-
-    // macro di default
-    require DIR_SRC_INC_MACRO . '_default/_default.tools.php';
-
-    // macro di default
-    require DIR_SRC_INC_MACRO . '_default/_default.form.php';
-
