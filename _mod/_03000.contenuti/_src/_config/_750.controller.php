@@ -19,11 +19,13 @@
         $custom = path2custom(
            DIR_SRC_TPL.
             '_' . $_REQUEST['__templates__']['id'] . '/' .
+            ( ( isset( $_REQUEST['__template_files__']['folder'] ) && ! empty( $_REQUEST['__template_files__']['folder'] ) ) ? trim( $_REQUEST['__template_files__']['folder'], './' ) . '/' : NULL ) .
             $_REQUEST['__template_files__']['id']
         );
 
-        deleteFile( $custom );
+        $e = deleteFile( $custom );
 
+        // var_dump( $e );
         // die( 'devo cancellare il file: ' . $custom );
 
     } elseif( isset( $_REQUEST['__templates__']['id'] ) && ! empty( $_REQUEST['__templates__']['id'] ) ) {
