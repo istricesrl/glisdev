@@ -36,7 +36,8 @@
 	    array( 'id' => 'css', '__label__' => 'fogli di stile CSS' ),
 	    array( 'id' => 'js', '__label__' => 'script Javascript' ),
         array( 'id' => 'json', '__label__' => 'file di dati JSON' ),
-        array( 'id' => 'yaml', '__label__' => 'file di dati YAML' )
+        array( 'id' => 'yaml', '__label__' => 'file di dati YAML' ),
+        array( 'id' => 'md', '__label__' => 'file di testo Markdown' ),
 	);
 
     // tendina moduli
