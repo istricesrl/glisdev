@@ -1,11 +1,11 @@
 <?php
 
     /**
+     * macro commerciale ciclo attivo tools
      *
+	 * questo file contiene il codice specifico per la pagina 'commerciale.ciclo.attivo.tools'; è presente
+	 * in standard in modo da poter essere personalizzato in custom
      *
-     *
-     * TODO implementare
-     * TODO documentare
      *
      */
 
