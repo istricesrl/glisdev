@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `codice_archivium` char(32) DEFAULT NULL,                   -- codice per l'integrazione con Archivium
   `token` char(128) DEFAULT NULL,                             -- token per geolocalizzazione
   `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,         -- timestamp dell'ultimo calcolo dei sostituti
-  `data_archiviazione` date DEFAULT NULL,                  -- data di archiviazione
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
   `id_account_archiviazione` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha archiviato l'attività
   `note_archiviazione` text NULL,                             -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'attività
@@ -502,6 +502,38 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (           --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la categoria
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000003700
+
+-- categorie_notizie
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le categorie delle notizie
+--
+-- questa tabella contiene le categorie delle notizie
+--
+CREATE TABLE IF NOT EXISTS `categorie_notizie` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` tinyint(1) DEFAULT NULL,
+  `se_cacheable` tinyint(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text NULL,                             -- note di archiviazione
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000004300
 
@@ -1475,6 +1507,58 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
   `codice` char(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000022000
+
+-- notizie
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le notizie del sito
+--
+-- questa tabella contiene le notizie del sito, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `notizie` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` tinyint(1) DEFAULT NULL,
+  `se_cacheable` tinyint(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
+  `note_archiviazione` text DEFAULT NULL,                     -- note per l'archiviazione del documento
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000022200
+
+-- notizie_categorie
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene le categorie associate alle notizie e agli annunci
+--
+-- questa tabella contiene le categorie associate alle notizie e agli annunci, con le informazioni relative
+-- all'ordine di visualizzazione
+--
+CREATE TABLE IF NOT EXISTS `notizie_categorie` (
+  `id` int(11) NOT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
+  `id_categoria` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000022800
 
 -- organizzazioni
@@ -2268,6 +2352,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000053800
+
+-- tipologie_notizie
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di notizie
+--
+-- questa tabella contiene le tipologie di notizie, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000054000
 

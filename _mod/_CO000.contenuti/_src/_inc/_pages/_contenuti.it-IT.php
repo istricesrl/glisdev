@@ -108,3 +108,94 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'contenuti.pagine.form' )
 	);
+
+	// gestione notizie form contenuti
+	$p['contenuti.notizie.form.web'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-brands fa-chrome" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'gestione web' ),
+	    'h1'				=> array( $l		=> 'web' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.notizie.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.notizie.form.web.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.notizie.form.web.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.notizie.form' )
+	);
+
+	// gestione notizie form contenuti
+	$p['contenuti.notizie.form.sem'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-brands fa-google" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'seo/sem' ),
+	    'h1'				=> array( $l		=> 'SEO/SEM' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.notizie.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.notizie.form.sem.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.notizie.form.sem.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.notizie.form' )
+	);
+
+    // gestione notizie form contenuti
+	$p['contenuti.notizie.form.contenuti'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-regular fa-file-lines" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'contenuti' ),
+	    'h1'				=> array( $l		=> 'contenuti' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.notizie.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.notizie.form.contenuti.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.notizie.form.contenuti.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.notizie.form' )
+	);
+
+	// gestione notizie form contenuti
+	$p['contenuti.categorie.notizie.form.web'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-brands fa-chrome" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'gestione web' ),
+	    'h1'				=> array( $l		=> 'web' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.categorie.notizie.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.categorie.notizie.form.web.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.categorie.notizie.form.web.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.categorie.notizie.form' )
+	);
+
+    // tools archivio produzione
+	$p['contenuti.categorie.notizie.form.menu'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-bars" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'contenuti categorie notizie form menu' ),
+	    'h1'				=> array( $l		=> 'menu' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.categorie.notizie.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.categorie.notizie.form.menu.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.categorie.notizie.form.menu.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.categorie.notizie.form' )
+	);
+
+	// gestione notizie form contenuti
+	$p['contenuti.categorie.notizie.form.sem'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-brands fa-google" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'seo/sem' ),
+	    'h1'				=> array( $l		=> 'SEO/SEM' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.categorie.notizie.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.categorie.notizie.form.sem.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.categorie.notizie.form.sem.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.categorie.notizie.form' )
+	);
+
+    // gestione notizie form contenuti
+	$p['contenuti.categorie.notizie.form.contenuti'] = array(
+	    'sitemap'			=> false,
+	    'icon'				=> '<i class="fa fa-regular fa-file-lines" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'contenuti' ),
+	    'h1'				=> array( $l		=> 'contenuti' ),
+	    'parent'			=> array( 'id'		=> 'contenuti.categorie.notizie.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.categorie.notizie.form.contenuti.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.categorie.notizie.form.contenuti.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'contenuti.categorie .notizie.form' )
+	);

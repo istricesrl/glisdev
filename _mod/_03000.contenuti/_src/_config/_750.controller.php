@@ -175,7 +175,7 @@
                 // die( $custom );
 
                 // leggo il contenuto del file standard
-                $standard = readFromFile( $base );
+                $standard = readFromFile( $base, FILE_READ_AS_STRING );
 
                 // scrivo nel file custom il contenuto del file standard
                 writeToFile( $standard, $custom );

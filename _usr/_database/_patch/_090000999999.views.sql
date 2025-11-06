@@ -488,6 +488,34 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS           --
 	GROUP BY categorie_anagrafica.id                          --
 ;                                                             --
 
+-- | 090000003700
+
+-- categorie_notizie_view
+CREATE OR REPLACE VIEW categorie_notizie_view AS
+	SELECT
+		categorie_notizie.id,
+		categorie_notizie.id_genitore,
+		categorie_notizie.ordine,
+		categorie_notizie.nome,
+		categorie_notizie.template,
+		categorie_notizie.schema_html,
+		categorie_notizie.tema_css,
+		categorie_notizie.se_sitemap,
+		categorie_notizie.se_cacheable,
+		categorie_notizie.id_sito,
+		categorie_notizie.id_pagina,
+        categorie_notizie.data_archiviazione,
+		count( c1.id ) AS figli,
+		count( notizie_categorie.id ) AS membri,
+		categorie_notizie.id_account_inserimento,
+		categorie_notizie.id_account_aggiornamento,
+		categorie_notizie_path( categorie_notizie.id ) AS __label__
+	FROM categorie_notizie
+		LEFT JOIN categorie_notizie AS c1 ON c1.id_genitore = categorie_notizie.id
+		LEFT JOIN notizie_categorie ON notizie_categorie.id_categoria = categorie_notizie.id
+	GROUP BY categorie_notizie.id
+;
+
 -- | 090000005300
 
 -- comuni_view
@@ -1011,6 +1039,49 @@ CREATE OR REPLACE VIEW `menu_view` AS                           --
             ON lingue.id = menu.id_lingua                       --
 ;                                                               --
 
+-- | 090000022000
+
+-- notizie_view
+CREATE OR REPLACE VIEW `notizie_view` AS
+	SELECT
+		notizie.id,
+		notizie.id_tipologia,
+		tipologie_notizie.nome AS tipologia,
+		notizie.nome,
+		group_concat( categorie_notizie.nome SEPARATOR '|' ) AS categorie,
+        notizie.data_archiviazione,
+		notizie.id_account_inserimento,
+		notizie.id_account_aggiornamento,
+		notizie.nome AS __label__
+	FROM notizie
+		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
+		LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id
+		LEFT JOIN categorie_notizie ON categorie_notizie.id = notizie_categorie.id_categoria
+	GROUP BY notizie.id
+;
+
+-- | 090000022201
+
+-- notizie_categorie_view
+CREATE OR REPLACE VIEW `notizie_categorie_view` AS
+	SELECT
+		notizie_categorie.id,
+		notizie_categorie.id_notizia,
+		notizie.nome AS notizia,
+		notizie_categorie.id_categoria,
+		categorie_notizie_path( notizie_categorie.id_categoria ) AS categoria,
+		notizie_categorie.ordine,
+		notizie_categorie.id_account_inserimento,
+		notizie_categorie.id_account_aggiornamento,
+		concat(
+			notizie.nome,
+			' / ',
+			categorie_notizie_path( notizie_categorie.id_categoria )
+		) AS __label__
+	FROM notizie_categorie
+		LEFT JOIN notizie ON notizie.id = notizie_categorie.id_notizia
+;
+
 -- | 090000023100
 
 -- pagamenti_view
@@ -1362,7 +1433,7 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
 	FROM tipologie_attivita                                   --
 ;                                                             --
 
--- | 090000052601
+-- | 090000052600
 
 -- tipologie_documenti_view
 CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
@@ -1410,6 +1481,23 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
         ) AS __label__                                        -- etichetta per le tendine e le liste
 	FROM tipologie_indirizzi                                  --
 ;                                                             --
+
+-- | 090000053800
+
+-- tipologie_notizie_view
+CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
+	SELECT
+		tipologie_notizie.id,
+		tipologie_notizie.id_genitore,
+		tipologie_notizie.ordine,
+		tipologie_notizie.nome,
+		tipologie_notizie.html_entity,
+		tipologie_notizie.font_awesome,
+		tipologie_notizie.id_account_inserimento,
+		tipologie_notizie.id_account_aggiornamento,
+		tipologie_notizie_path( tipologie_notizie.id ) AS __label__
+	FROM tipologie_notizie
+;
 
 -- | 090000055400
 
