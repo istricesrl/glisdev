@@ -1,12 +1,14 @@
 <?php
 
     /**
+     *breve descrizione
+     *introduzione
+     *=============
      *
-     *
-     *
-     * @todo finire di documentare
-     *
-     * @file
+     *funzione            |descrizione
+     * -------------------|------
+     * getToken()         |
+     * getPassword()      |
      *
      */
 
