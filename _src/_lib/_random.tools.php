@@ -1,17 +1,41 @@
 <?php
 
     /**
-     * libreria di generatori di stringhe casuali
+     * libreria per la generazione di stringhe casuali
      *
-     * introduzione
-     * =============
      * Questa libreria fornisce strumenti utili per ottenere stringhe casuali, come token o password.
      *
+     * introduzione
+     * ============
+     * Questa libreria semplifica la generazione di stringhe casuali per vari scopi, come la creazione di token di sessione
+     * o password temporanee. Utilizza funzioni sicure per garantire l'unicità e la casualità delle stringhe generate.
+     * 
+     * funzioni
+     * ========
+     * Questa libreria contiene soltanto due funzioni quindi non è divisa in sezioni. Le funzioni disponibili sono:
+     * 
      * funzione           | descrizione
      * -------------------|---------------------------------------------------------------------------
-     * getToken()         | restituisce un token generato casualmente a partire dal tempo corrente 
-     * getPassword()      | restituisce una password casuale di lunghezza definita   
+     * getToken()         | restituisce un token generato casualmente a partire dal tempo corrente
+     * getPassword()      | restituisce una password casuale di lunghezza definita
      *
+     * dipendenze
+     * ==========
+     * Questa libreria non ha dipendenze esterne.
+     * 
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     * 
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2025-11-08       | Elisabetta Comani    | documentata la libreria
+     * 
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     * 
      */
 
     /**
