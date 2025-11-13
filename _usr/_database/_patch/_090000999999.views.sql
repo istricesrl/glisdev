@@ -879,6 +879,35 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
         documenti_articoli.id
 ;
 
+-- | 090000015400
+
+-- iban_view
+CREATE OR REPLACE VIEW `iban_view` AS
+	SELECT
+		iban.id,
+		iban.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		iban.intestazione,
+		iban.iban,
+		iban.id_account_inserimento,
+		iban.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			iban.iban,
+			iban.intestazione,
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				)
+			)
+		) AS __label__
+	FROM iban
+		LEFT JOIN anagrafica AS a1 ON a1.id = iban.id_anagrafica
+;
+
 -- | 090000015600
 
 -- immagini_view
@@ -949,6 +978,26 @@ CREATE OR REPLACE VIEW lingue_view AS                         --
     lingue.nome AS __label__                                  -- etichetta per le tendine e le liste
   FROM lingue                                                 --
   ;                                                           --
+
+-- | 090000017200
+
+-- listini_view
+CREATE OR REPLACE VIEW `listini_view` AS
+	SELECT
+		listini.id,
+		listini.id_valuta,
+		valute.iso4217 AS valuta,
+		listini.nome,
+		listini.id_account_inserimento,
+		listini.id_account_aggiornamento,
+		concat(
+			listini.nome,
+			' ',
+			valute.iso4217
+		) AS __label__
+	FROM listini
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+;
 
 -- | 090000018200
 
@@ -1040,6 +1089,19 @@ CREATE OR REPLACE VIEW `menu_view` AS                           --
             ON lingue.id = menu.id_lingua                       --
 ;                                                               --
 
+-- | 090000021900
+
+-- modalita_pagamento
+CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
+    SELECT
+    modalita_pagamento.id,
+    modalita_pagamento.nome,
+    modalita_pagamento.codice,
+    modalita_pagamento.provider,
+    concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
+    FROM modalita_pagamento
+;
+
 -- | 090000022000
 
 -- notizie_view
@@ -1090,6 +1152,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
 		pagamenti.id_tipologia,
+		pagamenti.codice,
 		pagamenti.id_modalita_pagamento,
 		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
 		tipologie_pagamenti.nome AS tipologia,
@@ -1136,6 +1199,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		day( pagamenti.data_scadenza ) as giorno_scadenza,
 		month( pagamenti.data_scadenza ) as mese_scadenza,
 		year( pagamenti.data_scadenza ) as anno_scadenza,
+        documenti.data_archiviazione,
 		pagamenti.timestamp_pagamento,
 		from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
 		day( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as giorno_pagamento,
@@ -1258,6 +1322,23 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
 		LEFT JOIN tipologie_pubblicazioni AS tp                 --
             ON tp.id = pubblicazioni.id_tipologia               --
 ;                                                               --
+
+-- | 090000028600
+
+-- ranking_view
+CREATE OR REPLACE VIEW `ranking_view` AS
+    SELECT
+		ranking.id,
+		ranking.nome,
+		ranking.ordine,
+		ranking.se_fornitore,
+		ranking.se_cliente,
+		ranking.se_progetti,
+		ranking.id_account_inserimento,
+		ranking.id_account_aggiornamento,
+		ranking.nome AS __label__
+    FROM ranking
+;
 
 -- | 090000029000
 

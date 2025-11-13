@@ -18,8 +18,16 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-            {# VIEW PRINCIPALE #}
-            {% include 'inc/view.twig' %}
+			{# SEZIONE GENERALE #}
+			<fieldset>
+				<legend>dati cliente</legend>
+
+	    	</fieldset>
+
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
+			</fieldset>
 
 		</form>
     </div>

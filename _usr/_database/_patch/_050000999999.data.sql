@@ -88,6 +88,50 @@ INSERT IGNORE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alph
 (14,    'croato',       'croato (Croazia)',         'hr',    'hrv',    'hr-HR'),
 (15,    'rumeno',       'rumeno (Romania)',         'ro',    'ron',    'ro-RO');
 
+-- | 050000017200
+
+-- listini
+INSERT INTO `listini` (`id`, `id_genitore`, `id_tipologia`, `id_valuta`, `codice`, `sconto_su_genitore`, `se_default_su_genitore`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	'DEFAULT',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000021900
+
+-- modalita_pagamento
+INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
+(1,	        'MP01',	        'contanti'),
+(2,	        'MP02',	        'assegno'),
+(3,	        'MP03',	        'assegno circolare'),
+(4,	        'MP04',	        'contanti presso tesoreria'),
+(5,	        'MP05',	        'bonifico'),
+(6,	        'MP06',	        'vaglia cambiario'),
+(7,	        'MP07',	        'bollettino bancario'),
+(8,	        'MP08',	        'carta di credito'),
+(9,	        'MP09',	        'RID'),
+(10,	    'MP10',	        'RID utenze'),
+(11,	    'MP11',	        'RID veloce'),
+(12,	    'MP12',	        'RIBA'),
+(13,	    'MP13',	        'MAV'),
+(14,	    'MP14',	        'quietanza erario stato'),
+(15,	    'MP15',	        'giroconto su conti di contabilità speciale'),
+(16,	    'MP16',	        'domiciliazione bancaria'),
+(17,	    'MP17',	        'domiciliazione postale'),
+(18,	    'MP18',         'bollettino di c/c postale'),
+(19,        'MP19',         'SEPA Direct Debit' ),
+(20,        'MP20',         'SEPA Direct Debit CORE' ),
+(21,        'MP21',         'SEPA Direct Debit B2B' ),
+(22,        'MP22',         'Trattenuta su somme già riscosse' ),
+(23,        'MP08',         'bancomat' ),
+(24,        'MP08',         'paypal' );
+
+-- | 050000028600
+
+-- ranking
+INSERT IGNORE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornitore`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'PLATINUM',	NULL,	100,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'GOLD',	NULL,	200,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'BRONZE',	NULL,	400,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000034600
 
 -- ruoli_immagini
@@ -312,5 +356,11 @@ INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity
 (13,	2,	NULL,	'YouTube',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (14,	2,	NULL,	'TikTok',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (15,	3,	NULL,	'FTP',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000063000
+
+-- valute
+INSERT IGNORE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
+(1,	'EUR',	'&#8634;',	'€');
 
 -- | FINE FILE
