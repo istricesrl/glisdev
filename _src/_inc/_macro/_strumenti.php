@@ -27,7 +27,7 @@
 			'label' => 'viste statiche'
         ),
         '06.logs' => array(
-            'label' => 'logs'
+            'label' => 'log'
         )
 	);
 
@@ -65,5 +65,46 @@
 	    timerCheck( $cf['speed'], '-> cache Twig' );
 	}
 
-    // gestione di default dei tools
+	if( count( glob( DIR_VAR_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE ) ) > 0 ) {
+	    $ct['page']['contents']['metro']['04.cache'][] = array(
+			'ws' => 'task/sitemap.clean',
+			'icon' => NULL,
+			'fa' => 'fa-regular fa-file-code',
+			'title' => 'pulizia delle sitemap',
+			'text' => 'forza la cancellazione delle sitemap'
+	    );
+	}
+
+	if( count( glob( DIR_TMP . '*' ) ) > 0 ) {
+		$ct['page']['contents']['metro']['04.cache'][] = array(
+			'ws' => 'task/tmp.clean',
+			'confirm' => true,
+			'icon' => NULL,
+			'fa' => 'fa-hourglass-end',
+			'title' => 'pulizia dei file temporanei',
+			'text' => 'svuota la cartella dei file temporanei'
+	    );
+		timerCheck( $cf['speed'], '-> controllo file temporanei' );
+	}
+
+	if( count( glob( DIR_VAR_LOG . '{*/,}*.log', GLOB_BRACE ) ) > 0 ) {
+		$ct['page']['contents']['metro']['06.logs'][] = array(
+			'ws' => 'task/log.clean',
+			'icon' => NULL,
+			'fa' => 'fa-trash',
+			'title' => 'pulizia dei log',
+			'text' => 'cancella i log base del framework'
+	    );
+		$ct['page']['contents']['metro']['06.logs'][] = array(
+			'ws' => 'task/log.clean?hard=1',
+			'confirm' => true,
+			'icon' => NULL,
+			'fa' => 'fa-trash-arrow-up',
+			'title' => 'pulizia totale dei log',
+			'text' => 'cancella tutti i log del framework'
+		);
+		timerCheck( $cf['speed'], '-> controllo log' );
+	}
+
+	// gestione di default dei tools
 	require DIR_SRC_INC_MACRO . '_default/_default.tools.php';
