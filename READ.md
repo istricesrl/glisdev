@@ -191,6 +191,84 @@ un po' grezzo ma funzionale, che blocca molti tipi di attacchi basati su URL.
 Questo file contiene un piccolo dizionario di password vietate per l'utente root. Il controllo viene effettuato in /_src/_api/_status/_framework.php
 nella sezione sicurezza.
 
+### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.archivio.php
+Questa è la macro dell'archivio del modulo produzione.
+
+### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.archivio.tools.php
+Questa è la macro della pagina degli strumenti dell'archivio del modulo produzione.
+
+### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.php
+Questa è la macro della dashboard del modulo produzione.
+
+### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.tools.php
+Questa è la macro della pagina degli strumenti della dashboard del modulo produzione.
+
+### /_mod/_01000.produzione/_src/_inc/_pages/_produzione.it-IT.php
+In questo file vengono definite le pagine del modulo produzione.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.archivio.php
+Questa è la macro dell'archivio del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.archivio.tools.php
+Questa è la macro della pagina degli strumenti dell'archivio del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.ciclo.attivo.php
+Questa è la macro della dashboard del ciclo attivo del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.ciclo.attivo.tools.php
+Questa è la macro della pagina strumenti del ciclo attivo del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.ciclo.passivo.php
+Questa è la macro della dashboard del ciclo passivo del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.ciclo.passivo.tools.php
+Questa è la macro della pagina strumenti del ciclo passivo del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.php
+Questa è la macro della dashboard del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.tools.php
+Questa è la macro della pagina strumenti della dashboard del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_pages/_commerciale.it-IT.php
+In questo file vengono definite le pagine del modulo commerciale.
+
+### /_mod/_03000.contenuti/_src/_config/_750.controller.php
+Questa è la controller del modulo contenuti, ha la funzione di caricare e salvare i file dei template modificati tramite il CMS.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.archivio.php
+Questa è la macro della pagina di archivio del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.archivio.tools.php
+Questa è la macro della pagina strumenti dell'archivio del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.php
+Questa è la macro della dashboard del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.template.form.default.php
+Questa è una macro di default inclusa dalle macro di gestione dei template del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.template.form.editor.php
+Questa è la macro della pagina di modifica dei file dei template del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.template.form.php
+Questa è la macro della pagina di gestione dei template del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.template.form.tools.php
+Questa è la macro della pagina degli strumenti del form di gestione dei template del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.template.tools.php
+Questa è la macro della pagina degli strumenti della vista template del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.template.view.php
+Questa è la macro della pagina di vista dei template del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_macro/_contenuti.tools.php
+Questa è la macro della pagina degli strumenti della dashboard del modulo contenuti.
+
+### /_mod/_03000.contenuti/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono definite le pagine del modulo contenuti.
+
 ### /_src/_config.php
 Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
 comunque il suo compito è quello di includere tutti i componenti del framework per renderli disponibili al successivo codice sorgente. Qualsiasi
@@ -1192,3 +1270,59 @@ tre sezioni introdotte dalla sequenza -- | seguita dalla timestamp più il progr
 
 Per ulteriori informazioni sul funzionamento del sistema di patch del database si faccia riferimento alla documentazione del file
 /_src/_api/_task/_mysql.patch.php.
+
+#### come inserisco un'immagine in una pagina del sito?
+Per aggiungere un'immagine in una pagina del sito sfruttando il meccanismo di scalamento delle immagini nativo del framework è
+necessario prima di tutto caricare l'immagine desiderata nella scheda immagini della pagina in questione. Assegnando un ordine e un
+ruolo all'immagine sarà poi possibile richiamarla con la macro image() come segue:
+
+```
+{{ cms.image({ 'source': { 'ruolo': 'immagine', 'ordine': 10 }, 'site': site, 'page': page, 'image': image }) }}
+```
+
+Supponendo in questo caso che il ruolo assegnato sia 'immagine' e l'ordine assegnato sia '10'.
+
+### template Athena
+Questa sezione contiene domande specificamente relative all'utilizzo del template Athena.
+
+#### qual è la struttura base di una pagina di tipo form?
+Le pagine di tipo form possono essere create a partire da questa struttura base:
+
+```
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}
+```

@@ -18,7 +18,7 @@
 
     // tabella gestita
     $ct['form'] = array(
-        'table' => 'url',
+        'table' => 'ranking',
     );
 
     /**
@@ -30,14 +30,6 @@
      * 
      * 
      */
-
-    // tendina tipologie URL
-    $ct['etc']['select']['tipologie_url'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'],
-        $cf['memcache']['connection'],
-        $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM tipologie_url_view'
-    );
 
     /**
      * macro di default
