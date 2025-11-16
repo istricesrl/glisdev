@@ -1142,7 +1142,7 @@ CREATE TABLE IF NOT EXISTS `iban` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `intestazione` char(255) DEFAULT NULL,
-  `iban` char(27) NOT NULL,
+  `iban` char(27) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1245,7 +1245,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
 CREATE TABLE IF NOT EXISTS `job` (                            --
   `id` int(11) NOT NULL,                                      -- chiave primaria
   `nome` char(255) DEFAULT NULL,                              -- nome del job
-  `job` char(255) NOT NULL,                                   -- percorso del file del job
+  `job` char(255) DEFAULT NULL,                                   -- percorso del file del job
   `timestamp_apertura` int(11) DEFAULT NULL,                  -- timestamp di apertura del job
   `totale` int(11) DEFAULT NULL,                              -- totale elementi da processare
   `corrente` int(11) DEFAULT NULL,                            -- elemento corrente
@@ -1504,7 +1504,7 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
   `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `provider` char(64) DEFAULT NULL,
-  `codice` char(32) NOT NULL
+  `codice` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022000

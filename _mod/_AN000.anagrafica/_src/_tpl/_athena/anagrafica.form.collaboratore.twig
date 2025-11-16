@@ -2,6 +2,7 @@
 {% import '_lib/_default.twig' as cms %}
 {% import '_lib/_form.twig' as frm %}
 {% import 'lib/default.twig' as def %}
+{% import 'lib/anagrafica.form.sub.twig' as sub %}
 
 {# ESTENSIONE DELLO SCHEMA DI BASE #}
 {% extends 'ext/main.twig' %}
@@ -19,21 +20,7 @@
 
             {# SEZIONE GENERALE #}
             <fieldset>
-                <legend>dati generali <small>{{ legend }}</small></legend>
-
-                <div class="form-group row">
-                    <div class="col form-col">
-                        <span class="label-top">nome</span>
-                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-12 form-col">
-                        <span class="label-top">note</span>
-                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
-                    </div>
-                </div>
+                <legend>dati collaboratore</legend>
 
             </fieldset>
 

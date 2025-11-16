@@ -78,8 +78,8 @@
                                                             // 'anagrafica.form.relazioni',
                                                             // 'anagrafica.form.amministrazione',
                                                             'anagrafica.form.cliente',
-                                                            // 'anagrafica.form.fornitore',
-                                                            // 'anagrafica.form.collaboratore',
+                                                            'anagrafica.form.fornitore',
+                                                            'anagrafica.form.collaboratore',
                                                             // 'anagrafica.form.attivita',
                                                             // 'anagrafica.form.immagini',
                                                             // 'anagrafica.form.video',
@@ -100,6 +100,30 @@
         'parent'            => array( 'id'        => 'anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.cliente.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.form.fornitore'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica form fornitore' ),
+        'h1'                => array( $l        => 'fornitore' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.fornitore.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.fornitore.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.form.collaboratore'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica form collaboratore' ),
+        'h1'                => array( $l        => 'collaboratore' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.collaboratore.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.collaboratore.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );
@@ -416,3 +440,15 @@
                                                             'ranking.form.tools' ) )
     );
 
+    // tools account
+    $p['ranking.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni ranking' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'ranking.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'ranking.form' )
+    );
