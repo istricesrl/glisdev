@@ -1,11 +1,9 @@
 <?php
 
     /**
-     * Front controller che emula il comportamento del .htaccess fornito
-     * Funziona senza accesso alla config Nginx/Apache.
+     * Front controller che emula il comportamento del file .htaccess negli ambienti in cui
+     * non è possibile utilizzare Apache (ad esempio server Windows con IIS o Nginx).
      */
-
-    declare(strict_types=1);
 
     /* ======================== CONFIG DI BASE ======================== */
 
