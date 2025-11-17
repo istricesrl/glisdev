@@ -1880,6 +1880,22 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000029800
+
+-- regimi
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i regimi fiscali
+--
+-- questa tabella contiene i regimi fiscali, con le informazioni relative al nome e al codice
+--
+CREATE TABLE IF NOT EXISTS `regimi` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000030200
 
 -- regioni
@@ -2090,6 +2106,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000037000
+
+-- settori
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i settori aziendali
+--
+-- questa tabella contiene i settori di attività ATECO, con le informazioni relative al nome, al soprannome
+-- e al codice ATECO
+--
+CREATE TABLE IF NOT EXISTS `settori` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `soprannome` char(64) DEFAULT NULL,
+  `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000042000

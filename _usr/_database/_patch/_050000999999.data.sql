@@ -132,6 +132,45 @@ INSERT IGNORE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_
 (3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	'BRONZE',	NULL,	400,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000029800
+
+-- regimi
+INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice`) VALUES
+(1,     'privato',                      NULL),
+(2,     'ordinario',                    'RF01'),
+(3,     'minimi',                       'RF02'),
+(4,     'agricoltura e pesca',          'RF04'),
+(5,     'sali e tabacchi',              'RF05'),
+(6,     'editoria',                     'RF07'),
+(7,     'intrattenimento',              'RF10'),
+(8,     'viaggi e turismo',             'RF11'),
+(9,     'agriturismo',                  'RF12'),
+(10,    'vendite a domicilio',          'RF13'),
+(11,    'beni usati e collezionismo',   'RF14'),
+(12,    'IVA per cassa P.A.',           'RF16'),
+(13,    'IVA per cassa',                'RF17'),
+(14,    'altro',                        'RF18'),
+(15,    'forfettario',                  'RF19');
+
+-- NOTE
+-- Contribuenti minimi (art. 1, commi 96-117, legge n. 244/2007)	RF2
+-- Agricoltura e attività connesse e pesca (articoli 34 e 34-bis, D.P.R. n. 633/1972);	RF04
+-- Vendita sali e tabacchi (art. 74, comma 1, D.P.R. n. 633/1972)	RF05
+-- Commercio dei fiammiferi (art. 74, comma 1, D.P.R. n. 633/1972)	RF06
+-- Editoria (art. 74, comma 1, D.P.R. n. 633/1972)	RF07
+-- Gestione di servizi di telefonia pubblica (art. 74, comma 1, D.P.R. n. 633/1972)	RF08
+-- Rivendita di documenti di trasporto pubblico e di sosta (art. 74, comma 1, D.P.R. n. 633/1972)	RF09
+-- Intrattenimenti, giochi e altre attività di cui alla tariffa allegata al D.P.R. n. 640/1972 (art. 74, comma 6, D.P.R. n. 633/1972)	RF10
+-- Agenzie di viaggi e turismo (art. 74-ter, D.P.R. n. 633/1972)	RF11
+-- Agriturismo (art. 5, comma 2, legge n. 413/1991)	FR12
+-- Vendite a domicilio (art. 25-bis, comma 6, D.P.R. n. 600/1973)	RF13
+-- Rivendita di beni usati, di oggetti d’arte, d’antiquariato o da collezione (art. 36, D.L. n. 41/1995)	RF14
+-- Agenzie di vendite all’asta di oggetti d’arte, antiquariato o da collezione (art. 40-bis, D.L. n. 41/1995)	RF15
+-- IVA per cassa P.A. (art. 6, comma 5, D.P.R. n. 633/1972)	RF16
+-- IVA per cassa (art. 32-bis, D.L. n. 83/2012)	RF17
+-- Altro	RF18
+-- Forfettario (art.1, commi 54-89, legge n. 190/2014)	RF19
+
 -- | 050000034300
 
 -- ruoli_documenti
@@ -174,6 +213,16 @@ INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome
 (3,	'casa',             '&#xf015;',     '',     NULL,	NULL,	1,	    NULL),
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
+
+-- | 050000037000
+
+-- settori
+INSERT IGNORE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`) VALUES
+(1,     NULL,   'A',          'AGRICOLTURA, SILVICOLTURA E PESCA',                                                    'agricoltura, silvicoltura e pesca'),
+(2,     1,      '01',         'COLTIVAZIONI AGRICOLE E PRODUZIONE DI PRODOTTI ANIMALI, CACCIA E SERVIZI CONNESSI',    'coltivazioni, prodotti animali e caccia'),
+(3,     2,      '01.1',       'COLTIVAZIONE DI COLTURE AGRICOLE NON PERMANENTI',                                      'colture non permanenti'),
+(4,     2,      '01.11',      'Coltivazione di cereali (escluso il riso), legumi da granella e semi oleosi',          'coltivazione di cereali, legumi e semi'),
+(5,     4,      '01.11.1',    'Coltivazione di cereali (escluso il riso)',                                            'coltivazione di cereali');
 
 -- | 050000050000
 

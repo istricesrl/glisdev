@@ -1361,6 +1361,22 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
   FROM redirect                                               --
 ;                                                             --
 
+-- | 090000029800
+
+-- regimi_view
+CREATE OR REPLACE VIEW regimi_view AS
+	SELECT
+		regimi.id,
+		regimi.nome,
+		regimi.codice,
+		concat_ws(
+			' ',
+			regimi.nome,
+			regimi.codice
+		) AS __label__
+	FROM regimi
+;
+
 -- | 090000030400
 
 -- relazioni_documenti_view
@@ -1376,7 +1392,7 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
 
--- | 090000034301
+-- | 090000034300
 
 -- ruoli_documenti_view
 CREATE OR REPLACE VIEW ruoli_documenti_view AS
@@ -1442,6 +1458,20 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
 			ruoli_indirizzi.id ) AS __label__			  	  -- etichetta per le tendine e le liste
 	FROM ruoli_indirizzi									  --
 ;                                                             --
+
+-- | 090000037000
+
+-- settori_view
+CREATE OR REPLACE VIEW settori_view AS
+	SELECT
+		settori.id,
+		settori.id_genitore,
+		settori.nome,
+		settori.soprannome,
+		settori.ateco,
+	 	concat( settori.ateco, ' ', settori.nome ) AS __label__
+	FROM settori
+;
 
 -- | 090000042000
 
