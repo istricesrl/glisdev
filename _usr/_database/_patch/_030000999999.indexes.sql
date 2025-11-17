@@ -194,6 +194,28 @@ ALTER TABLE `attivita`
 -- attivita
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003050
+
+-- carrelli_articoli
+ALTER TABLE `carrelli_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_pagamento` (`id_pagamento`),
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
+	ADD KEY `id_coupon` (`id_coupon`),
+	ADD KEY `id_account_evasione` (`id_account_evasione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000003051
+
+-- carrelli_articoli
+ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000003100
 
 -- categorie_anagrafica
