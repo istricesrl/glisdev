@@ -290,6 +290,24 @@ ALTER TABLE `categorie_progetti`
 -- categorie_progetti
 ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- |030000005050
+
+--colli
+ALTER TABLE `colli`
+	ADD PRIMARY KEY (`id`),
+    ADD KEY `id_documento` (`id_documento`),	
+    ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),	
+    ADD KEY `id_udm_peso` (`id_udm_peso`),	
+    ADD KEY `id_udm_volume` (`id_udm_volume`),	
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+
+-- |030000005051
+
+--colli
+ALTER TABLE `colli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 -- | 030000005300
 
 -- comuni
