@@ -549,7 +549,7 @@ CREATE OR REPLACE VIEW comuni_view AS                         --
             ON stati.id = regioni.id_stato                    --
 ;                                                             --
 
--- | 010000006000
+-- | 090000006000
 
 -- condizioni_pagamento_view
 CREATE OR REPLACE VIEW condizioni_pagamento_view AS
