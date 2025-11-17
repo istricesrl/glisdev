@@ -292,7 +292,7 @@ ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000005050
 
---colli
+-- colli
 ALTER TABLE `colli`
 	ADD PRIMARY KEY (`id`),
     ADD KEY `id_documento` (`id_documento`),	
@@ -304,9 +304,8 @@ ALTER TABLE `colli`
 
 -- | 030000005051
 
---colli
+-- colli
 ALTER TABLE `colli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 
 -- | 030000005300
 
