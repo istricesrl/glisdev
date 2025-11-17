@@ -1900,6 +1900,55 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `note` text DEFAULT NULL                                    -- note sulla regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000030400
+
+-- relazioni_documenti
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: tabella di relazione molti a molti tra documenti
+--
+-- questa tabella contiene la relazione molti a molti tra documenti, con le informazioni relative al ruolo
+-- della relazione e ai dati di inserimento e aggiornamento
+--
+CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
+  `id` int(11) NOT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documento_collegato` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034300
+
+-- ruoli_documenti
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei documenti
+--
+-- questa tabella contiene i ruoli dei documenti, con le informazioni relative al nome, alle
+-- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere
+-- associati i documenti
+--
+CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` tinyint(1) DEFAULT NULL,
+  `se_documenti` tinyint(1) DEFAULT NULL,
+  `se_documenti_articoli` tinyint(1) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL,
+  `se_conferma` tinyint(1) DEFAULT NULL,
+  `se_consuntivo` tinyint(1) DEFAULT NULL,
+  `se_evasione` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000034400
 
 -- ruoli_file

@@ -1361,6 +1361,42 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
   FROM redirect                                               --
 ;                                                             --
 
+-- | 090000030400
+
+-- relazioni_documenti_view
+CREATE OR REPLACE VIEW relazioni_documenti_view AS
+	SELECT
+		relazioni_documenti.id,
+		relazioni_documenti.id_documento,
+		relazioni_documenti.id_documento_collegato,
+		relazioni_documenti.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+	FROM relazioni_documenti
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
+;
+
+-- | 090000034301
+
+-- ruoli_documenti_view
+CREATE OR REPLACE VIEW ruoli_documenti_view AS
+	SELECT
+		ruoli_documenti.id,
+		ruoli_documenti.id_genitore,
+		ruoli_documenti.nome,
+		ruoli_documenti.html_entity,
+		ruoli_documenti.font_awesome,
+		ruoli_documenti.se_xml,
+		ruoli_documenti.se_documenti,
+		ruoli_documenti.se_documenti_articoli,
+		ruoli_documenti.se_relazioni,
+		ruoli_documenti.se_conferma,
+		ruoli_documenti.se_consuntivo,
+		ruoli_documenti.se_evasione,
+	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
+	FROM ruoli_documenti
+;
+
 -- | 090000034600
 
 -- ruoli_immagini_view

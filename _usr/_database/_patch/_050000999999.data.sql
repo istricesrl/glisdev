@@ -132,6 +132,15 @@ INSERT IGNORE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_
 (3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	'BRONZE',	NULL,	400,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000034300
+
+-- ruoli_documenti
+INSERT INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_documenti`, `se_documenti_articoli`, `se_relazioni`, `se_conferma`, `se_consuntivo`, `se_evasione`) VALUES
+(1,	NULL,	'conferma',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL,	NULL),
+(2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1,	NULL),
+(3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	1),
+(4,	NULL,	'missione',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	1);
+
 -- | 050000034600
 
 -- ruoli_immagini
