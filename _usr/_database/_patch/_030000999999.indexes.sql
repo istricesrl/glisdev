@@ -247,6 +247,23 @@ ALTER TABLE `categorie_anagrafica`
 -- categorie_anagrafica
 ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003700
+
+-- categorie-notizie
+ALTER TABLE `categorie_notizie`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_sito` (`id_sito`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+
+-- | 030000003701
+
+-- categorie-notizie
+ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 -- | 030000004300
 
 -- categorie_progetti
