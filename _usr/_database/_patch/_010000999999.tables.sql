@@ -1231,7 +1231,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
--- | 010000016200
+-- | 010000016000
 
 -- job
 -- tipologia: tabella gestita
@@ -1262,7 +1262,7 @@ CREATE TABLE IF NOT EXISTS `job` (                            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
--- | 010000016000
+-- | 010000016200
 
 -- lingue
 -- tipologia: tabella standard
