@@ -88,6 +88,9 @@
     // var_dump( $_REQUEST );
     // die( print_r( $_REQUEST, true ) );
     // echo 'DEBUG';
+    // echo('SCRIPT_FILENAME='.($_SERVER['SCRIPT_FILENAME'] ?? ''));
+    // echo('REQUEST_URI='.($_SERVER['REQUEST_URI'] ?? ''));
+    // echo('INCLUDED='.print_r(get_included_files(), true));
 
     /**
      * tokenizzazione di __rw__
@@ -415,6 +418,11 @@
 
     // log
     loggerLatest( 'inizio controllo permessi' );
+
+    // debug
+    // var_dump( $cf );
+    // var_dump('before_call_count', is_array($cf) ? count($cf) : 'no');
+    // var_dump(spl_object_id($GLOBALS['cf']));
 
     // switch dello schema in caso di permessi insufficienti
     if( getPagePermission( $ct['page'] ) !== true ) {
