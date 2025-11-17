@@ -39,6 +39,34 @@
 
     require_once '_src/_config.php';
 
+    /* ======================== TASK ======================== */
+
+    // task/<task> -> src/api/task/<task>.php o _src/_api/_task/_<task>.php
+    if (preg_match('#^/task/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        $task = $m[1];
+        if (file_exists("src/api/task/$task.php")) {
+            require "src/api/task/$task.php";
+            exit;
+        }
+        if (file_exists("_src/_api/_task/_$task.php")) {
+            require "_src/_api/_task/_$task.php";
+            exit;
+        }
+    }
+
+    // task/<mod>/<task>
+    if (preg_match('#^/task/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        [$all,$mod,$task] = $m;
+        if (file_exists("mod/$mod/src/api/task/$task.php")) {
+            require "mod/$mod/src/api/task/$task.php";
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_task/_$task.php")) {
+            require "_mod/_$mod/_src/_api/_task/_$task.php";
+            exit;
+        }
+    }
+
     /* ======================== PAGINE (catch-all) ======================== */
 
     // Home
