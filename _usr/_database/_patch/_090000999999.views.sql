@@ -1361,6 +1361,58 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
   FROM redirect                                               --
 ;                                                             --
 
+-- | 090000029800
+
+-- regimi_view
+CREATE OR REPLACE VIEW regimi_view AS
+	SELECT
+		regimi.id,
+		regimi.nome,
+		regimi.codice,
+		concat_ws(
+			' ',
+			regimi.nome,
+			regimi.codice
+		) AS __label__
+	FROM regimi
+;
+
+-- | 090000030400
+
+-- relazioni_documenti_view
+CREATE OR REPLACE VIEW relazioni_documenti_view AS
+	SELECT
+		relazioni_documenti.id,
+		relazioni_documenti.id_documento,
+		relazioni_documenti.id_documento_collegato,
+		relazioni_documenti.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+	FROM relazioni_documenti
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
+;
+
+-- | 090000034300
+
+-- ruoli_documenti_view
+CREATE OR REPLACE VIEW ruoli_documenti_view AS
+	SELECT
+		ruoli_documenti.id,
+		ruoli_documenti.id_genitore,
+		ruoli_documenti.nome,
+		ruoli_documenti.html_entity,
+		ruoli_documenti.font_awesome,
+		ruoli_documenti.se_xml,
+		ruoli_documenti.se_documenti,
+		ruoli_documenti.se_documenti_articoli,
+		ruoli_documenti.se_relazioni,
+		ruoli_documenti.se_conferma,
+		ruoli_documenti.se_consuntivo,
+		ruoli_documenti.se_evasione,
+	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
+	FROM ruoli_documenti
+;
+
 -- | 090000034600
 
 -- ruoli_immagini_view
@@ -1406,6 +1458,20 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
 			ruoli_indirizzi.id ) AS __label__			  	  -- etichetta per le tendine e le liste
 	FROM ruoli_indirizzi									  --
 ;                                                             --
+
+-- | 090000037000
+
+-- settori_view
+CREATE OR REPLACE VIEW settori_view AS
+	SELECT
+		settori.id,
+		settori.id_genitore,
+		settori.nome,
+		settori.soprannome,
+		settori.ateco,
+	 	concat( settori.ateco, ' ', settori.nome ) AS __label__
+	FROM settori
+;
 
 -- | 090000042000
 

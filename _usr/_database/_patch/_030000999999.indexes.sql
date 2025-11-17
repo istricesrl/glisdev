@@ -194,6 +194,28 @@ ALTER TABLE `attivita`
 -- attivita
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003050
+
+-- carrelli_articoli
+ALTER TABLE `carrelli_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_pagamento` (`id_pagamento`),
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
+	ADD KEY `id_coupon` (`id_coupon`),
+	ADD KEY `id_account_evasione` (`id_account_evasione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000003051
+
+-- carrelli_articoli
+ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000003100
 
 -- categorie_anagrafica
@@ -225,6 +247,23 @@ ALTER TABLE `categorie_anagrafica`
 -- categorie_anagrafica
 ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003700
+
+-- categorie-notizie
+ALTER TABLE `categorie_notizie`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_sito` (`id_sito`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+
+-- | 030000003701
+
+-- categorie-notizie
+ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 -- | 030000004300
 
 -- categorie_progetti
@@ -251,6 +290,23 @@ ALTER TABLE `categorie_progetti`
 -- categorie_progetti
 ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000005050
+
+-- colli
+ALTER TABLE `colli`
+	ADD PRIMARY KEY (`id`),
+    ADD KEY `id_documento` (`id_documento`),	
+    ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),	
+    ADD KEY `id_udm_peso` (`id_udm_peso`),	
+    ADD KEY `id_udm_volume` (`id_udm_volume`),	
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000005051
+
+-- colli
+ALTER TABLE `colli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000005300
 
 -- comuni
@@ -265,6 +321,17 @@ ALTER TABLE `comuni`
 
 -- comuni
 ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000006000
+
+-- condizioni_pagamento
+ALTER TABLE `condizioni_pagamento`
+	ADD PRIMARY KEY (`id`);
+
+-- | 030000006001
+
+-- condizioni_pagamento
+ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006400
 

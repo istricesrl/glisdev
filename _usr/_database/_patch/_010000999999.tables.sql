@@ -1880,6 +1880,22 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000029800
+
+-- regimi
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i regimi fiscali
+--
+-- questa tabella contiene i regimi fiscali, con le informazioni relative al nome e al codice
+--
+CREATE TABLE IF NOT EXISTS `regimi` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000030200
 
 -- regioni
@@ -1899,6 +1915,55 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della regione
   `note` text DEFAULT NULL                                    -- note sulla regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000030400
+
+-- relazioni_documenti
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: tabella di relazione molti a molti tra documenti
+--
+-- questa tabella contiene la relazione molti a molti tra documenti, con le informazioni relative al ruolo
+-- della relazione e ai dati di inserimento e aggiornamento
+--
+CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
+  `id` int(11) NOT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documento_collegato` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034300
+
+-- ruoli_documenti
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei documenti
+--
+-- questa tabella contiene i ruoli dei documenti, con le informazioni relative al nome, alle
+-- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere
+-- associati i documenti
+--
+CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` tinyint(1) DEFAULT NULL,
+  `se_documenti` tinyint(1) DEFAULT NULL,
+  `se_documenti_articoli` tinyint(1) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL,
+  `se_conferma` tinyint(1) DEFAULT NULL,
+  `se_consuntivo` tinyint(1) DEFAULT NULL,
+  `se_evasione` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034400
 
@@ -2041,6 +2106,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000037000
+
+-- settori
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i settori aziendali
+--
+-- questa tabella contiene i settori di attività ATECO, con le informazioni relative al nome, al soprannome
+-- e al codice ATECO
+--
+CREATE TABLE IF NOT EXISTS `settori` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `soprannome` char(64) DEFAULT NULL,
+  `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000042000
