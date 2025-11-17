@@ -788,11 +788,30 @@ ALTER TABLE `organizzazioni`
 -- organizzazioni
 ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000023200
+
+-- pagine
+ALTER TABLE `pagine`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_contenuti` (`id_contenuti`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`id_sito`,`nome`,`template`,`schema_html`,`tema_css`,`se_sitemap`,`se_cacheable`,`id_contenuti`);
+
+-- | 030000023201
+
+-- pagine
+ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000027000
 
 -- progetti
--- tipologia: tabella gestita
--- verifica: 2021-10-08 13:54 Fabio Mosti
 ALTER TABLE `progetti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
