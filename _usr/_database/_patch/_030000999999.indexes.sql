@@ -916,11 +916,31 @@ ALTER TABLE `matricole`
 	ADD KEY `id_articolo` (`id_articolo`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+
 -- | 030000021001
 
 -- matricole
 ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000021600
+
+-- menu
+ALTER TABLE `menu`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000021601
+
+-- menu
+ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022800
 
