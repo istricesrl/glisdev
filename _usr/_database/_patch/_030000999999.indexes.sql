@@ -987,11 +987,22 @@ ALTER TABLE `metadati`
 	ADD KEY `id_stato` (`id_stato`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+
 -- | 030000021801
 
 -- metadati
 ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000021900
+
+-- modalita_pagamento
+ALTER TABLE `modalita_pagamento`
+ 	ADD PRIMARY KEY (`id`);
+	
+-- | 030000021901
+
+-- modalita_pagamento
+ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022800
 
