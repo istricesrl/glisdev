@@ -132,6 +132,31 @@ ALTER TABLE `anagrafica_indirizzi`
 -- anagrafica_indirizzi
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000001300
+
+-- articoli
+ALTER TABLE `articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `id_reparto` (`id_reparto`),
+	ADD KEY `id_taglia` (`id_taglia`),
+	ADD KEY `id_colore` (`id_colore`),
+	ADD KEY `id_periodicita` (`id_periodicita`),
+	ADD KEY `id_tipologia_rinnovo` (`id_tipologia_rinnovo`),
+	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
+	ADD KEY `id_udm_peso` (`id_udm_peso`),
+	ADD KEY `id_udm_volume` (`id_udm_volume`),
+	ADD KEY `id_udm_capacita` (`id_udm_capacita`),
+	ADD KEY `id_udm_durata` (`id_udm_durata`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000001301
+
+-- articoli
+ALTER TABLE `articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 -- | 030000001700
 
 -- asset
