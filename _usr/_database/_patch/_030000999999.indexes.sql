@@ -696,6 +696,20 @@ ALTER TABLE `gruppi`
 -- gruppi
 ALTER TABLE `gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000015400
+
+-- iban
+ALTER TABLE `iban`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+
+-- | 030000015401
+
+-- iban
+ALTER TABLE `iban` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000015600
 
 -- immagini
