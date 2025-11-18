@@ -998,11 +998,26 @@ ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- modalita_pagamento
 ALTER TABLE `modalita_pagamento`
  	ADD PRIMARY KEY (`id`);
-	
+
 -- | 030000021901
 
 -- modalita_pagamento
 ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000022000
+
+-- notizie
+ALTER TABLE `notizie`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_sito` (`id_sito`),
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000022001
+
+-- notizie
+ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022800
 
