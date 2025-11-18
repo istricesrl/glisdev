@@ -826,6 +826,22 @@ ALTER TABLE `lingue`
 -- lingue
 ALTER TABLE `lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000017200
+
+-- listini
+ALTER TABLE `listini`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+
+-- | 030000017201
+
+-- listini
+ALTER TABLE `listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000018600
 
 -- mail
