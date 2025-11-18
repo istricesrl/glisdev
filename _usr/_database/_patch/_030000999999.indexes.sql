@@ -906,6 +906,22 @@ ALTER TABLE `mastri`
 -- mastri
 ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000021000
+
+-- matricole
+ALTER TABLE `matricole`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `id_articolo` (`id_articolo`),
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000021001
+
+-- matricole
+ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000022800
 
 -- organizzazioni
