@@ -1074,7 +1074,7 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+
 -- | 030000023101
 
 -- pagamenti
@@ -1100,6 +1100,24 @@ ALTER TABLE `pagine`
 
 -- pagine
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000026000
+
+-- prodotti
+ALTER TABLE `prodotti`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000026001
+
+-- prodotti
+ALTER TABLE `prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000027000
 
