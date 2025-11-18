@@ -936,11 +936,62 @@ ALTER TABLE `menu`
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+
 -- | 030000021601
 
 -- menu
 ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000021800
+
+-- metadati
+ALTER TABLE `metadati`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_annuncio` (`id_annuncio`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
+	ADD KEY `id_immagine` (`id_immagine`),
+	ADD KEY `id_video` (`id_video`),
+	ADD KEY `id_audio` (`id_audio`),
+	ADD KEY `id_file` (`id_file`),
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_edificio` (`id_edificio`), 
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
+	ADD KEY `id_attivita` (`id_attivita`),
+	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`),
+	ADD KEY `id_banner` (`id_banner`),
+	ADD KEY `id_pianificazione` (`id_pianificazione`),
+	ADD KEY `id_todo` (`id_todo`),
+	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
+	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`),
+	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_tipologia_corrispondenza` (`id_tipologia_corrispondenza`),
+	ADD KEY `id_peso_tipologie_corrispondenza` (`id_peso_tipologie_corrispondenza`),
+	ADD KEY `id_stato` (`id_stato`),
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000021801
+
+-- metadati
+ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022800
 
