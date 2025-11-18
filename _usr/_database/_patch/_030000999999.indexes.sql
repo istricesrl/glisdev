@@ -842,6 +842,32 @@ ALTER TABLE `listini`
 -- listini
 ALTER TABLE `listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000018200
+
+-- macro
+ALTER TABLE `macro`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_annuncio` (`id_annuncio`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `id_pianificazione` (`id_pianificazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000018201
+
+-- macro
+ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000018600
 
 -- mail
