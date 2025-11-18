@@ -1029,7 +1029,7 @@ ALTER TABLE `notizie_categorie`
 	ADD KEY `id_categoria` (`id_categoria`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+
 -- | 030000022201
 
 -- notizie_categorie
@@ -1053,6 +1053,32 @@ ALTER TABLE `organizzazioni`
 
 -- organizzazioni
 ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000023100
+
+-- pagamenti
+ALTER TABLE `pagamenti`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
+	ADD KEY `id_carrelli_articoli` (`id_carrelli_articoli`),
+	ADD KEY `id_creditore` (`id_creditore`),
+	ADD KEY `id_debitore` (`id_debitore`),
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`),
+	ADD KEY `id_iban` (`id_iban`),
+	ADD KEY `id_coupon` (`id_coupon`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_pianificazione` (`id_pianificazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000023101
+
+-- pagamenti
+ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023200
 
