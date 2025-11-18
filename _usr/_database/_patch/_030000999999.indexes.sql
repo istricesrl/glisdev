@@ -513,6 +513,20 @@ ALTER TABLE `corrispondenza`
 -- corrispondenza
 ALTER TABLE `corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000008000
+
+-- coupon
+ALTER TABLE `coupon`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000008001
+
+-- coupon
+ALTER TABLE `coupon` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000009800
 
 -- documenti
