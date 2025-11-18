@@ -1019,6 +1019,22 @@ ALTER TABLE `notizie`
 -- notizie
 ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000022200
+
+-- notizie_categorie
+ALTER TABLE `notizie_categorie`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_annuncio` (`id_annuncio`),
+	ADD KEY `id_categoria` (`id_categoria`),
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000022201
+
+-- notizie_categorie
+ALTER TABLE `notizie_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000022800
 
 -- organizzazioni
