@@ -26,7 +26,6 @@
         // print_r( get_included_files() );
 
     // stampo i dati di validità della sessione corrente
-#        echo json_encode(
         buildJson(
             array(
                 'used' => $_SESSION['used'],
@@ -43,5 +42,14 @@
                         : 0
                     )
                 )
+            ),
+            ENCODING_UTF8,
+            array(
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Cache-Lifetime' => '0',
+                'X-Proxy-Cache' => 'BYPASS',
+                'X-GlisWeb-No-Cache' => 'true'
             )
         );

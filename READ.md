@@ -970,6 +970,7 @@ b           | /_src/_config/_220.auth.php               | URL di ritorno
 c           | /_src/_config/_420.pages.php              | forza il tema della pagina
 j           | /_src/_config/_210.auth.php               | innesca il login via JWT
 m           | /_src/_config/_420.pages.php              | inserisce il Lorem Ipsum come testo della pagina
+q           | /_src/_api/_pages.php                     | aggiunge un report della velocità ai commenti della pagina
 s           | /_src/_config/_420.pages.php              | forza lo schema della pagina
 t           | /_src/_config/_420.pages.php              | forza il template della pagina
 u           | /_src/_api/_pages.php                     | crea un commento HTML con il dump dell'array $ct a partire dal nodo indicato
