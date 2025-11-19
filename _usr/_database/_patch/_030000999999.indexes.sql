@@ -1228,6 +1228,27 @@ ALTER TABLE `ranking`
 -- ranking
 ALTER TABLE `ranking` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000028900
+
+-- recensioni
+ALTER TABLE `recensioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000028901
+
+-- recensioni
+ALTER TABLE `recensioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000029400
 
 -- redirect
