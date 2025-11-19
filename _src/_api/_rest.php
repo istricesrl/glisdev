@@ -208,7 +208,11 @@
                 // die( print_r( $cf['ws'], true ) );
 
                 // inclusione del framework
-                require '../_config.php';
+                if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+                    require '../_config.php';
+                } else {
+                    require INCLUDE_SUBDIR . '_config.php';
+                }
 
             }
 
@@ -290,6 +294,9 @@
 
     } else {
 
+        // debug
+        // print_r( $_REQUEST );
+        
         // risposta con errore
         http_response_code( 400 );
 

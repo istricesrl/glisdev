@@ -15,7 +15,12 @@
         // print_r( $_SESSION );
 
     // dati di contesto
-        require '../../_config.php';
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
+
 
     // rinnovo sessione
         if( isset( $_REQUEST['renew'] ) ) {

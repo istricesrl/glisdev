@@ -119,8 +119,8 @@
 
     // REST generiche: /api/<entita>[/<id>]
     if (preg_match('#^/api/([A-Za-z0-9_\-]+)(?:/([A-Za-z0-9\.\-]+))?$#', $URI, $m)) {
-        $_GET['__ws__'] = $m[1];
-        $_GET['__id__'] = $m[2] ?? '';
+        $_REQUEST['__ws__'] = $m[1];
+        $_REQUEST['__id__'] = $m[2] ?? '';
         require('_src/_api/_rest.php');
         exit;
     }
@@ -241,21 +241,39 @@
 
     // recupero $_SERVER['REDIRECT_URL'] se non esiste
     if( ! isset( $_SERVER['REDIRECT_URL'] ) ) {
-        $_REQUEST['__rw__'] = $_SERVER['REDIRECT_URL'] = $_SERVER['REQUEST_URI'];
-        if( preg_match( '#^/([A-Za-z0-9._\-/]+)\.([a-z]{2}-[A-Z]{2})\.html?$#', $_SERVER['REQUEST_URI'], $m ) ) {
-            $_SERVER['REDIRECT_URL'] = '/'.$m[1].'.html';
+
+        // parto dalla REQUEST_URI e tolgo la query string
+        $uri = $_SERVER['REQUEST_URI'];
+        $uri = explode( '?', $uri, 2 )[0];
+
+        $_SERVER['REDIRECT_URL'] = $uri;
+        $_REQUEST['__rw__']      = $uri;
+
+        if( preg_match( '#^/([A-Za-z0-9._\-/]+)\.([a-z]{2}-[A-Z]{2})\.html?$#', $uri, $m ) ) {
+
+            // nomepagina.xx-XX.html / nomepagina.xx-XX.htm
             $_REQUEST['__lg__'] = $m[2];
+            $clean = '/' . $m[1];
+
+        } elseif( preg_match( '#^/([A-Za-z0-9._\-/]+)\.html?$#', $uri, $m ) ) {
+
+            // nomepagina.html / nomepagina.htm
+            $clean = '/' . $m[1];
+
+        } else {
+
+            $clean = $uri;
         }
-        $_REQUEST['__rw__'] = $_SERVER['REQUEST_URI'] = $_SERVER['REDIRECT_URL'] . ( $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' );
-        if( preg_match( '#^/([A-Za-z0-9._\-/]+)\.html?$#', $_SERVER['REDIRECT_URL'], $m ) ) {
-            $_REQUEST['__rw__'] = $_SERVER['REDIRECT_URL'] = '/'.$m[1];
-        }
+
+        $_SERVER['REDIRECT_URL'] = $clean;
+        $_REQUEST['__rw__']      = $clean;
+
     }
 
     // tokenizzazione di __rw__
-    if( isset( $_REQUEST['__rw__'] ) ) {
-        $_REQUEST['__rp__'] = explode( '/', trim( $_REQUEST['__rw__'], '/' ) );
-        unset( $_REQUEST['__rw__'] );
+    if (isset($_REQUEST['__rw__'])) {
+        $_REQUEST['__rp__'] = explode('/', trim($_REQUEST['__rw__'], '/'));
+        unset($_REQUEST['__rw__']);
     }
 
     // Home
