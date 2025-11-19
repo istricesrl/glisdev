@@ -27,7 +27,10 @@
      */
 
     // percorso di inclusione del framework
-    define( 'INCLUDE_SUBDIR', __DIR__ . '_src/' );
+    define( 'INCLUDE_SUBDIR', __DIR__ . '/_src/' );
+
+    // URI corrente
+    $URI = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 
     /**
      * gestione delle API (/api/...)
