@@ -10,7 +10,12 @@
      */
 
     // inclusione del framework
-    require '../../_config.php';
+    if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+        require '../../_config.php';
+    } else {
+        require INCLUDE_SUBDIR . '_config.php';
+    }
+
 
     // header
     header( 'Content-type: text/plain' );
