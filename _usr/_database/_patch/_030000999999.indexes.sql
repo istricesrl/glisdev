@@ -1265,6 +1265,17 @@ ALTER TABLE `redirect`
 -- redirect
 ALTER TABLE `redirect` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000029800
+
+-- regimi
+ALTER TABLE `regimi`
+	ADD PRIMARY KEY (`id`);
+
+-- | 030000029801
+
+-- regimi
+ALTER TABLE `regimi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000030200
 
 -- regioni
