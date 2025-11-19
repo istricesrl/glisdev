@@ -1387,6 +1387,18 @@ ALTER TABLE `ruoli_video`
 -- ruoli_video
 ALTER TABLE `ruoli_video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000037000
+
+-- settori
+ALTER TABLE `settori`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000037001
+
+-- settori
+ALTER TABLE `settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000042000
 
 -- stati
