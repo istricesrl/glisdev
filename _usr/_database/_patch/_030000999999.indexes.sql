@@ -1645,6 +1645,20 @@ ALTER TABLE `tipologie_notizie`
 -- tipologie_notizie
 ALTER TABLE `tipologie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000054000
+
+-- tipologie_pagamenti
+ALTER TABLE `tipologie_pagamenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000054001
+
+-- tipologie_pagamenti
+ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000056200
 
 -- tipologie_telefoni
