@@ -1762,6 +1762,18 @@ ALTER TABLE `todo`
 -- todo
 ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000062000
+
+-- udm
+ALTER TABLE `udm`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_base` (`id_base`); 
+
+-- | 030000062001
+
+-- udm
+ALTER TABLE `udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000062600
 
 -- url
