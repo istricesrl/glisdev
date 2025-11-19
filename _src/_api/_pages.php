@@ -1150,6 +1150,35 @@
     loggerLatest( 'fine gestione parametri di una lettera' );
 
     /**
+     * controllo della cache
+     * =====================
+     * 
+     * 
+     */
+
+    // rimuovo tutti gli header legati alla cache
+    header_remove('Pragma');
+    header_remove('Expires');
+    header_remove('Cache-Control');
+    header_remove('X-Cache-Lifetime');
+    header_remove('X-Proxy-Cache');
+
+    // cache del buffer
+    if( ! isset( $cf['session']['account']['username'] ) && isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
+        echo '<!-- pagina cacheable -->' . PHP_EOL;
+        header('Cache-Control: public, max-age=' . $ttl . ', s-maxage=' . $ttl);
+        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $ttl) . ' GMT');
+        header('Pragma: cache');
+        header('X-Cache-Lifetime: ' . $ttl);
+    } else {
+        echo '<!-- pagina NON cacheable -->' . PHP_EOL;
+        header('Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('X-Proxy-Cache: BYPASS');
+    }
+
+    /**
      * pulizia dell'output
      * ===================
      * 
@@ -1223,35 +1252,6 @@
 
     // output
     echo PHP_EOL;
-
-    /**
-     * controllo della cache
-     * =====================
-     * 
-     * 
-     */
-
-    // rimuovo tutti gli header legati alla cache
-    header_remove('Pragma');
-    header_remove('Expires');
-    header_remove('Cache-Control');
-    header_remove('X-Cache-Lifetime');
-    header_remove('X-Proxy-Cache');
-
-    // cache del buffer
-    if( ! isset( $cf['session']['account']['username'] ) && isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
-        echo '<!-- pagina cacheable -->' . PHP_EOL;
-        header('Cache-Control: public, max-age=' . $ttl . ', s-maxage=' . $ttl);
-        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $ttl) . ' GMT');
-        header('Pragma: cache');
-        header('X-Cache-Lifetime: ' . $ttl);
-    } else {
-        echo '<!-- pagina NON cacheable -->' . PHP_EOL;
-        header('Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        header('X-Proxy-Cache: BYPASS');
-    }
 
     /**
      * flush dell'output buffer
