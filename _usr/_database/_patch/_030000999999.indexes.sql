@@ -1803,7 +1803,7 @@ ALTER TABLE `valute`
 -- valute
 ALTER TABLE `valute` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- | 03000006500
+-- | 030000065000
 
 -- video
 ALTER TABLE `video`
@@ -1831,10 +1831,21 @@ ALTER TABLE `video`
 	ADD KEY `id_embed` (`id_embed`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
--- | 03000006501
+
+-- | 030000065001
 
 -- video
 ALTER TABLE `video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999000
+
+-- test
+ALTER TABLE `test`
+	ADD PRIMARY KEY (`id`);
+
+-- | 030000999001
+
+-- test
+ALTER TABLE `test` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | FINE FILE
