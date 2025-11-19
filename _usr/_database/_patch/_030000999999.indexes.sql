@@ -1291,6 +1291,22 @@ ALTER TABLE `regioni`
 -- regioni
 ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000030400
+
+-- relazioni_documenti
+ALTER TABLE `relazioni_documenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000030401
+
+-- relazioni_documenti
+ALTER TABLE `relazioni_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000034800
 
 -- ruoli_indirizzi
