@@ -1209,12 +1209,9 @@
             echo '<!-- expire: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_LIMIT ) . ' -->'    . PHP_EOL;
             echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'                . PHP_EOL;
         } else {
-            header( 'X-Proxy-Cache: BYPASS' );
-            header( 'X-GlisWeb-No-Cache: true' );
             echo PHP_EOL . '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
         }
         echo PHP_EOL . '<!-- sessione: ' . session_id() . ' -->' . PHP_EOL;
-
 
         // timer
         timerCheck( $cf['speed'], 'fine gestione cache statica delle pagine' );
@@ -1226,6 +1223,37 @@
 
     // output
     echo PHP_EOL;
+
+    /**
+     * controllo della cache
+     * =====================
+     * 
+     * 
+     */
+
+    // cache del buffer
+    if( ! isset( $cf['session']['account']['username'] ) && isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
+            header_remove('Pragma');
+            header_remove('Expires');
+            header_remove('Cache-Control');
+            header_remove('X-GlisWeb-No-Cache');
+            header_remove('X-Proxy-Cache');
+            header('Cache-Control: public, max-age=' . $ttl . ', s-maxage=' . $ttl);
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $ttl) . ' GMT');
+            header('Pragma: cache');
+            header('X-Cache-Lifetime: ' . $ttl);
+            header('X-GlisWeb-Cacheable: true');
+        } else {
+            header_remove('Pragma');
+            header_remove('Expires');
+            header_remove('Cache-Control');
+            header_remove('X-Cache-Lifetime');
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+            header('X-Proxy-Cache: BYPASS');
+            header('X-GlisWeb-No-Cache: true');
+        }
 
     /**
      * flush dell'output buffer
@@ -1255,6 +1283,8 @@
 
     // debug
     // print_r( $ct['page']['css'] );
+    // var_dump(headers_list());
+    // var_dump( $cf['session']['accout'] );
 
     /**
      * chiusura del monitoraggio tempi

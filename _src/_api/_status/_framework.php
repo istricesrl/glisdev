@@ -16,7 +16,6 @@
         require INCLUDE_SUBDIR . '_config.php';
     }
 
-
     // header
     header( 'Content-type: text/plain' );
 

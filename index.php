@@ -32,12 +32,43 @@
     // URI corrente
     $URI = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 
+    // debug
+    // die( $URI );
+
     /**
      * scorciatoie
      * ===========
      * 
      * 
      */
+
+    // current.release
+    if ($URI === '/current.release' && file_exists('_etc/_current.release')) 
+        die( file_get_contents('_etc/_current.release'));
+
+    // current.version
+    if ($URI === '/current.version' && file_exists('_etc/_current.version'))
+        die( file_get_contents('_etc/_current.version'));
+
+    // manuale PDF
+    if ($URI === '/docs/pdf' && file_exists('_usr/_docs/_pdf/refman.pdf')) {
+        die( file_get_contents('_usr/_docs/_pdf/refman.pdf'));
+    }
+
+    // documentazione HTML
+    if (preg_match('#^/docs/([A-Za-z0-9_\-\/\.]*)$#', $URI, $m)) {
+        $t = '_usr/_docs/_html/'.norm_path($m[1]);
+        if (file_exists($t)) die(file_get_contents($t));
+    }
+
+    // navigatore array $cf
+    if ($URI === '/cf')  require('_src/_api/_status/_cf.php');
+
+    // navigatore geografia
+    if ($URI === '/geo') require('_src/_api/_status/_geo.php');
+
+    // status del framework
+    if ($URI === '/status') require('_src/_api/_status/_framework.php');
 
     /**
      * gestione delle API (/api/...)
@@ -159,6 +190,32 @@
      * 
      * 
      */
+
+    // gestione dei report di stato base
+    if (preg_match('#^/status/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        $st = $m[1];
+        if (file_exists("src/api/status/$st.php")) {
+            require("src/api/status/$st.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_status/_$st.php")) {
+            require("_src/_api/_status/_$st.php");
+            exit;
+        }
+    }
+
+    // gestione dei report di stato dei moduli
+    if (preg_match('#^/status/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        [$all,$mod,$st] = $m;
+        if (file_exists("mod/$mod/src/api/status/$st.php")) {
+            require("mod/$mod/src/api/status/$st.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_status/_$st.php")) {
+            require("_mod/_$mod/_src/_api/_status/_$st.php");
+            exit;
+        }
+    }
 
     /**
      * stampe (/print/...)
