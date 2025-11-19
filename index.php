@@ -33,24 +33,57 @@
     $URI = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 
     /**
+     * scorciatoie
+     * ===========
+     * 
+     * 
+     */
+
+    /**
      * gestione delle API (/api/...)
      * =============================
      * 
      * 
      */
 
+    // API di login e logout
+
+    // API di download
+
+    // API per il mailing
+
+    // API per OpenstreetMap
+
+    /**
+     * API generiche
+     * -------------
+     * 
+     */
+
     // /api/<api> -> src/api/<api>.php o _src/_api/_<api>.php
     if (preg_match('#^/api/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         $api = $m[1];
-        if (file_exists("src/api/$api.php")) require("src/api/$api.php");
-        if (file_exists("_src/_api/_$api.php")) require("_src/_api/_$api.php");
+        if (file_exists("src/api/$api.php")) {
+            require("src/api/$api.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_$api.php")) {
+            require("_src/_api/_$api.php");
+            exit;
+        }
     }
 
     // /api/<mod>/<api> -> mod/<mod>/src/api/<api>.php o _mod/_<mod>/_src/_api/_<api>.php
     if (preg_match('#^/api/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9\.]+)$#', $URI, $m)) {
         [$all,$mod,$api] = $m;
-        if (file_exists("mod/$mod/src/api/$api.php")) require("mod/$mod/src/api/$api.php");
-        if (file_exists("_mod/_$mod/_src/_api/_$api.php")) require("_mod/_$mod/_src/_api/_$api.php");
+        if (file_exists("mod/$mod/src/api/$api.php")) {
+            require("mod/$mod/src/api/$api.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_$api.php")) {
+            require("_mod/_$mod/_src/_api/_$api.php");
+            exit;
+        }
     }
 
     // REST generiche: /api/<entita>[/<id>]
@@ -58,10 +91,19 @@
         $_GET['__ws__'] = $m[1];
         $_GET['__id__'] = $m[2] ?? '';
         require('_src/_api/_rest.php');
+        exit;
     }
 
     // protezione da loop pages
     if ($URI === '/_src/_api/_pages.php') { exit; }
+
+    /**
+     * gestione dei job (/job/...)
+     * ===========================
+     * 
+     * 
+     * 
+     */
 
     /**
      * gestione dei task (/task/...)
@@ -72,21 +114,71 @@
     // task/<task> -> src/api/task/<task>.php o _src/_api/_task/_<task>.php
     if (preg_match('#^/task/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         $task = $m[1];
-        if (file_exists("src/api/task/$task.php")) require("src/api/task/$task.php");
-        if (file_exists("_src/_api/_task/_$task.php")) require("_src/_api/_task/_$task.php");
+        if (file_exists("src/api/task/$task.php")) {
+            require("src/api/task/$task.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_task/_$task.php")) {
+            require("_src/_api/_task/_$task.php");
+            exit;
+        }
     }
 
     // task/<mod>/<task>
     if (preg_match('#^/task/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         [$all,$mod,$task] = $m;
-        if (file_exists("mod/$mod/src/api/task/$task.php")) require("mod/$mod/src/api/task/$task.php");
-        if (file_exists("_mod/_$mod/_src/_api/_task/_$task.php")) require("_mod/_$mod/_src/_api/_task/_$task.php");
+        if (file_exists("mod/$mod/src/api/task/$task.php")) {
+            require("mod/$mod/src/api/task/$task.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_task/_$task.php")) {
+            require("_mod/_$mod/_src/_api/_task/_$task.php");
+            exit;
+        }
     }
 
     /**
-     * gestione delle pagine (catch-all)
-     * =================================
+     * task di popolazione dei report
+     * ------------------------------
      * 
+     */
+
+    /**
+     * report (/report/...)
+     * ====================
+     * 
+     * 
+     * 
+     * 
+     */
+
+    /**
+     * status (/status/...)
+     * ====================
+     * 
+     * 
+     * 
+     */
+
+    /**
+     * stampe (/print/...)
+     * ===================
+     * 
+     * 
+     * 
+     */
+
+    /**
+     * gestione dei contenuti
+     * ======================
+     * 
+     * 
+     * 
+     */
+
+    /**
+     * gestione delle pagine (catch-all)
+     * ---------------------------------
      * 
      */
 
@@ -112,6 +204,7 @@
     // Home
     if ($URI === '/' || $URI === '') {
         require '_src/_api/_pages.php';
+        exit;
     }
 
     // nomepagina.xx-XX.html
@@ -119,10 +212,12 @@
         $_GET['__rw__'] = $m[1];
         $_GET['__lg__'] = $m[2];
         require '_src/_api/_pages.php';
+        exit;
     }
 
     // nomefile[.estensione] -> pages con __rw__=nomefile
     if (preg_match('#^/([A-Za-z0-9._\-/]*[A-Za-z0-9_-])(?:\.[A-Za-z0-9]+)?$#', $URI, $m)) {
         $_GET['__rw__'] = ltrim($m[1],'/');
         require '_src/_api/_pages.php';
+        exit;
     }
