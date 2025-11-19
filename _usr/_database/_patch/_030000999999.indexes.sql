@@ -1301,11 +1301,47 @@ ALTER TABLE `relazioni_documenti`
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+
 -- | 030000030401
 
 -- relazioni_documenti
 ALTER TABLE `relazioni_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000034300
+
+-- ruoli_documenti
+ALTER TABLE `ruoli_documenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000034301
+
+-- ruoli_documenti
+ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000034400
+
+-- ruoli_file
+ALTER TABLE `ruoli_file`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000034401
+
+-- ruoli_file
+ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000034600
+
+-- ruoli_immagini
+ALTER TABLE `ruoli_immagini`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000034601
+
+-- ruoli_immagini
+ALTER TABLE `ruoli_immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034800
 
