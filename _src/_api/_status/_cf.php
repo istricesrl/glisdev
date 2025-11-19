@@ -93,4 +93,16 @@
     $tx    .= '</span>';
 
     // output
-    buildHtml( $tx, 'variabili del framework' );
+    buildHtml(
+        $tx,
+        'variabili del framework',
+        ENCODING_UTF8,
+        array(
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+            'X-Cache-Lifetime' => '0',
+            'X-Proxy-Cache' => 'BYPASS',
+            'X-GlisWeb-No-Cache' => 'true'
+        )
+    );
