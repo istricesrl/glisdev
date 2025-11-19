@@ -1792,4 +1792,15 @@ ALTER TABLE `url`
 -- url
 ALTER TABLE `url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000063000
+
+-- valute
+ALTER TABLE `valute`
+	ADD PRIMARY KEY (`id`);
+
+-- | 030000063001
+
+-- valute
+ALTER TABLE `valute` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | FINE FILE
