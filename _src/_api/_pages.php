@@ -1231,29 +1231,27 @@
      * 
      */
 
+    // rimuovo tutti gli header legati alla cache
+    header_remove('Pragma');
+    header_remove('Expires');
+    header_remove('Cache-Control');
+    header_remove('X-Cache-Lifetime');
+    header_remove('X-Proxy-Cache');
+
     // cache del buffer
     if( ! isset( $cf['session']['account']['username'] ) && isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
-            header_remove('Pragma');
-            header_remove('Expires');
-            header_remove('Cache-Control');
-            header_remove('X-GlisWeb-No-Cache');
-            header_remove('X-Proxy-Cache');
-            header('Cache-Control: public, max-age=' . $ttl . ', s-maxage=' . $ttl);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $ttl) . ' GMT');
-            header('Pragma: cache');
-            header('X-Cache-Lifetime: ' . $ttl);
-            header('X-GlisWeb-Cacheable: true');
-        } else {
-            header_remove('Pragma');
-            header_remove('Expires');
-            header_remove('Cache-Control');
-            header_remove('X-Cache-Lifetime');
-            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
-            header('Pragma: no-cache');
-            header('Expires: 0');
-            header('X-Proxy-Cache: BYPASS');
-            header('X-GlisWeb-No-Cache: true');
-        }
+        echo '<!-- pagina cacheable -->' . PHP_EOL;
+        header('Cache-Control: public, max-age=' . $ttl . ', s-maxage=' . $ttl);
+        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $ttl) . ' GMT');
+        header('Pragma: cache');
+        header('X-Cache-Lifetime: ' . $ttl);
+    } else {
+        echo '<!-- pagina NON cacheable -->' . PHP_EOL;
+        header('Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('X-Proxy-Cache: BYPASS');
+    }
 
     /**
      * flush dell'output buffer
@@ -1271,6 +1269,14 @@
         echo PHP_EOL;
 
     }
+
+    // debug
+    foreach( headers_list() as $header ) {
+        echo '<!-- header: ' . $header . ' -->' . PHP_EOL;
+    }
+
+    // debug
+    echo '<!-- timestamp: ' . date( 'Y-m-d H:i:s' ) . ' -->' . PHP_EOL;
 
     // fine del buffer
     ob_end_flush();

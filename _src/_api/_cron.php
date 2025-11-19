@@ -471,6 +471,5 @@
             'Expires' => '0',
             'X-Cache-Lifetime' => '0',
             'X-Proxy-Cache' => 'BYPASS',
-            'X-GlisWeb-No-Cache' => 'true'
         )
     );

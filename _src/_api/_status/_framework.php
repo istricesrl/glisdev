@@ -18,6 +18,11 @@
 
     // header
     header( 'Content-type: text/plain' );
+    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0' );
+    header( 'Pragma: no-cache' );
+    header( 'Expires: 0' );
+    header( 'X-Proxy-Cache: BYPASS' );
+    header( 'X-GlisWeb-No-Cache: true' );
 
     // output
     echo 'STATUS DEL FRAMEWORK ' . date( 'Y-m-d H:i:s' ) . PHP_EOL;
