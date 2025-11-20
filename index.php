@@ -62,13 +62,22 @@
     }
 
     // navigatore array $cf
-    if ($URI === '/cf')  require('_src/_api/_status/_cf.php');
+    if ($URI === '/cf') {
+        require('_src/_api/_status/_cf.php');
+        exit;
+    }
 
     // navigatore geografia
-    if ($URI === '/geo') require('_src/_api/_status/_geo.php');
+    if ($URI === '/geo') {
+        require('_src/_api/_status/_geo.php');
+        exit;
+    }
 
     // status del framework
-    if ($URI === '/status') require('_src/_api/_status/_framework.php');
+    if ($URI === '/status') {
+        require('_src/_api/_status/_framework.php');
+        exit;
+    }
 
     /**
      * gestione delle API (/api/...)
@@ -78,15 +87,23 @@
      */
 
     // API di login
-    if ($URI === '/api/login') require('_src/_api/_user.php');
+    if ($URI === '/api/login') {
+        require('_src/_api/_user.php');
+        exit;
+    }
 
     // API di logout
-    if ($URI === '/api/logout') { $_GET['__logout__'] = 1; require('_src/_api/_user.php'); }
+    if ($URI === '/api/logout') {
+        $_GET['__logout__'] = 1;
+        require('_src/_api/_user.php');
+        exit;
+    }
 
     // API di download generico: /var/<...> -> _src/_api/_download.php?__download__=var/...
     if (preg_match('#^/var/(.+)$#', $URI, $m)) {
         $_GET['__download__'] = 'var/'.$m[1];
         require('_src/_api/_download.php');
+        exit;
     }
 
     // API per il mailing /mailing/<id>/var/<...>
@@ -94,6 +111,7 @@
         $_GET['__download__'] = 'var/'.$m[2];
         $_GET['__mailing__']  = $m[1];
         require('_src/_api/_download.php');
+        exit;
     }
 
     // API per il mailing /mailing/<id>/<dst>/var/<...>
@@ -102,12 +120,14 @@
         $_GET['__mailing__']    = $m[1];
         $_GET['__mailing_dst__']= $m[2];
         require('_src/_api/_download.php');
+        exit;
     }
 
     // API per OpenstreetMap
     if (preg_match('#^/tiles/([0-9]+)/([0-9]+)/([0-9]+)\.png$#', $URI, $m)) {
         $_GET['z']=$m[1]; $_GET['x']=$m[2]; $_GET['y']=$m[3];
         require('_src/_api/_osm.php');
+        exit;
     }
 
     /**
@@ -165,6 +185,7 @@
     if (preg_match('#^/job/([0-9]+)?$#', $URI, $m)) {
         $_GET['__id__'] = $m[1] ?? '';
         require('_src/_api/_job.php');
+        exit;
     }
 
     /**
@@ -208,15 +229,27 @@
     // task di generazione report /task/report/<name> o /task/report/<mod>/<name>
     if (preg_match('#^/task/report/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         $name = $m[1];
-        if (file_exists("src/api/task/report/$name.php")) require("src/api/task/report/$name.php");
-        if (file_exists("_src/_api/_task/_report/_$name.php")) require("_src/_api/_task/_report/_$name.php");
+        if (file_exists("src/api/task/report/$name.php")) {
+            require("src/api/task/report/$name.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_task/_report/_$name.php")) {
+            require("_src/_api/_task/_report/_$name.php");
+            exit;
+        }
     }
 
     // task di generazione report dei moduli /task/report/<mod>/<name>
     if (preg_match('#^/task/report/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         [$all,$mod,$name] = $m;
-        if (file_exists("mod/$mod/src/api/task/report/$name.php")) require("mod/$mod/src/api/task/report/$name.php");
-        if (file_exists("_mod/_$mod/_src/_api/_task/_report/_$name.php")) require("_mod/_$mod/_src/_api/_task/_report/_$name.php");
+        if (file_exists("mod/$mod/src/api/task/report/$name.php")) {
+            require("mod/$mod/src/api/task/report/$name.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_task/_report/_$name.php")) {
+            require("_mod/_$mod/_src/_api/_task/_report/_$name.php");
+            exit;
+        }
     }
 
     /**
@@ -231,15 +264,27 @@
     // gestione dei report base /report/<report>
     if (preg_match('#^/report/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         $rep = $m[1];
-        if (file_exists("src/api/report/$rep.php")) require("src/api/report/$rep.php");
-        if (file_exists("_src/_api/_report/_$rep.php")) require("_src/_api/_report/_$rep.php");
+        if (file_exists("src/api/report/$rep.php")) {
+            require("src/api/report/$rep.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_report/_$rep.php")) {
+            require("_src/_api/_report/_$rep.php");
+            exit;
+        }
     }
 
     // gestione dei report dei moduli /report/<mod>/<report>
     if (preg_match('#^/report/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         [$all,$mod,$rep] = $m;
-        if (file_exists("mod/$mod/src/api/report/$rep.php")) require("mod/$mod/src/api/report/$rep.php");
-        if (file_exists("_mod/_$mod/_src/_api/_report/_$rep.php")) require("_mod/_$mod/_src/_api/_report/_$rep.php");
+        if (file_exists("mod/$mod/src/api/report/$rep.php")) {
+            require("mod/$mod/src/api/report/$rep.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_report/_$rep.php")) {
+            require("_mod/_$mod/_src/_api/_report/_$rep.php");
+            exit;
+        }
     }
 
     /**
@@ -287,15 +332,27 @@
     // gestione delle stampe base /print/<print>
     if (preg_match('#^/print/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         $pr = $m[1];
-        if (file_exists("src/api/print/$pr.php")) require("src/api/print/$pr.php");
-        if (file_exists("_src/_api/_print/_$pr.php")) require("_src/_api/_print/_$pr.php");
+        if (file_exists("src/api/print/$pr.php")) {
+            require("src/api/print/$pr.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_print/_$pr.php")) {
+            require("_src/_api/_print/_$pr.php");
+            exit;
+        }
     }
 
     // gestione delle stampe dei moduli /print/<mod>/<print>
     if (preg_match('#^/print/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         [$all,$mod,$pr] = $m;
-        if (file_exists("mod/$mod/src/api/print/$pr.php")) require("mod/$mod/src/api/print/$pr.php");
-        if (file_exists("_mod/_$mod/_src/_api/_print/_$pr.php")) require("_mod/_$mod/_src/_api/_print/_$pr.php");
+        if (file_exists("mod/$mod/src/api/print/$pr.php")) {
+            require("mod/$mod/src/api/print/$pr.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_print/_$pr.php")) {
+            require("_mod/_$mod/_src/_api/_print/_$pr.php");
+            exit;
+        }
     }
 
     /**
