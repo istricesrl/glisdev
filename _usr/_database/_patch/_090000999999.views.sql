@@ -689,6 +689,8 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		m1.nome AS mastro_provenienza,
 		documenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+        group_concat( DISTINCT d1.codice SEPARATOR ' | ' ) AS documenti_antecedenti,
+        group_concat( DISTINCT d2.codice SEPARATOR ' | ' ) AS documenti_successivi,
 		documenti.porto,
 		documenti.id_causale,
 		documenti.id_trasportatore,
@@ -730,6 +732,10 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
 		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
+        LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id
+        LEFT JOIN documenti AS d1 ON d1.id = r1.id_documento_collegato
+        LEFT JOIN relazioni_documenti AS r2 ON r2.id_documento_collegato = documenti.id
+        LEFT JOIN documenti AS d2 ON d2.id = r2.id_documento
 	GROUP BY
 		documenti.id
 ;
