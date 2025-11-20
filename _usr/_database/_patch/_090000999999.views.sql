@@ -879,6 +879,21 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
         documenti_articoli.id
 ;
 
+-- | 090000015200
+
+-- gruppi_view
+CREATE OR REPLACE VIEW `gruppi_view` AS
+	SELECT
+		gruppi.id,
+		gruppi.id_genitore,
+		gruppi.id_organizzazione,
+		gruppi.nome,
+		gruppi.id_account_inserimento,
+		gruppi.id_account_aggiornamento,
+		gruppi_path( gruppi.id ) AS __label__
+	FROM gruppi
+;
+
 -- | 090000015400
 
 -- iban_view

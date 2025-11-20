@@ -23,6 +23,7 @@
     // pagina principale
     $p['dashboard'] = array(
         'sitemap'       => false,
+        'cacheable'     => false,
         'title'         => array( $l        => 'admin' ),
         'h1'            => array( $l        => 'dashboard' ),
         'template'      => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'dashboard.twig' ),
@@ -36,6 +37,7 @@
     // tools dashboard
     $p['dashboard.tools'] = array(
         'sitemap'       => false,
+        'cacheable'     => false,
         'icon'          => '<i class="fa fa-cogs" aria-hidden="true"></i>',
         'title'         => array( $l        => 'azioni' ),
         'h1'            => array( $l        => 'azioni' ),
