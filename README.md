@@ -65,3 +65,42 @@ Prima di procedere con il login, è opportuno lanciare il task di popolazione de
 accedendo all'indirizzo *http://nomesito/task/mysql.patch*.
 
 Una volta che tutto funziona, è possibile accedere al CMS del framework all'indirizzo *http://nomesito/admin*.
+
+installazione su CloudPanel (https://www.cloudpanel.io/)
+--------------------------------------------------------
+Per rendere il framework pienamente funzionante su CloudPanel è necessario apportare una modifica al file
+di configurazione del Virtual Host di Nginx, in particolare è necessario aggiungere:
+
+```
+location / {
+    try_files "" /index.php$is_args$args;
+}
+```
+
+nel blocco server del sito web. Se è presente un blocco come questo, rimuoverlo:
+
+```
+if (-f $request_filename) {
+    break;
+}
+```
+
+in quanto farebbe servire i file statici direttamente senza passare per il front controller. Inoltre è necessario
+aggiungere alla configurazione di Varnish (nel blocco vcl_backend_response) la seguente configurazione:
+
+```
+if (beresp.http.X-GlisWeb-No-Cache == "true") {
+    set beresp.ttl = 0s;
+    set beresp.uncacheable = true;
+    unset beresp.http.Cache-Control;
+    unset beresp.http.Expires;
+    unset beresp.http.Pragma;
+    unset beresp.http.X-Cache-Lifetime;
+    unset beresp.http.X-Cache-Tags;
+    return (deliver);
+}
+```
+
+per fare in modo che GlisWeb possa governare la cache di Varnish. Senza questa configurazione, è necessario
+disattivare Varnish per assicurarsi un comportamento corretto del framework.
+
