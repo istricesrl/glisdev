@@ -57,3 +57,7 @@ mods:
       - "PA000.pagine"
       - "CO000.contenuti"
 ```
+Se è andato tutto a buon fine, vedrete sulla pagina *http://nomesito/status* un report sullo stato
+del framework; altrimenti una serie di errori parlanti vi guiderà al completamento dell'installazione.
+
+Una volta che tutto funziona, è possibile accedere al CMS del framework all'indirizzo *http://nomesito/admin*.
