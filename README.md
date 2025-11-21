@@ -13,9 +13,6 @@ bsdtar --strip-components=1 -xf develop.zip
 rm -f develop.zip
 ```
 
-A questo punto il framework è raggiungibile tramite web, ma non configurato. Per vedere la situazione
-e verificare che sia tutto ok aprite un browser su *http://nomesito/status*.
-
 Per iniziare a lavorare con il framework è necessario creare un file di configurazione minimale
 in */src/config.yaml*:
 
@@ -58,8 +55,10 @@ mods:
       - "CO000.contenuti"
 ```
 
-Se è andato tutto a buon fine, vedrete sulla pagina *http://nomesito/status* un report sullo stato
-del framework; altrimenti una serie di errori parlanti vi guiderà al completamento dell'installazione.
+A questo punto il framework è raggiungibile tramite web, ma non configurato. Per vedere la situazione
+e verificare che sia tutto ok aprite un browser su *http://nomesito/status*; se è andato tutto a buon fine,
+vedrete un report sullo stato del framework; altrimenti una serie di errori parlanti vi guiderà
+al completamento dell'installazione.
 
 Prima di procedere con il login, è opportuno lanciare il task di popolazione del database
 accedendo all'indirizzo *http://nomesito/task/mysql.patch*.
