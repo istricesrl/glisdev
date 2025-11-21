@@ -1154,6 +1154,27 @@
      * =====================
      * 
      * 
+     * sub vcl_backend_response {
+     * 
+     *     if (beresp.http.X-GlisWeb-No-Cache == "true") {
+     *         set beresp.ttl = 0s;
+     *         set beresp.uncacheable = true;
+     *         unset beresp.http.Cache-Control;
+     *         unset beresp.http.Expires;
+     *         unset beresp.http.Pragma;
+     *         unset beresp.http.X-Cache-Lifetime;
+     *         unset beresp.http.X-Cache-Tags;
+     *         return (deliver);
+     *     }
+     * 
+     *     set beresp.grace = 3d;
+     * 
+     *     [...]
+     * 
+     * }
+     * 
+     * 
+     * 
      */
 
     // rimuovo tutti gli header legati alla cache
@@ -1161,7 +1182,11 @@
     header_remove('Expires');
     header_remove('Cache-Control');
     header_remove('X-Cache-Lifetime');
+    header_remove('X-GlisWeb-No-Cache');
+    header_remove('X-GlisWeb-Cacheable');
     header_remove('X-Proxy-Cache');
+
+    $ttl = ( isset( $cf['cache']['profile']['ttl'] ) ) ? intval( $cf['cache']['profile']['ttl'] ) : 3600;
 
     // cache del buffer
     if( ! isset( $cf['session']['account']['username'] ) && isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
@@ -1170,12 +1195,14 @@
         header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $ttl) . ' GMT');
         header('Pragma: cache');
         header('X-Cache-Lifetime: ' . $ttl);
+        header('X-GlisWeb-Cacheable: true');
     } else {
         echo '<!-- pagina NON cacheable -->' . PHP_EOL;
-        header('Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
         header('Pragma: no-cache');
         header('Expires: 0');
         header('X-Proxy-Cache: BYPASS');
+        header('X-GlisWeb-No-Cache: true');
     }
 
     /**
@@ -1247,6 +1274,11 @@
 
         // log
         loggerLatest( 'fine gestione cache statica delle pagine' );
+
+    } else {
+
+        // debug
+        echo PHP_EOL . '<!-- cache delle pagine disabilitata -->' . PHP_EOL;
 
     }
 

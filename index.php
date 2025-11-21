@@ -62,13 +62,22 @@
     }
 
     // navigatore array $cf
-    if ($URI === '/cf')  require('_src/_api/_status/_cf.php');
+    if ($URI === '/cf') {
+        require('_src/_api/_status/_cf.php');
+        exit;
+    }
 
     // navigatore geografia
-    if ($URI === '/geo') require('_src/_api/_status/_geo.php');
+    if ($URI === '/geo') {
+        require('_src/_api/_status/_geo.php');
+        exit;
+    }
 
     // status del framework
-    if ($URI === '/status') require('_src/_api/_status/_framework.php');
+    if ($URI === '/status') {
+        require('_src/_api/_status/_framework.php');
+        exit;
+    }
 
     /**
      * gestione delle API (/api/...)
@@ -77,13 +86,49 @@
      * 
      */
 
-    // API di login e logout
+    // API di login
+    if ($URI === '/api/login') {
+        require('_src/_api/_user.php');
+        exit;
+    }
 
-    // API di download
+    // API di logout
+    if ($URI === '/api/logout') {
+        $_GET['__logout__'] = 1;
+        require('_src/_api/_user.php');
+        exit;
+    }
 
-    // API per il mailing
+    // API di download generico: /var/<...> -> _src/_api/_download.php?__download__=var/...
+    if (preg_match('#^/var/(.+)$#', $URI, $m)) {
+        $_GET['__download__'] = 'var/'.$m[1];
+        require('_src/_api/_download.php');
+        exit;
+    }
+
+    // API per il mailing /mailing/<id>/var/<...>
+    if (preg_match('#^/mailing/([0-9]+)/var/(.+)$#', $URI, $m)) {
+        $_GET['__download__'] = 'var/'.$m[2];
+        $_GET['__mailing__']  = $m[1];
+        require('_src/_api/_download.php');
+        exit;
+    }
+
+    // API per il mailing /mailing/<id>/<dst>/var/<...>
+    if (preg_match('#^/mailing/([0-9]+)/([0-9]+)/var/(.+)$#', $URI, $m)) {
+        $_GET['__download__']   = 'var/'.$m[3];
+        $_GET['__mailing__']    = $m[1];
+        $_GET['__mailing_dst__']= $m[2];
+        require('_src/_api/_download.php');
+        exit;
+    }
 
     // API per OpenstreetMap
+    if (preg_match('#^/tiles/([0-9]+)/([0-9]+)/([0-9]+)\.png$#', $URI, $m)) {
+        $_GET['z']=$m[1]; $_GET['x']=$m[2]; $_GET['y']=$m[3];
+        require('_src/_api/_osm.php');
+        exit;
+    }
 
     /**
      * API generiche
@@ -136,6 +181,13 @@
      * 
      */
 
+    // API per la chiamata diretta dei job /job/<id>
+    if (preg_match('#^/job/([0-9]+)?$#', $URI, $m)) {
+        $_GET['__id__'] = $m[1] ?? '';
+        require('_src/_api/_job.php');
+        exit;
+    }
+
     /**
      * gestione dei task (/task/...)
      * =============================
@@ -174,6 +226,32 @@
      * 
      */
 
+    // task di generazione report /task/report/<name> o /task/report/<mod>/<name>
+    if (preg_match('#^/task/report/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        $name = $m[1];
+        if (file_exists("src/api/task/report/$name.php")) {
+            require("src/api/task/report/$name.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_task/_report/_$name.php")) {
+            require("_src/_api/_task/_report/_$name.php");
+            exit;
+        }
+    }
+
+    // task di generazione report dei moduli /task/report/<mod>/<name>
+    if (preg_match('#^/task/report/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        [$all,$mod,$name] = $m;
+        if (file_exists("mod/$mod/src/api/task/report/$name.php")) {
+            require("mod/$mod/src/api/task/report/$name.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_task/_report/_$name.php")) {
+            require("_mod/_$mod/_src/_api/_task/_report/_$name.php");
+            exit;
+        }
+    }
+
     /**
      * report (/report/...)
      * ====================
@@ -183,6 +261,32 @@
      * 
      */
 
+    // gestione dei report base /report/<report>
+    if (preg_match('#^/report/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        $rep = $m[1];
+        if (file_exists("src/api/report/$rep.php")) {
+            require("src/api/report/$rep.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_report/_$rep.php")) {
+            require("_src/_api/_report/_$rep.php");
+            exit;
+        }
+    }
+
+    // gestione dei report dei moduli /report/<mod>/<report>
+    if (preg_match('#^/report/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        [$all,$mod,$rep] = $m;
+        if (file_exists("mod/$mod/src/api/report/$rep.php")) {
+            require("mod/$mod/src/api/report/$rep.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_report/_$rep.php")) {
+            require("_mod/_$mod/_src/_api/_report/_$rep.php");
+            exit;
+        }
+    }
+
     /**
      * status (/status/...)
      * ====================
@@ -191,7 +295,7 @@
      * 
      */
 
-    // gestione dei report di stato base
+    // gestione dei report di stato base /status/<status>
     if (preg_match('#^/status/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         $st = $m[1];
         if (file_exists("src/api/status/$st.php")) {
@@ -204,7 +308,7 @@
         }
     }
 
-    // gestione dei report di stato dei moduli
+    // gestione dei report di stato dei moduli /status/<mod>/<status>
     if (preg_match('#^/status/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
         [$all,$mod,$st] = $m;
         if (file_exists("mod/$mod/src/api/status/$st.php")) {
@@ -225,6 +329,32 @@
      * 
      */
 
+    // gestione delle stampe base /print/<print>
+    if (preg_match('#^/print/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        $pr = $m[1];
+        if (file_exists("src/api/print/$pr.php")) {
+            require("src/api/print/$pr.php");
+            exit;
+        }
+        if (file_exists("_src/_api/_print/_$pr.php")) {
+            require("_src/_api/_print/_$pr.php");
+            exit;
+        }
+    }
+
+    // gestione delle stampe dei moduli /print/<mod>/<print>
+    if (preg_match('#^/print/([A-Za-z0-9_\-\.]+)/([A-Za-z0-9_\-\.]+)$#', $URI, $m)) {
+        [$all,$mod,$pr] = $m;
+        if (file_exists("mod/$mod/src/api/print/$pr.php")) {
+            require("mod/$mod/src/api/print/$pr.php");
+            exit;
+        }
+        if (file_exists("_mod/_$mod/_src/_api/_print/_$pr.php")) {
+            require("_mod/_$mod/_src/_api/_print/_$pr.php");
+            exit;
+        }
+    }
+
     /**
      * gestione dei contenuti
      * ======================
@@ -232,6 +362,84 @@
      * 
      * 
      */
+
+    // favicon
+    if ($URI === '/favicon.ico') {
+        if (!file_exists('favicon.ico') && file_exists('_src/_img/_favicon.ico')) {
+            die( file_get_contents('_src/_img/_favicon.ico') );
+        }
+    }
+
+    // robots override per STATUS=DEV/TEST
+    $ENV_STATUS = $_SERVER['STATUS'] ?? getenv('STATUS') ?? '';
+    if ($URI === '/robots.txt') {
+        if ($ENV_STATUS === 'DEV' || $ENV_STATUS === 'TEST') {
+            if (file_exists('_etc/_robots/_deny.txt')) 
+                die( file_get_contents('_etc/_robots/_deny.txt') );
+        }
+        if (file_exists('etc/robots/robots.txt')) die( file_get_contents('etc/robots/robots.txt') );
+        if (file_exists('_etc/_robots/_robots.txt')) die( file_get_contents('_etc/_robots/_robots.txt') );
+    }
+
+    // sitemap per host in formato XML
+    if ($URI === '/sitemap.xml') {
+        $p = 'var/sitemap/sitemap.'.$HOST.'.xml';
+        if (file_exists($p)) die( file_get_contents($p) );
+    }
+
+    // sitemap per host in formato CSV
+    if ($URI === '/sitemap.csv') {
+        $p = 'var/sitemap/sitemap.'.$HOST.'.csv';
+        if (file_exists($p)) die( file_get_contents($p) );
+    }
+
+    // supporto WebP automatico
+    if (!preg_match('~\.webp$~i', $URI)) {
+        $rel = ltrim($URI, '/');
+        if ($rel !== '' && !file_exists($rel) && file_exists($rel.'.webp')) {
+            die( file_get_contents($rel.'.webp') );
+        }
+    }
+
+    /**
+     * directory ad accesso diretto
+     * ----------------------------
+     * 
+     * 
+     */
+
+    // usr/pages e _usr/_pages se il file esiste realmente
+    $rel = ltrim($URI, '/');
+    if ($rel !== '') {
+        if (file_exists('usr/pages/'.$rel))  die( file_get_contents('usr/pages/'.$rel) );
+        if (file_exists('_usr/_pages/'.$rel)) die( file_get_contents('_usr/_pages/'.$rel) );
+    }
+
+    // var/cache/css/* -> accesso diretto
+    if (preg_match('#^/var/cache/css/.*#i', $URI) && file_exists(ltrim($URI,'/'))) {
+        die( file_get_contents(ltrim($URI,'/')) );
+    }
+
+    /**
+     * gestione dei contenuti statici
+     * ------------------------------
+     * 
+     * 
+     */
+
+    // se arrivo qui e il file esiste realmente, lo servo
+    if ($rel !== '' && file_exists($rel)) {
+        $ext = strtolower(pathinfo($rel, PATHINFO_EXTENSION));
+        if (in_array($ext, ['htm','html'])) {
+            die( file_get_contents($rel) );
+        } elseif (in_array($ext, ['jpg','jpeg','png','gif','ico','webp'])) {
+            die( file_get_contents($rel) );
+        } elseif (in_array($ext, ['css','js'])) {
+            die( file_get_contents($rel) );
+        } else {
+            die( file_get_contents($rel));
+        }
+    }
 
     /**
      * gestione delle pagine (catch-all)
