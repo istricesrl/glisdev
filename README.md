@@ -57,7 +57,11 @@ mods:
       - "PA000.pagine"
       - "CO000.contenuti"
 ```
+
 Se è andato tutto a buon fine, vedrete sulla pagina *http://nomesito/status* un report sullo stato
 del framework; altrimenti una serie di errori parlanti vi guiderà al completamento dell'installazione.
+
+Prima di procedere con il login, è opportuno lanciare il task di popolazione del database
+accedendo all'indirizzo *http://nomesito/task/mysql.patch*.
 
 Una volta che tutto funziona, è possibile accedere al CMS del framework all'indirizzo *http://nomesito/admin*.
