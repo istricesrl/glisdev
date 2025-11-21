@@ -84,4 +84,8 @@ if [ -f "nginxuser.conf" ]; then
     # informazioni
     echo "permessi modificati"
 
+else
+
+    echo "file nginxuser.conf mancante"
+
 fi
