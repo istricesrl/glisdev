@@ -17,7 +17,7 @@ A questo punto il framework è raggiungibile tramite web, ma non configurato. Pe
 e verificare che sia tutto ok aprite un browser su *http://nomesito/status*.
 
 Per iniziare a lavorare con il framework è necessario creare un file di configurazione minimale
-in /src/config.yaml:
+in */src/config.yaml*:
 
 ```
 sites:
