@@ -63,7 +63,9 @@ al completamento dell'installazione.
 
 Gli step che saranno più frequentemente richiesti in questa fase sono la sistemazione dei permessi
 (per la quale è necessario lanciare */_src/_sh/_lamp.permissions.secure.sh* o */_src/_sh/_nginx.permissions.secure.sh*)
-e l'esecuzione di *composer update*.
+e l'esecuzione di *composer update*. Si noti che l'esecuzione di */_src/_sh/_nginx.permissions.secure.sh*
+richiede la presenza, nella cartella che contiene la document root del sito, di un file *nginxuser.conf*
+contenente il nome utente al quale assegnare la proprietà del sito.
 
 Quando è tutto in ordine, prima di procedere con il login è opportuno lanciare il task di popolazione del database
 accedendo all'indirizzo *http://nomesito/task/mysql.patch*.
