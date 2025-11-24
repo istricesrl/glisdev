@@ -1,6 +1,11 @@
 come installare GlisWeb
 =======================
-Accedete via SSH al vostro server e scaricate lo zip del repository nella document root:
+Questa procedura descrive come installare il framework GlisWeb per lo sviluppo di progetti con
+il framework; per sviluppare il framework invece leggere la sezione *installare il framework per
+contribuire*.
+
+Per iniziare un nuovo progetto che utilizza il framework GlisWeb, accedete via SSH al
+vostro server e scaricate lo zip del repository nella document root:
 
 ```
 wget https://github.com/istricesrl/glisdev/archive/refs/heads/develop.zip
@@ -110,3 +115,6 @@ if (beresp.http.X-GlisWeb-No-Cache == "true") {
 per fare in modo che GlisWeb possa governare la cache di Varnish. Senza questa configurazione, è necessario
 disattivare Varnish per assicurarsi un comportamento corretto del framework.
 
+installare il framework per contribuire
+---------------------------------------
+Questa sezione è attualmente in aggiornamento.
