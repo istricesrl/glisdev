@@ -86,6 +86,6 @@ if [ -f "nginxuser.conf" ]; then
 
 else
 
-    echo "file nginxuser.conf mancante"
+    echo "file nginxuser.conf mancante, utilizzare 'echo <user> > nginxuser.conf' nella cartella superiore alla document root"
 
 fi
