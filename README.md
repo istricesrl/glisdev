@@ -65,7 +65,7 @@ Gli step che saranno più frequentemente richiesti in questa fase sono la sistem
 (per la quale è necessario lanciare */_src/_sh/_lamp.permissions.secure.sh* o */_src/_sh/_nginx.permissions.secure.sh*)
 e l'esecuzione di *composer update*.
 
-Quando è tutto in ordine, rima di procedere con il login è opportuno lanciare il task di popolazione del database
+Quando è tutto in ordine, prima di procedere con il login è opportuno lanciare il task di popolazione del database
 accedendo all'indirizzo *http://nomesito/task/mysql.patch*.
 
 Una volta che tutto funziona, è possibile accedere al CMS del framework all'indirizzo *http://nomesito/admin*.
