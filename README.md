@@ -61,7 +61,11 @@ e verificare che sia tutto ok aprite un browser su *http://nomesito/status*; se 
 vedrete un report sullo stato del framework; altrimenti una serie di errori parlanti vi guiderà
 al completamento dell'installazione.
 
-Prima di procedere con il login, è opportuno lanciare il task di popolazione del database
+Gli step che saranno più frequentemente richiesti in questa fase sono la sistemazione dei permessi
+(per la quale è necessario lanciare */_src/_sh/_lamp.permissions.secure.sh* o */_src/_sh/_nginx.permissions.secure.sh*)
+e l'esecuzione di *composer update*.
+
+Quando è tutto in ordine, rima di procedere con il login è opportuno lanciare il task di popolazione del database
 accedendo all'indirizzo *http://nomesito/task/mysql.patch*.
 
 Una volta che tutto funziona, è possibile accedere al CMS del framework all'indirizzo *http://nomesito/admin*.
