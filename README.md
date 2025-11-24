@@ -14,7 +14,8 @@ rm -f develop.zip
 ```
 
 Per iniziare a lavorare con il framework è necessario creare un file di configurazione minimale
-in */src/config.yaml*:
+in */src/config.yaml*; prima di iniziare assicurarsi di avere a portata di mano i dati di connessione
+al database e l'hash della password di root (potete generarlo usando */_src/_sh/_password.hash.sh*):
 
 ```
 sites:
