@@ -39,7 +39,7 @@ Bootstrap 4.x
 
 <div class="media">
     <div class="media-left">
-        {{ include( template_from_string( obj.icon|default(') ) ) }}
+        {{ include( template_from_string( obj.icon|default('') ) ) }}
     </div>
     <div class="media-body">
         <h5 class="media-title">{{ obj.h1[ localization.language.ietf ] }}</h5>
