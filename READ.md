@@ -28,9 +28,9 @@ require         | phpoffice/phpword             | *                 |
 require         | phpoffice/phpspreadsheet      | *                 |
 require         | phpoffice/phppresentation     | *                 |
 require         | html2text/html2text           | *                 |
-require         | phpmailer/phpmailer           | 6.*               |
+require         | phpmailer/phpmailer           | *                 |
 require         | tecnickcom/tcpdf              | *                 |
-require         | twig/twig                     | 2.*               |
+require         | twig/twig                     | *                 |
 require         | predis/predis                 | *                 |
 require         | codeception/codeception       | *                 |
 require         | codeception/module-phpbrowser | *                 |
