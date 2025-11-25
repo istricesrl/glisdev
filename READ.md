@@ -269,6 +269,21 @@ Questa è la macro della pagina degli strumenti della dashboard del modulo conte
 ### /_mod/_03000.contenuti/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine del modulo contenuti.
 
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.archivio.php
+Questa è la macro della pagina di archivio del catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.archivio.tools.php
+Questa è la macro della pagina degli strumenti dell'archivio del catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.php
+Questa è la macro della dashboard del modulo catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.tools.php
+Questa è la macro della pagina degli strumenti della dashboard del modulo catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_pages/_catalogo.it-IT.php
+Qui vengono definite le pagine del modulo catalogo.
+
 ### /_src/_config.php
 Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
 comunque il suo compito è quello di includere tutti i componenti del framework per renderli disponibili al successivo codice sorgente. Qualsiasi
