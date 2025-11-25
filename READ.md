@@ -311,6 +311,33 @@ Questa è la macro della pagina degli strumenti della dashboard dell'amministraz
 ### /_mod/_06000.amministrazione/_src/_inc/_pages/_amministrazione.it-IT.php
 Qui vengono definite le pagine del modulo amministrazione.
 
+### /_mod/_AC000.account/_src/_inc/_controllers/_account.before.php
+Questa controller viene eseguita al before di ogni elaborazione dell'entità account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.php
+Questa è la macro del form di gestione degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.tools.php
+Questa è la macro della pagina strumenti del form di gestione degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.tools.php
+Questa è la macro degli strumenti della view degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.view.php
+Questa è la macro della view degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_gruppi.form.php
+Questa è la macro della pagina di gestione dei gruppi.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_gruppi.form.tools.php
+Questa è la macro della pagina strumenti della gestione dei gruppi.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_gruppi.view.php
+QUesta è la macro della view dei gruppi.
+
+### /_mod/_AC000.account/_src/_inc/_pages/_account.it-IT.php
+Qui vengono definite le pagine del modulo account.
+
 ### /_src/_config.php
 Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
 comunque il suo compito è quello di includere tutti i componenti del framework per renderli disponibili al successivo codice sorgente. Qualsiasi
