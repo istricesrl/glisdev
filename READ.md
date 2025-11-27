@@ -1647,6 +1647,18 @@ ruolo all'immagine sarà poi possibile richiamarla con la macro image() come seg
 
 Supponendo in questo caso che il ruolo assegnato sia 'immagine' e l'ordine assegnato sia '10'.
 
+#### come configuro Google Analytics per misurare le visite al mio sito?
+Devi compilare l'apposita sezione del file di configurazione; supponendo che tu abbia usato YAML, avrai qualcosa di simile:
+
+```
+google:
+  profiles:
+    DEV:
+      analytics:
+        ua: "IL-TUO-CODICE-ANALYTICS",
+        anonymous": true
+```
+
 ### template Athena
 Questa sezione contiene domande specificamente relative all'utilizzo del template Athena.
 
