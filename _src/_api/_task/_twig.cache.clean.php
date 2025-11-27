@@ -13,7 +13,6 @@
 
     // inclusione del framework
     if( ! defined( 'CRON_RUNNING' ) ) {
-        define( 'MEMCACHE_REFRESH', 1 );
         if( ! defined( 'INCLUDE_SUBDIR' ) ) {
             require '../../_config.php';
         } else {
