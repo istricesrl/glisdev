@@ -1182,6 +1182,10 @@ configurato in modalità anonimizzazione IP.
 Questo file contiene le patch base necessarie alla creazione delle tabelle nel database del framework; per ulteriori informazioni
 sul funzionamento del sistema di patch si vedano i commenti al file /_src/_api/_task/_mysql.patch.php.
 
+## documentazione dei moduli
+
+### CT000.contatti
+
 ## FAQ
 
 ### domande generali
@@ -1561,3 +1565,12 @@ Le pagine di tipo form possono essere create a partire da questa struttura base:
 <!-- fine blocco {{ _self }}::main -->
 {% endblock main %}
 ```
+
+### problemi frequenti
+
+#### il framework mi chiede di rifare il login a ogni pagina che visito, perché?
+Questo problema si manifesta solitamente quando SSL non è configurato correttamente; accedendo a una pagina HTTP e venendo
+poi reindirizzati a una pagina HTTPS si perde il cookie di sessione e questo obbliga a rifare il login. Per verificare se
+effettivamente il problema che riscontrate è questo, monitorate il cookie di sessione dalla scheda applicazione dei tools
+per gli sviluppatori di Chrome o Firefox; se notate che il cookie appare e scompare randomicamente ogni volta che cambiate
+pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito sia configurata correttamente.

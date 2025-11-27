@@ -749,6 +749,7 @@ CREATE TABLE IF NOT EXISTS `contatti` (                       --
   `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica collegata al contatto
   `id_inviante` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica dell'inviante
   `id_ranking` int(11) DEFAULT NULL,                          -- chiave esterna per il ranking
+  `id_sito` int(11) DEFAULT NULL,                             -- chiave esterna per il sito di acquisizione
   `utm_id` char(128) DEFAULT NULL,                            -- UTM id
   `utm_source` char(128) DEFAULT NULL,                        -- UTM source
   `utm_medium` char(128) DEFAULT NULL,                        -- UTM medium
@@ -756,8 +757,12 @@ CREATE TABLE IF NOT EXISTS `contatti` (                       --
   `utm_term` char(128) DEFAULT NULL,                          -- UTM term
   `utm_content` char(128) DEFAULT NULL,                       -- UTM content
   `nome` char(255) DEFAULT NULL,                              -- nome del contatto
+  `modulo` char(128) DEFAULT NULL,                            -- modulo di acquisizione
   `note` text DEFAULT NULL,                                   -- note sul contatto
   `json` text DEFAULT NULL,                                   -- campo JSON per informazioni aggiuntive
+  `yaml` text DEFAULT NULL,                                   -- campo YAML per informazioni aggiuntive
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text NULL,                             -- note di archiviazione
   `timestamp_contatto` int(11) DEFAULT NULL,                  -- timestamp del contatto
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il contatto
@@ -2408,6 +2413,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000050800
+
+-- tipologie_contatti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di contatti
+--
+-- questa tabella contiene le tipologie di contatti, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000050900
 

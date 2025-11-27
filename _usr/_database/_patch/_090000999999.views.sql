@@ -602,6 +602,46 @@ CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
   FROM consensi_moduli                                        --
 ;                                                             --
 
+-- | 090000006700
+
+-- contatti_view
+CREATE OR REPLACE VIEW contatti_view AS
+	SELECT
+		contatti.id,
+		contatti.id_tipologia,
+		tipologie_contatti.nome AS tipologia,
+		contatti.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		contatti.id_inviante,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS inviante,
+		contatti.id_ranking,
+		ranking.nome AS ranking,
+		contatti.id_sito,
+        contatti.utm_id,
+        contatti.utm_source,
+        contatti.utm_medium,
+        contatti.utm_campaign,
+        contatti.utm_term,
+        contatti.utm_content,
+		contatti.nome,
+		contatti.modulo,
+        contatti.data_archiviazione,
+		contatti.timestamp_contatto,
+		from_unixtime( contatti.timestamp_contatto, '%Y-%m-%d %H:%i' ) AS data_ora_contatto,
+		contatti.id_account_inserimento,
+		contatti.id_account_aggiornamento,
+		concat(
+			tipologie_contatti.nome,
+			' / ',
+			contatti.nome
+		) AS __label__
+	FROM contatti
+		LEFT JOIN tipologie_contatti ON tipologie_contatti.id = contatti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = contatti.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
+		LEFT JOIN ranking ON ranking.id = contatti.id_ranking
+;
+
 -- | 090000006900
 
 -- contenuti_view
@@ -1601,6 +1641,23 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
             tipologie_attivita.id ) AS __label__              -- etichetta per le tendine e le liste
 	FROM tipologie_attivita                                   --
 ;                                                             --
+
+-- | 090000050800
+
+-- tipologie_contatti_view
+CREATE OR REPLACE VIEW `tipologie_contatti_view` AS
+	SELECT
+		tipologie_contatti.id,
+		tipologie_contatti.id_genitore,
+		tipologie_contatti.ordine,
+		tipologie_contatti.nome,
+		tipologie_contatti.html_entity,
+		tipologie_contatti.font_awesome,
+		tipologie_contatti.id_account_inserimento,
+		tipologie_contatti.id_account_aggiornamento,
+		tipologie_contatti_path( tipologie_contatti.id ) AS __label__
+	FROM tipologie_contatti
+;
 
 -- | 090000052600
 
