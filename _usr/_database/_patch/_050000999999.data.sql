@@ -88,6 +88,98 @@ INSERT IGNORE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alph
 (14,    'croato',       'croato (Croazia)',         'hr',    'hrv',    'hr-HR'),
 (15,    'rumeno',       'rumeno (Romania)',         'ro',    'ron',    'ro-RO');
 
+-- | 050000017200
+
+-- listini
+INSERT INTO `listini` (`id`, `id_genitore`, `id_tipologia`, `id_valuta`, `codice`, `sconto_su_genitore`, `se_default_su_genitore`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	'DEFAULT',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000021900
+
+-- modalita_pagamento
+INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
+(1,	        'MP01',	        'contanti'),
+(2,	        'MP02',	        'assegno'),
+(3,	        'MP03',	        'assegno circolare'),
+(4,	        'MP04',	        'contanti presso tesoreria'),
+(5,	        'MP05',	        'bonifico'),
+(6,	        'MP06',	        'vaglia cambiario'),
+(7,	        'MP07',	        'bollettino bancario'),
+(8,	        'MP08',	        'carta di credito'),
+(9,	        'MP09',	        'RID'),
+(10,	    'MP10',	        'RID utenze'),
+(11,	    'MP11',	        'RID veloce'),
+(12,	    'MP12',	        'RIBA'),
+(13,	    'MP13',	        'MAV'),
+(14,	    'MP14',	        'quietanza erario stato'),
+(15,	    'MP15',	        'giroconto su conti di contabilità speciale'),
+(16,	    'MP16',	        'domiciliazione bancaria'),
+(17,	    'MP17',	        'domiciliazione postale'),
+(18,	    'MP18',         'bollettino di c/c postale'),
+(19,        'MP19',         'SEPA Direct Debit' ),
+(20,        'MP20',         'SEPA Direct Debit CORE' ),
+(21,        'MP21',         'SEPA Direct Debit B2B' ),
+(22,        'MP22',         'Trattenuta su somme già riscosse' ),
+(23,        'MP08',         'bancomat' ),
+(24,        'MP08',         'paypal' );
+
+-- | 050000028600
+
+-- ranking
+INSERT IGNORE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornitore`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'PLATINUM',	NULL,	100,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'GOLD',	NULL,	200,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'BRONZE',	NULL,	400,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000029800
+
+-- regimi
+INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice`) VALUES
+(1,     'privato',                      NULL),
+(2,     'ordinario',                    'RF01'),
+(3,     'minimi',                       'RF02'),
+(4,     'agricoltura e pesca',          'RF04'),
+(5,     'sali e tabacchi',              'RF05'),
+(6,     'editoria',                     'RF07'),
+(7,     'intrattenimento',              'RF10'),
+(8,     'viaggi e turismo',             'RF11'),
+(9,     'agriturismo',                  'RF12'),
+(10,    'vendite a domicilio',          'RF13'),
+(11,    'beni usati e collezionismo',   'RF14'),
+(12,    'IVA per cassa P.A.',           'RF16'),
+(13,    'IVA per cassa',                'RF17'),
+(14,    'altro',                        'RF18'),
+(15,    'forfettario',                  'RF19');
+
+-- NOTE
+-- Contribuenti minimi (art. 1, commi 96-117, legge n. 244/2007)	RF2
+-- Agricoltura e attività connesse e pesca (articoli 34 e 34-bis, D.P.R. n. 633/1972);	RF04
+-- Vendita sali e tabacchi (art. 74, comma 1, D.P.R. n. 633/1972)	RF05
+-- Commercio dei fiammiferi (art. 74, comma 1, D.P.R. n. 633/1972)	RF06
+-- Editoria (art. 74, comma 1, D.P.R. n. 633/1972)	RF07
+-- Gestione di servizi di telefonia pubblica (art. 74, comma 1, D.P.R. n. 633/1972)	RF08
+-- Rivendita di documenti di trasporto pubblico e di sosta (art. 74, comma 1, D.P.R. n. 633/1972)	RF09
+-- Intrattenimenti, giochi e altre attività di cui alla tariffa allegata al D.P.R. n. 640/1972 (art. 74, comma 6, D.P.R. n. 633/1972)	RF10
+-- Agenzie di viaggi e turismo (art. 74-ter, D.P.R. n. 633/1972)	RF11
+-- Agriturismo (art. 5, comma 2, legge n. 413/1991)	FR12
+-- Vendite a domicilio (art. 25-bis, comma 6, D.P.R. n. 600/1973)	RF13
+-- Rivendita di beni usati, di oggetti d’arte, d’antiquariato o da collezione (art. 36, D.L. n. 41/1995)	RF14
+-- Agenzie di vendite all’asta di oggetti d’arte, antiquariato o da collezione (art. 40-bis, D.L. n. 41/1995)	RF15
+-- IVA per cassa P.A. (art. 6, comma 5, D.P.R. n. 633/1972)	RF16
+-- IVA per cassa (art. 32-bis, D.L. n. 83/2012)	RF17
+-- Altro	RF18
+-- Forfettario (art.1, commi 54-89, legge n. 190/2014)	RF19
+
+-- | 050000034300
+
+-- ruoli_documenti
+INSERT INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_documenti`, `se_documenti_articoli`, `se_relazioni`, `se_conferma`, `se_consuntivo`, `se_evasione`) VALUES
+(1,	NULL,	'conferma',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL,	NULL),
+(2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1,	NULL),
+(3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	1),
+(4,	NULL,	'missione',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	1);
+
 -- | 050000034600
 
 -- ruoli_immagini
@@ -121,6 +213,16 @@ INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome
 (3,	'casa',             '&#xf015;',     '',     NULL,	NULL,	1,	    NULL),
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
+
+-- | 050000037000
+
+-- settori
+INSERT IGNORE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`) VALUES
+(1,     NULL,   'A',          'AGRICOLTURA, SILVICOLTURA E PESCA',                                                    'agricoltura, silvicoltura e pesca'),
+(2,     1,      '01',         'COLTIVAZIONI AGRICOLE E PRODUZIONE DI PRODOTTI ANIMALI, CACCIA E SERVIZI CONNESSI',    'coltivazioni, prodotti animali e caccia'),
+(3,     2,      '01.1',       'COLTIVAZIONE DI COLTURE AGRICOLE NON PERMANENTI',                                      'colture non permanenti'),
+(4,     2,      '01.11',      'Coltivazione di cereali (escluso il riso), legumi da granella e semi oleosi',          'coltivazione di cereali, legumi e semi'),
+(5,     4,      '01.11.1',    'Coltivazione di cereali (escluso il riso)',                                            'coltivazione di cereali');
 
 -- | 050000050000
 
@@ -312,5 +414,11 @@ INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity
 (13,	2,	NULL,	'YouTube',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (14,	2,	NULL,	'TikTok',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (15,	3,	NULL,	'FTP',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000063000
+
+-- valute
+INSERT IGNORE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
+(1,	'EUR',	'&#8634;',	'€');
 
 -- | FINE FILE

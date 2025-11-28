@@ -417,6 +417,145 @@ CREATE
 
 END;
 
+-- | 070000015200
+
+-- gruppi_path
+DROP FUNCTION IF EXISTS `gruppi_path`;
+
+-- | 070000015201
+
+-- gruppi_path
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `gruppi_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT gruppi_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				gruppi.id_genitore,
+				gruppi.nome
+			FROM gruppi
+			WHERE gruppi.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000015210
+
+-- gruppi_path_check
+DROP FUNCTION IF EXISTS `gruppi_path_check`;
+
+-- | 070000015211
+
+-- gruppi_path_check
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `gruppi_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT gruppi_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				gruppi.id_genitore
+			FROM gruppi
+			WHERE gruppi.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000015220
+
+-- gruppi_path_find_ancestor
+DROP FUNCTION IF EXISTS `gruppi_path_find_ancestor`;
+
+-- | 070000015221
+
+-- gruppi_path_find_ancestor
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `gruppi_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT gruppi_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				gruppi.id_genitore,
+				gruppi.id
+			FROM gruppi
+			WHERE gruppi.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000018000
 
 -- luoghi_path
@@ -545,6 +684,145 @@ CREATE
 				luoghi.id
 			FROM luoghi
 			WHERE luoghi.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+-- | 070000020600
+
+-- mastri_path
+DROP FUNCTION IF EXISTS `mastri_path`;
+
+-- | 070000020601
+
+-- mastri_path
+-- verifica: 2021-09-28 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `mastri_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT mastri_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				mastri.id_genitore,
+				mastri.nome
+			FROM mastri
+			WHERE mastri.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000020610
+
+-- mastri_path_check
+DROP FUNCTION IF EXISTS `mastri_path_check`;
+
+-- | 070000020611
+
+-- mastri_path_check
+-- verifica: 2021-09-28 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `mastri_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT mastri_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				mastri.id_genitore
+			FROM mastri
+			WHERE mastri.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000020620
+
+-- mastri_path_find_ancestor
+DROP FUNCTION IF EXISTS `mastri_path_find_ancestor`;
+
+-- | 070000020621
+
+-- mastri_path_find_ancestor
+-- verifica: 2021-09-28 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `mastri_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT mastri_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				mastri.id_genitore,
+				mastri.id
+			FROM mastri
+			WHERE mastri.id = p1
 			INTO p1, p2;
 
 		END WHILE;
@@ -831,6 +1109,142 @@ CREATE
 
 END;
 
+-- | 070000034300
+
+-- ruoli_documenti_path
+DROP FUNCTION IF EXISTS `ruoli_documenti_path`;
+
+-- | 070000034301
+
+-- ruoli_documenti_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_documenti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_documenti_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				ruoli_documenti.id_genitore,
+				ruoli_documenti.nome
+			FROM ruoli_documenti
+			WHERE ruoli_documenti.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000034310
+
+-- ruoli_documenti_path_check
+DROP FUNCTION IF EXISTS `ruoli_documenti_path_check`;
+
+-- | 070000034311
+
+-- ruoli_documenti_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_documenti_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_documenti_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				ruoli_documenti.id_genitore
+			FROM ruoli_documenti
+			WHERE ruoli_documenti.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000034320
+
+-- ruoli_documenti_path_find_ancestor
+DROP FUNCTION IF EXISTS `ruoli_documenti_path_find_ancestor`;
+
+-- | 070000034321
+
+-- ruoli_documenti_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_documenti_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_documenti_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				ruoli_documenti.id_genitore,
+				ruoli_documenti.id
+			FROM ruoli_documenti
+			WHERE ruoli_documenti.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000034600
 
 -- ruoli_immagini_path
@@ -1095,6 +1509,142 @@ CREATE
 				ruoli_indirizzi.id
 			FROM ruoli_indirizzi
 			WHERE ruoli_indirizzi.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+-- | 070000037000
+
+-- settori_path
+DROP FUNCTION IF EXISTS `settori_path`;
+
+-- | 070000037001
+
+-- settori_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `settori_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT settori_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				settori.id_genitore,
+				concat( settori.ateco, ' ', settori.nome )
+			FROM settori
+			WHERE settori.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000037010
+
+-- settori_path_check
+DROP FUNCTION IF EXISTS `settori_path_check`;
+
+-- | 070000037011
+
+-- settori_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `settori_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT settori_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				settori.id_genitore
+			FROM settori
+			WHERE settori.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000037020
+
+-- settori_path_find_ancestor
+DROP FUNCTION IF EXISTS `settori_path_find_ancestor`;
+
+-- | 070000037021
+
+-- settori_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `settori_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT settori_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				settori.id_genitore,
+				settori.id
+			FROM settori
+			WHERE settori.id = p1
 			INTO p1, p2;
 
 		END WHILE;
