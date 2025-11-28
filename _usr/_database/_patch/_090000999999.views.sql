@@ -1884,9 +1884,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 			' # ',
 			video.ordine,
 			' / ',
-			video.nome,
-			' / ',
-			video.path
+			video.nome
 		) AS __label__
 	FROM video
 		LEFT JOIN lingue ON lingue.id = video.id_lingua
