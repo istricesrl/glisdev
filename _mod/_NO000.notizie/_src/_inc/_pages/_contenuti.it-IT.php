@@ -210,6 +210,11 @@
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.immagini' );
     }
 
+    // RELAZIONI CON IL MODULO VIDEO
+    if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.video' );
+    }
+
     // tools archivio produzione
     $p['contenuti.categorie.notizie.form.archiviazione'] = array(
         'sitemap'            => false,
