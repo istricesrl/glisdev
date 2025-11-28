@@ -1520,6 +1520,30 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
 	FROM ruoli_indirizzi									  --
 ;                                                             --
 
+-- | 090000035200
+
+-- ruoli_video_view
+CREATE OR REPLACE VIEW ruoli_video_view AS
+	SELECT
+		ruoli_video.id,
+		ruoli_video.id_genitore,
+		ruoli_video.nome,
+		ruoli_video.html_entity,
+		ruoli_video.font_awesome,
+		ruoli_video.se_anagrafica,
+		ruoli_video.se_pagine,
+		ruoli_video.se_prodotti,
+		ruoli_video.se_articoli,
+		ruoli_video.se_categorie_prodotti,
+		ruoli_video.se_notizie,
+		ruoli_video.se_categorie_notizie,
+		ruoli_video.se_risorse,
+		ruoli_video.se_categorie_risorse,
+		ruoli_video.se_immobili,
+	 	ruoli_video_path( ruoli_video.id ) AS __label__
+	FROM ruoli_video
+;
+
 -- | 090000037000
 
 -- settori_view
