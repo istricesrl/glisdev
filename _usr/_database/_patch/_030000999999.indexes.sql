@@ -401,6 +401,7 @@ ALTER TABLE `contatti`
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_inviante` (`id_inviante`),
 	ADD KEY `id_ranking` (`id_ranking`),	
+	ADD KEY `id_sito` (`id_sito`),	
 	ADD KEY `utm_id` ( `utm_id` ),
 	ADD KEY `utm_source` ( `utm_source` ),
 	ADD KEY `utm_medium` ( `utm_medium` ),
@@ -1534,6 +1535,20 @@ ALTER TABLE `tipologie_attivita`
 
 -- tipologie_attivita
 ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000050800
+
+-- tipologie_contatti
+ALTER TABLE `tipologie_contatti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000050801
+
+-- tipologie_contatti
+ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050900
 
