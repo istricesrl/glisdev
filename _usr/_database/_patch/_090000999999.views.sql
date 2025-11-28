@@ -1840,6 +1840,59 @@ CREATE OR REPLACE VIEW url_view AS                            --
             ON tipologie_url.id = url.id_tipologia            --
 ;                                                             --
 
+-- | 090000065001
+
+-- video_view
+CREATE OR REPLACE VIEW `video_view` AS
+	SELECT
+		video.id,
+		video.id_anagrafica,
+		video.id_pagina,
+		video.id_file,
+		video.id_prodotto,
+		video.id_articolo,
+		video.id_categoria_prodotti,
+		video.id_risorsa,
+		video.id_categoria_risorse,
+		video.id_notizia,
+		video.id_annuncio,
+		video.id_categoria_notizie,
+		video.id_categoria_annunci,
+		video.id_lingua,
+		lingue.nome AS lingua,
+		video.id_ruolo,
+		video.id_progetto,
+		video.id_categoria_progetti,
+		video.id_indirizzo,
+		video.id_edificio,
+		video.id_immobile,
+        video.id_valutazione,
+		ruoli_video.nome AS ruolo,
+		video.ordine,
+		video.nome,
+		video.path,
+		video.id_embed,
+		video.codice_embed,
+		video.embed_custom,
+		video.target,
+		video.orientamento,
+		video.ratio,
+		video.id_account_inserimento,
+		video.id_account_aggiornamento,
+		concat(
+			ruoli_video.nome,
+			' # ',
+			video.ordine,
+			' / ',
+			video.nome,
+			' / ',
+			video.path
+		) AS __label__
+	FROM video
+		LEFT JOIN lingue ON lingue.id = video.id_lingua
+		LEFT JOIN ruoli_video ON ruoli_video.id = video.id_ruolo
+;
+
 -- | 090000999000
 
 -- test_view
