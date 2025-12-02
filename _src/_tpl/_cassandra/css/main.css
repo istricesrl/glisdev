@@ -6,11 +6,15 @@ body {
 }
 
 header, main, footer {
-    padding: 1.0em 2.0em;
+    padding: 0em !important;
+}
+
+header, footer {
+    background-color: #f2f2f2;
 }
 
 nav {
-    margin-top: 1em;
+    margin: 0em;
 }
 
 h1, h2, h3, h4, h5 {
@@ -39,6 +43,10 @@ p {
 
 header p, footer p {
     margin: 0.0em;
+}
+
+footer p {
+    font-size: 0.75em;
 }
 
 li {
