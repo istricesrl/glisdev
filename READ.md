@@ -1584,6 +1584,9 @@ Per entrare in un container ed esplorare i file (utile per vedere i file di log)
 docker exec -it <containerId> bash
 ```
 
+#### posso lanciare il container di Glisweb su Flatcar Linux?
+TODO documentare
+
 #### come creo una patch per il database?
 Una patch per il database è un file contenente uno o più comandi SQL, opportunamente commentati per far capire al framework come deve considerarli.
 Per mantenere la consistenza fra database e applicazione è necessario attenersi strettamente alle seguenti regole ogni volta che si desidera
