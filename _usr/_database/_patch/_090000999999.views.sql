@@ -1117,6 +1117,78 @@ CREATE OR REPLACE VIEW `mail_view` AS                         --
             ON a1.id = mail.id_anagrafica                     --
 ;                                                             --
 
+-- | 090000018800
+
+-- mail_out_view
+CREATE OR REPLACE VIEW `mail_out_view` AS
+	SELECT
+		mail_out.id,
+		mail_out.id_mail,
+		mail_out.id_mailing,
+		mail_out.ordine,
+		mail_out.timestamp_composizione,
+		mail_out.mittente,
+		mail_out.destinatari,
+		mail_out.destinatari_cc,
+		mail_out.destinatari_bcc,
+		mail_out.oggetto,
+		mail_out.allegati,
+		mail_out.headers,
+		mail_out.server,
+		mail_out.host,
+		mail_out.port,
+		mail_out.user,
+		mail_out.password,
+		mail_out.token,
+		mail_out.tentativi,
+		mail_out.timestamp_invio,
+		from_unixtime( mail_out.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		mail_out.id_account_inserimento,
+		mail_out.id_account_aggiornamento,
+		concat(
+			mail_out.destinatari,
+			' / ',
+			mail_out.oggetto
+		) AS __label__
+	FROM mail_out
+;
+
+-- | 090000018900
+
+-- mail_sent_view
+CREATE OR REPLACE VIEW `mail_sent_view` AS
+	SELECT
+		mail_sent.id,
+		mail_sent.id_mail,
+		mail_sent.id_mailing,
+		mail_sent.ordine,
+		mail_sent.timestamp_composizione,
+		mail_sent.mittente,
+		mail_sent.destinatari,
+		mail_sent.destinatari_cc,
+		mail_sent.destinatari_bcc,
+		mail_sent.oggetto,
+		mail_sent.allegati,
+		mail_sent.headers,
+		mail_sent.server,
+		mail_sent.host,
+		mail_sent.port,
+		mail_sent.user,
+		mail_sent.password,
+		mail_sent.token,
+		mail_sent.tentativi,
+		mail_sent.timestamp_invio,
+		from_unixtime( mail_sent.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		mail_sent.id_account_inserimento,
+		mail_sent.id_account_aggiornamento,
+		concat(
+			mail_sent.destinatari,
+			' / ',
+			mail_sent.oggetto
+		) AS __label__
+	FROM mail_sent
+;
+
 -- | 090000021600
 
 -- menu_view
@@ -1472,6 +1544,32 @@ CREATE OR REPLACE VIEW ruoli_documenti_view AS
 		ruoli_documenti.se_evasione,
 	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
 	FROM ruoli_documenti
+;
+
+-- | 090000034401
+
+-- ruoli_file_view
+CREATE OR REPLACE VIEW ruoli_file_view AS
+	SELECT
+		ruoli_file.id,
+		ruoli_file.id_genitore,
+		ruoli_file.nome,
+		ruoli_file.html_entity,
+		ruoli_file.font_awesome,
+		ruoli_file.se_anagrafica,
+		ruoli_file.se_pagine,
+		ruoli_file.se_prodotti,
+		ruoli_file.se_articoli,
+		ruoli_file.se_categorie_prodotti,
+		ruoli_file.se_notizie,
+		ruoli_file.se_categorie_notizie,
+		ruoli_file.se_risorse,
+		ruoli_file.se_categorie_risorse,
+		ruoli_file.se_mail,
+		ruoli_file.se_immobili,
+		ruoli_file.se_documenti,
+	 	ruoli_file_path( ruoli_file.id ) AS __label__
+	FROM ruoli_file
 ;
 
 -- | 090000034600

@@ -1416,6 +1416,84 @@ CREATE TABLE IF NOT EXISTS `mail` (                           --
   `id_account_inserimento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha inserito l'indirizzo mail
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000018800
+
+-- mail_out
+-- tipolgia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le mail in uscita
+--
+-- questa tabella contiene le mail in uscita, con le informazioni relative al mittente, ai destinatari,
+-- all'oggetto, al corpo, agli allegati, al server di invio e allo stato di invio
+--
+CREATE TABLE IF NOT EXISTS `mail_out` (
+  `id` int(11) NOT NULL,
+  `id_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_composizione` int(11) DEFAULT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `destinatari_cc` text DEFAULT NULL,
+  `destinatari_bcc` text DEFAULT NULL,
+  `oggetto` char(254) DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
+  `allegati` text DEFAULT NULL,
+  `headers` text DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT 0,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000018900
+
+-- mail_sent
+-- tipolgia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le mail inviate
+--
+-- questa tabella contiene le mail inviate, con le informazioni relative al mittente, ai destinatari,
+-- all'oggetto, al corpo, agli allegati, al server di invio e allo stato di invio
+--
+CREATE TABLE IF NOT EXISTS `mail_sent` (
+  `id` int(11) NOT NULL,
+  `id_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_composizione` int(11) DEFAULT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `destinatari_cc` text DEFAULT NULL,
+  `destinatari_bcc` text DEFAULT NULL,
+  `oggetto` char(254) DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
+  `allegati` text DEFAULT NULL,
+  `headers` text DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT 0,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000020600
 
 -- mastri
