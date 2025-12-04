@@ -95,6 +95,24 @@
 												 ) ),
 	);
 
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'mail.sent.form.tools', $p['mail.sent.form']['etc']['tabs'], 'mail.sent.form.file' );
+    }
+
+    // gestione strumenti mail in uscita
+	$p['mail.sent.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'strumenti code mail' ),
+	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.form.tools.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.sent.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.sent.form']['etc']['tabs'] )
+	);
+
 	// strumenti mail
 	$p['mail.tools'] = array(
 		'sitemap'		=> false,

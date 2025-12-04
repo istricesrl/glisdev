@@ -1639,6 +1639,10 @@ tre sezioni introdotte dalla sequenza -- | seguita dalla timestamp più il progr
 Per ulteriori informazioni sul funzionamento del sistema di patch del database si faccia riferimento alla documentazione del file
 /_src/_api/_task/_mysql.patch.php.
 
+#### come abilito la firma DKIM per la posta inviata dal framework?
+Le chiavi DKIM vengono memorizzate in /etc/secret/<nomeDominio>; per utilizzarle è necessario aggiungere un record DKIM al proprio DNS. Lo script
+/_src/_sh/_dkim.keygen.sh è pensato per aiutare in questo processo.
+
 #### come inserisco un'immagine in una pagina del sito?
 Per aggiungere un'immagine in una pagina del sito sfruttando il meccanismo di scalamento delle immagini nativo del framework è
 necessario prima di tutto caricare l'immagine desiderata nella scheda immagini della pagina in questione. Assegnando un ordine e un

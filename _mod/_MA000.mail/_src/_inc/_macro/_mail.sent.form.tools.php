@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'mail_out';
+    $ct['form']['table'] = 'mail_sent';
 
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(
@@ -37,12 +37,12 @@
     );
 
     $ct['page']['contents']['metro']['03.elaborazioni'][] = array(
-    'ws' => '/task/MA000.mail/mail.queue.send?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
-    'callback' => 'function() { window.open("' . $cf['contents']['pages']['mail.sent.view']['url'][ LINGUA_CORRENTE ] . '", "_self"); }',
+    'ws' => '/task/MA000.mail/mail.queue.resend?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+    'callback' => 'function() { window.open("' . $cf['contents']['pages']['mail.out.view']['url'][ LINGUA_CORRENTE ] . '", "_self"); }',
     'icon' => NULL,
-    'fa' => 'fa-regular fa-paper-plane',
-    'title' => 'invia immediatamente la mail',
-    'text' => 'forza un tentativo di invio per questa mail'
+    'fa' => 'fa-recycle',
+    'title' => 'reinvia la mail',
+    'text' => 'rimette questa mail nella coda da inviare'
     );
 
     // macro di default

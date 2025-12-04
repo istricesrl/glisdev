@@ -1146,7 +1146,7 @@ CREATE OR REPLACE VIEW `mail_out_view` AS
 		mail_out.id_account_inserimento,
 		mail_out.id_account_aggiornamento,
 		concat(
-			mail_out.destinatari,
+			mail_out.id,
 			' / ',
 			mail_out.oggetto
 		) AS __label__
@@ -1182,7 +1182,7 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 		mail_sent.id_account_inserimento,
 		mail_sent.id_account_aggiornamento,
 		concat(
-			mail_sent.destinatari,
+			mail_sent.id,
 			' / ',
 			mail_sent.oggetto
 		) AS __label__
