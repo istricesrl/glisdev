@@ -650,13 +650,6 @@
     define( 'RUNNING_ON_LINUX'                          , 'LINUX' );
     define( 'RUNNING_ON_WINDOWS'                        , 'WINDOWS' );
 
-    // valorizzazione dell'ambiente corrente
-    if (PHP_OS_FAMILY === 'Windows') {
-        define( 'RUNNING_ON', RUNNING_ON_WINDOWS );
-    } elseif (PHP_OS_FAMILY === 'Linux') {
-        define( 'RUNNING_ON', RUNNING_ON_LINUX );
-    }
-
     /**
      * inizializzazione dei log latest
      * ===============================
@@ -782,6 +775,15 @@
      * Vedi https://www.php.net/supported-versions.php.
      * 
      */
+
+    // valorizzazione dell'ambiente corrente
+    if (PHP_OS_FAMILY === 'Windows') {
+        define( 'RUNNING_ON', RUNNING_ON_WINDOWS );
+    } elseif (PHP_OS_FAMILY === 'Linux') {
+        define( 'RUNNING_ON', RUNNING_ON_LINUX );
+    } else {
+        die( 'sistema operativo non supportato: ' . PHP_OS_FAMILY );
+    }
 
     // versione di PHP richiesta
     $cf['php']['required']['version'] = '7.0.0';       // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
