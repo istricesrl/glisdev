@@ -47,7 +47,7 @@
 	// form template mail testo
 	$p['mail.template.form.testo'] = array(
 	    'sitemap'		=> false,
-		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
+		'icon'			=> '<i class="fa-regular fa-file-text" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'mail.template.view' ),
@@ -60,7 +60,7 @@
 	// gestione template file
 	$p['mail.template.form.file'] = array(
 		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'icon'		=> '<i class="fa-regular fa-folder-open" aria-hidden="true"></i>',
 		'title'		=> array( $l		=> 'file' ),
 		'h1'		=> array( $l		=> 'file' ),
 		'parent'		=> array( 'id'		=> 'mail.template.view' ),
