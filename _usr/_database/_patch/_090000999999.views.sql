@@ -1716,6 +1716,25 @@ CREATE OR REPLACE VIEW telefoni_view AS                       --
             ON t1.id = telefoni.id_tipologia                  --
 ;                                                             --
 
+-- | 090000044001
+
+-- template_view
+CREATE OR REPLACE VIEW `template_view` AS
+	SELECT
+		template.id,
+		template.ruolo,
+		template.nome,
+		template.tipo,
+		template.note,
+		template.latenza_invio,
+		template.se_mail,
+		template.se_sms,
+		template.id_account_inserimento,
+		template.id_account_aggiornamento,
+		template.ruolo AS __label__
+	FROM template
+;
+
 -- | 090000050000
 
 -- tipologie_anagrafica_view

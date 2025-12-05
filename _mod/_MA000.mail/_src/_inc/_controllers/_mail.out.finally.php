@@ -17,14 +17,13 @@
 
 	    case METHOD_GET:
 
-		// se sono presenti dati
+			// se sono presenti dati
 		    if( isset( $d ) && is_array( $d ) ) {
 
-
-			// se i dati riguardano un singolo oggetto
+				// se i dati riguardano un singolo oggetto
 			    if( in_array( 'id', $ks ) ) {
 					
-				// elaboro i campi
+					// elaboro i campi
 				    foreach( $d as $vKey => $vVal ) {
         
 						if( in_array( $vKey, array( 'allegati' ) ) && !empty( $d[ 'allegati' ]) ) {
@@ -43,10 +42,10 @@
 									
 								}
 							}
-
 							
                         }
-				    }
+
+					}
 
 			    } 
 
