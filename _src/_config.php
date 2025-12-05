@@ -776,17 +776,8 @@
      * 
      */
 
-    // valorizzazione dell'ambiente corrente
-    if (PHP_OS_FAMILY === 'Windows') {
-        define( 'RUNNING_ON', RUNNING_ON_WINDOWS );
-    } elseif (PHP_OS_FAMILY === 'Linux') {
-        define( 'RUNNING_ON', RUNNING_ON_LINUX );
-    } else {
-        die( 'sistema operativo non supportato: ' . PHP_OS_FAMILY );
-    }
-
     // versione di PHP richiesta
-    $cf['php']['required']['version'] = '7.0.0';       // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
+    $cf['php']['required']['version'] = '7.0.0';        // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
 
     // versione di PHP suggerita
     $cf['php']['preferred']['version'] = '8.2.0';       // rilasciata l'8 dicembre 2022
@@ -822,6 +813,15 @@
      * Verifico che tutti i requisiti minimi per il funzionamento del framework siano soddisfatti.
      * 
      */
+
+    // valorizzazione dell'ambiente corrente
+    if (PHP_OS_FAMILY === 'Windows') {
+        define( 'RUNNING_ON', RUNNING_ON_WINDOWS );
+    } elseif (PHP_OS_FAMILY === 'Linux') {
+        define( 'RUNNING_ON', RUNNING_ON_LINUX );
+    } else {
+        die( 'sistema operativo non supportato: ' . PHP_OS_FAMILY );
+    }
 
     // controllo che la versione di PHP installata sia uguale o superiore a quella richiesta
     if( version_compare( PHP_VERSION, $cf['php']['required']['version'], '<' ) ) {
