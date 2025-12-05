@@ -115,6 +115,11 @@ if (beresp.http.X-GlisWeb-No-Cache == "true") {
 per fare in modo che GlisWeb possa governare la cache di Varnish. Senza questa configurazione, è necessario
 disattivare Varnish per assicurarsi un comportamento corretto del framework.
 
+installazione su XAMPP
+----------------------
+Per installare il framework su XAMPP è sufficiente scaricare lo zip del codice e scompattarlo nella document root; se
+viene richiesta l'installazione di moduli di PHP aggiuntivi scaricateli da https://pecl.php.net/packages.php.
+
 installare il framework per contribuire
 ---------------------------------------
 Questa sezione è attualmente in aggiornamento.
