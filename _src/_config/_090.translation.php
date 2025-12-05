@@ -49,12 +49,12 @@
      */
 
     // debug
-     die( print_r( $cf['tr'], true ) );
-     die( print_r( $arrayDizionari, true ) );
-     die( print_r( $arrayDizionariBase, true ) ); 
-     die( print_r( $arrayDizionariModuli, true ) ); 
+    // die( print_r( $cf['tr'], true ) );
+    // die( print_r( $arrayDizionari, true ) );
+    // die( print_r( $arrayDizionariBase, true ) ); 
+    // die( print_r( $arrayDizionariModuli, true ) ); 
     // echo DIR_ETC_DICTIONARIES . '_*.{' . LINGUE_ATTIVE . '}.php' . PHP_EOL;
     // echo DIR_MOD_ATTIVI_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.php' . PHP_EOL;
-    var_dump( defined('GLOB_BRACE') );
+    // var_dump( defined('GLOB_BRACE') );
     // echo 'OUTPUT';
-    die();
+    // die();
