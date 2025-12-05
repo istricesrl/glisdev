@@ -28,7 +28,7 @@ if( in_array( $ct['form']['subtable'], array( 'contenuti' ) ) ) {
     )
 */
 // die( print_r( $cf['localization']['languages'], true ) );
-// die( print_r( $ct['tr']['languages'], true ) );
+ die( print_r( $ct['tr']['languages'], true ) );
     // ...
     if( isset( $ct['tr']['languages'] ) && is_array( $ct['tr']['languages'] ) ) {
         // foreach( array_column( $cf['localization']['languages'], 'id' ) as $l ) {
