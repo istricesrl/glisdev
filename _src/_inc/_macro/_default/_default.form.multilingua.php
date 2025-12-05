@@ -47,6 +47,7 @@ if( in_array( $ct['form']['subtable'], array( 'contenuti' ) ) ) {
             }
 
         }
+
     }
 
 }
