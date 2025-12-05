@@ -646,6 +646,17 @@
     // costanti per l'I/O
     define( 'PHP_INPUT'                                 , 'php://input' );
 
+    // costanti per gli ambienti di lavoro
+    define( 'RUNNING_ON_LINUX'                          , 'LINUX' );
+    define( 'RUNNING_ON_WINDOWS'                        , 'WINDOWS' );
+
+    // valorizzazione dell'ambiente corrente
+    if (PHP_OS_FAMILY === 'Windows') {
+        define( 'RUNNING_ON', RUNNING_ON_WINDOWS );
+    } elseif (PHP_OS_FAMILY === 'Linux') {
+        define( 'RUNNING_ON', RUNNING_ON_LINUX );
+    }
+
     /**
      * inizializzazione dei log latest
      * ===============================
@@ -797,6 +808,7 @@
         'core',                                         // modulo core
         'mod_deflate',                                  // necessario per la compressione gzip
         'mod_expires',                                  // necessario per la gestione della cache lato client
+        'mod_filter',                                   // necessario per la gestione dei filtri di output
         'mod_headers',                                  // necessario per la gestione degli header HTTP
         'mod_rewrite',                                  // necessario per il rewrite degli URL
         'mod_ssl'                                       // necessario per la gestione delle connessioni sicure
@@ -843,7 +855,7 @@
     }
 
     // controllo che la document root NON sia scrivibile
-    if( is_writeable( DIR_BASE ) ) {
+    if( is_writeable( DIR_BASE ) && RUNNING_ON === RUNNING_ON_LINUX ) {
         die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh o _nginx.permissions.secure.sh' );
     }
 
