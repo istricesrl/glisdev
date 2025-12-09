@@ -24,7 +24,7 @@
 		'tab'		=> array( $l		=> 'template' ),
 	    'template'	=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.template.view.php' ),
-		'parent'	=> array( 'id'		=> 'strumenti' ),
+		'parent'	=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
 	);

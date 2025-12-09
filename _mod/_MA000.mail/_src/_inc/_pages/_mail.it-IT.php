@@ -20,7 +20,7 @@
 	$p['mail.out.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'mail in uscita' ),
-	    'h1'			=> array( $l		=> 'mail in uscita' ),
+	    'h1'			=> array( $l		=> 'mail' ),
 	    'tab'			=> array( $l		=> 'in uscita' ),
 	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_mail.out.view.php' ),
@@ -81,7 +81,7 @@
 	    'tab'		=> array( $l		=> 'inviate' ),
 	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.view.php' ),
-	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
 	);
@@ -126,7 +126,7 @@
 		'h1'		=> array( $l		=> 'strumenti mail' ),
 		'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_mail.tools.php' ),
-		'parent'		=> array( 'id'		=> 'strumenti' ),
+		'parent'		=> array( 'id'		=> 'mail.out.view' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
 	);
