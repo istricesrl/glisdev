@@ -837,13 +837,13 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `mittente_nome` char(128) DEFAULT NULL,                       -- mittente nome
   `mittente_numero` char(128) DEFAULT NULL,                     -- mittente numero
   `mittente_mail` char(128) DEFAULT NULL,                       -- mittente mail
-  `destinatario_nome` char(128) DEFAULT NULL,                   -- destinatario nome
-  `destinatario_numero` char(128) DEFAULT NULL,                 -- destinatario numero
-  `destinatario_mail` char(128) DEFAULT NULL,                   -- destinatario mail
-  `destinatario_cc_nome` char(128) DEFAULT NULL,                -- destinatario cc nome
-  `destinatario_cc_mail` char(128) DEFAULT NULL,                -- destinatario cc mail
-  `destinatario_ccn_nome` char(128) DEFAULT NULL,               -- destinatario ccn nome
-  `destinatario_ccn_mail` char(128) DEFAULT NULL,               -- destinatario ccn mail
+  `destinatari_nome` char(128) DEFAULT NULL,                    -- destinatario nome
+  `destinatari_numero` char(128) DEFAULT NULL,                  -- destinatario numero
+  `destinatari_mail` char(128) DEFAULT NULL,                    -- destinatario mail
+  `destinatari_cc_nome` char(128) DEFAULT NULL,                 -- destinatario cc nome
+  `destinatari_cc_mail` char(128) DEFAULT NULL,                 -- destinatario cc mail
+  `destinatari_bcc_nome` char(128) DEFAULT NULL,                -- destinatario bcc nome
+  `destinatari_bcc_mail` char(128) DEFAULT NULL,                -- destinatario bcc mail
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito il contenuto
   `timestamp_aggiornamento` int(11) DEFAULT NULL,               -- timestamp di aggiornamento

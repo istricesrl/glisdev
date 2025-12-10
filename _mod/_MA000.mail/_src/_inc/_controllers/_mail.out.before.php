@@ -38,7 +38,6 @@
 
 			}
 
-
             // elaboro l'array dei valori
 			foreach( $vs as $vKey => $vVal ) {
 

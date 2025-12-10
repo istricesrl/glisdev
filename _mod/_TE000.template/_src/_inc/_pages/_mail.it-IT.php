@@ -24,7 +24,7 @@
 		'tab'		=> array( $l		=> 'template' ),
 	    'template'	=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.template.view.php' ),
-		'parent'	=> array( 'id'		=> 'strumenti' ),
+		'parent'	=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
 	);
@@ -39,36 +39,20 @@
 		'parent'		=> array( 'id'		=> 'mail.template.view' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'mail.template.form',
-												'mail.template.form.testo',
-												'mail.template.form.file',
+												// 'mail.template.form.contenuti',
+												// 'mail.template.form.file',
 												'mail.template.form.tools' ) ),
 	);
 
-	// form template mail testo
-	$p['mail.template.form.testo'] = array(
-	    'sitemap'		=> false,
-		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'testo' ),
-	    'h1'		=> array( $l		=> 'testo' ),
-	    'parent'		=> array( 'id'		=> 'mail.template.view' ),
-	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'mail.template.form.testo.twig' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_mail.template.form.testo.php' ),
-		'etc'		=> array( 'tabs'	=> $p['mail.template.form']['etc']['tabs'] ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) )
-	);
+    // RELAZIONI CON IL MODULO CONTENUTI
+    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'mail.template.form.tools', $p['mail.template.form']['etc']['tabs'], 'mail.template.form.contenuti' );
+    }
 
-	// gestione template file
-	$p['mail.template.form.file'] = array(
-		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
-		'title'		=> array( $l		=> 'file' ),
-		'h1'		=> array( $l		=> 'file' ),
-		'parent'		=> array( 'id'		=> 'mail.template.view' ),
-		'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'mail.template.form.file.twig' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_mail.template.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> $p['mail.template.form']['etc']['tabs'] )
-	);
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'mail.template.form.tools', $p['mail.template.form']['etc']['tabs'], 'mail.template.form.file' );
+    }
 
 	// gestione mail strumenti
 	$p['mail.template.form.tools'] = array(

@@ -26,11 +26,19 @@
         'cols'  => array(
             'id' => '#',
             'nome' => 'nome',
-            '__label__' => 'ruolo'
+            '__label__' => 'ruolo',
+            NULL => 'azioni'
         ),
         'class' => array(
             'nome' => 'text-left',
-            '__label__' => 'text-left'
+            '__label__' => 'text-left',
+            NULL => 'no-wrap'
+        ),
+        'onclick' => array(
+            NULL => 'event.stopPropagation();'
+        ),
+        '__sort__' => array(
+            '__label__' => 'ASC'
         )
     );
 

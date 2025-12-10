@@ -886,6 +886,36 @@ ALTER TABLE `mail`
 -- mail
 ALTER TABLE `mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000018800
+
+-- mail_out
+ALTER TABLE `mail_out`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_mail` (`id_mail`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+
+-- | 030000018801
+
+-- mail_out
+ALTER TABLE `mail_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 03000018900
+
+-- mail_sent
+ALTER TABLE `mail_sent`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_mail` (`id_mail`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 03000018901
+
+-- mail_sent
+ALTER TABLE `mail_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000020600
 
 -- mastri
