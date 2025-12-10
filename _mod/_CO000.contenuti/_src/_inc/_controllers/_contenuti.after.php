@@ -25,11 +25,11 @@
 					
 					// elaboro i campi
 				    foreach( $d as $vKey => $vVal ) {
-/**
-                        if( in_array( $vKey, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
+
+                        if( in_array( $vKey, array( 'mittente_mail', 'destinatari_mail', 'destinatari_cc_mail', 'destinatari_bcc_mail' ) ) ) {
                             $d[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
                         }
- */
+
 					}
 
 			    } else {
@@ -39,11 +39,11 @@
 
 						// elaboro i campi
 					    foreach( $row as $vKey => $vVal ) {
-/**
-                            if( in_array( $vKey, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
+
+                            if( in_array( $vKey, array( 'mittente_mail', 'destinatari_mail', 'destinatari_cc_mail', 'destinatari_bcc_mail' ) ) ) {
                                 $row[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
                             }
- */
+
 					    }
 
 				    }

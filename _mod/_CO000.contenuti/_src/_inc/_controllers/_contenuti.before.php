@@ -19,16 +19,16 @@
 	    case METHOD_PUT:
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
-/**
+
             // elaboro l'array dei valori
 			foreach( $vs as $vKey => $vVal ) {
 
-				if( in_array( $vKey, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
+				if( in_array( $vKey, array( 'mittente_mail', 'destinatari_mail', 'destinatari_cc_mail', 'destinatari_bcc_mail' ) ) ) {
 					$vs[ $vKey ]['s'] = serialize( mailString2array( $vVal['s'] ) ) ;
 				}
 
 			}
- */
+
         break;
 
 	}
