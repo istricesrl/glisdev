@@ -15,7 +15,7 @@
     $ct['view'] = array(
         'table' => 'documenti_articoli',
         'open' => array(
-            'page' => 'amministrazione.documenti.articoli.form',
+            'page' => 'amministrazione.archivio.documenti.articoli.form',
             'table' => 'documenti_articoli',
         ),
         'cols' => array(
@@ -40,7 +40,8 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array( 'NL' => true )
+            'data_archiviazione' => array( 'NL' => true ),
+            'id_tipologia' => array( 'IN' => '1|2' )
         ),
         '__sort__' => array(
             'id' => 'DESC'
