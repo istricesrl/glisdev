@@ -334,3 +334,18 @@
     );
 
     //
+// tools archivio produzione
+    $p['catalogo.marchi.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo marchi' ),
+        'h1'                => array( $l        => 'marchi' ),
+        'parent'            => array( 'id'        => 'catalogo' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.marchi.view',
+                                                            'catalogo.marchi.view.archiviati',
+                                                            'catalogo.marchi.tools' ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'marchi' ),
+                                                                            'priority'    => '200' ) ) )
+    );
