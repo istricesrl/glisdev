@@ -332,3 +332,86 @@
                                                             'catalogo.articoli.form.archiviazione',
                                                             'catalogo.articoli.form.tools' ) )
     );
+
+    //
+// tools archivio produzione
+    $p['catalogo.marchi.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo marchi' ),
+        'h1'                => array( $l        => 'marchi' ),
+        'parent'            => array( 'id'        => 'catalogo' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.marchi.view',
+                                                            'catalogo.marchi.view.archiviati',
+                                                            'catalogo.marchi.tools' ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'marchi' ),
+                                                                            'priority'    => '200' ) ) )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.marchi.view.archiviati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'marchi archiviati' ),
+        'h1'                => array( $l        => 'archiviati' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.view.archiviati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.view' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.marchi.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo marchi' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.view' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.marchi.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo marchi form' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.marchi.form',
+                                                              'catalogo.marchi.form.archiviazione',
+                                                              'catalogo.marchi.form.tools' ) )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.marchi.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo marchi form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
+
+// tools archivio produzione
+    $p['catalogo.marchi.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione catalogo marchi form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
