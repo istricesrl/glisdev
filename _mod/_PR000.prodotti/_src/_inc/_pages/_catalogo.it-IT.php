@@ -332,3 +332,5 @@
                                                             'catalogo.articoli.form.archiviazione',
                                                             'catalogo.articoli.form.tools' ) )
     );
+
+    //
