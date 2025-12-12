@@ -349,3 +349,29 @@
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'marchi' ),
                                                                             'priority'    => '200' ) ) )
     );
+
+    // tools archivio produzione
+    $p['catalogo.marchi.view.archiviati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'marchi archiviati' ),
+        'h1'                => array( $l        => 'archiviati' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.view.archiviati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.view' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.marchi.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo marchi' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.view' )
+    );
