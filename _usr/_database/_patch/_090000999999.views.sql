@@ -1421,9 +1421,13 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 CREATE OR REPLACE VIEW `marchi_view` AS
 	SELECT
 		marchi.id,
+		marchi.id_produttore,
+		produttori.denominazione AS produttore,
 		marchi.nome,
+		marchi.data_archiviazione,
 		marchi.nome AS __label__
 	FROM marchi
+	LEFT JOIN anagrafica AS produttori ON produttori.id = marchi.id_produttore
 ;
 
 -- | 090000021600

@@ -1546,6 +1546,7 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `marchi` (
   `id` int(11) NOT NULL,
+  `id_produttore` int(11) NOT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
