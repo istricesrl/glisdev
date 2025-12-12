@@ -58,6 +58,21 @@
             <fieldset>
                 <legend>produttore e brand</legend>
 
+                <div class="form-group row">
+                    <div class="col col-md-3 form-col">
+                        <span class="label-top">codice produttore</span>
+                        {{ frm.input({ 'field': { 'name': 'codice_produttore', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">produttore</span>
+                        {{ frm.select({ 'field': { 'name': 'id_produttore' }, 'source': { 'values': etc.select.produttori }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">marchio</span>
+                        {{ frm.select({ 'field': { 'name': 'id_marchio' }, 'source': { 'values': etc.select.marchi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+                
             </fieldset>
 
             {# BOTTONI E COMANDI DEL MODULO #}
