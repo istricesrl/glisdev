@@ -77,11 +77,11 @@
                                                             'catalogo.prodotti.form.tools' ) )
     );
 
-    // RELAZIONI CON IL MODULO CONTENUTI
-    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
+    // RELAZIONI CON IL MODULO catalogo
+    if( in_array( "CO000.catalogo", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.web' );
         arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.sem' );
-        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.contenuti' );
+        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.catalogo' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -169,6 +169,132 @@
     );
 
     // tools archivio produzione
+    $p['catalogo.categorie.prodotti.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo categorie prodotti' ),
+        'h1'                => array( $l        => 'categorie' ),
+        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.categorie.prodotti.view',
+                                                            'catalogo.categorie.prodotti.view.archiviati',
+                                                            'catalogo.categorie.prodotti.tools' ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'categorie' ),
+                                                                            'priority'    => '200' ) ) )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.view.archiviati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'categorie prodotti archiviati' ),
+        'h1'                => array( $l        => 'archiviati' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.view.archiviati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.view' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo categorie prodotti' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.view' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo categorie prodotti form' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.categorie.prodotti.form',
+                                                            'catalogo.categorie.prodotti.form.archiviazione',
+                                                            'catalogo.categorie.prodotti.form.tools' ) )
+    );
+
+    // RELAZIONI CON IL MODULO catalogo
+    if( in_array( "CO000.catalogo", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.web' );
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.menu' );
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.sem' );
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.contenuti' );
+    }
+
+    // RELAZIONI CON IL MODULO IMMAGINI
+    if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.immagini' );
+    }
+
+    // RELAZIONI CON IL MODULO VIDEO
+    if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.video' );
+    }
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione catalogo categorie prodotti form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo categorie prodotti form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione catalogo categorie prodotti form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo categorie prodotti form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
+    );
+
+    // tools archivio produzione
     $p['catalogo.articoli.view'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo articoli' ),
@@ -193,4 +319,3 @@
                                                             'catalogo.articoli.form.archiviazione',
                                                             'catalogo.articoli.form.tools' ) )
     );
-

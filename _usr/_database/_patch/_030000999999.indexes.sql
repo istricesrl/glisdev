@@ -901,7 +901,7 @@ ALTER TABLE `mail_out`
 -- mail_out
 ALTER TABLE `mail_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- | 03000018900
+-- | 030000018900
 
 -- mail_sent
 ALTER TABLE `mail_sent`
@@ -911,7 +911,7 @@ ALTER TABLE `mail_sent`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
--- | 03000018901
+-- | 030000018901
 
 -- mail_sent
 ALTER TABLE `mail_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
