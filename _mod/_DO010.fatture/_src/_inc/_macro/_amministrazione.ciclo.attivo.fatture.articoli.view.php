@@ -15,7 +15,7 @@
     $ct['view'] = array(
         'table' => 'documenti_articoli',
         'open' => array(
-            'page' => 'amministrazione.archivio.documenti.articoli.form',
+            'page' => 'amministrazione.fatture.documenti.articoli.form',
             'table' => 'documenti_articoli',
         ),
         'cols' => array(

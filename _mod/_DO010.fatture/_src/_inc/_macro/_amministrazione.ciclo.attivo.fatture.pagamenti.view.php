@@ -15,7 +15,7 @@
     $ct['view'] = array(
         'table' => 'pagamenti',
         'open' => array(
-            'page' => 'amministrazione.archivio.documenti.pagamenti.form',
+            'page' => 'amministrazione.ciclo.attivo.fatture.pagamenti.form',
             'table' => 'pagamenti',
         ),
         'cols' => array(

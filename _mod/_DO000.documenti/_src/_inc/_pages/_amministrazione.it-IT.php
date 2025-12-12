@@ -76,7 +76,7 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'amministrazione.archivio.documenti.form',
                                                             'amministrazione.archivio.documenti.form.relazioni',
-                                                            'amministrazione.archivio.documenti.form.righe',
+                                                            'amministrazione.archivio.documenti.form.documenti.articoli',
                                                             'amministrazione.archivio.documenti.form.pagamenti',
                                                             'amministrazione.archivio.documenti.form.archiviazione',
                                                             'amministrazione.archivio.documenti.form.stampe',
@@ -96,13 +96,13 @@
     );
 
     // tools archivio amministrazione
-    $p['amministrazione.archivio.documenti.form.righe'] = array(
+    $p['amministrazione.archivio.documenti.form.documenti.articoli'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione archivio documenti form righe' ),
         'h1'                => array( $l        => 'righe' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.righe.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.righe.php' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.documenti.articoli.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.documenti.articoli.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.form' )
     );

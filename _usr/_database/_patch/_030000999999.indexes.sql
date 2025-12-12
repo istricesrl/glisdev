@@ -1175,6 +1175,11 @@ ALTER TABLE `progetti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_apertura`,`data_chiusura`,`data_archiviazione`);
 
+-- | 030000027001
+
+-- prodotti
+ALTER TABLE `progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000027400
 
 -- progetti_categorie

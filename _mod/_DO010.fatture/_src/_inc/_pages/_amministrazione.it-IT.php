@@ -95,7 +95,7 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'amministrazione.ciclo.attivo.fatture.form',
                                                             'amministrazione.ciclo.attivo.fatture.form.relazioni',
-                                                            'amministrazione.ciclo.attivo.fatture.form.righe',
+                                                            'amministrazione.ciclo.attivo.fatture.form.documenti.articoli',
                                                             'amministrazione.ciclo.attivo.fatture.form.pagamenti',
                                                             'amministrazione.ciclo.attivo.fatture.form.archiviazione',
                                                             'amministrazione.ciclo.attivo.fatture.form.stampe',
@@ -115,13 +115,13 @@
     );
 
     // tools archivio amministrazione
-    $p['amministrazione.ciclo.attivo.fatture.form.righe'] = array(
+    $p['amministrazione.ciclo.attivo.fatture.form.documenti.articoli'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione fatture attive form righe' ),
         'h1'                => array( $l        => 'righe' ),
         'parent'            => array( 'id'        => 'amministrazione.ciclo.attivo.fatture.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.ciclo.attivo.fatture.form.righe.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.righe.php' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.ciclo.attivo.fatture.form.documenti.articoli.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.documenti.articoli.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'amministrazione.ciclo.attivo.fatture.form' )
     );

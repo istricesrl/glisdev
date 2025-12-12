@@ -240,8 +240,8 @@
 
             } else {
 
-            // svuoto la lista
-            $( lista ).empty();
+                // svuoto la lista
+                $( lista ).empty();
 
                 // TODO appendo alla lista un <li> per ogni <option> della select
                 select.find('option').each( function( idx, el ) {

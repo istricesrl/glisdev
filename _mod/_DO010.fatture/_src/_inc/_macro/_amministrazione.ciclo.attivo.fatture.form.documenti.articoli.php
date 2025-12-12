@@ -18,14 +18,14 @@
     $ct['view'] = array(
         'table' => 'documenti_articoli',
         'open' => array(
-            'page' => 'amministrazione.archivio.documenti.articoli.form',
+            'page' => 'amministrazione.ciclo.attivo.fatture.documenti.articoli.form',
             'table' => 'documenti_articoli',
             'preset' => array(
                 'field' => 'id_documento',
             )
         ),
         'insert' => array(
-            'page' => 'amministrazione.archivio.documenti.articoli.form',
+            'page' => 'amministrazione.ciclo.attivo.fatture.documenti.articoli.form',
             'table' => 'documenti_articoli',
         ),
         'cols' => array(

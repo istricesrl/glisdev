@@ -210,6 +210,124 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
     GROUP BY anagrafica_indirizzi.id                          --
 ;                                                             --
 
+-- | 090000001300
+
+-- articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-25 10:56 Fabio Mosti
+CREATE OR REPLACE VIEW `articoli_view` AS
+	SELECT
+		articoli.id,
+		articoli.id_prodotto,
+        prodotti.nome AS prodotto,
+		articoli.ordine,
+		articoli.ean,
+		articoli.isbn,
+		articoli.id_reparto,
+		articoli.id_taglia,
+		articoli.id_colore,
+		articoli.id_periodicita,
+		periodicita.nome AS periodicita,
+		articoli.id_tipologia_rinnovo,
+		tipologie_rinnovi.nome AS tipologia_rinnovo,
+		articoli.larghezza,
+		articoli.lunghezza,
+		articoli.altezza,
+        articoli.id_udm_dimensioni,
+		udm_dimensioni.sigla AS udm_dimensioni,
+		articoli.peso,
+        articoli.id_udm_peso,
+		udm_peso.sigla AS udm_peso,
+		articoli.volume,
+        articoli.id_udm_volume,
+		udm_volume.sigla AS udm_volume,
+		articoli.capacita,
+        articoli.id_udm_capacita,
+		udm_capacita.sigla AS udm_capacita,
+        articoli.durata,
+        articoli.id_udm_durata,
+		udm_durata.sigla AS udm_durata,
+		concat_ws(
+			' ',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					concat_ws( 'x', articoli.larghezza, articoli.lunghezza, articoli.altezza ),
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat(
+					
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat(
+					
+					articoli.durata,
+					udm_durata.sigla
+				),
+				''
+			)
+		) AS nome,
+		group_concat( DISTINCT prodotti_categorie.id_categoria SEPARATOR ' | ' ) AS id_categorie,
+		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT concat_ws( ' ', listini.nome, valute.iso4217, format( prezzi.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' ) AS prezzi,
+        prodotti.data_archiviazione,
+		concat_ws(
+			' ',
+            articoli.ean,
+			articoli.id,
+			'/',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat(
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat(
+					articoli.durata,
+					udm_durata.sigla
+				),
+				''
+			)
+		) AS __label__
+	FROM articoli
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_prodotto
+		LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id
+		LEFT JOIN listini ON listini.id = prezzi.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN periodicita ON periodicita.id = articoli.id_periodicita
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = articoli.id_tipologia_rinnovo
+	GROUP BY articoli.id
+;
+
 -- | 090000001800
 
 -- attivita_view
@@ -1284,7 +1402,7 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
-		pagamenti.id_tipologia,
+		coalesce( pagamenti.id_tipologia, documenti.id_tipologia ) AS id_tipologia,
 		pagamenti.codice,
 		pagamenti.id_modalita_pagamento,
 		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
@@ -1394,6 +1512,45 @@ CREATE OR REPLACE VIEW `pagine_view` AS						  --
 		pagine_path( pagine.id ) AS __label__			  	  -- etichetta per le tendine e le liste
 	FROM pagine										  		  --
 ;															  --
+
+-- | 090000026000
+
+-- prodotti_view
+CREATE OR REPLACE VIEW `prodotti_view` AS
+	SELECT
+		prodotti.id,
+		prodotti.id_tipologia,
+		tipologie_prodotti.nome AS tipologia,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
+		prodotti.nome,
+		prodotti.id_marchio,
+		marchi.nome AS marchio,
+		prodotti.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		prodotti.codice_produttore,
+		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		prodotti.id_sito,
+		prodotti.template,
+		prodotti.schema_html,
+		prodotti.tema_css,
+		prodotti.se_sitemap,
+		prodotti.se_cacheable,
+        prodotti.data_archiviazione,
+		prodotti.id_account_inserimento,
+		prodotti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			prodotti.id,
+			prodotti.nome
+		) AS __label__
+	FROM prodotti
+		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
+		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
+		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+	GROUP BY prodotti.id
+;
 
 -- | 090000028000
 
@@ -1864,6 +2021,34 @@ CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
 		tipologie_notizie.id_account_aggiornamento,
 		tipologie_notizie_path( tipologie_notizie.id ) AS __label__
 	FROM tipologie_notizie
+;
+
+-- | 090000054601
+
+-- tipologie_prodotti_view
+CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
+	SELECT
+		tipologie_prodotti.id,
+		tipologie_prodotti.id_genitore,
+		tipologie_prodotti.ordine,
+		tipologie_prodotti.nome,
+		tipologie_prodotti.html_entity,
+		tipologie_prodotti.font_awesome,
+		tipologie_prodotti.se_colori,
+		tipologie_prodotti.se_taglie,
+		tipologie_prodotti.se_dimensioni,
+		tipologie_prodotti.se_imballo,
+		tipologie_prodotti.se_spedizione,
+		tipologie_prodotti.se_trasporto,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
+		tipologie_prodotti.se_volume,
+		tipologie_prodotti.se_capacita,
+		tipologie_prodotti.se_peso,
+		tipologie_prodotti.id_account_inserimento,
+		tipologie_prodotti.id_account_aggiornamento,
+		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
+	FROM tipologie_prodotti
 ;
 
 -- | 090000055400
