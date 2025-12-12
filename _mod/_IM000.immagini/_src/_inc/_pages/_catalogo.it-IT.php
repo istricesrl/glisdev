@@ -29,3 +29,16 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.prodotti.form' )
     );
+
+    // gestione catalogo.prodotti form immagini
+    $p['catalogo.categorie.prodotti.form.immagini'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'immagini' ),
+        'h1'                => array( $l        => 'immagini' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.immagini.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.immagini.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
+    );

@@ -437,6 +437,25 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000002900
+
+-- caratteristiche
+CREATE TABLE IF NOT EXISTS `caratteristiche` (
+  `id` int(11) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `font_awesome` char(24) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_prodotto` tinyint(1) DEFAULT NULL,
+  `se_articolo` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000003050
 
 -- carrelli_articoli
@@ -596,6 +615,8 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `se_cacheable` tinyint(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text NULL,                             -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2802,6 +2823,30 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `se_trasporto` tinyint(1) DEFAULT NULL,
   `se_prodotto` tinyint(1) DEFAULT NULL,
   `se_servizio` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000055000
+
+-- tipologie_progetti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_produzione` tinyint(1) DEFAULT NULL,
+  `se_contratto` tinyint(1) DEFAULT NULL,
+  `se_pacchetto` tinyint(1) DEFAULT NULL,
+  `se_progetto` tinyint(1) DEFAULT NULL,
+  `se_consuntivo` tinyint(1) DEFAULT NULL,
+  `se_forfait` tinyint(1) DEFAULT NULL,
+  `se_didattica` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

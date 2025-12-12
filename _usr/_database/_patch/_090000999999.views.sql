@@ -213,11 +213,10 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
 -- | 090000001300
 
 -- articoli_view
--- tipologia: tabella gestita
--- verifica: 2021-05-25 10:56 Fabio Mosti
 CREATE OR REPLACE VIEW `articoli_view` AS
 	SELECT
 		articoli.id,
+		articoli.codice,
 		articoli.id_prodotto,
         prodotti.nome AS prodotto,
 		articoli.ordine,
@@ -284,7 +283,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		concat_ws(
 			' ',
             articoli.ean,
-			articoli.id,
+			articoli.codice,
 			'/',
 			prodotti.nome,
 			articoli.nome,
@@ -568,6 +567,25 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 	GROUP BY attivita.id                                      --
 ;                                                             --
 
+-- | 090000002900
+
+-- caratteristiche_view
+CREATE OR REPLACE VIEW `caratteristiche_view` AS
+	SELECT
+		caratteristiche.id,
+		caratteristiche.nome,
+		caratteristiche.html_entity,
+		caratteristiche.font_awesome,
+		caratteristiche.se_immobili,
+		caratteristiche.se_categorie_prodotti,
+		caratteristiche.se_prodotto,
+		caratteristiche.se_articolo,
+		caratteristiche.id_account_inserimento,
+		caratteristiche.id_account_aggiornamento,
+		caratteristiche.nome AS __label__
+	FROM caratteristiche
+;
+
 -- | 090000003100
 
 -- categorie_anagrafica_view
@@ -632,6 +650,35 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		LEFT JOIN categorie_notizie AS c1 ON c1.id_genitore = categorie_notizie.id
 		LEFT JOIN notizie_categorie ON notizie_categorie.id_categoria = categorie_notizie.id
 	GROUP BY categorie_notizie.id
+;
+
+-- | 090000003900
+
+-- categorie_prodotti_view
+CREATE OR REPLACE VIEW categorie_prodotti_view AS
+	SELECT
+		categorie_prodotti.id,
+		categorie_prodotti.id_genitore,
+		categorie_prodotti.codice,
+		categorie_prodotti.ordine,
+		categorie_prodotti.nome,
+		categorie_prodotti.template,
+		categorie_prodotti.schema_html,
+		categorie_prodotti.tema_css,
+		categorie_prodotti.se_sitemap,
+		categorie_prodotti.se_cacheable,
+		categorie_prodotti.id_sito,
+		categorie_prodotti.id_pagina,
+		count( c1.id ) AS figli,
+		count( prodotti_categorie.id ) AS membri,
+		categorie_prodotti.data_archiviazione,
+		categorie_prodotti.id_account_inserimento,
+		categorie_prodotti.id_account_aggiornamento,
+		categorie_prodotti_path( categorie_prodotti.id ) AS __label__
+	FROM categorie_prodotti
+		LEFT JOIN categorie_prodotti AS c1 ON c1.id_genitore = categorie_prodotti.id
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_categoria = categorie_prodotti.id
+	GROUP BY categorie_prodotti.id
 ;
 
 -- | 090000005300
@@ -1043,6 +1090,67 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
         documenti_articoli.id
 ;
 
+-- | 090000015000
+
+-- file_view
+CREATE OR REPLACE VIEW `file_view` AS
+	SELECT
+		file.id,
+		file.ordine,
+		file.id_ruolo,
+		ruoli_file.nome AS ruolo,
+		file.id_anagrafica,
+		file.id_prodotto,
+		file.id_articolo,
+		file.id_categoria_prodotti,
+		file.id_todo,
+		file.id_pagina,
+		file.id_template,
+		file.id_notizia,
+		file.id_annuncio,
+		file.id_categoria_notizie,
+		file.id_categoria_annunci,
+		file.id_risorsa,
+		file.id_categoria_risorse,
+		file.id_mail_out,                    
+		file.id_mail_sent, 
+		file.id_progetto,
+		file.id_categoria_progetti,
+		file.id_documento,
+		file.id_indirizzo,
+		file.id_edificio,
+		file.id_immobile,
+		file.id_contratto,
+        file.id_valutazione,
+        file.id_rinnovo,
+		file.id_anagrafica_certificazioni,
+		file.id_valutazione_certificazioni,
+		file.id_licenza,
+		file.id_lingua,
+		lingue.iso6393alpha3 AS lingua,
+		file.id_attivita,
+		file.path,
+		file.url,
+		file.nome,
+		file.id_account_inserimento,
+		file.id_account_aggiornamento,
+		concat(
+			ruoli_file.nome,
+			' # ',
+			file.ordine,
+			' / ',
+			file.nome,
+			' / ',
+			coalesce(
+				file.path,
+				file.url
+			)
+		) AS __label__
+	FROM file
+		LEFT JOIN ruoli_file ON ruoli_file.id = file.id_ruolo
+		LEFT JOIN lingue ON lingue.id = file.id_lingua
+;
+
 -- | 090000015200
 
 -- gruppi_view
@@ -1307,6 +1415,17 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 	FROM mail_sent
 ;
 
+-- | 090000020200
+
+-- marchi_view
+CREATE OR REPLACE VIEW `marchi_view` AS
+	SELECT
+		marchi.id,
+		marchi.nome,
+		marchi.nome AS __label__
+	FROM marchi
+;
+
 -- | 090000021600
 
 -- menu_view
@@ -1519,6 +1638,7 @@ CREATE OR REPLACE VIEW `pagine_view` AS						  --
 CREATE OR REPLACE VIEW `prodotti_view` AS
 	SELECT
 		prodotti.id,
+		prodotti.codice,
 		prodotti.id_tipologia,
 		tipologie_prodotti.nome AS tipologia,
 		tipologie_prodotti.se_prodotto,
@@ -1541,7 +1661,7 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		prodotti.id_account_aggiornamento,
 		concat_ws(
 			' ',
-			prodotti.id,
+			prodotti.codice,
 			prodotti.nome
 		) AS __label__
 	FROM prodotti
@@ -1550,6 +1670,60 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
 		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
 	GROUP BY prodotti.id
+;
+
+-- | 090000027001
+
+-- progetti_view
+CREATE OR REPLACE VIEW `progetti_view` AS
+	SELECT
+		progetti.id,
+		progetti.codice,
+		progetti.id_tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
+		progetti.id_articolo,
+		progetti.id_prodotto,
+		progetti.id_periodo,
+		progetti.nome,
+		progetti.data_consegna,
+		progetti.template,
+		progetti.schema_html,
+		progetti.tema_css,
+		progetti.se_sitemap,
+		progetti.se_cacheable,
+        progetti.id_sito,
+        progetti.id_pagina,
+		progetti.data_apertura,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		progetti.id_account_inserimento,
+		progetti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			progetti.codice,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
+	GROUP BY progetti.id
 ;
 
 -- | 090000028000
@@ -2049,6 +2223,30 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
 	FROM tipologie_prodotti
+;
+
+-- | 090000055001
+
+-- tipologie_progetti_view
+CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
+	SELECT
+		tipologie_progetti.id,
+		tipologie_progetti.id_genitore,
+		tipologie_progetti.ordine,
+		tipologie_progetti.nome,
+		tipologie_progetti.html_entity,
+		tipologie_progetti.font_awesome,
+		tipologie_progetti.se_produzione,
+		tipologie_progetti.se_contratto,
+		tipologie_progetti.se_pacchetto,
+		tipologie_progetti.se_progetto,
+		tipologie_progetti.se_consuntivo,
+		tipologie_progetti.se_forfait,
+		tipologie_progetti.se_didattica,
+		tipologie_progetti.id_account_inserimento,
+		tipologie_progetti.id_account_aggiornamento,
+		tipologie_progetti_path( tipologie_progetti.id ) AS __label__
+	FROM tipologie_progetti
 ;
 
 -- | 090000055400

@@ -77,11 +77,11 @@
                                                             'catalogo.prodotti.form.tools' ) )
     );
 
-    // RELAZIONI CON IL MODULO catalogo
-    if( in_array( "CO000.catalogo", $cf['mods']['active']['array'] ) ) {
+    // RELAZIONI CON IL MODULO CONTENUTI
+    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.web' );
         arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.sem' );
-        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.catalogo' );
+        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.contenuti' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -220,16 +220,17 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.categorie.prodotti.form',
+                                                            'catalogo.categorie.prodotti.form.prodotti',
                                                             'catalogo.categorie.prodotti.form.archiviazione',
                                                             'catalogo.categorie.prodotti.form.tools' ) )
     );
 
     // RELAZIONI CON IL MODULO catalogo
-    if( in_array( "CO000.catalogo", $cf['mods']['active']['array'] ) ) {
+    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.web' );
-        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.menu' );
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.sem' );
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.contenuti' );
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.menu' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -241,6 +242,18 @@
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.video' );
     }
+
+    // tools archivio produzione
+    $p['catalogo.categorie.prodotti.form.prodotti'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo categorie prodotti form prodotti' ),
+        'h1'                => array( $l        => 'prodotti' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.prodotti.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.prodotti.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
+    );
 
     // tools archivio produzione
     $p['catalogo.categorie.prodotti.form.archiviazione'] = array(

@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'immagini';
+    $ct['form']['table'] = 'file';
 
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(
@@ -28,15 +28,6 @@
         '05.static' => array(
             'label' => 'viste statiche'
         )
-    );
-
-    // ...
-    $ct['page']['contents']['metro']['03.elaborazioni'][] = array(
-        'ws' => '/task/IM000.immagini/images.resize?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
-        'icon' => NULL,
-        'fa' => 'fa-image',
-        'title' => 'scalatura immagine',
-        'text' => 'forza la scalatura di questa immagine'
     );
 
     // gestione default
