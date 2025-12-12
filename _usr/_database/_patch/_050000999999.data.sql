@@ -481,6 +481,49 @@ INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity
 (14,	2,	NULL,	'TikTok',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (15,	3,	NULL,	'FTP',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000062000
+
+-- udm
+INSERT IGNORE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_peso`, `se_tempo`, `se_quantita`, `se_area`) VALUES
+(1,	NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(2,	NULL,	1,	'millimetro',	'mm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	2,	10,	'centimetro',	'cm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	2,	100,	'decimetro',	'dm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	2,	1000,	'metro',	'm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	2,	10000,	'decametro',	'dam',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	2,	100000,	'ettometro',	'hm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	2,	1000000,	'kilometro',	'km',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	1,	'milligrammo',	'mg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(10,	9,	10,	'centigrammo',	'cg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(11,	9,	100,	'decigrammo',	'dg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(12,	9,	1000,	'grammo',	'gr',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(13,	9,	10000,	'decagrammo',	'dag',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(14,	9,	100000,	'ettogrammo',	'hg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(15,	9,	1000000,	'kilogrammo',	'kg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(16,	NULL,	1,	'millilitro',	'ml',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(17,	16,	10,	'centilitro',	'cl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(18,	16,	100,	'decilitro',	'dl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(19,	16,	1000,	'litro',	'l',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	16,	10000,	'decalitro',	'dal',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	16,	100000,	'ettolitro',	'hl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	16,	1000000,	'kilolitro',	'kl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	NULL,	1,	'secondo',	's',	'https://it.wikipedia.org/wiki/Secondo',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(24,	23,	60,	'minuto',	'min',	'https://it.wikipedia.org/wiki/Minuto',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(25,	23,	3600,	'ora',	'h',	'https://it.wikipedia.org/wiki/Ora',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(26,	23,	86400,	'giorno',	'd',	'https://it.wikipedia.org/wiki/Giorno',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(27,	9,	100000000,	'quintale',	'q',	'https://it.wikipedia.org/wiki/Quintale',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(28,	9,	1000000000,	'tonnellata',	't',	'https://it.wikipedia.org/wiki/Tonnellata',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(29,	NULL,	1,	'millimetro quadrato',	'mm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(30,	29,	100,	'centimetro quadrato',	'cm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(31,	29,	10000,	'decimetro quadrato',	'dm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(32,	29,	1000000,	'metro quadrato',	'm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(33,	29,	100000000,	'decametro quadrato',	'dam²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(34,	29,	10000000000,	'ettometro quadrato',	'hm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(35,	29,	1000000000000,	'kilometro quadrato',	'km²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(36,	29,	1000000,	'centiara',	'ca',	'https://it.wikipedia.org/wiki/Centiara',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(37,	29,	100000000,	'ara',	'a',	'https://it.wikipedia.org/wiki/Ara_(unità_di_misura)',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(38,	29,	10000000000,	'ettaro',	'ha',	'https://it.wikipedia.org/wiki/Ettaro',	1,	NULL,	NULL,	NULL,	NULL,	1);
+
 -- | 050000063000
 
 -- valute

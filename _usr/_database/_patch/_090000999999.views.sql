@@ -2303,6 +2303,26 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS                --
 	FROM tipologie_url                                        --
 ;                                                             --
 
+-- | 090000062000
+
+-- udm_view
+CREATE OR REPLACE VIEW udm_view AS
+	SELECT
+		udm.id,
+		coalesce( udm.id_base, udm.id ) AS id_base,
+		coalesce( udm.conversione, 1 ) AS conversione,
+		udm.nome,
+		udm.sigla,
+		udm.se_lunghezza,
+		udm.se_volume,
+		udm.se_peso,
+		udm.se_tempo,
+		udm.se_quantita,
+		udm.se_area,
+		udm.sigla AS __label__
+	FROM udm
+;
+
 -- | 090000062600
 
 -- url_view
