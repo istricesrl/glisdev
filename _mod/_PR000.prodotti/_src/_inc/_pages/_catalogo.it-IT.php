@@ -402,3 +402,16 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
     );
+
+// tools archivio produzione
+    $p['catalogo.marchi.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione catalogo marchi form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
