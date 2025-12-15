@@ -17,23 +17,22 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
+            {# SEZIONE GENERALE #}
             <fieldset>
-                <legend>dati generali <small>{{ legend }}</small></legend>
+                <legend>archiviazione <small>{{ legend }}</small></legend>
 
+                {# PRIMA RIGA DI CAMPI #}
                 <div class="form-group row">
-                    <div class="col col-md form-col">
-                        <span class="label-top">prodotto</span>
-                        {{ frm.select({ 'field': { 'name': 'id_prodotto' }, 'source': { 'api': 'prodotti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">data</span>
+                        {{ frm.input({ 'field': { 'name': 'data_archiviazione', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
-                    <div class="col-12 col-md-2 form-col">
-                        <span class="label-top">codice</span>
-                        {{ frm.input({ 'field': { 'name': 'codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note_archiviazione', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
-                    <div class="col-12 col-md-6 form-col">
-                        <span class="label-top">nome</span>
-                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-                    </div>                    
                 </div>
+
             </fieldset>
 
             {# BOTTONI E COMANDI DEL MODULO #}
