@@ -308,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
 --
 CREATE TABLE `articoli` (
   `id` int(11) NOT NULL,                                        -- chiave primaria
-  `codice` char(32) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
   `id_prodotto` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
@@ -333,6 +333,8 @@ CREATE TABLE `articoli` (
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_codifica` text DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1920,7 +1922,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
 --
 CREATE TABLE IF NOT EXISTS `prodotti` (	
   `id` int(11) NOT NULL,                                        -- chiave primaria
-  `codice` char(32) NOT NULL,	
+  `codice` char(32) DEFAULT NULL,	
   `id_tipologia` int(11) DEFAULT NULL,	
   `nome` char(128) DEFAULT NULL,	
   `note` text DEFAULT NULL,
@@ -1971,7 +1973,7 @@ CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
 --
 CREATE TABLE IF NOT EXISTS `progetti` (                       --
   `id` int(11) NOT NULL,                                      -- chiave primaria
-  `codice` char(32) NOT NULL,                                 -- codice del progetto
+  `codice` char(32) DEFAULT NULL,                                 -- codice del progetto
   `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di progetto
   `id_pianificazione` int(11) DEFAULT NULL,                   -- chiave esterna per la pianificazione del progetto
   `id_cliente` int(11) DEFAULT NULL,                          -- chiave esterna per l'anagrafica del cliente
@@ -3137,7 +3139,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_immobile` int(11) DEFAULT NULL,
   `id_valutazione` int(11) DEFAULT NULL, 
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `id_embed` int(11) DEFAULT NULL,
   `codice_embed` char(128) DEFAULT NULL,
