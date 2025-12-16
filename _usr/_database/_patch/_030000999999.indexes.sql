@@ -219,6 +219,19 @@ ALTER TABLE `attivita`
 -- attivita
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000002900
+
+-- caratteristiche
+ALTER TABLE `caratteristiche`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000002901
+
+-- caratteristiche
+ALTER TABLE `caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000003050
 
 -- carrelli_articoli
@@ -288,6 +301,21 @@ ALTER TABLE `categorie_notizie`
 -- categorie-notizie
 ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003900
+
+-- categorie_prodotti
+ALTER TABLE `categorie_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_sito` (`id_sito`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000003901
+
+-- categorie_prodotti
+ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000004300
 
