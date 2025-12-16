@@ -944,6 +944,20 @@ ALTER TABLE `mail_sent`
 -- mail_sent
 ALTER TABLE `mail_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000020200
+
+-- marchi
+ALTER TABLE `marchi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000020201
+
+-- marchi
+ALTER TABLE `marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000020600
 
 -- mastri
@@ -1159,6 +1173,34 @@ ALTER TABLE `pagine`
 
 -- pagine
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000023600
+
+-- periodicita
+ALTER TABLE `periodicita`
+	ADD PRIMARY KEY (`id`);
+
+-- | 030000023601
+
+-- periodicita
+ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000025000
+
+-- prezzi
+ALTER TABLE `prezzi`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000025001
+
+-- prezzi
+ALTER TABLE `prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000026000
 
