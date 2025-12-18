@@ -219,6 +219,19 @@ ALTER TABLE `attivita`
 -- attivita
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000002900
+
+-- caratteristiche
+ALTER TABLE `caratteristiche`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000002901
+
+-- caratteristiche
+ALTER TABLE `caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000003050
 
 -- carrelli_articoli
@@ -288,6 +301,21 @@ ALTER TABLE `categorie_notizie`
 -- categorie-notizie
 ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003900
+
+-- categorie_prodotti
+ALTER TABLE `categorie_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_sito` (`id_sito`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000003901
+
+-- categorie_prodotti
+ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000004300
 
@@ -916,6 +944,20 @@ ALTER TABLE `mail_sent`
 -- mail_sent
 ALTER TABLE `mail_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000020200
+
+-- marchi
+ALTER TABLE `marchi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000020201
+
+-- marchi
+ALTER TABLE `marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000020600
 
 -- mastri
@@ -1132,6 +1174,34 @@ ALTER TABLE `pagine`
 -- pagine
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000023600
+
+-- periodicita
+ALTER TABLE `periodicita`
+	ADD PRIMARY KEY (`id`);
+
+-- | 030000023601
+
+-- periodicita
+ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000025000
+
+-- prezzi
+ALTER TABLE `prezzi`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000025001
+
+-- prezzi
+ALTER TABLE `prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000026000
 
 -- prodotti
@@ -1149,6 +1219,22 @@ ALTER TABLE `prodotti`
 
 -- prodotti
 ALTER TABLE `prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000026400
+
+-- prodotti_categorie
+ALTER TABLE `prodotti_categorie`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000026401
+
+-- prodotti_categorie
+ALTER TABLE `prodotti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000027000
 
@@ -1177,7 +1263,7 @@ ALTER TABLE `progetti`
 
 -- | 030000027001
 
--- prodotti
+-- progetti
 ALTER TABLE `progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000027400
@@ -1709,6 +1795,34 @@ ALTER TABLE `tipologie_pagamenti`
 -- tipologie_pagamenti
 ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000054600
+
+-- tipologie_prodotti
+ALTER TABLE `tipologie_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000054601
+
+-- tipologie_prodotti
+ALTER TABLE `tipologie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000055000
+
+-- tipologie_progetti
+ALTER TABLE `tipologie_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000055001
+
+-- tipologie_progetti
+ALTER TABLE `tipologie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000055400
 
 -- tipologie_pubblicazioni
@@ -1722,6 +1836,20 @@ ALTER TABLE `tipologie_pubblicazioni`
 
 -- tipologie_pubblicazioni
 ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000055700
+
+-- tipologie_rinnovi
+ALTER TABLE `tipologie_rinnovi`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000055701
+
+-- tipologie_rinnovi
+ALTER TABLE `tipologie_rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000056200
 
