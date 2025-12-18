@@ -329,8 +329,47 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.articoli.form',
+                                                            'catalogo.articoli.form.caratteristiche',
+                                                            'catalogo.articoli.form.relazioni',
+                                                            'catalogo.articoli.form.distinta',
                                                             'catalogo.articoli.form.archiviazione',
                                                             'catalogo.articoli.form.tools' ) )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.articoli.form.caratteristiche'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo articoli form caratteristiche' ),
+        'h1'                => array( $l        => 'caratteristiche' ),
+        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.caratteristiche.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.articoli.form.relazioni'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo articoli form relazioni' ),
+        'h1'                => array( $l        => 'relazioni' ),
+        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.relazioni.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.relazioni.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.articoli.form.distinta'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo articoli form distinta' ),
+        'h1'                => array( $l        => 'distinta' ),
+        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.distinta.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.distinta.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
     );
 
     // tools archivio produzione

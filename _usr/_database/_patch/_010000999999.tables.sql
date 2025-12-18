@@ -682,6 +682,8 @@ CREATE TABLE `colli` (
   `note` text DEFAULT NULL,
   `timestamp_chiusura`	int(11) DEFAULT NULL,
   `note_chiusura`	text DEFAULT NULL,
+  `timestamp_spedizione`	int(11) DEFAULT NULL,
+  `note_spedizione`	text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
