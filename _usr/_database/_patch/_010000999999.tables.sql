@@ -2243,6 +2243,22 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000030800
+
+-- reparti
+-- tipologia: tabella assistita
+CREATE TABLE IF NOT EXISTS `reparti` (
+  `id` int(11) NOT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `id_settore` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000034300
 
 -- ruoli_documenti
