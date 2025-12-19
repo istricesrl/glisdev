@@ -1880,6 +1880,7 @@ CREATE TABLE IF NOT EXISTS `pagine` (                           --
   `template` char(255) DEFAULT NULL,                            -- template della pagina
   `schema_html` char(128) DEFAULT NULL,                         -- schema HTML della pagina
   `tema_css` char(32) DEFAULT NULL,                             -- tema CSS della pagina
+  `javascript` text NULL,                                       -- javascript della pagina
   `id_contenuti` int(11) DEFAULT NULL,                          -- chiave esterna per i contenuti della pagina
   `se_sitemap` tinyint(1) DEFAULT NULL,                         -- se la pagina deve essere inclusa nella sitemap
   `se_cacheable` tinyint(1) DEFAULT NULL,                       -- se la pagina è cacheable
