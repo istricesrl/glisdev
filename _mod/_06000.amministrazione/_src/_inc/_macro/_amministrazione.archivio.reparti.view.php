@@ -1,6 +1,7 @@
 <?php
 
     /**
+     * macro anagrafica view
      * 
      * 
      * 
@@ -13,34 +14,25 @@
 
     // informazioni della vista
     $ct['view'] = array(
-        'table' => 'documenti_articoli',
+        'table' => 'reparti',
         'open' => array(
-            'page' => 'amministrazione.archivio.documenti.articoli.form',
-            'table' => 'documenti_articoli',
+            'page' => 'amministrazione.archivio.reparti.form',
+            'table' => 'reparti',
         ),
         'cols' => array(
             'id' => '#',
-            'codice' => 'codice',
-            'tipologia' => 'tipologia',
-            'documento' => 'documento',
-            'nome' => 'descrizione',
-            '__label__' => 'documento',
+            '__label__' => 'reparto',
             NULL => 'azioni'
         ),
         'class' => array(
             'id' => 'd-none',
-            'codice' => 'no-wrap',
-            'tipologia' => 'no-wrap text-start',
-            'documento' => 'no-wrap text-start',
-            'nome' => 'text-start',
-            '__label__' => 'd-none',
+            '__label__' => 'text-start no-wrap',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array( 'NL' => true )
         ),
         '__sort__' => array(
             '__label__' => 'DESC'

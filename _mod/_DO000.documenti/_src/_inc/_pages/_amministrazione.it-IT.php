@@ -174,15 +174,15 @@
     );
 
     // tools archivio amministrazione
-    $p['amministrazione.archivio.documenti.articoli.form.aggregati'] = array(
+    $p['amministrazione.archivio.documenti.articoli.form.aggregate'] = array(
         'sitemap'            => false,
-        'title'                => array( $l        => 'amministrazione archivio documenti articoli form aggregati' ),
+        'title'                => array( $l        => 'amministrazione archivio documenti articoli form aggregate' ),
         'h1'                => array( $l        => 'righe aggregate' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.articoli.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.aggregati.php' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.articoli.form.aggregate.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.aggregate.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.articoli.aggregati.form' )
+        'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.articoli.form' )
     );
 
     // tools archivio amministrazione
