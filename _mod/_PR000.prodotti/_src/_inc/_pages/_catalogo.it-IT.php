@@ -69,29 +69,28 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.prodotti.form',
-                                                            'catalogo.prodotti.form.categorie',
                                                             'catalogo.prodotti.form.caratteristiche',
-                                                            'catalogo.prodotti.form.relazioni',
                                                             'catalogo.prodotti.form.articoli',
+                                                            'catalogo.prodotti.form.relazioni',
                                                             'catalogo.prodotti.form.archiviazione',
                                                             'catalogo.prodotti.form.tools' ) )
     );
 
     // RELAZIONI CON IL MODULO CONTENUTI
     if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.web' );
-        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.sem' );
-        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.contenuti' );
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.web' );
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.sem' );
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.contenuti' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.immagini' );
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.immagini' );
     }
 
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'catalogo.prodotti.form.archiviazione', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.video' );
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.video' );
     }
 
     // tools archivio produzione
@@ -121,6 +120,7 @@
     // tools archivio produzione
     $p['catalogo.prodotti.form.relazioni'] = array(
         'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-diagram-project" aria-hidden="true"></i>',
         'title'                => array( $l        => 'catalogo prodotti form relazioni' ),
         'h1'                => array( $l        => 'relazioni' ),
         'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
@@ -330,20 +330,20 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.articoli.form',
                                                             'catalogo.articoli.form.caratteristiche',
-                                                            'catalogo.articoli.form.relazioni',
                                                             'catalogo.articoli.form.distinta',
+                                                            'catalogo.articoli.form.relazioni',
                                                             'catalogo.articoli.form.archiviazione',
                                                             'catalogo.articoli.form.tools' ) )
     );
 
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'catalogo.articoli.form.archiviazione', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.immagini' );
+        arrayInsertBefore( 'catalogo.articoli.form.relazioni', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.immagini' );
     }
 
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'catalogo.articoli.form.archiviazione', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
+        arrayInsertBefore( 'catalogo.articoli.form.relazioni', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
     }
 
     // tools archivio produzione
@@ -361,6 +361,7 @@
     // tools archivio produzione
     $p['catalogo.articoli.form.relazioni'] = array(
         'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-diagram-project" aria-hidden="true"></i>',
         'title'                => array( $l        => 'catalogo articoli form relazioni' ),
         'h1'                => array( $l        => 'relazioni' ),
         'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
