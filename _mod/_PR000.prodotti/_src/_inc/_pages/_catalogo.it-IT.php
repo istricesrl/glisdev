@@ -336,6 +336,16 @@
                                                             'catalogo.articoli.form.tools' ) )
     );
 
+    // RELAZIONI CON IL MODULO IMMAGINI
+    if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.archiviazione', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.immagini' );
+    }
+
+    // RELAZIONI CON IL MODULO VIDEO
+    if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.archiviazione', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
+    }
+
     // tools archivio produzione
     $p['catalogo.articoli.form.caratteristiche'] = array(
         'sitemap'            => false,

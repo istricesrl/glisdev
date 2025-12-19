@@ -42,3 +42,16 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
     );
+
+    // gestione catalogo.prodotti form immagini
+    $p['catalogo.articoli.form.immagini'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'immagini' ),
+        'h1'                => array( $l        => 'immagini' ),
+        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.immagini.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.immagini.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
+    );
