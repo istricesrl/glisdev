@@ -1860,6 +1860,24 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
 
+-- | 090000030800
+
+-- reparti_view
+CREATE OR REPLACE VIEW reparti_view AS
+	SELECT
+		reparti.id,
+		reparti.id_iva,
+		iva.aliquota AS iva,
+		reparti.id_settore,
+		settori_path( reparti.id_settore ) AS settore,
+		reparti.nome,
+		reparti.id_account_inserimento,
+		reparti.id_account_aggiornamento,
+		reparti.nome AS __label__
+	FROM reparti
+		LEFT JOIN iva ON iva.id = reparti.id_iva
+;
+
 -- | 090000034300
 
 -- ruoli_documenti_view
