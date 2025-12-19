@@ -1113,12 +1113,12 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id_destinatario` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica destinataria
   `id_emittente` int(11) DEFAULT NULL,                          -- chiave esterna per l'anagrafica emittente
   `id_reparto` int(11) DEFAULT NULL,                            -- chiave esterna per il reparto collegato all'articolo
-  `id_progetto` int(11) DEFAULT NULL,                          -- chiave esterna per il progetto collegato all'articolo
+  `id_progetto` int(11) DEFAULT NULL,                           -- chiave esterna per il progetto collegato all'articolo
   `id_todo` int(11) DEFAULT NULL,                               -- chiave esterna per la todo collegata all'articolo
   `id_attivita` int(11) DEFAULT NULL,                           -- chiave esterna per l'attività collegata all'articolo
-  `id_articolo` int(11) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato
+  `id_articolo` int(11) DEFAULT NULL,                           -- chiave esterna per l'articolo collegato
   `id_collo` int(11) DEFAULT NULL,                              -- chiave esterna per il collo collegato all'articolo
-  `id_prodotto` int(11) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato
+  `id_prodotto` int(11) DEFAULT NULL,                           -- chiave esterna per il prodotto collegato
   `id_mastro_provenienza` int(11) DEFAULT NULL,                 -- chiave esterna per il mastro di provenienza
   `id_mastro_destinazione` int(11) DEFAULT NULL,                -- chiave esterna per il mastro di destinazione
   `id_udm` int(11) DEFAULT NULL,                                -- chiave esterna per l'unità di misura
@@ -1130,6 +1130,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id_listino` int(11) DEFAULT NULL,                            -- chiave esterna per il listino applicato
   `costo_netto_unitario` decimal(16,2) DEFAULT NULL,            -- costo netto unitario
   `costo_netto_totale` decimal(16,2) DEFAULT NULL,              -- costo netto totale
+  `note_costi` text DEFAULT NULL,                               -- note sull'articolo
   `prezzo_netto_unitario` decimal(16,2) DEFAULT NULL,           -- prezzo netto unitario
   `prezzo_netto_totale` decimal(16,2) DEFAULT NULL,             -- prezzo netto totale
   `importo_netto_totale` decimal(16,2) DEFAULT NULL,            -- importo netto totale
