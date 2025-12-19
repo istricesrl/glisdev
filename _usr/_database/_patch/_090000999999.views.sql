@@ -1254,6 +1254,21 @@ CREATE OR REPLACE VIEW `immagini_view` AS                       --
 
 -- | 090000016000
 
+-- iva_view
+CREATE OR REPLACE VIEW iva_view AS
+	SELECT
+		iva.id,
+		iva.aliquota,
+		iva.nome,
+		iva.codice,
+		iva.timestamp_archiviazione,
+		iva.nome AS __label__
+	FROM
+		iva
+;
+
+-- | 090000016800
+
 -- lingue_view
 CREATE OR REPLACE VIEW lingue_view AS                         --
   SELECT                                                      --

@@ -1331,6 +1331,20 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
 
 -- | 010000016000
 
+-- iva
+-- tipologia: tabella standard
+-- verifica: 2021-09-23 16:52 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `iva` (
+  `id` int(11) NOT NULL,
+  `aliquota` decimal(5,2) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `descrizione` text DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000016200
+
 -- job
 -- tipologia: tabella gestita
 -- rango: tabella principale
@@ -1360,7 +1374,7 @@ CREATE TABLE IF NOT EXISTS `job` (                            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
--- | 010000016200
+-- | 010000016800
 
 -- lingue
 -- tipologia: tabella standard
