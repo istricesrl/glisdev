@@ -122,6 +122,32 @@
         'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
     );
 
+    // gestione pagine form contenuti
+    $p['contenuti.pagine.form.macro'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-brands fa-php" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'macro' ),
+        'h1'                => array( $l        => 'macro' ),
+        'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.macro.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.macro.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
+    );
+
+    // gestione pagine form contenuti
+    $p['contenuti.pagine.form.metadati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-tags" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'metadati' ),
+        'h1'                => array( $l        => 'metadati' ),
+        'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.metadati.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.metadati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
+    );
+
     // gestione notizie form contenuti
     $p['contenuti.notizie.form.web'] = array(
         'sitemap'            => false,
