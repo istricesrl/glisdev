@@ -333,6 +333,7 @@ CREATE TABLE `articoli` (
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_codifica` text DEFAULT NULL,
+  `codice_produttore` char(64) DEFAULT NULL,	
   `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,
