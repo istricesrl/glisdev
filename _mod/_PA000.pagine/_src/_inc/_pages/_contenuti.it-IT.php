@@ -84,12 +84,12 @@
 
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.immagini' );
+        arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.immagini' );
     }
 
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.video' );
+        arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.video' );
     }
 
     // tools archivio produzione
