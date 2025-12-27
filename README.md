@@ -88,7 +88,12 @@ location / {
 }
 ```
 
-nel blocco server del sito web. Se è presente un blocco come questo, rimuoverlo:
+oppure semplicemente:
+
+```
+    try_files "" /index.php$is_args$args;
+```
+alla sezione location / se la sezione esiste già nel blocco server del sito web. Se è presente un blocco come questo, rimuoverlo:
 
 ```
 if (-f $request_filename) {
@@ -114,6 +119,8 @@ if (beresp.http.X-GlisWeb-No-Cache == "true") {
 
 per fare in modo che GlisWeb possa governare la cache di Varnish. Senza questa configurazione, è necessario
 disattivare Varnish per assicurarsi un comportamento corretto del framework.
+
+Se si hanno problemi con php8.5 e i moduli, tornare a php8.4 dopo aver lanciato _nginx.setup.sh.
 
 installazione su XAMPP
 ----------------------
