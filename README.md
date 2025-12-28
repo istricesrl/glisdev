@@ -80,20 +80,46 @@ Una volta che tutto funziona, è possibile accedere al CMS del framework all'ind
 installazione su CloudPanel (https://www.cloudpanel.io/)
 --------------------------------------------------------
 Per rendere il framework pienamente funzionante su CloudPanel è necessario apportare una modifica al file
-di configurazione del Virtual Host di Nginx, in particolare è necessario aggiungere:
+di configurazione del Virtual Host di Nginx, in particolare è necessario modificare la sezione server (8080)
+come segue:
 
 ```
-location / {
-    try_files "" /index.php$is_args$args;
+server {
+  listen 8080;
+  listen [::]:8080;
+  server_name www.fabiomosti.it www1.fabiomosti.it;
+  {{root}}
+
+  include /etc/nginx/global_settings;
+
+  index index.php;
+
+  location / {
+    rewrite ^ /index.php?$query_string last;
+  }
+
+  # Esegui solo index.php (opzionale ma consigliato)
+  location = /index.php {
+    include fastcgi_params;
+    fastcgi_intercept_errors on;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_read_timeout 3600;
+    fastcgi_send_timeout 3600;
+    fastcgi_param HTTPS "on";
+    fastcgi_param SERVER_PORT 443;
+    fastcgi_pass 127.0.0.1:{{php_fpm_port}};
+    fastcgi_param PHP_VALUE "{{php_settings}}";
+  }
+
+  # Blocca l’esecuzione di qualsiasi altro .php (consigliato)
+  location ~ \.php$ {
+    return 404;
+  }
 }
 ```
 
-oppure semplicemente:
-
-```
-    try_files "" /index.php$is_args$args;
-```
-alla sezione location / se la sezione esiste già nel blocco server del sito web. Se è presente un blocco come questo, rimuoverlo:
+inoltre se la sezione server (80) del sito web contiene un blocco come questo, rimuoverlo:
 
 ```
 if (-f $request_filename) {
@@ -101,8 +127,10 @@ if (-f $request_filename) {
 }
 ```
 
-in quanto farebbe servire i file statici direttamente senza passare per il front controller. Inoltre è necessario
-aggiungere alla configurazione di Varnish (nel blocco vcl_backend_response) la seguente configurazione:
+in quanto farebbe servire i file statici direttamente senza passare per il front controller.
+
+Infine è necessario aggiungere alla configurazione di Varnish (nel blocco vcl_backend_response)
+la seguente configurazione:
 
 ```
 if (beresp.http.X-GlisWeb-No-Cache == "true") {
