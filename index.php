@@ -6,15 +6,46 @@
      * 
      * 
      * per far passare tutto il traffico web a questo file, è necessario configurare il server web
-     * Nginx o IIS in modo appropriato. Per Nginx inserire questo blocco di configurazione:
+     * Nginx o IIS in modo appropriato. Per Nginx modificare il blocco server (8080) come segue
+     * (sostituire dominio.tld con il dominio effettivo):
      * 
      * ```
-     * location / {
-     *    try_files "" /index.php$is_args$args;
-     * }
+     *  server {
+     *    listen 8080;
+     *    listen [::]:8080;
+     *    server_name www.dominio.tld www1.dominio.tld;
+     *    {{root}}
+     *  
+     *    include /etc/nginx/global_settings;
+     *  
+     *    index index.php;
+     *  
+     *    location / {
+     *      rewrite ^ /index.php?$query_string last;
+     *    }
+     *  
+     *    # Esegui solo index.php (opzionale ma consigliato)
+     *    location = /index.php {
+     *      include fastcgi_params;
+     *      fastcgi_intercept_errors on;
+     *      fastcgi_index index.php;
+     *      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+     *      fastcgi_read_timeout 3600;
+     *      fastcgi_send_timeout 3600;
+     *      fastcgi_param HTTPS "on";
+     *      fastcgi_param SERVER_PORT 443;
+     *      fastcgi_pass 127.0.0.1:{{php_fpm_port}};
+     *      fastcgi_param PHP_VALUE "{{php_settings}}";
+     *    }
+     *  
+     *    # Blocca l’esecuzione di qualsiasi altro .php (consigliato)
+     *    location ~ \.php$ {
+     *      return 404;
+     *    }
+     *  }
      * ```
      * 
-     * nel blocco server del sito web. Se è presente un blocco come questo, rimuoverlo:
+     * nel blocco server (80) del sito web, se è presente un blocco come questo, rimuoverlo:
      * 
      * ```
      * if (-f $request_filename) {
@@ -34,6 +65,43 @@
 
     // debug
     // die( $URI );
+
+    /**
+     * blocchi di sicurezza
+     * ====================
+     * 
+     */
+
+    // estraggo l’estensione del file richiesto (se presente)
+    $ext = strtolower(pathinfo($URI, PATHINFO_EXTENSION));
+
+    // linguaggi non supportati
+    $deny_lang = [
+        'asp','bas','cfm','csp','jsp','shtml'
+    ];
+
+    // file con informazioni sensibili
+    $deny_sensitive = [
+        'bak','blt','cfg','conf','config','dox',
+        'htaccess','htpasswd','ini','info','json',
+        'key','lock','log','md','notes','pem',
+        'properties','save','sql','sqlite','swp',
+        'templ','trace','twig'
+    ];
+
+    // file potenzialmente dannosi
+    $deny_exec = [
+        'cgi','exe','htl','map','mdb','pl','py','sh'
+    ];
+
+    // merge di tutte le blacklist
+    $deny_all = array_merge($deny_lang, $deny_sensitive, $deny_exec);
+
+    // se l’estensione è in blacklist
+    if ($ext !== '' && in_array($ext, $deny_all, true)) {
+        http_response_code(403);
+        exit;
+    }
 
     /**
      * scorciatoie
