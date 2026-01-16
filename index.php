@@ -162,31 +162,31 @@
 
     // API di logout
     if ($URI === '/api/logout') {
-        $_GET['__logout__'] = 1;
+        $_REQUEST['__logout__'] = 1;
         require('_src/_api/_user.php');
         exit;
     }
 
     // API di download generico: /var/<...> -> _src/_api/_download.php?__download__=var/...
     if (preg_match('#^/var/(.+)$#', $URI, $m)) {
-        $_GET['__download__'] = 'var/'.$m[1];
+        $_REQUEST['__download__'] = 'var/'.$m[1];
         require('_src/_api/_download.php');
         exit;
     }
 
     // API per il mailing /mailing/<id>/var/<...>
     if (preg_match('#^/mailing/([0-9]+)/var/(.+)$#', $URI, $m)) {
-        $_GET['__download__'] = 'var/'.$m[2];
-        $_GET['__mailing__']  = $m[1];
+        $_REQUEST['__download__'] = 'var/'.$m[2];
+        $_REQUEST['__mailing__']  = $m[1];
         require('_src/_api/_download.php');
         exit;
     }
 
     // API per il mailing /mailing/<id>/<dst>/var/<...>
     if (preg_match('#^/mailing/([0-9]+)/([0-9]+)/var/(.+)$#', $URI, $m)) {
-        $_GET['__download__']   = 'var/'.$m[3];
-        $_GET['__mailing__']    = $m[1];
-        $_GET['__mailing_dst__']= $m[2];
+        $_REQUEST['__download__']   = 'var/'.$m[3];
+        $_REQUEST['__mailing__']    = $m[1];
+        $_REQUEST['__mailing_dst__']= $m[2];
         require('_src/_api/_download.php');
         exit;
     }
@@ -251,7 +251,7 @@
 
     // API per la chiamata diretta dei job /job/<id>
     if (preg_match('#^/job/([0-9]+)?$#', $URI, $m)) {
-        $_GET['__id__'] = $m[1] ?? '';
+        $_REQUEST['__id__'] = $m[1] ?? '';
         require('_src/_api/_job.php');
         exit;
     }
@@ -560,15 +560,15 @@
 
     // nomepagina.xx-XX.html
     if (preg_match('#^/([A-Za-z0-9._\-/]+)\.([a-z]{2}-[A-Z]{2})\.html?$#', $URI, $m)) {
-        $_GET['__rw__'] = $m[1];
-        $_GET['__lg__'] = $m[2];
+        $_REQUEST['__rw__'] = $m[1];
+        $_REQUEST['__lg__'] = $m[2];
         require '_src/_api/_pages.php';
         exit;
     }
 
     // nomefile[.estensione] -> pages con __rw__=nomefile
     if (preg_match('#^/([A-Za-z0-9._\-/]*[A-Za-z0-9_-])(?:\.[A-Za-z0-9]+)?$#', $URI, $m)) {
-        $_GET['__rw__'] = ltrim($m[1],'/');
+        $_REQUEST['__rw__'] = ltrim($m[1],'/');
         require '_src/_api/_pages.php';
         exit;
     }

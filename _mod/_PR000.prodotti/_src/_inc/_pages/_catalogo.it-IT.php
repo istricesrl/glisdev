@@ -282,32 +282,6 @@
     );
 
     // tools archivio produzione
-    $p['catalogo.categorie.prodotti.form.archiviazione'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'archiviazione catalogo categorie prodotti form' ),
-        'h1'                => array( $l        => 'archiviazione' ),
-        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.archiviazione.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
-    );
-
-    // tools archivio produzione
-    $p['catalogo.categorie.prodotti.form.tools'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'azioni catalogo categorie prodotti form' ),
-        'h1'                => array( $l        => 'azioni' ),
-        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.tools.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
-    );
-
-    // tools archivio produzione
     $p['catalogo.articoli.view'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo articoli' ),
