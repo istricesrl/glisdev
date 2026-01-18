@@ -131,3 +131,19 @@
         'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
     );
 
+    // RELAZIONI CON IL MODULO CONTENUTI
+    if( in_array( "03000.contenuti", $cf['mods']['active']['array'] ) ) {
+        arrayInsertSeq( 'contenuti.archivio.contenuti.view', $p['contenuti.archivio']['etc']['tabs'], 'contenuti.archivio.menu.view' );
+    }
+
+    // tools archivio contenuti
+    $p['contenuti.archivio.menu.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'menu' ),
+        'h1'                => array( $l        => 'menu' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.menu.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.archivio' )
+    );

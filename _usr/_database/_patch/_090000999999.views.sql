@@ -1451,6 +1451,7 @@ CREATE OR REPLACE VIEW `marchi_view` AS
 CREATE OR REPLACE VIEW `menu_view` AS                           --
     SELECT                                                      --
 		menu.id,                                                --
+		pagine.id_sito,                                    		--
 		menu.id_lingua,                                         --
 		menu.id_pagina,                                         --
 		menu.id_categoria_prodotti,                             --
@@ -1476,6 +1477,7 @@ CREATE OR REPLACE VIEW `menu_view` AS                           --
     FROM menu                                                   --
 		INNER JOIN lingue                                       --
             ON lingue.id = menu.id_lingua                       --
+		LEFT JOIN pagine ON pagine.id = menu.id_pagina         	--
 ;                                                               --
 
 -- | 090000021900
