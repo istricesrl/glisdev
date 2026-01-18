@@ -32,7 +32,7 @@
                                                             'ranking.view',
                                                             'anagrafica.view.archiviate',
                                                             // 'anagrafica.stats',
-                                                            // 'anagrafica.stampe',
+                                                            'anagrafica.stampe',
                                                             'anagrafica.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'anagrafica' ),
                                                                             'priority'    => '050' ) ) )
@@ -47,6 +47,19 @@
         'parent'            => array( 'id'        => 'anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.view.archiviate.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.view' )
+    );
+
+    // anagrafica stampe
+    $p['anagrafica.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'anagrafica stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.stampe.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'anagrafica.view' )
     );
@@ -89,7 +102,7 @@
                                                             'anagrafica.form.relazioni',
                                                             'anagrafica.form.archiviazione',
                                                             // 'anagrafica.form.stats',
-                                                            // 'anagrafica.form.stampe',
+                                                            'anagrafica.form.stampe',
                                                             'anagrafica.form.tools' ) )
     );
 
@@ -173,6 +186,19 @@
         'parent'            => array( 'id'        => 'anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.archiviazione.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // anagrafica form stampe
+    $p['anagrafica.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'anagrafica form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.stampe.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );
