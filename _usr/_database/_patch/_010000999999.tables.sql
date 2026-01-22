@@ -1569,6 +1569,8 @@ CREATE TABLE IF NOT EXISTS `marchi` (
   `id_produttore` int(11) NOT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
+  `note_archiviazione` text DEFAULT NULL,                     -- note per l'archiviazione del documento
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
