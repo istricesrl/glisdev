@@ -23,18 +23,18 @@
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logWrite( 'struttura delle categorie notizie NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR );
+            logWrite( 'struttura delle categorie prodotti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR );
         }
 
-	    // recupero le categorie notizie dal database
+	    // recupero le categorie prodotti dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT categorie_notizie.* FROM categorie_notizie 
-            INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id 
-            WHERE categorie_notizie.id_sito = ? 
+            'SELECT categorie_prodotti.* FROM categorie_prodotti 
+            INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_prodotti = categorie_prodotti.id 
+            WHERE categorie_prodotti.id_sito = ? 
             AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) 
             AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) 
-            GROUP BY categorie_notizie.id ',
+            GROUP BY categorie_prodotti.id ',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),
@@ -43,10 +43,10 @@
         );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine recupero categorie notizie dal database' );
+		timerCheck( $cf['speed'], ' -> fine recupero categorie prodotti dal database' );
 
         // log
-        logger( 'categorie notizie trovate: ' . print_r( $pgs, true ), 'notizie' );
+        logger( 'categorie prodotti trovate: ' . print_r( $pgs, true ), 'prodotti' );
 
         // se ci sono pagine trovate le inserisco nell'array principale
 		if( is_array( $pgs ) ) {
@@ -55,8 +55,8 @@
 			foreach( $pgs as $pg ) {
 
                 // ID della pagina
-                $pid = PREFX_CATEGORIE_NOTIZIE . $pg['id'];
-                $pip = PREFX_CATEGORIE_NOTIZIE . $pg['id_genitore'];
+                $pid = PREFX_CATEGORIE_PRODOTTI . $pg['id'];
+                $pip = PREFX_CATEGORIE_PRODOTTI . $pg['id_genitore'];
 
                 if( ! empty( $pg['id_pagina'] ) ) {
                     $pip = $pg['id_pagina'];
@@ -74,9 +74,9 @@
                 // valuto se i dati in cache sono ancora validi
 				if( $pg['timestamp_aggiornamento'] > $age || empty( $pgc ) ) {
 
-                    if( empty( $pg['template'] ) ){ $pg['template'] = $cf['notizie']['pages']['elenco']['template']; }
-                    if( empty( $pg['schema_html'] ) ){ $pg['schema_html'] = $cf['notizie']['pages']['elenco']['schema']; }
-                    if( empty( $pg['tema_css'] ) ){ $pg['tema_css'] = $cf['notizie']['pages']['elenco']['css']; }
+                    if( empty( $pg['template'] ) ){ $pg['template'] = $cf['prodotti']['pages']['elenco']['template']; }
+                    if( empty( $pg['schema_html'] ) ){ $pg['schema_html'] = $cf['prodotti']['pages']['elenco']['schema']; }
+                    if( empty( $pg['tema_css'] ) ){ $pg['tema_css'] = $cf['prodotti']['pages']['elenco']['css']; }
 
                     // blocco dati principale
                     $cf['contents']['pages'][ $pid ] = array(
@@ -85,8 +85,8 @@
                         // TODO 'robots'        => $pg['robots'],
                         'parent'		=> array( 'id'		=> $pip ),
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
-                        'metadati'      => array('id_categoria_notizie' => $pg['id']),
-                        'macro'         => $cf['notizie']['pages']['elenco']['macro'] ?? []
+                        'metadati'      => array('id_categoria_prodotti' => $pg['id']),
+                        'macro'         => $cf['prodotti']['pages']['elenco']['macro'] ?? []
                     );
 
                     aggiungiGruppi(
@@ -97,32 +97,32 @@
                     aggiungiContenuti(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_categoria_notizie'
+                        'id_categoria_prodotti'
                     );
 
                     aggiungiContenuti(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_categoria_notizie'
+                        'id_categoria_prodotti'
                     );
 
                     aggiungiImmagini(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_categoria_notizie',
+                        'id_categoria_prodotti',
                         array(4, 16, 29, 14)
                     );
 
                     aggiungiMetadati(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_categoria_notizie'
+                        'id_categoria_prodotti'
                     );
 
                     aggiungiMenu(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_categoria_notizie'
+                        'id_categoria_prodotti'
                     );
 
                     // scrivo la pagina in cache
@@ -135,22 +135,22 @@
         }
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine elaborazione categorie notizie prelevate dal database' );
+		timerCheck( $cf['speed'], ' -> fine elaborazione categorie prodotti prelevate dal database' );
 
-        // recupero le notizie dal database
+        // recupero le prodotti dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT notizie.*, notizie_categorie.id_categoria AS id_categoria, '.
+            'SELECT prodotti.*, prodotti_categorie.id_categoria AS id_categoria, '.
             'pubblicazioni.id_tipologia AS id_tipologia_pubblicazione, tipologie_pubblicazioni.nome AS tipologia_pubblicazione '.
-            'FROM notizie '.
-            'INNER JOIN pubblicazioni ON pubblicazioni.id_notizia = notizie.id '.
+            'FROM prodotti '.
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id '.
             'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia '.
-            'LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id  '.
-            'LEFT JOIN categorie_notizie ON notizie_categorie.id_categoria = categorie_notizie.id '.
-            'WHERE categorie_notizie.id_sito = ? '.
+            'LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id  '.
+            'LEFT JOIN categorie_prodotti ON prodotti_categorie.id_categoria = categorie_prodotti.id '.
+            'WHERE categorie_prodotti.id_sito = ? '.
             'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
             'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
-            'GROUP BY notizie.id',
+            'GROUP BY prodotti.id',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),
@@ -159,10 +159,10 @@
         );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine recupero notizie dal database' );
+		timerCheck( $cf['speed'], ' -> fine recupero prodotti dal database' );
 
         // log
-        logger( 'notizie trovate: ' . print_r( $pgs, true ), 'notizie' );
+        logger( 'prodotti trovate: ' . print_r( $pgs, true ), 'prodotti' );
 
         // se ci sono pagine trovate le inserisco nell'array principale
 		if( is_array( $pgs ) ) {
@@ -171,9 +171,9 @@
             foreach( $pgs as $pg ) {
             // categorie
             $cat = mysqlQuery( $cf['mysql']['connection'],
-                'SELECT notizie_categorie.id_categoria '
-                .'FROM notizie_categorie '
-                .'WHERE notizie_categorie.id_notizia = ? '
+                'SELECT prodotti_categorie.id_categoria '
+                .'FROM prodotti_categorie '
+                .'WHERE prodotti_categorie.id_prodotto = ? '
                 .'ORDER BY ordine',
                 array( array( 's' => $pg['id'] ) )
             );
@@ -181,15 +181,15 @@
             // canonical
             $canon = NULL;
 
-            // creazione della pagina per tutte le notizie
+            // creazione della pagina per tutte le prodotti
             foreach( $cat as $ce ) {
 
 
                 // ID della categoria
-                $cid = PREFX_CATEGORIE_NOTIZIE . $ce['id_categoria'];
+                $cid = PREFX_CATEGORIE_PRODOTTI . $ce['id_categoria'];
 
                 // ID della pagina
-                $pid = $cid . '.' . PREFX_NOTIZIE . $pg['id'];
+                $pid = $cid . '.' . PREFX_PRODOTTI . $pg['id'];
 
                 if( empty( $pip ) ) {
                     $pip = $pg['id_pagina'];
@@ -207,9 +207,9 @@
                 // valuto se i dati in cache sono ancora validi
 				if( $pg['timestamp_aggiornamento'] > $age || empty( $pgc ) ) {
 
-                    if( empty( $pg['template'] ) ){ $pg['template'] = $cf['notizie']['pages']['scheda']['template']; }
-                    if( empty( $pg['schema_html'] ) ){ $pg['schema_html'] = $cf['notizie']['pages']['scheda']['schema']; }
-                    if( empty( $pg['tema_css'] ) ){ $pg['tema_css'] = $cf['notizie']['pages']['scheda']['css']; }
+                    if( empty( $pg['template'] ) ){ $pg['template'] = $cf['prodotti']['pages']['scheda']['template']; }
+                    if( empty( $pg['schema_html'] ) ){ $pg['schema_html'] = $cf['prodotti']['pages']['scheda']['schema']; }
+                    if( empty( $pg['tema_css'] ) ){ $pg['tema_css'] = $cf['prodotti']['pages']['scheda']['css']; }
 
                     // blocco dati principale
                     $cf['contents']['pages'][ $pid ] = array(
@@ -220,11 +220,11 @@
                         'parent'		=> array( 'id'		=> $cid ),
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
                         'metadati'      => array(
-                            'id_notizia' => $pg['id'],
+                            'id_prodotto' => $pg['id'],
                             'id_tipologia_pubblicazione' => $pg['id_tipologia_pubblicazione'],
                             'tipologia_pubblicazione' => $pg['tipologia_pubblicazione']
                         ),
-                        'macro'         => $cf['notizie']['pages']['scheda']['macro']
+                        'macro'         => $cf['prodotti']['pages']['scheda']['macro']
                     );
 
                     aggiungiGruppi(
@@ -235,26 +235,26 @@
                     aggiungiContenuti(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_notizia'
+                        'id_prodotto'
                     );
 
                     aggiungiContenuti(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_notizia'
+                        'id_prodotto'
                     );
 
                     aggiungiImmagini(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_notizia',
+                        'id_prodotto',
                         array(4, 16, 29, 14)
                     );
 
                     aggiungiMetadati(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_notizia'
+                        'id_prodotto'
                     );
 
                     
@@ -263,17 +263,17 @@
                     aggiungiMenu(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
-                        'id_notizia'
+                        'id_prodotto'
                     );
 */
 
                     // ...
-                    $cf['notizie']['index'][ $pg['id'] ] = $pid;
+                    $cf['prodotti']['index'][ $pg['id'] ] = $pid;
 
                     // canonical
 				    $canon = $pid;
 
-                   // scrivo la pagina della notizia in cache
+                   // scrivo la pagina della prodotto in cache
                     memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
   
                     }
@@ -283,16 +283,16 @@
         }
 
         // timer
-		timerCheck( $cf['speed'], ' -> fine elaborazione notizie prelevate dal database' );
+		timerCheck( $cf['speed'], ' -> fine elaborazione prodotti prelevate dal database' );
 
     } else {
         
 	    // recupero la timestamp di aggiornamento più recente
 		$cf['contents']['updated'] = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max( categorie_notizie.timestamp_aggiornamento ) AS updated FROM categorie_notizie '.
-            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id '.
-            'WHERE categorie_notizie.id_sito = ? '.
+            'SELECT max( categorie_prodotti.timestamp_aggiornamento ) AS updated FROM categorie_prodotti '.
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_prodotti = categorie_prodotti.id '.
+            'WHERE categorie_prodotti.id_sito = ? '.
             'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
             'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
             array(
