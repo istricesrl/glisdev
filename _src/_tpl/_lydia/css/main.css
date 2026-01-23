@@ -56,6 +56,7 @@ h1, h2, h3, h4, h5 {
 
 h1 {
     font-size: 2em;
+    margin-bottom: .25em;
 }
 
 h2 {
@@ -156,6 +157,20 @@ a.nav-link:active, a.nav-link:hover {
 
 nav ul {
     list-style-type: none;
+}
+
+nav ul ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    padding: 0em;
+}
+
+div.sottomenu {
+    background-color: #eeeeee;
+    text-align: left;
+    font-size: 0.8em;;
+    padding: 0px;
 }
 
 div.megamenu {

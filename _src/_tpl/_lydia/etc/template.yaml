@@ -4,6 +4,7 @@ template:
   login: login.twig
   menu:
     categorie: NULL
+    sottomenu: NULL
     mega: NULL
     icons: NULL
     main: NULL

@@ -42,19 +42,13 @@
                 </div>
                 {% endif %}
             </div>
-            {% if not page.contents.images.carousel and not page.contents.images.jumbotron %}
-            {% if page.id != site.home %}
-            <div class="breadcrumbs">
+            <div class="sottomenu">
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <p>{% block breadcrumbs %}{% include 'inc/breadcrumbs.twig' %}{% endblock %}</p>
-                        </div>
+                    <div class="row sottomenu">
+                        {% block sottomenu %}{% include 'inc/sottomenu.twig' %}{% endblock %}
                     </div>
                 </div>
             </div>
-            {% endif %}
-            {% endif %}
         </div>
 
         {% block carousel %}{% include 'inc/carousel.twig' %}{% endblock %}
@@ -64,6 +58,9 @@
             <div class="container">
                 <div class="row mb-3">
                     <div class="col">
+                        {% if page.parent.id %}
+                        <p class="mb-0">sei qui > {% block breadcrumbs %}{% include 'inc/breadcrumbs.twig' %}{% endblock %}</p>
+                        {% endif %}
                         <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ]|default('') ) | raw ) }}</h1>
                         {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ]|default('') ) | raw ) }}</h2>{% endif %}
                     </div>
