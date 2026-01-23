@@ -1285,6 +1285,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (                       --
   `id_valutazione` int(11) DEFAULT NULL,                      -- chiave esterna per la valutazione a cui è associata l'immagine
   `id_file` int(11) DEFAULT NULL,                             -- chiave esterna per il file a cui è associata l'immagine
   `id_banner` int(11) DEFAULT NULL,                           -- chiave esterna per il banner a cui è associata l'immagine
+  `id_contatto` int(11) DEFAULT NULL,                           -- chiave esterna per il contatto a cui è associata l'immagine
   `id_lingua` int(11) DEFAULT NULL,                           -- chiave esterna per la lingua dell'immagine
   `nome` char(255) DEFAULT NULL,                              -- nome dell'immagine
   `orientamento` enum('L','P','S') DEFAULT NULL,              -- orientamento dell'immagine: L=landscape, P=portrait, S=square
