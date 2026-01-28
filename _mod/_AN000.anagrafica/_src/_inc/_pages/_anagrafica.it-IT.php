@@ -538,7 +538,34 @@
         'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'ranking.form',
+                                                            'ranking.form.anagrafiche',
+                                                            'ranking.form.stampe',
                                                             'ranking.form.tools' ) )
+    );
+
+    // ranking form anagrafiche
+    $p['ranking.form.anagrafiche'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'ranking form anagrafiche' ),
+        'h1'                => array( $l        => 'anagrafiche' ),
+        'parent'            => array( 'id'        => 'ranking.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'ranking.form.anagrafiche.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.anagrafiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'ranking.form' )
+    );
+
+    // ranking form stampe
+    $p['ranking.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'ranking form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'ranking.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'ranking.form' )
     );
 
     // tools account
