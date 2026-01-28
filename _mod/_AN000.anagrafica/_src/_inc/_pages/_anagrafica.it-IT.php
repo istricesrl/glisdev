@@ -38,7 +38,7 @@
                                                                             'priority'    => '050' ) ) )
     );
 
-    // tools anagrafica
+    // anagrafica archiviate
     $p['anagrafica.view.archiviate'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
@@ -116,7 +116,7 @@
         arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.video' );
     }
 
-    // gestione anagrafica form tools
+    // anagrafica form cliente
     $p['anagrafica.form.cliente'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'anagrafica form cliente' ),
@@ -128,7 +128,7 @@
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );
 
-    // gestione anagrafica form tools
+    // anagrafica form fornitore
     $p['anagrafica.form.fornitore'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'anagrafica form fornitore' ),
@@ -140,7 +140,7 @@
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );
 
-    // gestione anagrafica form tools
+    // anagrafica form collaboratore
     $p['anagrafica.form.collaboratore'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'anagrafica form collaboratore' ),
@@ -152,7 +152,7 @@
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );
 
-    // gestione anagrafica form tools
+    // anagrafica form produttore
     $p['anagrafica.form.produttore'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'anagrafica form produttore' ),
@@ -177,7 +177,7 @@
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );
 
-    // gestione anagrafica form tools
+    // gestione anagrafica form archiviazione
     $p['anagrafica.form.archiviazione'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
@@ -249,7 +249,7 @@
         'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
     );
 
-    // anagrafica archivio telefoni
+    // anagrafica archivio telefoni form
     $p['anagrafica.archivio.telefoni.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio telefoni' ),
@@ -262,7 +262,7 @@
                                                             'anagrafica.archivio.telefoni.form.tools' ) ),
     );
 
-    // gestione anagrafica form tools
+    //  anagrafica archivio telefoni tools
     $p['anagrafica.archivio.telefoni.form.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -287,7 +287,7 @@
         'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
     );
 
-    // anagrafica archivio mail
+    // anagrafica archivio mail form
     $p['anagrafica.archivio.mail.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio e-mail' ),
@@ -300,7 +300,7 @@
                                                             'anagrafica.archivio.mail.form.tools' ) ),
     );
 
-    // gestione anagrafica form tools
+    // anagrafica archivio mail form tools
     $p['anagrafica.archivio.mail.form.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -500,8 +500,21 @@
         'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'categorie.anagrafica.form',
+                                                            'categorie.anagrafica.form.anagrafiche',
                                                             'categorie.anagrafica.form.stampe',
                                                             'categorie.anagrafica.form.tools' ) )
+    );
+
+    // categorie anagrafica form anagrafiche
+    $p['categorie.anagrafica.form.anagrafiche'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'categorie anagrafica form anagrafiche' ),
+        'h1'                => array( $l        => 'anagrafiche' ),
+        'parent'            => array( 'id'        => 'categorie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'categorie.anagrafica.form.anagrafiche.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.anagrafiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'categorie.anagrafica.form' )
     );
 
     // categorie anagrafica form stampe
