@@ -2605,6 +2605,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (           --
   `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `note` text DEFAULT NULL,                                   -- note della tipologia
   `sigla` char(32) DEFAULT NULL,                              -- sigla della tipologia
   `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
