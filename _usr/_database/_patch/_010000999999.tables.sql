@@ -171,6 +171,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (    --
   `id_account` int(11) DEFAULT NULL,                          -- chiave esterna per l'account
   `id_gruppo` int(11) DEFAULT NULL,                           -- chiave esterna per il gruppo
   `entita` char(64) DEFAULT NULL,                             -- entità per la quale si innesca l'associazione
+  `note` text DEFAULT NULL,                                   -- note
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
