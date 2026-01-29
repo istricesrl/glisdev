@@ -55,6 +55,50 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   UNIQUE KEY `codice` (`codice`)                              --
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
 
+-- | 080000001300
+
+-- articoli_view_static
+CREATE TABLE IF NOT EXISTS `articoli_view_static` (
+  `id` int(11) PRIMARY KEY NOT NULL,
+  `codice` char(32) DEFAULT NULL,                             --
+  `id_prodotto` char(32) DEFAULT NULL,
+  `prodotto` char(255) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `ean` char(32) DEFAULT NULL,
+  `isbn` char(32) DEFAULT NULL,
+  `id_reparto` int(11) DEFAULT NULL,
+  `id_taglia` int(11) DEFAULT NULL,
+  `id_colore` int(11) DEFAULT NULL,
+  `id_periodicita` int(11) DEFAULT NULL,
+  `periodicita` char(32) DEFAULT NULL,
+  `id_tipologia_rinnovo` int(11) DEFAULT NULL,
+  `tipologia_rinnovo` char(32) DEFAULT NULL,
+  `larghezza` decimal(7,2) DEFAULT NULL,
+  `lunghezza` decimal(7,2) DEFAULT NULL,
+  `altezza` decimal(7,2) DEFAULT NULL,
+  `id_udm_dimensioni` int(11) DEFAULT NULL,
+  `udm_dimensioni` char(32) DEFAULT NULL,
+  `peso` decimal(7,2) DEFAULT NULL,
+  `id_udm_peso` int(11) DEFAULT NULL,
+  `udm_peso` char(32) DEFAULT NULL,
+  `volume` decimal(7,2) DEFAULT NULL,
+  `id_udm_volume` int(11) DEFAULT NULL,
+  `udm_volume` char(32) DEFAULT NULL,
+  `capacita` decimal(7,2) DEFAULT NULL,
+  `id_udm_capacita` int(11) DEFAULT NULL,
+  `udm_capacita` char(32) DEFAULT NULL,
+  `durata` decimal(7,2) DEFAULT NULL,
+  `id_udm_durata` int(11) DEFAULT NULL,
+  `udm_durata` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `id_categorie` char(255) DEFAULT NULL,
+  `categorie` char(255) DEFAULT NULL,
+  `prezzi` char(255) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     --
+  `__label__` text,                                           --
+  UNIQUE KEY `codice` (`codice`)                              --
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -- | 080000001800
 
 -- attivita_view_static
@@ -134,8 +178,9 @@ CREATE TABLE `attivita_view_static` (                         --
   `timestamp_inserimento` int(11) DEFAULT NULL,               --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
-  `data_archiviazione` date DEFAULT NULL,             --
-  `__label__` text                                            --
+  `data_archiviazione` date DEFAULT NULL,                     --
+  `__label__` text,                                           --
+  UNIQUE KEY `codice` (`codice`)                              --
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
 
 -- | FINE FILE
