@@ -127,7 +127,15 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS           --
 	SELECT                                                    --
 		anagrafica_categorie.id,                              --
 		anagrafica_categorie.id_anagrafica,                   --
+		coalesce(                                         	  --
+			a1.denominazione,                             	  --
+			concat( a1.cognome, ' ', a1.nome ),           	  --
+			''                                            	  --
+		) AS anagrafica,                                      --
 		anagrafica_categorie.id_categoria,                    --
+		categorie_anagrafica_path(                        	  --
+			anagrafica_categorie.id_categoria             	  --
+		) AS categoria,                                       --
 		anagrafica_categorie.id_account_inserimento,          --
 		anagrafica_categorie.id_account_aggiornamento,        --
 		concat(                                               --

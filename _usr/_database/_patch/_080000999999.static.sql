@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `sesso` char(1) DEFAULT NULL,                               --
   `codice_fiscale` char(32) DEFAULT NULL,                     --
   `partita_iva` char(32) DEFAULT NULL,                        --
+  `id_ranking` int(11) DEFAULT NULL,                          --
   `ranking` char(128) DEFAULT NULL,                           --
   `recapiti` text,                                            --
   `id_stato` int(11) DEFAULT NULL,                            --
