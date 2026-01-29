@@ -29,7 +29,7 @@
         'open' => array(
             'page' => 'anagrafica.form',
             'table' => 'anagrafica',
-            'field' => 'id_anagrafica'
+            'field' => 'id'
         ),
         'cols' => array(
             'id' => '#',
@@ -39,7 +39,7 @@
         'class' => array(
             'id' => 'd-none',
             'id_anagrafica' => 'd-none',
-            'anagrafica' => 'no-wrap text-start',
+            '__label__' => 'no-wrap text-start',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
@@ -49,7 +49,7 @@
             'id_ranking' => array( 'EQ' => $_REQUEST['ranking']['id'] ?? NULL )
         ),
         '__sort__' => array(
-            'anagrafica' => 'ASC'
+            '__label__' => 'ASC'
         ),
     );
 
