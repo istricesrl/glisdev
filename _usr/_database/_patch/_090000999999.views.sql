@@ -94,6 +94,32 @@ CREATE OR REPLACE VIEW account_gruppi_view AS                 --
             ON gruppi.id = account_gruppi.id_gruppo           --
 ;                                                             --
 
+-- | 090000000300
+
+-- account_gruppi_attribuzione_view
+CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
+	SELECT
+		aga.id,
+		aga.id_account,
+		aga.id_gruppo,
+		aga.ordine,
+		aga.entita,
+		aga.id_account_inserimento,
+		aga.id_account_aggiornamento,
+		concat(
+			account.username,
+			' / ',
+			gruppi.nome,
+			' / ',
+			aga.entita
+		) AS __label__
+	FROM account_gruppi_attribuzione AS aga
+		LEFT JOIN account 
+			ON account.id = aga.id_account
+		LEFT JOIN gruppi 
+			ON gruppi.id = aga.id_gruppo
+;
+
 -- | 090000000500
 
 -- anagrafica_categorie_view
