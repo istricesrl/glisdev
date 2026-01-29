@@ -10,7 +10,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'account_gruppi_attribuzione';
+    $ct['form']['table'] = 'account';
 
     // tendina gruppi
     $ct['etc']['select']['gruppi'] = mysqlCachedIndexedQuery(

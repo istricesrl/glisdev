@@ -7,7 +7,7 @@
 {% import 'lib/default.twig' as tpl %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
-    {% set require = 0 %}
+    {% set require = -1 %}
     {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
