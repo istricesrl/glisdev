@@ -432,6 +432,7 @@
         'sitemap'            => false,
         'title'                => array( $l        => 'archivio tipologie anagrafica' ),
         'h1'                => array( $l        => 'tipologie anagrafica' ),
+        'tab'                => array( $l        => 'tipologie' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.view.php' ),

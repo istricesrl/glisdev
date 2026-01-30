@@ -1666,6 +1666,10 @@ google:
         anonymous": true
 ```
 
+#### come funziona l'aggiornamento dei report di magazzino?
+Di base l'aggiornamento dei report di magazzino viene attivata dalla controller su documenti_articoli nel modulo mastri. In pratica ogni volta che
+una riga di documento viene salvata, le relative informazioni di magazzino vengono aggiornate.
+
 ### template Athena
 Questa sezione contiene domande specificamente relative all'utilizzo del template Athena.
 

@@ -1896,6 +1896,23 @@ CREATE OR REPLACE VIEW regimi_view AS
 	FROM regimi
 ;
 
+-- | 090000030300
+
+-- relazioni_anagrafica_view
+CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
+	SELECT
+	relazioni_anagrafica.id,
+	relazioni_anagrafica.id_ruolo,
+	relazioni_anagrafica.id_anagrafica,
+	relazioni_anagrafica.id_anagrafica_collegata,
+	concat( 
+        relazioni_anagrafica.id_anagrafica,
+        ' - ',
+        relazioni_anagrafica.id_anagrafica_collegata
+    ) AS __label__
+	FROM relazioni_anagrafica
+;
+
 -- | 090000030400
 
 -- relazioni_documenti_view
@@ -1927,6 +1944,29 @@ CREATE OR REPLACE VIEW reparti_view AS
 		reparti.nome AS __label__
 	FROM reparti
 		LEFT JOIN iva ON iva.id = reparti.id_iva
+;
+
+-- | 090000034001
+
+-- ruoli_anagrafica_view
+CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
+	SELECT
+		ruoli_anagrafica.id,
+		ruoli_anagrafica.id_genitore,
+		ruoli_anagrafica.nome,
+		ruoli_anagrafica.se_produzione,
+		ruoli_anagrafica.se_didattica,
+		ruoli_anagrafica.se_organizzazioni,
+		ruoli_anagrafica.se_relazioni,
+		ruoli_anagrafica.se_notizie,
+		ruoli_anagrafica.se_risorse,
+		ruoli_anagrafica.se_progetti,
+		ruoli_anagrafica.se_immobili,
+		ruoli_anagrafica.se_contratti,
+		ruoli_anagrafica.se_proponente,
+		ruoli_anagrafica.se_contraente,
+	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
+	FROM ruoli_anagrafica
 ;
 
 -- | 090000034300

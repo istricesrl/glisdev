@@ -2241,6 +2241,20 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `note` text DEFAULT NULL                                    -- note sulla regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000030300
+
+-- relazioni_anagrafica
+CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_anagrafica_collegata` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000030400
 
 -- relazioni_documenti
@@ -2277,6 +2291,28 @@ CREATE TABLE IF NOT EXISTS `reparti` (
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
   `id_account_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034000
+
+-- ruoli_anagrafica
+CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_produzione` tinyint(1) DEFAULT NULL,
+  `se_didattica` tinyint(1) DEFAULT NULL,
+  `se_organizzazioni` tinyint(1) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL,
+  `se_risorse` tinyint(1) DEFAULT NULL,
+  `se_notizie` tinyint(1) DEFAULT NULL,
+  `se_progetti` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_contratti` tinyint(1) DEFAULT NULL,
+  `se_proponente` tinyint(1) DEFAULT NULL,
+  `se_contraente` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034300
