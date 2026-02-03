@@ -29,6 +29,29 @@
 
 			}
 
+            // forzo la formattazione dell'HTML nel campo testo
+            if( isset( $vs['testo']['s'] ) ) {
+
+                $config = [
+                    'indent'         => true,
+                    'indent-spaces'  => 4,
+                    'wrap'           => 0,
+                    'show-body-only' => true,
+                    'drop-empty-elements' => false,
+                    'newline'        => 'LF',
+                    'output-xhtml'   => false,
+                    'output-html'    => true,
+                    'quiet'          => true,
+                ];
+
+                $tidy = new tidy();
+                $tidy->parseString('<!doctype html><html><body>' . $vs['testo']['s'] . '</body></html>', $config, 'utf8');
+                $tidy->cleanRepair();
+
+                $vs['testo']['s'] = trim((string)$tidy);
+
+            }
+
         break;
 
 	}
