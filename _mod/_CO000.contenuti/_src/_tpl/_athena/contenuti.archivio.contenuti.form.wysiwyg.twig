@@ -21,10 +21,8 @@
             {# MODULO PRINCIPALE #}
             <fieldset class="d-flex flex-column h-100">
                 <legend>testo della pagina 
-                    {% if request[ form.table ].id_pagina %}
-                    <small>(<a href="{{ pages['contenuti.pagine.form.contenuti'].url[ ietf ] }}?pagine[id]={{ request[ form.table ].id_pagina }}">torna alla gestione della pagina</a>)</small>
-                    {% elseif request[ form.table ].id_notizia %}
-                    <small>(<a href="{{ pages['contenuti.notizie.form.contenuti'].url[ ietf ] }}?notizie[id]={{ request[ form.table ].id_notizia }}">torna alla gestione della notizia</a>)</small>
+                    {% if request.__backurl__ %}
+                    <small>(<a href="{{ session.backurls[ request.__backurl__ ] }}">torna indietro</a>)</small>
                     {% endif %}
                 </legend>
 
