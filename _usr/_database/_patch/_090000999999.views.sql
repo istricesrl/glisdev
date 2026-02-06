@@ -607,6 +607,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 CREATE OR REPLACE VIEW `caratteristiche_view` AS
 	SELECT
 		caratteristiche.id,
+		caratteristiche.id_genitore,
 		caratteristiche.nome,
 		caratteristiche.html_entity,
 		caratteristiche.font_awesome,
@@ -616,7 +617,9 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 		caratteristiche.se_articolo,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
-		caratteristiche.nome AS __label__
+		caratteristiche_path(
+            caratteristiche.id
+        ) AS __label__
 	FROM caratteristiche
 ;
 
@@ -911,6 +914,8 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_destinatario_spedizione,
+		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS destinatario_spedizione,
 		documenti.id_condizione_pagamento,
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.esigibilita, 
@@ -966,9 +971,10 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+        LEFT JOIN anagrafica AS a3 ON a3.id = documenti.id_destinatario_spedizione
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienzagggggggggggg
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
 		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
         LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id

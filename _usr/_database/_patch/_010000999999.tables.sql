@@ -446,6 +446,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
 -- caratteristiche
 CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `font_awesome` char(24) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
@@ -836,8 +837,8 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id` int(11) NOT NULL,                                        -- chiave primaria
   `id_lingua` int(11) DEFAULT NULL,                             -- chiave esterna per la lingua
   `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica
-  `id_prodotto` int(11) DEFAULT NULL,                          -- chiave esterna per il prodotto
-  `id_articolo` int(11) DEFAULT NULL,                          -- chiave esterna per l'articolo
+  `id_prodotto` int(11) DEFAULT NULL,                           -- chiave esterna per il prodotto
+  `id_articolo` int(11) DEFAULT NULL,                           -- chiave esterna per l'articolo
   `id_categoria_prodotti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria dei prodotti
   `id_caratteristica` int(11) DEFAULT NULL,                     -- chiave esterna per la caratteristica
   `id_marchio` int(11) DEFAULT NULL,                            -- chiave esterna per il marchio
@@ -859,7 +860,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id_template` int(11) DEFAULT NULL,                           -- chiave esterna per il template
   `id_mailing` int(11) DEFAULT NULL,                            -- chiave esterna per il mailing
   `id_colore` int(11) DEFAULT NULL,                             -- chiave esterna per il colore
-  `id_progetto` int(11) DEFAULT NULL,                          -- chiave esterna per il progetto
+  `id_progetto` int(11) DEFAULT NULL,                           -- chiave esterna per il progetto
   `id_categoria_progetti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria dei progetti
   `id_banner` int(11) DEFAULT NULL,                             -- chiave esterna per il banner
   `path_custom` char(255) DEFAULT NULL,                         -- path custom
@@ -1055,6 +1056,9 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
   `id_sede_emittente` int(11) DEFAULT NULL,                   -- chiave esterna per la sede dell'anagrafica emittente
   `id_destinatario` int(11) DEFAULT NULL,                     -- chiave esterna per l'anagrafica destinataria
   `id_sede_destinatario` int(11) DEFAULT NULL,                -- chiave esterna per la sede dell'anagrafica destinataria
+  `id_destinatario_spedizione` int(11) DEFAULT NULL,          -- chiave esterna per l'anagrafica destinataria della spedizione
+  `id_sede_destinatario_spedizione` int(11) DEFAULT NULL,     -- chiave esterna per la sede dell'anagrafica destinataria della spedizione
+  `note_spedizione` text DEFAULT NULL,                        -- note per la spedizione
   `id_condizione_pagamento` int(11) DEFAULT NULL,             -- chiave esterna per la condizione di pagamento
   `esigibilita`	enum('I','D','S') DEFAULT NULL,               -- esigibilità del documento
   `codice_archivium` char(64) DEFAULT NULL ,                  -- codice per Archivium
