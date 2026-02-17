@@ -670,7 +670,11 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
 -- tipologia: tabella gestita
 CREATE TABLE `colli` (
   `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
+  `id_mittente` int(11) DEFAULT NULL,
+  `id_destinatario` int(11) DEFAULT NULL,
+  `id_mastro` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
   `larghezza` decimal(7,2) DEFAULT NULL,
@@ -2691,6 +2695,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000050700
+
+-- tipologie_colli
+CREATE TABLE IF NOT EXISTS `tipologie_colli` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `larghezza` decimal(7,2) DEFAULT NULL,
+  `lunghezza` decimal(7,2) DEFAULT NULL,
+  `altezza` decimal(7,2) DEFAULT NULL,
+  `id_udm_dimensioni` int(11) DEFAULT NULL,
+  `peso` decimal(7,2) DEFAULT NULL,
+  `id_udm_peso` int(11) DEFAULT NULL,
+  `sigla` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000050800
 

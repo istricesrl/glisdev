@@ -2233,6 +2233,23 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
 	FROM tipologie_attivita                                   --
 ;                                                             --
 
+-- | 090000050700
+
+-- tipologie_colli_view
+CREATE OR REPLACE VIEW `tipologie_colli_view` AS
+	SELECT
+		tipologie_colli.id,
+		tipologie_colli.id_genitore,
+		tipologie_colli.ordine,
+		tipologie_colli.nome,
+		tipologie_colli.html_entity,
+		tipologie_colli.font_awesome,
+		tipologie_colli.id_account_inserimento,
+		tipologie_colli.id_account_aggiornamento,
+		tipologie_colli_path( tipologie_colli.id ) AS __label__
+	FROM tipologie_colli
+;
+
 -- | 090000050800
 
 -- tipologie_contatti_view
