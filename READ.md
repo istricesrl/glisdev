@@ -287,6 +287,9 @@ Qui vengono definite le pagine del modulo catalogo.
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.php
 Questa è la macro dell'archivio dell'amministrazione.
 
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.reparti.view.php
+Questa è la macro della pagina di vista dell'archivio reparti.
+
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.tools.php
 Questa è la macro della pagina degli strumenti dell'archivio amministrazione
 
