@@ -320,6 +320,9 @@ Questa controller viene eseguita al before di ogni elaborazione dell'entità acc
 ### /_mod/_AC000.account/_src/_inc/_macro/_account.form.php
 Questa è la macro del form di gestione degli account.
 
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.attribuzione.php
+Questa è la macro della scheda attribuzione del form di gestione degli account.
+
 ### /_mod/_AC000.account/_src/_inc/_macro/_account.form.tools.php
 Questa è la macro della pagina strumenti del form di gestione degli account.
 
@@ -355,6 +358,15 @@ Questa è la macro della pagina strumenti della gestione degli indirizzi.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.view.php
 Questa è la macro della view degli indirizzi.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.iban.form.php
+Questa è la macro della pagina di gestione degli IBAN.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.iban.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione degli IBAN.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.iban.view.php
+Questa è la macro della view degli IBAN.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.mail.form.php
 Questa è la macro della pagina di gestione delle mail.
@@ -416,8 +428,20 @@ Questa è la macro della scheda fornitore della gestione anagrafica.
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.php
 Questa è la macro della pagina di gestione anagrafica.
 
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.produttore.php
+Questa è la macro della scheda produttore della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.relazioni.php
+Questa è la macro della scheda relazioni della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione anagrafica.
+
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.tools.php
 Queata è la macro della pagina strumenti della gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.stampe.php
+Questa è la macro della scheda stampe dell'anagrafica.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.tools.php
 Questa è la macro della pagina strumenti della view dell'anagrafica.
@@ -431,6 +455,12 @@ Questa è la macro della view delle anagrafiche.
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.php
 Questa è la macro della pagina di gestione delle categorie dell'anagrafica.
 
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.anagrafiche.php
+Questa è la macro della scheda anagrafiche della pagina di gestione delle categorie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione delle categorie dell'anagrafica.
+
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.tools.php
 Questa è la macro della pagina strumenti della gestione delle categorie dell'anagrafica.
 
@@ -442,6 +472,12 @@ Questa è la macro della view delle categorie dell'anagrafica.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.php
 Questa è la macro della pagina di gestione del ranking
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.anagrafiche.php
+Questa è la macro della scheda anagrafiche della pagina di gestione ranking.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione ranking.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.tools.php
 Questa è la macro della pagina strumenti della gestione ranking.
@@ -1136,6 +1172,15 @@ Questo file è vuoto in modo che possa essere facilmente customizzato.
 ### /_src/_js/_main.js
 Questa libreria Javascript contiene le funzioni di utilità generale del framework, nonché le operazioni da eseguire al caricamento del DOM.
 
+### /_src/_js/_lib/_rest.js
+Questa libreria Javascript contiene funzioni che semplificano l'interazione con gli endpoint REST.
+
+### /_src/_js/_lib/_selectbox.js
+Questa libreria Javascript implementa una semplice combobox per il framework.
+
+### /_src/_js/_lib/_uploader.js
+Questa libreria Javascript implementa un semplice file uploader per il framework.
+
 ### /_src/_lib/_acl.utils.php
 Questa libreria contiene le funzioni di utilità per la gestione dei permessi degli utenti.
 
@@ -1163,6 +1208,9 @@ Questa libreria è ancora da implementare e dovrebbe contenere una collezione di
 ### /_src/_lib/_ftp.tools.php
 Questa libreria è ancora da implementare e dovrebbe contenere una collezione di funzioni per la gestione del protocollo FTP.
 
+### /_src/_lib/_image.tools.php
+Questa libreria contiene vari strumenti per la gestione delle immagini.
+
 ### /_src/_lib/_jwt.tools.php
 Questa libreria contiene le funzioni per la gestione dei token JWT.
 
@@ -1172,7 +1220,13 @@ Questa libreria contiene funzioni utili per la localizzazione.
 ### /_src/_lib/_log.utils.php
 Questa libreria è inserita solo per garantire la retrocompatibilità con il vecchio sistema di log del framework.
 
+### /_src/_lib/_mail.tools.php
+Questa libreria contiene diverse funzioni per la gestione delle mail e delle code delle mail.
+
 ### /_src/_lib/_memcache.tools.php
+Questa libreria contiene funzioni per la gestione della cache su Memcache.
+
+### /_src/_lib/_memcache.utils.php
 Questa libreria contiene funzioni per la gestione della cache su Memcache.
 
 ### /_src/_lib/_menu.utils.php
@@ -1260,6 +1314,12 @@ modalità di funzionamento predefinita del framework.
 
 ### /_src/_sh/_lamp.setup.sh
 Questo script fa il setup dell'ambiente LAMP necessario a far girare il framework.
+
+### /_src/_sh/_memcached.list.keys.sh
+Questo script elenca le chiavi presenti in Memcache.
+
+### /_src/_sh/_nginx.permissions.secure.sh
+Questo script normalizza i permessi per l'ambiente Nginx.
 
 ### /_src/_sh/_password.hash.sh
 Questo script genera l'hash di una password in modo che possa essere utilizzata nella configurazione o nel database del
