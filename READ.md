@@ -678,6 +678,14 @@ Questo file ha lo scopo di renderizzare e erogare le pagine. Svolge numerose fun
 per i dettagli. In sintesi, riceve le richieste di pagina in base alle regole del file /.htaccess e le soddisfa tramite le informazioni in suo
 possesso.
 
+### /_src/_api/_rest.php
+Questa API fondamentale per il funzionamento del framework gestisce tutte le chiamate REST in entrata. Per maggiori dettagli si rimanda alla
+lettura del codice dell'API stessa.
+
+### /_src/_api/_upload.php
+Questa API è la controparte dell'uploader Javascript creato da /_src/_js/_lib/_uploader.js e si occupa di ricevere i dati e salvarli su disco.
+Per maggiori dettagli si rimanda al codice dell'API stessa e al codice di /_src/_js/_lib/_uploader.js.
+
 ### /_src/_api/_user.php
 Questa API consente il login dell'utente, è utilizzata per le integrazioni e per il dialogo con app e altri sistemi esterni. Tramite il meccanismo di
 login è possibile ottenere un'API key temporanea per fare più rapidamente le chiamate successive. Per ulteriori dettagli sul meccanismo di login
@@ -685,6 +693,9 @@ tramite API key si vedano i commenti a questo file e ai file dev/_src/_config/_2
 
 ### /_src/_api/_job/_test.job.php
 Questo è un job di test.
+
+### /_src/_api/_print/_default.csv.php
+Questa stampa consente di stampare in CSV tutte le view del framework; è collegata al tasto "esporta in CSV" che si trova nelle view standard.
 
 ### /_src/_api/_report/_cookie.php
 Questo report restituisce l'elenco di tutti i cookie presenti nel browser per il dominio corrente indicando se sono gestiti o meno dal
@@ -704,6 +715,10 @@ Questa API restituisce un report di auto diagnostica del framework, indicando lo
 tratta di un file piuttosto complesso, al cui sorgente si rimanda per approfondimenti. Una regola di /.htaccess rende disponibile questa API all'URL
 speciale /status.
 
+### /_src/_api/_status/_session.php
+Questa API restituisce informazioni minimali sulla sessione corrente e viene interrogata in background dal template Athena (vedi il codice di
+/_src/_tpl/_athena/src/js/main.js dove viene chiamata come /status/session).
+
 ### /_src/_api/_task/_framework.setup.php
 TODO Questo task è ancora da implementare.
 
@@ -718,6 +733,10 @@ Questo task, piuttosto semplice, scarica i dati relativi alla geografia dalla ve
 e li copia nella cartella DIR_VAR_SPOOL_IMPORT per sfruttare il normale sistema di importazione automatica dei file CSV del framework
 (dev/_src/_config/_740.controller.php) e aggiornare le informazioni relative alla geografia per il deploy corrente.
 
+### /_src/_api/_task/_log.clean.php
+Questo semplice task si occupa di pulire la cartella /log; può funzionare in modalità soft (cancella solo i log nella cartella principale) o hard
+(cancella ricorsivamente tutti i log).
+
 ### /_src/_api/_task/_memcache.clean.php
 Questo task si occupa semplicemente di svuotare la memoria di memcache.
 
@@ -730,12 +749,21 @@ funzionale allo scopo di tenere aggiornati tutti i database di tutti i deploy se
 
 Il meccanismo di patch del database è illustrato nel dettaglio nel file /_src/_api/_task/_mysql.patch.php al quale si rimanda per approfondimenti.
 
+### /_src/_api/_task/_pages.cache.clean.php
+Questo task elimina la cache statica delle pagine (/var/cache/pages).
+
+### /_src/_api/_task/_sitemap.clean.php
+Questo task si occupa di eliminare le sitemap (da /var/sitemap).
+
 ### /_src/_api/_task/_test.cron.php
 Questo è un semplice task di test, utile per verificare il funzionamento del sistema dei task ricorrenti; non fa altro che scrivere su un file di log quando
 viene eseguito, in questo modo è facile fare dei test e del debug sul meccanismo dei task.
 
 ### /_src/_api/_task/_test.job.start.php
 Questo task avvia un job di test.
+
+### /_src/_api/_task/_twig.cache.clean.php
+Questo task svuota la cache di Twig (/var/cache/twig).
 
 ### /_src/_config/_000.debug.php
 Questo file di configurazione inizializza l'array $cf['debug'] e setta i default per le sue chiavi principali.
@@ -833,6 +861,12 @@ la redirezione viene applicata tramite header http. In caso di redirect, l'esecu
 
 ### /_src/_config/_140.session.php
 In questo file vengono gestiti i tag UTM in $cf['session']['utm'] e inizializzate le impostazioni per l'anti spam in $cf['session']['spam'].
+
+### /_src/_config/_160.microsoft.php
+In questo file vengono dichiarate le variabili relative ai profili Microsoft.
+
+### /_src/_config/_165.microsoft.php
+In questo file vengono applicate le configurazioni relative ai profili Microsoft.
 
 ### /_src/_config/_180.privacy.php
 In questo file vengono lette dal database le impostazioni di privacy dei moduli e vengono riportate su $cf['privacy']['moduli']. Si noti che la parte relativa alla privacy è tuttora in costante sviluppo.
@@ -1141,6 +1175,19 @@ e in particolare vengono cercati questi file:
 Dal momento che la creazione di così tante icone può risultare tediosa, è possibile avvalersi di strumenti come https://www.favicon-generator.org/ in
 attesa che il framework implementi una propria gestione della scalatura delle favicon.
 
+### /_src/_inc/_controllers/_default.after.php
+Questa controller viene eseguita dopo ogni ciclo di lavoro della funzione controller().
+
+### /_src/_inc/_controllers/_default.append.php
+Questa controller viene eseguita durante ogni ciclo di lavoro della funzione controller(), dopo la composizione della query e prima della sua esecuzione.
+
+### /_src/_inc/_controllers/_default.before.php
+Questa controller viene eseguita prima di ogni ciclo di lavoro della funzione controller().
+
+### /_src/_inc/_controllers/_default.finally.php
+Questa controller viene eseguita dopo ogni gruppo di cicli di lavoro della funzione controller(), cioè dopo il ciclo principale e dopo tutti i sotto cicli
+per i subform.
+
 ### /_src/_inc/_macro/_app.php
 Questa è la macro di pagina di default della pagina app. In standard non prevede particolari funzionalità, ma è pensata per essere customizzata.
 
@@ -1150,24 +1197,57 @@ Questa è la macro di pagina della dashboard, la pagina principale dell'area adm
 ### /_src/_inc/_macro/_dashboard.tools.php
 Questa è la macro di pagina della dashboard tools, la pagina di strumenti della dashboard.
 
+### /_src/_inc/_macro/_delete.php
+Questa è la macro della pagina di cancellazione del template Athena e si occupa fra le altre cose di chiedere la conferma all'utente prima della cancellazione.
+
+### /_src/_inc/_macro/_password.reset.php
+Questa macro si occupa di gestire il cambio password. Per maggiori dettagli si rimanda al codice della macro stessa.
+
+### /_src/_inc/_macro/_phpinfo.php
+Questa macro si limita a visualizzare l'output di phpinfo() e a terminare l'esecuzione del framework.
+
 ### /_src/_inc/_macro/_security.php
 Questo file implementa il firewall applicativo del framework ed è quindi cruciale per la sua sicurezza. Viene incluso da /_src/_config.php e si occupa
 di filtrare le richieste potenzialmente dannose. Per i dettagli del suo funzionamento si vedano i commenti al codice.
 
+### /_src/_inc/_macro/_strumenti.php
+Questa è la macro della pagina strumenti del template Athena.
+
+### /_src/_inc/_macro/_default/_default.form.php
+Questa macro contiene le logiche comuni a tutte le pagine di tipo form.
+
+### /_src/_inc/_macro/_default/_default.form.multilingua.php
+Questa macro contiene le logiche necessarie al funzionamento dei form multilingua.
+
 ### /_src/_inc/_macro/_default/_default.tools.php
 Questo file è una macro di default inclusa soprattutto da pagine che utilizzano lo schema metro.
 
+### /_src/_inc/_macro/_default/_default.view.php
+Questa macro contiene le logiche comuni a tutte le pagine di tipo view.
+
+### /_src/_inc/_pages/_app.en-GB.php
+Questo file contiene la dichiarazione delle pagine della web app standard del framework in inglese.
+
 ### /_src/_inc/_pages/_app.it-IT.php
-Questo file contiene la dichiarazione delle pagine della web app standard del framework.
+Questo file contiene la dichiarazione delle pagine della web app standard del framework in italiano.
 
 ### /_src/_inc/_pages/_dashboard.it-IT.php
 Questo file contiene la dichiarazione delle pagine della dashboard del CMS.
 
+### /_src/_inc/_pages/_delete.it-IT.php
+Questo file contiene la dichiarazione della pagina di cancellazione del CMS.
+
 ### /_src/_inc/_pages/_null.it-IT.php
 Questo file contiene la dichiarazione della pagina NULL utilizzata per l'errore HTTP 404.
 
+### /_src/_inc/_pages/_password.it-IT.php
+Questo file contiene la dichiarazione delle pagine per il reset della password.
+
 ### /_src/_inc/_pages/_site.it-IT.php
 Questo file è vuoto in modo che possa essere facilmente customizzato.
+
+### /_src/_inc/_pages/_strumenti.it-IT.php
+Questo file contiene la dichiarazione delle pagine strumenti del CMS.
 
 ### /_src/_js/_main.js
 Questa libreria Javascript contiene le funzioni di utilità generale del framework, nonché le operazioni da eseguire al caricamento del DOM.
@@ -1340,6 +1420,30 @@ configurato in modalità anonimizzazione IP.
 ### /_usr/_database/_patch/_010000999999.tables.sql
 Questo file contiene le patch base necessarie alla creazione delle tabelle nel database del framework; per ulteriori informazioni
 sul funzionamento del sistema di patch si vedano i commenti al file /_src/_api/_task/_mysql.patch.php.
+
+### /_usr/_database/_patch/_030000999999.indexes.sql
+Questo file contiene le patch base che creano gli indici delle tabelle nel database del framework.
+
+### /_usr/_database/_patch/_040000999999.acl.sql
+Questo file contiene le patch base che creano le tabelle di ACL nel database del framework.
+
+### /_usr/_database/_patch/_050000999999.data.sql
+Questo file contiene le patch base che popolano le tabelle nel database del framework.
+
+### /_usr/_database/_patch/_060000999999.constraints.sql
+Questo file contiene le patch base che creano i constraint fra le tabelle del database del framework.
+
+### /_usr/_database/_patch/_070000999999.procedures.sql
+Questo file contiene le patch base che creano le stored procedures e le functions del database del framework.
+
+### /_usr/_database/_patch/_080000999999.static.sql
+Questo file contiene le patch base che creano le tabelle per le view statiche del database del framework.
+
+### /_usr/_database/_patch/_090000999999.views.sql
+Questo file contiene le patch base che creano le view del database del framework.
+
+### /_usr/_database/_patch/_100000999999.reports.sql
+Questo file contiene le patch base che creano le tabelle di report nel database del framework.
 
 ## documentazione dei moduli
 
