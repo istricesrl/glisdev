@@ -542,6 +542,33 @@ Qui vengono definite le pagine del modulo attività relative al modulo produzion
 ### /_mod/_AT000.attivita/_src/_lib/_mysql.utils.add.php
 In questa libreria vengono definite funzioni specifiche per le attività da aggiungere a /_src/_lib/_mysql.utils.php.
 
+### /_mod/_CO000.contenuti/_src/_inc/_controllers/_contenuti.after.php
+Questa controller viene eseguita dopo ogni ciclo di lavoro della funzione controller() per l'entità contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_controllers/_contenuti.before.php
+Questa controller viene eseguita prima di ogni ciclo di lavoro della funzione controller() per l'entità contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.contenuti.php
+Questa è la macro della scheda di gestione contenuti della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.menu.php
+Questa è la macro della scheda di gestione dei menu della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.sem.php
+Questa è la macro della scheda di gestione SEM/SMM della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.web.php
+Questa è la macro della scheda di gestione web della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.contenuti.php
+Questa è la macro della scheda di gestione contenuti della pagina di gestione prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.sem.php
+Questa è la macro della scheda di gestione SEM/SMM della pagina di gestione prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.web.php
+Questa è la macro della scheda di gestione web della pagina di gestione prodotti.
+
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.php
 Questa è la macro della dashboard dell'archivio dei contenuti.
 
@@ -550,6 +577,9 @@ Questa è la macro della pagina di gestione dell'archivio dei contenuti.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.tools.php
 Questa è la macro della pagina degli strumenti della pagina di gestione dei contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.wysiwyg.php
+Questa è la macro della scheda WYSIWYG della pagina di gestione contenuti.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.view.php
 Questa è la macro della view dei contenuti.
@@ -578,11 +608,29 @@ Questa è la macro della pagina di contenuti web delle notizie.
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.contenuti.php
 Questa è la macro della pagina di gestione dei contenuti delle pagine.
 
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.javascript.php
+Questa è la macro della scheda di gestione del javascript della pagina di gestione delle pagine.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.macro.php
+Questa è la macro della scheda di gestione delle macro della pagina di gestione delle pagine.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.metadati.php
+Questa è la macro della scheda di gestione metadati della pagina di gestione delle pagine.
+
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.sem.php
 Quesa è la macro della pagina di gestione SEM/SMM delle pagine.
 
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_mail.template.form.contenuti.php
+Questa è la macro della scheda contenuti della pagina di gestione dei template mail.
+
+### /_mod/_CO000.contenuti/_src/_inc/_pages/_catalogo.it-IT.php
+Questo file contiene le dichiarazioni delle pagine di gestione contenuti del catalogo prodotti.
+
 ### /_mod/_CO000.contenuti/_src/_inc/_pages/_contenuti.it-IT.php
 Qui vengono definite le pagine del modulo contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_pages/_mail.it-IT.php
+Questo file contiene la dichiarazione delle pagine di gestione contenuti dei template mail.
 
 ### /_mod/_CT000.contatti/_src/_config/_030.common.php
 In questo file vengono definiti i moduli di contatto standard del framework.
@@ -623,6 +671,231 @@ Qui vengono definite le pagine del modulo contatti.
 
 ### /_mod/_CT000.contatti/_src/_lib/_mysql.utils.add.php
 Questa libreria contiene funzioni specifiche per i contatti da aggiungere a /_src/_lib/_mysql.tools.php.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.aggregate.php
+Questa è la macro della scheda aggregate della pagina di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.php
+Questa è la macro della pagina di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.stampe.php
+Questa è la macro della scheda stampe della pagine di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.view.php
+Questa è la macro della view delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.archiviazione.php
+Questa è la macro della scheda archiviazione della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.documenti.articoli.php
+Questa è la macro della scheda articoli della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.evasione.php
+Questa è la macro della scheda evasione della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.pagamenti.php
+Questa è la macro della scheda pagamenti della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.php
+Questa è la macro della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.relazioni.php
+Questa è la macro della scheda relazioni della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.php
+Questa è la macro della pagina di gestione dei pagamenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione dei pagamenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.view.php
+Questa è la macro della view dei pagamenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.view.php
+Questa è la macro della view dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_pages/_amministrazione.it-IT.php
+Questa è la macro della dashboard dell'amministrazione.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.articoli.view.php
+Questa è la macro della view delle righe delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.archiviazione.php
+Questa è la macro della scheda archiviazione della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.documenti.articoli.php
+Questa è la macro della scheda articoli della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.pagamenti.php
+Questa è la macro della scheda pagamenti della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.php
+Questa è la macro della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.relazioni.php
+Questa è la macro della scheda relazioni della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.pagamenti.view.php
+Questa è la macro della view dei pagamenti delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.tools.php
+Questa è la macro della scheda strumenti della view delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.view.archiviate.php
+Questa è la macro della scheda archivio della view delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.view.php
+Questa è la macro della view delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_pages/_amministrazione.it-IT.php
+In questo file vengono dichiarate le pagine relative alle fatture per il modulo amministrazione.
+
+### /_mod/_DO040.offerte/_src/_inc/_pages/_commerciale.it-IT.php
+In questo file vengono dichiarate le pagine relative alle offerte per il modulo commerciale.
+
+### /_mod/_FI000.file/_src/_inc/_controllers/_file.before.php
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.php
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.tools.php
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.view.php
+### /_mod/_FI000.file/_src/_inc/_macro/_mail.out.form.file.php
+### /_mod/_FI000.file/_src/_inc/_macro/_mail.sent.form.file.php
+### /_mod/_FI000.file/_src/_inc/_macro/_mail.template.form.file.php
+### /_mod/_FI000.file/_src/_inc/_pages/_contenuti.it-IT.php
+### /_mod/_FI000.file/_src/_inc/_pages/_mail.it-IT.php
+### /_mod/_IM000.immagini/_src/_api/_task/_images.resize.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_anagrafica.form.immagini.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.articoli.form.immagini.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.categorie.prodotti.form.immagini.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.prodotti.form.immagini.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.form.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.form.tools.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.view.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.categorie.notizie.form.immagini.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.notizie.form.immagini.php
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.pagine.form.immagini.php
+### /_mod/_IM000.immagini/_src/_inc/_pages/_anagrafica.it-IT.php
+### /_mod/_IM000.immagini/_src/_inc/_pages/_catalogo.it-IT.php
+### /_mod/_IM000.immagini/_src/_inc/_pages/_contenuti.it-IT.php
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.out.php
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.sent.php
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.resend.php
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.send.php
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.after.php
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.before.php
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.finally.php
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.after.php
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.before.php
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.finally.php
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.form.php
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.form.tools.php
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.view.php
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.form.php
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.form.tools.php
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.view.php
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.tools.php
+### /_mod/_MA000.mail/_src/_inc/_pages/_mail.it-IT.php
+### /_mod/_NO000.notizie/_src/_config/_030.common.php
+### /_mod/_NO000.notizie/_src/_config/_035.common.php
+### /_mod/_NO000.notizie/_src/_config/_310.pages.php
+### /_mod/_NO000.notizie/_src/_config/_420.pages.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.archiviazione.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.tools.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.tools.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.view.archiviate.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.view.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.archiviazione.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.tools.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.tools.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.archiviate.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.php
+### /_mod/_NO000.notizie/_src/_inc/_pages/_contenuti.it-IT.php
+### /_mod/_NO000.notizie/_src/_lib/_mysql.utils.add.php
+### /_mod/_PA000.pagine/_src/_config/_310.pages.php
+### /_mod/_PA000.pagine/_src/_config/_420.pages.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.archivio.menu.view.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.archiviazione.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.menu.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.tools.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.tools.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.archiviate.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.php
+### /_mod/_PA000.pagine/_src/_inc/_pages/_contenuti.it-IT.php
+### /_mod/_PA000.pagine/_src/_lib/_mysql.utils.add.php
+### /_mod/_PR000.prodotti/_src/_config/_030.common.php
+### /_mod/_PR000.prodotti/_src/_config/_035.common.php
+### /_mod/_PR000.prodotti/_src/_config/_310.pages.php
+### /_mod/_PR000.prodotti/_src/_inc/_controllers/_articoli.finally.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.archiviazione.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.relazioni.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.tools.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.view.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.prodotti.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.tools.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.tools.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.archiviati.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.tools.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.tools.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.archiviati.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.archiviazione.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.articoli.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.caratteristiche.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.categorie.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.relazioni.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.tools.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.tools.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.archiviati.php
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.php
+### /_mod/_PR000.prodotti/_src/_inc/_pages/_catalogo.it-IT.php
+### /_mod/_PR000.prodotti/_src/_lib/_mysql.utils.add.php
+### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.php
+### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.tools.php
+### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.view.php
+### /_mod/_TE000.template/_src/_inc/_pages/_mail.it-IT.php
+### /_mod/_TE000.template/_src/tpl/athena/mail.template.form.twig
+### /_mod/_VI000.video/_src/_inc/_macro/_anagrafica.form.video.php
+### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.articoli.form.video.php
+### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.categorie.prodotti.form.video.php
+### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.prodotti.form.video.php
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.php
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.tools.php
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.view.php
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.categorie.notizie.form.video.php
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.notizie.form.video.php
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.pagine.form.video.php
+### /_mod/_VI000.video/_src/_inc/_pages/_anagrafica.it-IT.php
+### /_mod/_VI000.video/_src/_inc/_pages/_catalogo.it-IT.php
+### /_mod/_VI000.video/_src/_inc/_pages/_contenuti.it-IT.php
 
 ### /_src/_config.php
 Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
