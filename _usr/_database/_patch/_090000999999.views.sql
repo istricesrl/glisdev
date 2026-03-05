@@ -1875,6 +1875,7 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
     redirect.codice_stato_http,                               --
     redirect.sorgente,                                        --
     redirect.destinazione,                                    --
+    redirect.se_query_string,                                 --
     redirect.id_account_inserimento,                          --
     redirect.id_account_aggiornamento,                        --
     concat_ws(                                                --
@@ -2496,7 +2497,34 @@ CREATE OR REPLACE VIEW url_view AS                            --
             ON tipologie_url.id = url.id_tipologia            --
 ;                                                             --
 
--- | 090000065001
+-- | 090000064000
+
+-- veicoli_view
+CREATE OR REPLACE VIEW veicoli_view AS
+    SELECT
+        veicoli.id,
+        veicoli.id_tipologia,
+        tipologie_veicoli_path( veicoli.id_tipologia ) AS tipologia,
+        veicoli.id_costruttore,
+        coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+        veicoli.modello,
+        veicoli.targa,
+        veicoli.data_archiviazione,
+        veicoli.id_account_inserimento,
+        veicoli.id_account_aggiornamento,
+        concat(
+            coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+            ' - ',
+            veicoli.modello,
+            ' (',
+            veicoli.targa,
+            ')'
+        ) AS __label__
+    FROM veicoli
+        LEFT JOIN anagrafica AS a1 ON a1.id = veicoli.id_costruttore
+;
+
+-- | 090000065000
 
 -- video_view
 CREATE OR REPLACE VIEW `video_view` AS

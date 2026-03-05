@@ -1011,6 +1011,7 @@
 
                 // estensioni
                 $twig->addExtension( new \Twig\Extension\StringLoaderExtension() );
+                $twig->addExtension( new \Twig\Extension\DebugExtension() );
 
                 // timer
                 timerCheck( $cf['speed'], '-> -> estensioni Twig' );
@@ -1257,7 +1258,7 @@
      */
 
     // se è attiva la cache delle pagine
-    if( isset( $cf['cache']['profile']['pages'] ) && $cf['cache']['profile']['pages'] === true ) {
+    if( isset( $cf['cache']['profile']['pages'] ) && ! empty( $cf['cache']['profile']['pages'] ) ) {
 
         // cache del buffer
         if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {

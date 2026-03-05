@@ -235,10 +235,16 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 // die( print_r( $t, true ) );
 
 if( empty( $t[ $l ]['from'] ) ) {
-	die( 'mittente non settato, impossibile accodare la mail' );
+	die( 'mittente non settato, impossibile accodare la mail (template ' . print_r( $t, true ) . ')' );
 }
 
 try {
+
+// retrocompatibilità
+if( ! is_array($t[ $l ]['from']) ) {
+    $t[ $l ]['from'] = array( $t[ $l ]['from'] => $t[ $l ]['from'] );
+}
+
 
 		    // avvio di Twig
 			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $t[ $l ] ) );
