@@ -190,83 +190,216 @@
      * TODO documentare
      *
      */
-    function memcacheFlush( $conn, $allSites = false ) {
+    function memcacheFlush($conn, $allSites = false) {
 
-        if (empty($conn) || !is_object($conn)) {
-            logWrite('connessione al server assente per il flush', 'memcache');
+        // validazione connessione
+        if (!is_object($conn)) {
+            logWrite('connessione al server assente o non valida per il flush', 'memcache');
             return false;
         }
 
-        if (!defined('MEMCACHE_UNIQUE_SEED') || MEMCACHE_UNIQUE_SEED === '') {
+        // seed obbligatorio
+        if (!defined('MEMCACHE_UNIQUE_SEED') || trim((string) MEMCACHE_UNIQUE_SEED) === '') {
             logWrite('MEMCACHE_UNIQUE_SEED non definito o vuoto', 'memcache');
             return false;
         }
 
+        // getAllKeys obbligatorio per questa implementazione
         if (!method_exists($conn, 'getAllKeys')) {
             logWrite('getAllKeys non disponibile su questa connessione', 'memcache');
             return false;
         }
 
-        $keys = @$conn->getAllKeys();
-
-        if (!is_array($keys) || empty($keys)) {
-            logWrite('getAllKeys fallita o nessuna chiave presente', 'memcache');
+        // recupero chiavi
+        try {
+            $keys = $conn->getAllKeys();
+        } catch (\Throwable $e) {
+            logWrite('eccezione in getAllKeys(): ' . $e->getMessage(), 'memcache');
             return false;
         }
 
-        $prefix    = (string) ( $allSites === false ) ? MEMCACHE_UNIQUE_SEED : strtoupper( str_replace( '.', '_', $allSites ) ) . '_';
-        $prefixLen = strlen($prefix);
-        $batch     = [];
-        $deleted   = 0;
-        $batchSize = 500;
+        if (!is_array($keys)) {
+            logWrite('getAllKeys() non ha restituito un array', 'memcache');
+            return false;
+        }
 
+        if (empty($keys)) {
+            logWrite('getAllKeys() non ha restituito alcuna chiave', 'memcache');
+            return true;
+        }
+
+        /*
+        * MODALITÀ DI MATCH
+        *
+        * 1) $allSites === false
+        *    -> flush per seed corrente
+        *       match: chiave che INIZIA con MEMCACHE_UNIQUE_SEED
+        *
+        * 2) $allSites è una stringa (es. "istricesrl.com")
+        *    -> flush "per dominio"
+        *       match:
+        *          - chiave che INIZIA con DOMAIN_TOKEN
+        *          - oppure chiave che contiene _DOMAIN_TOKEN
+        *
+        * Questo perché nel tuo caso reale esistono chiavi tipo:
+        * BERNISPA_ISTRICESRL_COM_ISTRICESRL_COM_MYSQL_xxxxx
+        * quindi "ISTRICESRL_COM_" non è necessariamente all'inizio.
+        */
+
+        $mode        = 'seed';
+        $seedPrefix  = (string) MEMCACHE_UNIQUE_SEED;
+        $seedLen     = strlen($seedPrefix);
+        $domainToken = null;
+
+        if ($allSites !== false) {
+            $mode = 'domain';
+            $domainToken = strtoupper(str_replace('.', '_', (string) $allSites)) . '_';
+        }
+
+        $batch       = [];
+        $batchSize   = 500;
+
+        $totalKeys   = count($keys);
+        $validKeys   = 0;
+        $matched     = 0;
+        $deleted     = 0;
+        $failed      = 0;
+
+        // funzione di match centralizzata
+        $matchesKey = function ($key) use ($mode, $seedPrefix, $seedLen, $domainToken) {
+
+            if (!is_string($key) || $key === '') {
+                return false;
+            }
+
+            if ($mode === 'seed') {
+                return ($seedLen > 0 && strncmp($key, $seedPrefix, $seedLen) === 0);
+            }
+
+            // mode === 'domain'
+            // match se:
+            // - la chiave inizia esattamente con il token di dominio
+            // - oppure contiene "_TOKEN" da qualche parte (tipico caso sottodominio + dominio)
+            return (
+                strpos($key, $domainToken) === 0 ||
+                strpos($key, '_' . $domainToken) !== false
+            );
+        };
+
+        // cancellazione batch con conteggio reale
+        $deleteBatch = function(array $keysToDelete) use ($conn, &$deleted, &$failed) {
+
+            if (empty($keysToDelete)) {
+                return;
+            }
+
+            // Tentativo con deleteMulti, ma senza fidarsi ciecamente del risultato
+            if (method_exists($conn, 'deleteMulti')) {
+                try {
+                    $result = $conn->deleteMulti($keysToDelete);
+
+                    // Caso migliore: array di risultati per singola chiave
+                    if (is_array($result)) {
+                        foreach ($keysToDelete as $k) {
+                            $ok = isset($result[$k]) ? (bool) $result[$k] : false;
+                            if ($ok) {
+                                $deleted++;
+                            } else {
+                                $failed++;
+                            }
+                        }
+                        return;
+                    }
+
+                    // Se torna true/false globale, non ci fidiamo abbastanza:
+                    // ripassiamo singolarmente per avere un conteggio vero.
+                } catch (\Throwable $e) {
+                    logWrite('eccezione in deleteMulti(): ' . $e->getMessage(), 'memcache');
+                    // fallback al delete singolo
+                }
+            }
+
+            // fallback o verifica reale
+            foreach ($keysToDelete as $k) {
+                try {
+                    $ok = $conn->delete($k);
+                    if ($ok) {
+                        $deleted++;
+                    } else {
+                        $failed++;
+                    }
+                } catch (\Throwable $e) {
+                    $failed++;
+                    logWrite("eccezione in delete('{$k}'): " . $e->getMessage(), 'memcache');
+                }
+            }
+        };
+
+        // ciclo principale
         foreach ($keys as $k) {
 
-            if (!is_string($k)) {
+            if (!is_string($k) || $k === '') {
                 continue;
             }
 
-            if (strpos($k, $prefix) !== false) {
+            $validKeys++;
 
-                $batch[] = $k;
-
-                if (count($batch) >= $batchSize) {
-                    if (method_exists($conn, 'deleteMulti')) {
-                        @ $conn->deleteMulti($batch);
-                        $deleted += count($batch);
-                    } else {
-                        foreach ($batch as $bk) {
-                            if (@$conn->delete($bk)) {
-                                $deleted++;
-                            }
-                        }
-                    }
-                    $batch = [];
-                }
-
+            if (!$matchesKey($k)) {
+                continue;
             }
 
+            $matched++;
+            $batch[] = $k;
+
+            if (count($batch) >= $batchSize) {
+                $deleteBatch($batch);
+                $batch = [];
+            }
         }
 
+        // coda finale
         if (!empty($batch)) {
-
-            if (method_exists($conn, 'deleteMulti')) {
-                @ $conn->deleteMulti($batch);
-                $deleted += count($batch);
-            } else {
-                foreach ($batch as $bk) {
-                    if (@$conn->delete($bk)) {
-                        $deleted++;
-                    }
-                }
-            }
-
+            $deleteBatch($batch);
         }
 
-        logWrite("flush per prefisso '{$prefix}': eliminate {$deleted} chiavi", 'memcache');
+        // info client memcache/memcached se disponibili
+        $resultInfo = '';
+        if (method_exists($conn, 'getResultCode') && method_exists($conn, 'getResultMessage')) {
+            try {
+                $resultInfo = ' resultCode=' . $conn->getResultCode() . ' resultMessage=' . $conn->getResultMessage();
+            } catch (\Throwable $e) {
+                // niente
+            }
+        }
+
+        // log finale
+        if ($mode === 'seed') {
+            logWrite(
+                "memcacheFlush mode=seed seed='{$seedPrefix}' totalKeys={$totalKeys} validKeys={$validKeys} matched={$matched} deleted={$deleted} failed={$failed}{$resultInfo}",
+                'memcache'
+            );
+        } else {
+            logWrite(
+                "memcacheFlush mode=domain domain='{$allSites}' token='{$domainToken}' totalKeys={$totalKeys} validKeys={$validKeys} matched={$matched} deleted={$deleted} failed={$failed}{$resultInfo}",
+                'memcache'
+            );
+        }
+
+        /*
+        * Semantica del return:
+        * - false se ci sono state chiavi matchate ma nessuna è stata cancellata e ci sono fallimenti
+        * - true negli altri casi
+        *
+        * In pratica:
+        * - nessuna chiave da cancellare -> true
+        * - alcune cancellate -> true
+        * - tutte fallite -> false
+        */
+        if ($matched > 0 && $deleted === 0 && $failed > 0) {
+            return false;
+        }
 
         return true;
-
     }
 
     /**
