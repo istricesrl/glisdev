@@ -398,22 +398,16 @@ ALTER TABLE `consensi`
 
 -- | 030000006500
 
--- consensi_moduli
-ALTER TABLE `consensi_moduli`
+-- consensi_contatti
+ALTER TABLE `consensi_contatti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_consenso`, `id_lingua`, `modulo`), 
-	ADD KEY `id_lingua` (`id_lingua`),
+	ADD UNIQUE KEY `unica` (`id_consenso`, `id_contatto`, `modulo`), 
 	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `id_contatto` (`id_contatto`),
 	ADD KEY `modulo` (`modulo`),
-	ADD KEY `ordine` (`ordine`),
-	ADD KEY `azione` (`azione`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `informativa` (`informativa`),
-	ADD KEY `pagina` (`pagina`),
-	ADD KEY `se_richiesto` (`se_richiesto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_consenso`, `id_lingua`, `modulo`,`nome`,`ordine`,`azione`, `informativa`, `pagina`, `se_richiesto` );
+	ADD KEY `indice` (`id`, `id_consenso`, `id_contatto`, `modulo`);
 
 -- | 030000006501
 

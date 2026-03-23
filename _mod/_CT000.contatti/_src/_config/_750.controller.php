@@ -56,6 +56,8 @@
                     $v['__sito__']['label'] = $cf['site']['__label__'];
                     $v['__timestamp_contatto__'] = time();
                     $v['__status__'] = 'OK';
+                    $v['__privacy__'] = $v['__privacy__'] ?? false;
+                    $v['__id_anagrafica__'] = $_SESSION['account']['id_anagrafica'] ?? NULL;
 
                     // salvo la riga sulla tabella contatti
                     $v['__id_contatto__'] = mysqlInsertRow(
@@ -116,6 +118,9 @@
                         logger( 'nessuna controller specificata per modulo contatti ' . $k, 'contatti' );
 
                     }
+
+                    // associo i consensi prestati al contatto appena inserito
+                    associazioneConsensiContatto( $v );
 
                 } else {
 

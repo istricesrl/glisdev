@@ -782,30 +782,55 @@ CREATE OR REPLACE VIEW `consensi_view` AS                     --
   FROM consensi                                               --
 ;                                                             --
 
--- | 090000006500
+-- | 090000006400
 
--- consensi_moduli
-CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
+-- consensi_anagrafica_view
+CREATE OR REPLACE VIEW `consensi_anagrafica_view` AS            --
   SELECT                                                      --
-    consensi_moduli.id,                                       --
-    consensi_moduli.id_lingua,                                --
-    consensi_moduli.id_consenso,                              --
-    consensi_moduli.modulo,                                   --
-    consensi_moduli.ordine,                                   --
-    consensi_moduli.azione,                                   --
-    consensi_moduli.nome,                                     --
-    consensi_moduli.informativa,                              --
-    consensi_moduli.pagina,                                   --
-    consensi_moduli.se_richiesto,                             --
-    consensi_moduli.id_account_inserimento,                   --
-    consensi_moduli.id_account_aggiornamento,                 --
+	consensi_anagrafica.id,                                       --
+    consensi_anagrafica.id_consenso,                              --
+	consensi.nome AS consenso,                                            --
+	consensi_anagrafica.id_anagrafica,                              --
+	concat_ws(
+		' ',
+		anagrafica.nome,
+		anagrafica.cognome,
+		anagrafica.denominazione
+	) AS anagrafica,                              --
+    consensi_anagrafica.modulo,                                   --
+    consensi_anagrafica.id_account_inserimento,                   --
+    consensi_anagrafica.id_account_aggiornamento,                 --
     concat(                                                   --
       'consenso ',                                            --
-      consensi_moduli.id_consenso,                            --
+      consensi.nome,                            --
       ' per modulo ',                                         --
-      consensi_moduli.modulo                                  --
+      consensi_anagrafica.modulo                                  --
     ) AS __label__                                            -- etichetta per le tendine e le liste
-  FROM consensi_moduli                                        --
+  FROM consensi_anagrafica                                        --
+    INNER JOIN consensi ON consensi.id = consensi_anagrafica.id_consenso	--
+	INNER JOIN anagrafica ON anagrafica.id = consensi_anagrafica.id_anagrafica	--
+;                                                             --
+
+-- | 090000006500
+
+-- consensi_contatti_view
+CREATE OR REPLACE VIEW `consensi_contatti_view` AS            --
+  SELECT                                                      --
+	consensi_contatti.id,                                       --
+    consensi_contatti.id_consenso,                              --
+	consensi.nome AS consenso,                                            --
+	consensi_contatti.id_contatto,                              --
+    consensi_contatti.modulo,                                   --
+    consensi_contatti.id_account_inserimento,                   --
+    consensi_contatti.id_account_aggiornamento,                 --
+    concat(                                                   --
+      'consenso ',                                            --
+      consensi.nome,                            --
+      ' per modulo ',                                         --
+      consensi_contatti.modulo                                  --
+    ) AS __label__                                            -- etichetta per le tendine e le liste
+  FROM consensi_contatti                                        --
+    INNER JOIN consensi ON consensi.id = consensi_contatti.id_consenso	--
 ;                                                             --
 
 -- | 090000006700
