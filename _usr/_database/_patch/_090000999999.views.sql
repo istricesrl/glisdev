@@ -825,7 +825,9 @@ CREATE OR REPLACE VIEW `consensi_anagrafica_view` AS            --
 	) AS anagrafica,                              --
     consensi_anagrafica.modulo,                                   --
     consensi_anagrafica.id_account_inserimento,                   --
-    consensi_anagrafica.id_account_aggiornamento,                 --
+	consensi_anagrafica.timestamp_inserimento,
+	from_unixtime( consensi_anagrafica.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
+	consensi_anagrafica.id_account_aggiornamento,                 --
     concat(                                                   --
       'consenso ',                                            --
       consensi.nome,                            --
