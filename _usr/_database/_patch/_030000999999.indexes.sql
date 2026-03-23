@@ -386,7 +386,7 @@ ALTER TABLE `condizioni_pagamento`
 -- condizioni_pagamento
 ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- | 030000006400
+-- | 030000006200
 
 -- consensi
 ALTER TABLE `consensi`
@@ -395,6 +395,48 @@ ALTER TABLE `consensi`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
+
+-- | 030000006300
+
+-- consensi_moduli
+ALTER TABLE `consensi_moduli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_consenso`, `id_lingua`, `modulo`), 
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `modulo` (`modulo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `azione` (`azione`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `informativa` (`informativa`),
+	ADD KEY `pagina` (`pagina`),
+	ADD KEY `se_richiesto` (`se_richiesto`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_consenso`, `id_lingua`, `modulo`,`nome`,`ordine`,`azione`, `informativa`, `pagina`, `se_richiesto` );
+
+-- | 030000006301
+
+-- consensi_moduli
+ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000006400
+
+-- consensi_anagrafica
+ALTER TABLE `consensi_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_consenso`, `id_anagrafica`, `modulo`), 
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `modulo` (`modulo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_consenso`, `id_anagrafica`, `modulo`);
+
+-- | 030000006401
+
+-- consensi_anagrafica
+ALTER TABLE `consensi_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006500
 
@@ -411,8 +453,8 @@ ALTER TABLE `consensi_contatti`
 
 -- | 030000006501
 
--- consensi_moduli
-ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+-- consensi_contatti
+ALTER TABLE `consensi_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006700
 
