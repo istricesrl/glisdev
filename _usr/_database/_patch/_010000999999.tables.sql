@@ -809,6 +809,7 @@ CREATE TABLE `consensi_anagrafica` (                              --
   `id_consenso` int(11) DEFAULT NULL,                         -- chiave esterna per il consenso
   `id_anagrafica` int(11) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
   `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
+  `valore` int(1) DEFAULT NULL,
   `note` text DEFAULT NULL,                                   -- note sul consenso
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
@@ -833,6 +834,7 @@ CREATE TABLE `consensi_contatti` (                              --
   `id_consenso` int(11) DEFAULT NULL,                         -- chiave esterna per il consenso
   `id_contatto` int(11) DEFAULT NULL,                         -- chiave esterna per il contatto
   `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
+  `valore` int(1) DEFAULT NULL,
   `note` text DEFAULT NULL,                                   -- note sul consenso
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
