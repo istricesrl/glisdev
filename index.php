@@ -6,46 +6,10 @@
      * 
      * 
      * per far passare tutto il traffico web a questo file, è necessario configurare il server web
-     * Nginx o IIS in modo appropriato. Per Nginx modificare il blocco server (8080) come segue
-     * (sostituire dominio.tld con il dominio effettivo):
+     * Nginx o IIS in modo appropriato. Per Nginx sincerarsi di apportare le seguenti modifiche alla
+     * configurazione.
      * 
-     * ```
-     *  server {
-     *    listen 8080;
-     *    listen [::]:8080;
-     *    server_name www.dominio.tld www1.dominio.tld;
-     *    {{root}}
-     *  
-     *    include /etc/nginx/global_settings;
-     *  
-     *    index index.php;
-     *  
-     *    location / {
-     *      rewrite ^ /index.php?$query_string last;
-     *    }
-     *  
-     *    # Esegui solo index.php (opzionale ma consigliato)
-     *    location = /index.php {
-     *      include fastcgi_params;
-     *      fastcgi_intercept_errors on;
-     *      fastcgi_index index.php;
-     *      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-     *      fastcgi_read_timeout 3600;
-     *      fastcgi_send_timeout 3600;
-     *      fastcgi_param HTTPS "on";
-     *      fastcgi_param SERVER_PORT 443;
-     *      fastcgi_pass 127.0.0.1:{{php_fpm_port}};
-     *      fastcgi_param PHP_VALUE "{{php_settings}}";
-     *    }
-     *  
-     *    # Blocca l’esecuzione di qualsiasi altro .php (consigliato)
-     *    location ~ \.php$ {
-     *      return 404;
-     *    }
-     *  }
-     * ```
-     * 
-     * nel blocco server (80) del sito web, se è presente un blocco come questo, rimuoverlo:
+     * Nel blocco server (80) del sito web, se è presente un blocco come questo, rimuoverlo:
      * 
      * ```
      * if (-f $request_filename) {
@@ -54,6 +18,45 @@
      * ```
      * 
      * in quanto farebbe servire i file statici direttamente senza passare per il front controller.
+     * Fatto questo, sostituire completamente il blocco di configurazione server (8080) con questo,
+     * sostituendo domain.tld con il dominio reale:
+     * 
+     * ```
+     * server {
+     *   listen 8080;
+     *   listen [::]:8080;
+     *   server_name www.domain.tld www1.domain.tld;
+     *   {{root}}
+     * 
+     *   include /etc/nginx/global_settings;
+     * 
+     *   index index.php;
+     * 
+     *   location / {
+     *     rewrite ^ /index.php?$query_string last;
+     *   }
+     * 
+     *   # Esegui solo index.php (opzionale ma consigliato)
+     *   location = /index.php {
+     *     include fastcgi_params;
+     *     fastcgi_intercept_errors on;
+     *     fastcgi_index index.php;
+     *     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+     *     fastcgi_read_timeout 3600;
+     *     fastcgi_send_timeout 3600;
+     *     fastcgi_param HTTPS "on";
+     *     fastcgi_param SERVER_PORT 443;
+     *     fastcgi_pass 127.0.0.1:{{php_fpm_port}};
+     *     fastcgi_param PHP_VALUE "{{php_settings}}";
+     *   }
+     * 
+     *   # Blocca l’esecuzione di qualsiasi altro .php (consigliato)
+     *   location ~ \.php$ {
+     *     return 404;
+     *   }
+     * }
+     * ```
+     * 
      * 
      */
 
