@@ -24,6 +24,7 @@
             'consenso' => 'consenso',
             'anagrafica' => 'anagrafica',
             'modulo' => 'modulo',
+            'valore' => 'valore',
             'data_ora_inserimento' => 'data',
             NULL => 'azioni'
         ),
@@ -34,6 +35,7 @@
             'ora_inizio_riferimento' => 'no-wrap',
             'ora_fine_riferimento' => 'no-wrap',
             'nome' => 'no-wrap text-start',
+            'valore' => 'no-wrap text-center',
             'tipologia' => 'no-wrap',
             'codice' => 'no-wrap',
             'ore' => 'no-wrap',
@@ -61,3 +63,13 @@
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.form.php';
 
+    // trasformazione icona attivo/inattivo
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
+            if( $row['valore'] == 1 ) { 
+                $row['valore'] = 'consenso prestato';
+            } else {
+                $row['valore'] = 'consenso non prestato';
+            }
+        }
+    }

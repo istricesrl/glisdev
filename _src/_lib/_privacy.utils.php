@@ -40,6 +40,7 @@
                                 'modulo' => $v['__modulo__'],
                                 'id_contatto' => $v['__id_contatto__'],
                                 'id_consenso' => $idConsenso,
+                                'valore' => $valoreConsenso,
                                 'timestamp_inserimento' => time(),
                             ),
                             'consensi_contatti'
@@ -53,6 +54,7 @@
                                     'modulo' => $v['__modulo__'],
                                     'id_anagrafica' => $v['__id_anagrafica__'],
                                     'id_consenso' => $idConsenso,
+                                    'valore' => $valoreConsenso,
                                     'timestamp_inserimento' => time(),
                                 ),
                                 'consensi_anagrafica'
