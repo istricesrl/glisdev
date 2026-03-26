@@ -17,7 +17,7 @@
     header( 'Content-type: text/plain' );
 
     // chiave per la lettura dell'indice
-    $key = '__INDEX__';
+    $key = 'CACHE_INDEX';
 
     // lettura dell'indice di memcache
     $m = memcacheRead( $cf['memcache']['connection'], memcacheUniqueKey( $key ) ) ?? [];
