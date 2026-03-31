@@ -49,7 +49,7 @@
                                                         'contenuti.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'contenuti' ),
-                                                                        'priority'    => '3000' ) ) )                                                        
+                                                                        'priority'    => '9000' ) ) )                                                        
     );
 
     // tools della dashboard contenuti

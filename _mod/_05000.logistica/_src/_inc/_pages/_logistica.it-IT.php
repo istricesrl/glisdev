@@ -48,7 +48,7 @@
 														'logistica.tools'
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'logistica' ),
-																		'priority'	=> '6000' ) ) )														
+																		'priority'	=> '5000' ) ) )														
 	);
 
     // tools della dashboard logistica
