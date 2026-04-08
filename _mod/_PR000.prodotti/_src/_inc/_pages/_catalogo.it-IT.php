@@ -461,6 +461,12 @@
         arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.contenuti' );
     }
 
+
+        // RELAZIONI CON IL MODULO IMMAGINI
+    if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.immagini' );
+    }
+
     // tools archivio produzione
     $p['catalogo.marchi.form.tools'] = array(
         'sitemap'            => false,
