@@ -450,6 +450,7 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.marchi.form',
+                                                              'catalogo.marchi.form.prodotti',
                                                               'catalogo.marchi.form.archiviazione',
                                                               'catalogo.marchi.form.tools' ) )
     );
@@ -489,6 +490,19 @@
         'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.archiviazione.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
+
+
+    // subvista prodotti
+    $p['catalogo.marchi.form.prodotti'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo marchi form prodotti' ),
+        'h1'                => array( $l        => 'prodotti' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.prodotti.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.prodotti.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
     );
