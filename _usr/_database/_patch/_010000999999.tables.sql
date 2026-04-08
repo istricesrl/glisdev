@@ -1327,6 +1327,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (                       --
   `id_prodotto` int(11) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associata l'immagine
   `id_articolo` int(11) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associata l'immagine
   `id_categoria_prodotti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associata l'immagine
+  `id_marchio` int(11) DEFAULT NULL,               -- chiave esterna per il marchio a cui è associata l'immagine
   `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associata l'immagine
   `id_notizia` int(11) DEFAULT NULL,                          -- chiave esterna per la notizia a cui è associata l'immagine
   `id_categoria_notizie` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di notizie a cui è associata l'immagine
@@ -2478,6 +2479,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
   `se_prodotti` tinyint(1) DEFAULT NULL,                        -- se prodotti
   `se_articoli` tinyint(1) DEFAULT NULL,                        -- se articoli
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- se categorie prodotti
+  `se_marchi` tinyint(1) DEFAULT NULL,                          -- se marchi
   `se_notizie` tinyint(1) DEFAULT NULL,                         -- se notizie
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- se categorie notizie
   `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
