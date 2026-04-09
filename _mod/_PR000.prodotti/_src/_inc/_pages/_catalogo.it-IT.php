@@ -464,9 +464,23 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.marchi.form',
+                                                              'catalogo.marchi.form.prodotti',
                                                               'catalogo.marchi.form.archiviazione',
                                                               'catalogo.marchi.form.tools' ) )
     );
+
+    // RELAZIONI CON IL MODULO CONTENUTI
+    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.web' );
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.sem' );
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.contenuti' );
+    }
+
+
+        // RELAZIONI CON IL MODULO IMMAGINI
+    if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.immagini' );
+    }
 
     // tools archivio produzione
     $p['catalogo.marchi.form.tools'] = array(
@@ -490,6 +504,19 @@
         'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.archiviazione.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
+
+
+    // subvista prodotti
+    $p['catalogo.marchi.form.prodotti'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo marchi form prodotti' ),
+        'h1'                => array( $l        => 'prodotti' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.prodotti.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.prodotti.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
     );
