@@ -307,6 +307,12 @@ Questa è la macro della pagina degli strumenti della dashboard del modulo catal
 ### /_mod/_04000.catalogo/_src/_inc/_pages/_catalogo.it-IT.php
 Qui vengono definite le pagine del modulo catalogo.
 
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.php
+Questa è la macro della dashboard del modulo logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_pages/_logistica.it-IT.php
+In questo file vengono definite le pagine del modulo logistica.
+
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.php
 Questa è la macro dell'archivio dell'amministrazione.
 
@@ -450,6 +456,9 @@ Questa è la macro della scheda fornitore della gestione anagrafica.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.php
 Questa è la macro della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.privacy.php
+Questa è la macro della scheda privacy del modulo di gestione anagrafica.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.produttore.php
 Questa è la macro della scheda produttore della pagina di gestione anagrafica.
@@ -1025,57 +1034,151 @@ contenuti del sito.
 Questa controller viene eseguita alla fine di ogni gruppo di elaborazioni della tabella articoli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.archiviazione.php
-Questa è la macro della scheda archiviazione del modulo di gesitmà
+Questa è la macro della scheda archiviazione del modulo di gestione degli articoli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php
+Questa è la macro della scheda caratteristiche del modulo di gestione degli articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
+Questa è la macro della scheda distinta base del modulo di gestione degli articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php
+Questa è la macro del modulo di gestione degli articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.relazioni.php
+Questa è la macro della scheda relazioni del modulo di gestione articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.view.php
+Questa è la macro della vista articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.php
+Questa è la macro del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.prodotti.php
+Questa è la macro della scheda prodotti del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.tools.php
+Questa è la macro della scheda strumenti della vista prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.archiviati.php
+Questa è la macro della vista delle categorie prodotti archiviate.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.php
+Questa è la macro della vista categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.php
+Questa è la macro del modulo di gestione marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.tools.php
+Questa è la macro della scheda strumenti della vista marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.archiviati.php
+Questa è la macro della vista marchi archiviati.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.php
+Questa è la macro della vista marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.articoli.php
+Questa è la macro della scheda articoli del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.caratteristiche.php
+Questa è la macro della scheda caratteristiche del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.categorie.php
+Questa è la macro della scheda categorie del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.php
+Questa è la macro del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.relazioni.php
+Questa è la macro della scheda relazioni del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.tools.php
+Questa è la macro della scheda strumenti della vista prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.archiviati.php
+Questa è la macro della vista prodotti archiviati.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.php
+Questa è la macro della vista prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_pages/_catalogo.it-IT.php
+Questa è la macro della dashboard catalogo.
+
 ### /_mod/_PR000.prodotti/_src/_lib/_mysql.utils.add.php
+Questa è una libreria aggiuntiva di funzioni per MySQL relative ai prodotti.
+
 ### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.php
+Questa è la macro del modulo di gestione dei template mail.
+
 ### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione template mail.
+
 ### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.view.php
+Questa è la macro della vista template mail.
+
 ### /_mod/_TE000.template/_src/_inc/_pages/_mail.it-IT.php
-### /_mod/_TE000.template/_src/tpl/athena/mail.template.form.twig
+In questo file vengono definite le pagine relative alla gestione dei template mail.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_anagrafica.form.video.php
+Questa è la macro della scheda video del modulo di gestione anagrafica.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.articoli.form.video.php
+Questa è la macro della scheda video del modulo di gestione articoli.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.categorie.prodotti.form.video.php
+Questa è la macro della scheda video del modulo di gestione categorie prodotti.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.prodotti.form.video.php
+Questa è la macro della scheda video del modulo di gestione prodotti.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.php
+Questa è la macro del modulo di gestione video.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione video.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.view.php
+Questa è la macro della vista video.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.categorie.notizie.form.video.php
+Questa è la macro della scheda video del modulo di gestione categorie notizie.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.notizie.form.video.php
+Questa è la macro della scheda video del modulo di gestione notizie.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.pagine.form.video.php
+Questa è la macro della scheda video del modulo di gestione pagine.
+
 ### /_mod/_VI000.video/_src/_inc/_pages/_anagrafica.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative all'anagrafica.
+
 ### /_mod/_VI000.video/_src/_inc/_pages/_catalogo.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative al catalogo prodotti e articoli.
+
 ### /_mod/_VI000.video/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative ai contenuti.
 
 ### /_src/_config.php
 Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
@@ -1158,6 +1261,9 @@ framework, il loro scopo e altre informazioni utili. Per accedere al report util
 Questo report innesca l'importazione dei file presenti in /var/spool/import/todo/*/ e /var/spool/import, e restituisce un report dettagliato delle
 operazioni svolte. Normalmente l'importazione dei file è svolta dall'API cron, ma questo report può essere fondamentale per lo sviluppo, il test
 e il debug dei nuovi tracciati di importazione. Per accedere al report utilizzare il percorso /report/import.
+
+### /_src/_api/_report/_memcache.php
+Questo report mostra il contenuto dell'indice di memcache.
 
 ### /_src/_api/_status/_cf.php
 Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
@@ -1628,6 +1734,12 @@ e in particolare vengono cercati questi file:
 Dal momento che la creazione di così tante icone può risultare tediosa, è possibile avvalersi di strumenti come https://www.favicon-generator.org/ in
 attesa che il framework implementi una propria gestione della scalatura delle favicon.
 
+### /_src/_inc/_contents/_affiliazioni.it-IT.html
+Questo file contiene il testo della pagina standard di divulgazione delle affiliazioni.
+
+### /_src/_inc/_contents/_privacy.it-IT.html
+Questo file contiene il testo della pagina standard dell'informativa privacy e cookie.
+
 ### /_src/_inc/_controllers/_default.after.php
 Questa controller viene eseguita dopo ogni ciclo di lavoro della funzione controller().
 
@@ -1689,6 +1801,15 @@ Questo file contiene la dichiarazione delle pagine della dashboard del CMS.
 
 ### /_src/_inc/_pages/_delete.it-IT.php
 Questo file contiene la dichiarazione della pagina di cancellazione del CMS.
+
+### /_src/_inc/_pages/_legal.en-GB.php
+Questo file contiene la dichiarazione delle pagine legali in inglese.
+
+### /_src/_inc/_pages/_legal.fr-FR.php
+Questo file contiene la dichiarazione delle pagine legali in francese.
+
+### /_src/_inc/_pages/_legal.it-IT.php
+Questo file contiene la dichiarazione delle pagine legali.
 
 ### /_src/_inc/_pages/_null.it-IT.php
 Questo file contiene la dichiarazione della pagina NULL utilizzata per l'errore HTTP 404.
@@ -2353,3 +2474,8 @@ poi reindirizzati a una pagina HTTPS si perde il cookie di sessione e questo obb
 effettivamente il problema che riscontrate è questo, monitorate il cookie di sessione dalla scheda applicazione dei tools
 per gli sviluppatori di Chrome o Firefox; se notate che il cookie appare e scompare randomicamente ogni volta che cambiate
 pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito sia configurata correttamente.
+
+#### il framework dà errore 500 su tutte le pagine
+Questo problema può essere originato da una molteplicità di fattori, ma in primo luogo è d'uopo controllare che non siano per
+qualche ragione stati cambiati inavvertitamente dei permessi. Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e
+provare di nuovo ad accedere alle pagine.
