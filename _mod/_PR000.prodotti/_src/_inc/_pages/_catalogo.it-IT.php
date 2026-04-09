@@ -28,6 +28,7 @@
         'etc'                => array( 'tabs'    => array(    'catalogo.prodotti.view',
                                                             'catalogo.articoli.view',
                                                             'catalogo.prodotti.view.archiviati',
+                                                            'catalogo.prodotti.stampe',
                                                             'catalogo.prodotti.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'prodotti' ),
                                                                             'priority'    => '100' ) ) )
@@ -42,6 +43,19 @@
         'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.view.archiviati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.prodotti.view' )
+    );
+
+    // catalogo prodotti stampe
+    $p['catalogo.prodotti.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo prodotti stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.stampe.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.prodotti.view' )
     );
