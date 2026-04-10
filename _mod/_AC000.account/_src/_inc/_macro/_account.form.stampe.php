@@ -1,12 +1,11 @@
 <?php
 
     /**
+     * macro account form stampe
      * 
+     * Questa macro definisce le stampe disponibili per il singolo account; è presente in standard
+     * in modo da poter essere personalizzata in custom.
      * 
-     * 
-     * 
-     * 
-     * TODO documentare
      * 
      * 
      */

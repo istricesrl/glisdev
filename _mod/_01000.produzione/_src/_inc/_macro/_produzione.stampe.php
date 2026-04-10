@@ -1,18 +1,15 @@
 <?php
 
     /**
+     * macro produzione stampe
+     * 
+     * Questa macro definisce le stampe disponibili per il modulo produzione; è presente in standard
+     * in modo da poter essere personalizzata in custom.
      * 
      * 
-     * 
-     * 
-     * 
-     * TODO documentare
      * 
      * 
      */
-
-    // tabella gestita
-   
 
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(
