@@ -37,6 +37,9 @@
         'onclick' => array(
             NULL => 'event.stopPropagation();'
         ),
+        '__restrict__' => array(
+            'se_mail' => array( 'EQ' => true )
+        ),
         '__sort__' => array(
             '__label__' => 'ASC'
         )
