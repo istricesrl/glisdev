@@ -89,6 +89,11 @@
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.file' );
+    }
+
     // tools archivio produzione
     $p['contenuti.notizie.form.archiviazione'] = array(
         'sitemap'            => false,
