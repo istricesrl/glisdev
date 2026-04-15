@@ -26,6 +26,7 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.notizie.view',
+                                                            'contenuti.tipologie.notizie.view',
                                                             'contenuti.notizie.view.archiviate',
                                                             'contenuti.notizie.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'notizie' ),
@@ -139,6 +140,18 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.form.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
+    );
+
+    // scheda tipologie notizie
+    $p['contenuti.tipologie.notizie.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'tipologie notizie' ),
+        'h1'                => array( $l        => 'tipologie' ),
+        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.tipologie.notizie.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.notizie.view' )
     );
 
     // tools archivio produzione
