@@ -208,6 +208,19 @@
         'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
     );
 
+    // gestione pagine form contenuti
+    $p['contenuti.notizie.form.metadati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-tags" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'metadati' ),
+        'h1'                => array( $l        => 'metadati' ),
+        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.notizie.form.metadati.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.form.metadati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
+    );
+
     // gestione notizie form contenuti
     $p['contenuti.categorie.notizie.form.web'] = array(
         'sitemap'            => false,
