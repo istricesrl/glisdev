@@ -487,6 +487,11 @@
         arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.file' );
     }
 
+    // RELAZIONI CON IL MODULO VIDEO
+    if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.video' );
+    }
+
     // tools archivio produzione
     $p['catalogo.marchi.form.tools'] = array(
         'sitemap'            => false,

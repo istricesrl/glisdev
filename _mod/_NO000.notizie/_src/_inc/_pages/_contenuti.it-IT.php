@@ -77,6 +77,7 @@
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.web' );
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.sem' );
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.contenuti' );
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI

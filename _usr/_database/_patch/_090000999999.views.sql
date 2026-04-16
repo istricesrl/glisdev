@@ -1726,6 +1726,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.note,
 		pagamenti.note_pagamento,
 		pagamenti.id_documento,
+		pagamenti.id_carrello,
 		pagamenti.id_carrelli_articoli,
         concat(
 			tipologie_documenti.sigla,
@@ -2258,6 +2259,7 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_prodotti,
 		ruoli_video.se_articoli,
 		ruoli_video.se_categorie_prodotti,
+		ruoli_video.se_marchi,
 		ruoli_video.se_notizie,
 		ruoli_video.se_categorie_notizie,
 		ruoli_video.se_risorse,
@@ -2726,6 +2728,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_prodotto,
 		video.id_articolo,
 		video.id_categoria_prodotti,
+		video.id_marchio,
 		video.id_risorsa,
 		video.id_categoria_risorse,
 		video.id_notizia,
