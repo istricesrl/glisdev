@@ -1231,6 +1231,7 @@ CREATE TABLE IF NOT EXISTS `file` (                           --
   `id_prodotto` int(11) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associato il file
   `id_articolo` int(11) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associato il file
   `id_categoria_prodotti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associato il file
+  `id_marchio` int(11) DEFAULT NULL,               -- chiave esterna per il marchio a cui è associato il file
   `id_todo` int(11) DEFAULT NULL,                             -- chiave esterna per la todo a cui è associato il file
   `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associato il file
   `id_template` int(11) DEFAULT NULL,                         -- chiave esterna per il template a cui è associato il file
@@ -1923,6 +1924,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `note_pagamento` text DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `id_rinnovo` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
   `id_carrelli_articoli` int(11) DEFAULT NULL,
   `id_creditore` int(11) DEFAULT NULL,
   `id_debitore` int(11) DEFAULT NULL,
@@ -2449,6 +2451,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_prodotti` tinyint(1) DEFAULT NULL,
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
@@ -2582,6 +2585,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_prodotti` tinyint(1) DEFAULT NULL,
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
@@ -3377,6 +3381,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_prodotto` int(11) DEFAULT NULL,
   `id_articolo` int(11) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_marchio` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
