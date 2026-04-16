@@ -2107,40 +2107,14 @@ Questo file contiene le patch base che creano le view del database del framework
 ### /_usr/_database/_patch/_100000999999.reports.sql
 Questo file contiene le patch base che creano le tabelle di report nel database del framework.
 
-## documentazione dei moduli
+## descrizione dei moduli
 
 ### CT000.contatti
 Il modulo contatti consente di compiere azioni su blocchi di dati definiti liberamente, ad esempio provenienti da moduli di
-contatto sul sito, moduli di registrazione, landing page, eccetera. Il principio di funzionamento del modulo è molto semplice,
-lato front-end è sufficiente predisporre un form simile a questo:
+contatto sul sito, moduli di registrazione, landing page, eccetera.
 
-```
-{% if request.__ct__.default.__status__ == 'OK' %}
-<p>
-     modulo ricevuto, tutto ok!
-</p>
-{% else %}
-<form method="post" action="" id="esempioform">
-    <input type="text" name="__ct__[default][nome]">
-    <input type="text" name="__ct__[default][mail]">
-    {{ cms.formButton( { 'field': { 'text': 'INVIA' }, 'form': { 'id': 'esempioform', 'table': '__ct__', 'subtable': 'default' }, 'recaptcha': google.profile.recaptcha } ) }}
-</form>
-{% endif %}
-```
-
-Mentre lato back-end bisognerà definire se e quale controller attivare per gestire i dati provenienti dal modulo. Si può anche
-non specificare una controller, in quanto i dati raccolti dal modulo contatti vengono comunque salvati sulla tabella contatti per
-poter essere poi consultati in un secondo momento.
-
-La configurazione del modulo può avvenire in diversi punti, tutti validi, ma probabilmente il migliore è il file /mod/CT000.contatti/src/config.yaml;
-un esempio di configurazione minimale potrebbe essere il seguente:
-
-```
-contatti:
-  nomemodulo:
-    controller: 
-        - "_mod/_CT000.contatti/_src/_inc/_controllers/_form/_nomemodulo.php"
-```
+Per informazioni più dettagliate sul modulo controller si veda la relativa documentazione, nonché la documentazione e i commenti relativi
+al codice del modulo.
 
 ## FAQ
 
