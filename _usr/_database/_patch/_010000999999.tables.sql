@@ -296,6 +296,48 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000001300
+
+-- articoli
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli articoli di magazzino
+--
+-- questa tabella contiene gli articoli di magazzino, che possono essere collegati a prodotti
+--
+CREATE TABLE `articoli` (
+  `id` char(32) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `ean` char(32) DEFAULT NULL,
+  `isbn` char(32) DEFAULT NULL,
+  `id_reparto` int(11) DEFAULT NULL,
+  `id_taglia` int(11) DEFAULT NULL,
+  `id_colore` int(11) DEFAULT NULL,
+  `id_periodicita` int(11) DEFAULT NULL,
+  `id_tipologia_rinnovo` int(11) DEFAULT NULL,
+  `larghezza` decimal(9,5) DEFAULT NULL,
+  `lunghezza` decimal(9,5) DEFAULT NULL,
+  `altezza` decimal(9,5) DEFAULT NULL,
+  `id_udm_dimensioni` int(11) DEFAULT NULL,
+  `peso` decimal(9,5) DEFAULT NULL,
+  `id_udm_peso` int(11) DEFAULT NULL,
+  `volume` decimal(9,5) DEFAULT NULL,
+  `id_udm_volume` int(11) DEFAULT NULL,
+  `capacita` decimal(9,5) DEFAULT NULL,
+  `id_udm_capacita` int(11) DEFAULT NULL,
+  `durata` decimal(9,5) DEFAULT NULL,
+  `id_udm_durata` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `note_codifica` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000001700
 
 -- asset
@@ -1142,7 +1184,7 @@ CREATE TABLE IF NOT EXISTS `iban` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `intestazione` char(255) DEFAULT NULL,
-  `iban` char(27) NOT NULL,
+  `iban` char(27) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1231,7 +1273,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
--- | 010000016200
+-- | 010000016000
 
 -- job
 -- tipologia: tabella gestita
@@ -1245,7 +1287,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
 CREATE TABLE IF NOT EXISTS `job` (                            --
   `id` int(11) NOT NULL,                                      -- chiave primaria
   `nome` char(255) DEFAULT NULL,                              -- nome del job
-  `job` char(255) NOT NULL,                                   -- percorso del file del job
+  `job` char(255) DEFAULT NULL,                                   -- percorso del file del job
   `timestamp_apertura` int(11) DEFAULT NULL,                  -- timestamp di apertura del job
   `totale` int(11) DEFAULT NULL,                              -- totale elementi da processare
   `corrente` int(11) DEFAULT NULL,                            -- elemento corrente
@@ -1262,7 +1304,7 @@ CREATE TABLE IF NOT EXISTS `job` (                            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
--- | 010000016000
+-- | 010000016200
 
 -- lingue
 -- tipologia: tabella standard
@@ -1398,6 +1440,31 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000021000
+
+-- matricole
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le matricole degli articoli
+--
+-- questa tabella contiene le matricole degli articoli, con le informazioni principali
+--
+CREATE TABLE `matricole` (
+  `id` int(11) NOT NULL,
+  `id_marchio` int(11) DEFAULT NULL,
+  `id_produttore` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `matricola` char(128) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000021600
 
 -- menu
@@ -1504,7 +1571,7 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
   `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `provider` char(64) DEFAULT NULL,
-  `codice` char(32) NOT NULL
+  `codice` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022000
@@ -1659,6 +1726,38 @@ CREATE TABLE IF NOT EXISTS `pagine` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL,               -- timestamp di aggiornamento
   `id_account_aggiornamento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha aggiornato la pagina
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000026000
+
+-- prodotti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i prodotti del sito
+--
+-- questa tabella contiene i prodotti del sito, con le informazioni principali
+--
+CREATE TABLE IF NOT EXISTS `prodotti` (	
+  `id` char(32) NOT NULL,	
+  `id_tipologia` int(11) DEFAULT NULL,	
+  `nome` char(128) DEFAULT NULL,	
+  `note` text DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` tinyint(1) DEFAULT NULL,
+  `se_cacheable` tinyint(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,	
+  `note_codifica` text DEFAULT NULL,	
+  `id_marchio` int(11) DEFAULT NULL,	
+  `id_produttore` int(11) DEFAULT NULL,	
+  `codice_produttore` char(64) DEFAULT NULL,	
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000027000
 
@@ -1880,6 +1979,22 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000029800
+
+-- regimi
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i regimi fiscali
+--
+-- questa tabella contiene i regimi fiscali, con le informazioni relative al nome e al codice
+--
+CREATE TABLE IF NOT EXISTS `regimi` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000030200
 
 -- regioni
@@ -1899,6 +2014,55 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della regione
   `note` text DEFAULT NULL                                    -- note sulla regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000030400
+
+-- relazioni_documenti
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: tabella di relazione molti a molti tra documenti
+--
+-- questa tabella contiene la relazione molti a molti tra documenti, con le informazioni relative al ruolo
+-- della relazione e ai dati di inserimento e aggiornamento
+--
+CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
+  `id` int(11) NOT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documento_collegato` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034300
+
+-- ruoli_documenti
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei documenti
+--
+-- questa tabella contiene i ruoli dei documenti, con le informazioni relative al nome, alle
+-- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere
+-- associati i documenti
+--
+CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` tinyint(1) DEFAULT NULL,
+  `se_documenti` tinyint(1) DEFAULT NULL,
+  `se_documenti_articoli` tinyint(1) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL,
+  `se_conferma` tinyint(1) DEFAULT NULL,
+  `se_consuntivo` tinyint(1) DEFAULT NULL,
+  `se_evasione` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034400
 
@@ -2041,6 +2205,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000037000
+
+-- settori
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene i settori aziendali
+--
+-- questa tabella contiene i settori di attività ATECO, con le informazioni relative al nome, al soprannome
+-- e al codice ATECO
+--
+CREATE TABLE IF NOT EXISTS `settori` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `soprannome` char(64) DEFAULT NULL,
+  `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000042000
@@ -2596,6 +2779,24 @@ CREATE TABLE IF NOT EXISTS `url` (                            --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'URL
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000063000
+
+-- valute
+-- tipologia: tabella principale
+-- rango: tabella standard
+-- struttura: tabella base
+-- funzione: contiene le valute utilizzate nel sistema
+--
+-- questa tabella contiene le valute utilizzate nel sistema, con le informazioni relative al codice ISO 4217,
+-- all'entità HTML, e ai caratteri UTF-8 associati
+--
+CREATE TABLE IF NOT EXISTS `valute` (
+  `id` int(11) NOT NULL,
+  `iso4217` char(3) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `utf8` char(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000065000
 

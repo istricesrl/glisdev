@@ -1,13 +1,13 @@
 <?php
 
     // runlevel da saltare
-    	$cf['runlevels']['run'] = array(
+        $cf['runlevels']['run'] = array(
             '000', '005',
             '010', '015',
             '020', '025',
             '040', '045',
             '050', '055'
-	    );
+        );
 
     // debug
         // session_start();
@@ -15,18 +15,22 @@
         // print_r( $_SESSION );
 
     // dati di contesto
-        require '../../_config.php';
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
+
 
     // rinnovo sessione
         if( isset( $_REQUEST['renew'] ) ) {
-            $_SESSION['used']			= time();
+            $_SESSION['used']            = time();
         }
 
     // debug
         // print_r( get_included_files() );
 
     // stampo i dati di validità della sessione corrente
-#        echo json_encode(
         buildJson(
             array(
                 'used' => $_SESSION['used'],
@@ -43,5 +47,14 @@
                         : 0
                     )
                 )
+            ),
+            ENCODING_UTF8,
+            array(
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Cache-Lifetime' => '0',
+                'X-Proxy-Cache' => 'BYPASS',
+                'X-GlisWeb-No-Cache' => 'true'
             )
         );

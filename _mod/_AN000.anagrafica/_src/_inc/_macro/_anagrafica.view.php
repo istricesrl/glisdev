@@ -12,6 +12,10 @@
      * 
      */
 
+    // debug
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+
     /**
      * configurazione della view
      * =========================
@@ -24,7 +28,7 @@
      */
 
     // informazioni della vista
-	$ct['view'] = array(
+    $ct['view'] = array(
         'table' => 'anagrafica',
         'open' => array(
             'page' => 'anagrafica.form',
@@ -79,7 +83,7 @@
 
     // inclusione filtri speciali
 // TODO reimplementare
-//	$ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
+//    $ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
 
     // inclusione modal
     $ct['page']['contents']['modals']['metro'] = array(
@@ -98,10 +102,12 @@
      */
 
     // tendina categoria
-	$ct['etc']['select']['categorie_anagrafica'] = tendinaCategorieAnagrafica();
+    $ct['etc']['select']['categorie_anagrafica'] = tendinaCategorieAnagrafica();
 
     // tendina tipologie
-    $ct['etc']['select']['tipologie_attivita'] = tendinaTipologieAttivita();
+    if( function_exists( 'tendinaTipologieAnagrafica' ) ) {
+        $ct['etc']['select']['tipologie_anagrafica'] = tendinaTipologieAnagrafica();
+    }
 
     // tendina stati
     $ct['etc']['select']['stati'] = tendinaStati();
@@ -125,7 +131,7 @@
      */
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     /**
      * elaborazione risultati della vista
@@ -139,8 +145,8 @@
     $ct['etc']['select']['provincie'] = tendinaProvincie( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] ?? 1 );
 
     // elaborazione righe
-	foreach( $ct['view']['data'] as &$row ) {
-		if( is_array( $row ) ) {
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
 
             $onclickBookmark = "$(this).metroWs('/api/bookmarks?".
                 "__work__[anagrafica][items][".$row['id']."][id]=".$row['id'].

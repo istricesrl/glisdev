@@ -12,7 +12,7 @@
      */
 
     // informazioni della vista
-	$ct['view'] = array(
+    $ct['view'] = array(
         'table' => 'documenti_articoli',
         'open' => array(
             'page' => 'amministrazione.documenti.articoli.form',
@@ -40,6 +40,7 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
+            'data_archiviazione' => array( 'NL' => true )
         ),
         '__sort__' => array(
             'id' => 'DESC'
@@ -47,4 +48,4 @@
     );
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';

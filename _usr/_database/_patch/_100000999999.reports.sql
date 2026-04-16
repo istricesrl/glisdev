@@ -3,7 +3,7 @@
 -- questo file contiene le query per la creazione dei report
 --
 
--- | 100000020551
+-- | 100000020550
 
 -- __report_immagini_scalate__
 CREATE OR REPLACE VIEW __report_immagini_scalate__ AS

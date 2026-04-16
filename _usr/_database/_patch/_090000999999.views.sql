@@ -549,7 +549,7 @@ CREATE OR REPLACE VIEW comuni_view AS                         --
             ON stati.id = regioni.id_stato                    --
 ;                                                             --
 
--- | 010000006000
+-- | 090000006000
 
 -- condizioni_pagamento_view
 CREATE OR REPLACE VIEW condizioni_pagamento_view AS
@@ -689,6 +689,8 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		m1.nome AS mastro_provenienza,
 		documenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+        group_concat( DISTINCT d1.codice SEPARATOR ' | ' ) AS documenti_antecedenti,
+        group_concat( DISTINCT d2.codice SEPARATOR ' | ' ) AS documenti_successivi,
 		documenti.porto,
 		documenti.id_causale,
 		documenti.id_trasportatore,
@@ -730,6 +732,10 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
 		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
+        LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id
+        LEFT JOIN documenti AS d1 ON d1.id = r1.id_documento_collegato
+        LEFT JOIN relazioni_documenti AS r2 ON r2.id_documento_collegato = documenti.id
+        LEFT JOIN documenti AS d2 ON d2.id = r2.id_documento
 	GROUP BY
 		documenti.id
 ;
@@ -829,6 +835,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		matricole.data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.data_consegna,
+        documenti.data_archiviazione,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
 		concat_ws(
@@ -876,6 +883,50 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
         LEFT JOIN documenti_articoli AS sotto_righe ON sotto_righe.id_genitore = documenti_articoli.id
     GROUP BY
         documenti_articoli.id
+;
+
+-- | 090000015200
+
+-- gruppi_view
+CREATE OR REPLACE VIEW `gruppi_view` AS
+	SELECT
+		gruppi.id,
+		gruppi.id_genitore,
+		gruppi.id_organizzazione,
+		gruppi.nome,
+		gruppi.id_account_inserimento,
+		gruppi.id_account_aggiornamento,
+		gruppi_path( gruppi.id ) AS __label__
+	FROM gruppi
+;
+
+-- | 090000015400
+
+-- iban_view
+CREATE OR REPLACE VIEW `iban_view` AS
+	SELECT
+		iban.id,
+		iban.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		iban.intestazione,
+		iban.iban,
+		iban.id_account_inserimento,
+		iban.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			iban.iban,
+			iban.intestazione,
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				)
+			)
+		) AS __label__
+	FROM iban
+		LEFT JOIN anagrafica AS a1 ON a1.id = iban.id_anagrafica
 ;
 
 -- | 090000015600
@@ -948,6 +999,26 @@ CREATE OR REPLACE VIEW lingue_view AS                         --
     lingue.nome AS __label__                                  -- etichetta per le tendine e le liste
   FROM lingue                                                 --
   ;                                                           --
+
+-- | 090000017200
+
+-- listini_view
+CREATE OR REPLACE VIEW `listini_view` AS
+	SELECT
+		listini.id,
+		listini.id_valuta,
+		valute.iso4217 AS valuta,
+		listini.nome,
+		listini.id_account_inserimento,
+		listini.id_account_aggiornamento,
+		concat(
+			listini.nome,
+			' ',
+			valute.iso4217
+		) AS __label__
+	FROM listini
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+;
 
 -- | 090000018200
 
@@ -1039,6 +1110,19 @@ CREATE OR REPLACE VIEW `menu_view` AS                           --
             ON lingue.id = menu.id_lingua                       --
 ;                                                               --
 
+-- | 090000021900
+
+-- modalita_pagamento
+CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
+    SELECT
+    modalita_pagamento.id,
+    modalita_pagamento.nome,
+    modalita_pagamento.codice,
+    modalita_pagamento.provider,
+    concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
+    FROM modalita_pagamento
+;
+
 -- | 090000022000
 
 -- notizie_view
@@ -1089,6 +1173,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
 		pagamenti.id_tipologia,
+		pagamenti.codice,
 		pagamenti.id_modalita_pagamento,
 		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
 		tipologie_pagamenti.nome AS tipologia,
@@ -1135,6 +1220,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		day( pagamenti.data_scadenza ) as giorno_scadenza,
 		month( pagamenti.data_scadenza ) as mese_scadenza,
 		year( pagamenti.data_scadenza ) as anno_scadenza,
+        documenti.data_archiviazione,
 		pagamenti.timestamp_pagamento,
 		from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
 		day( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as giorno_pagamento,
@@ -1258,6 +1344,23 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
             ON tp.id = pubblicazioni.id_tipologia               --
 ;                                                               --
 
+-- | 090000028600
+
+-- ranking_view
+CREATE OR REPLACE VIEW `ranking_view` AS
+    SELECT
+		ranking.id,
+		ranking.nome,
+		ranking.ordine,
+		ranking.se_fornitore,
+		ranking.se_cliente,
+		ranking.se_progetti,
+		ranking.id_account_inserimento,
+		ranking.id_account_aggiornamento,
+		ranking.nome AS __label__
+    FROM ranking
+;
+
 -- | 090000029000
 
 -- redirect_view
@@ -1278,6 +1381,58 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
     ) AS __label__                                            -- etichetta per le tendine e le liste
   FROM redirect                                               --
 ;                                                             --
+
+-- | 090000029800
+
+-- regimi_view
+CREATE OR REPLACE VIEW regimi_view AS
+	SELECT
+		regimi.id,
+		regimi.nome,
+		regimi.codice,
+		concat_ws(
+			' ',
+			regimi.nome,
+			regimi.codice
+		) AS __label__
+	FROM regimi
+;
+
+-- | 090000030400
+
+-- relazioni_documenti_view
+CREATE OR REPLACE VIEW relazioni_documenti_view AS
+	SELECT
+		relazioni_documenti.id,
+		relazioni_documenti.id_documento,
+		relazioni_documenti.id_documento_collegato,
+		relazioni_documenti.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+	FROM relazioni_documenti
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
+;
+
+-- | 090000034300
+
+-- ruoli_documenti_view
+CREATE OR REPLACE VIEW ruoli_documenti_view AS
+	SELECT
+		ruoli_documenti.id,
+		ruoli_documenti.id_genitore,
+		ruoli_documenti.nome,
+		ruoli_documenti.html_entity,
+		ruoli_documenti.font_awesome,
+		ruoli_documenti.se_xml,
+		ruoli_documenti.se_documenti,
+		ruoli_documenti.se_documenti_articoli,
+		ruoli_documenti.se_relazioni,
+		ruoli_documenti.se_conferma,
+		ruoli_documenti.se_consuntivo,
+		ruoli_documenti.se_evasione,
+	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
+	FROM ruoli_documenti
+;
 
 -- | 090000034600
 
@@ -1324,6 +1479,20 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
 			ruoli_indirizzi.id ) AS __label__			  	  -- etichetta per le tendine e le liste
 	FROM ruoli_indirizzi									  --
 ;                                                             --
+
+-- | 090000037000
+
+-- settori_view
+CREATE OR REPLACE VIEW settori_view AS
+	SELECT
+		settori.id,
+		settori.id_genitore,
+		settori.nome,
+		settori.soprannome,
+		settori.ateco,
+	 	concat( settori.ateco, ' ', settori.nome ) AS __label__
+	FROM settori
+;
 
 -- | 090000042000
 
