@@ -204,6 +204,7 @@
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.sem' );
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.contenuti' );
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.menu' );
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
