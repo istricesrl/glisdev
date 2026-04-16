@@ -77,6 +77,7 @@
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.web' );
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.sem' );
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.contenuti' );
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -87,6 +88,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.file' );
     }
 
     // tools archivio produzione
@@ -203,6 +209,7 @@
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.sem' );
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.contenuti' );
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.menu' );
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -213,6 +220,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.file' );
     }
 
     // tools archivio produzione
