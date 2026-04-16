@@ -2509,6 +2509,34 @@ consensi_anagrafica.
 Se si studia il codice del file /_mod/_CT000.contatti/_src/_config/_750.controller.php e quello della funzione associazioneConsensiContatto() si
 vedrà esattamente dove i consensi prestati con i vari moduli presenti sul sito vengono intercettati, e come vengono poi salvati.
 
+#### come associo a un modulo contatti le relative spunte privacy?
+Prima di tutto a livello di configurazione è necessario specificare i consensi collegati al modulo:
+
+```
+privacy:
+    moduli:
+        <nomemodulo>:
+            titolo:
+                it-IT: titolo del modulo
+            descrizione:
+                it-IT: descrizione del modulo
+            consensi:
+                <NOMECONSENSO>:
+                    informativa:
+                        it-IT: descrizione del consenso per l'informativa privacy
+                    label:
+                        it-IT: etichetta del consenso da mettere a fianco della spunta
+                    action: chiave per l'azione (da prelevare dai microcontenuti)
+                    page: ID della pagina di informativa da linkare
+                    required: true o false
+```
+
+Poi nel form si può utilizzare la macro che compone automaticamente le spunte per la privacy:
+
+```   
+{{ prv.checkConsensi( '__ct__', '<nomemodulo>', privacy.moduli.<nomemodulo>, ietf, tr, pages ) }}
+```
+
 ### domande sul template Athena
 Questa sezione contiene domande specificamente relative all'utilizzo del template Athena.
 
@@ -2567,6 +2595,12 @@ pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito
 Questo problema può essere originato da una molteplicità di fattori, ma in primo luogo è d'uopo controllare che non siano per
 qualche ragione stati cambiati inavvertitamente dei permessi. Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e
 provare di nuovo ad accedere alle pagine.
+
+#### ho creato una pagina view ma non appaiono dati, perché?
+Le cause più comuni sono a) mancano i permessi per l'entità che vuoi visualizzare (controlla /_src/_config/_250.auth.php)
+oppure b) manca la view corrispondente all'entità che vuoi visualizzare (controlla il database) infine c) verifica di non star
+includendo nella configurazione delle colonne nomi di campi che mancano nella view (questo causerebbe un errore MySQL che
+puoi trovare nei log).
 
 ## glossario
 
