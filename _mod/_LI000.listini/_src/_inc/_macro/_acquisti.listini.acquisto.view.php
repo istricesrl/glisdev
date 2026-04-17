@@ -27,7 +27,7 @@
     $ct['view'] = array(
         'table' => 'listini',
         'open' => array(
-            'page' => 'catalogo.listini.acquisto.form',
+            'page' => 'acquisti.listini.acquisto.form',
             'table' => 'listini'
         ),
         'cols' => array(
