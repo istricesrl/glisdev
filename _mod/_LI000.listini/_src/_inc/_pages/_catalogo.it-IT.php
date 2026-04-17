@@ -33,7 +33,21 @@
                                                                             'priority'    => '200' ) ) )
     );
 
-    // tools archivio produzione
+    // catalogo listini vendita stampe
+    $p['catalogo.listini.vendita.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo listini vendita stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
+    );
+
+    
+    // tools catalogo listini vendita
     $p['catalogo.listini.vendita.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
