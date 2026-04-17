@@ -25,14 +25,27 @@
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.view',
-                                                            'catalogo.listini.acquisto.view',
+        'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.view',                                
                                                             'catalogo.listini.vendita.view.archiviati',
                                                             'catalogo.listini.vendita.stampe',
                                                             'catalogo.listini.vendita.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'listini' ),
                                                                             'priority'    => '200' ) ) )
     );
+
+    // tools archivio produzione
+    $p['catalogo.listini.vendita.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo listini vendita' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
+    );
+
 
     // geatione listini vendita
     $p['catalogo.listini.vendita.form'] = array(
