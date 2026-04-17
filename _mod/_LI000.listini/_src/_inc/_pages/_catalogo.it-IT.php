@@ -75,17 +75,60 @@
             'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
         );
 
-        // geatione listini vendita
-        $p['catalogo.listini.vendita.form'] = array(
-            'sitemap'            => false,
-            'title'                => array( $l        => 'catalogo listini vendita form' ),
-            'h1'                => array( $l        => 'gestione' ),
-            'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
-            'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.listini.vendita.form.twig' ),
-            'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.php' ),
-            'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-            'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.form',
-                                                                'catalogo.listini.vendita.form.tools' ) )
-        );
+    // geatione listini vendita
+    $p['catalogo.listini.vendita.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo listini vendita form' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.listini.vendita.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.form',
+                                                            'catalogo.listini.vendita.form.archiviazione',
+                                                            'catalogo.listini.vendita.form.stampe',
+                                                            'catalogo.listini.vendita.form.tools' ) )
+    );
+
+    // catalogo listini vendita form archiviazione
+    $p['catalogo.listini.vendita.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione catalogo listini vendita form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.listini.vendita.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.form' )
+    );
+
+
+    // catalogo listini vendita form stampe
+    $p['catalogo.listini.vendita.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'gestione catalogo listini vendita stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.form' )
+    );
+
+
+    // tools listini vendita form
+    $p['catalogo.listini.vendita.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni catalogo listini vendita form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.form' )
+    );
 
     }
