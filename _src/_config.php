@@ -866,6 +866,7 @@
 
     // debug
     // die( print_r( apache_get_modules(), true ) );
+    // die( __FILE__ );
 
     /**
      * inizializzazione dell'array di configurazione per il template manager
@@ -1125,6 +1126,9 @@
 
     }
 
+    // debug
+    // die( __FILE__ );
+
     /**
      * inclusione dei file di libreria
      * ===============================
@@ -1155,13 +1159,16 @@
         $locale = path2custom( $libreria );
         $aggiuntiva = str_replace( '.php', '.add.php', $locale );
         if( file_exists( $locale ) ) {
+            loggerLatest( 'inclusione libreria: ' . $locale );
             require $locale;
             timerCheck( $cf['speed'], $locale );
         } else {
+            loggerLatest( 'inclusione libreria: ' . $libreria );
             require $libreria;
             timerCheck( $cf['speed'], $libreria );
         }
         if( file_exists( $aggiuntiva ) ) {
+            loggerLatest( 'inclusione libreria: ' . $aggiuntiva );
             require $aggiuntiva;
             timerCheck( $cf['speed'], $aggiuntiva );
         }
@@ -1169,6 +1176,9 @@
 
     // timer
     timerCheck( $cf['speed'], 'fine inclusione files di libreria' );
+
+    // debug
+    // die( __FILE__ );
 
     /**
      * inclusione dei file di libreria esterni
@@ -1191,6 +1201,9 @@
     } else {
         die( 'autoload mancante, eseguire composer update' );
     }
+
+    // debug
+    // die( __FILE__ );
 
     /**
      * inclusione dei files dei runlevel

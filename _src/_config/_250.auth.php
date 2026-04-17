@@ -1175,7 +1175,10 @@
         ),
         'consensi_contatti' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
-        )
+        ),
+        'tipologie_notizie' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
     );
  
     // debug
