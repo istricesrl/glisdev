@@ -44,7 +44,8 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array('NL' => true)
+            'data_archiviazione' => array('NL' => true),
+            'id_emittente' => array('IN' => implode( '|', array_keys( tendinaAziendeGestite() ?? [] ) ) )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'
