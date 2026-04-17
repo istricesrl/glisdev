@@ -28,7 +28,7 @@
         'table' => 'listini',
         'open' => array(
             'page' => 'catalogo.listini.vendita.form',
-            'table' => 'prodotti'
+            'table' => 'listini'
         ),
         'cols' => array(
             'id' => '#',
