@@ -1393,6 +1393,7 @@ CREATE OR REPLACE VIEW `listini_view` AS
 		tipologie_listini_path( listini.id_tipologia ) AS tipologia,
 		valute.iso4217 AS valuta,
 		listini.nome,
+		listini.data_archiviazione,
 		listini.id_account_inserimento,
 		listini.id_account_aggiornamento,
 		concat(
