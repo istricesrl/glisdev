@@ -2576,6 +2576,9 @@ oppure b) manca la view corrispondente all'entità che vuoi visualizzare (contro
 includendo nella configurazione delle colonne nomi di campi che mancano nella view (questo causerebbe un errore MySQL che
 puoi trovare nei log).
 
+#### aprendo le pagine del framework ottengo un errore 500, perché?
+
+
 ## glossario
 
 ### macro
