@@ -33,6 +33,20 @@
                                                                             'priority'    => '200' ) ) )
     );
 
+    // tools listini vendita archiviati
+    $p['catalogo.listini.vendita.view.archiviati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'listini vendita archiviati' ),
+        'h1'                => array( $l        => 'archiviati' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.view.archiviati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
+    );
+
+
     // catalogo listini vendita stampe
     $p['catalogo.listini.vendita.stampe'] = array(
         'sitemap'            => false,
