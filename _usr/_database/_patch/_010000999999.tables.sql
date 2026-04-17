@@ -1476,6 +1476,7 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `codice` char(64) DEFAULT NULL,
   `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
   `se_default_su_genitore` tinyint(1) DEFAULT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione

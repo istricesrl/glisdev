@@ -1392,6 +1392,8 @@ CREATE OR REPLACE VIEW `listini_view` AS
 		listini.id_tipologia,
 		tipologie_listini_path( listini.id_tipologia ) AS tipologia,
 		valute.iso4217 AS valuta,
+		listini.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		listini.nome,
 		listini.data_archiviazione,
 		listini.id_account_inserimento,
@@ -1403,6 +1405,7 @@ CREATE OR REPLACE VIEW `listini_view` AS
 		) AS __label__
 	FROM listini
 		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN anagrafica AS a1 ON a1.id = listini.id_emittente
 ;
 
 -- | 090000018200
