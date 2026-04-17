@@ -85,8 +85,23 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.form',
+                                                            'catalogo.listini.vendita.form.stampe',
                                                             'catalogo.listini.vendita.form.tools' ) )
     );
+
+        // catalogo listini vendita form stampe
+    $p['catalogo.listini.vendita.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'gestione catalogo listini vendita stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.form' )
+    );
+
 
     // tools listini vendita form
     $p['catalogo.listini.vendita.form.tools'] = array(
