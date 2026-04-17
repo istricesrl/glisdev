@@ -26,6 +26,7 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.notizie.view',
+                                                            'contenuti.tipologie.notizie.view',
                                                             'contenuti.notizie.view.archiviate',
                                                             'contenuti.notizie.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'notizie' ),
@@ -146,6 +147,31 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
     );
+
+    // scheda tipologie notizie
+    $p['contenuti.tipologie.notizie.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'tipologie notizie' ),
+        'h1'                => array( $l        => 'tipologie' ),
+        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.tipologie.notizie.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.notizie.view' )
+    );
+
+    // contenuti tipologie notizie form
+    $p['contenuti.tipologie.notizie.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione contenuti tipologie notizie' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'contenuti.tipologie.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.tipologie.notizie.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.tipologie.notizie.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'contenuti.tipologie.notizie.form' ) ),
+    );
+
 
     // tools archivio produzione
     $p['contenuti.categorie.notizie.view'] = array(
