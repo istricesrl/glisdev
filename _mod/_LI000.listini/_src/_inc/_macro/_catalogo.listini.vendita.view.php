@@ -45,12 +45,15 @@
         ),
         '__restrict__' => array(
             'data_archiviazione' => array('NL' => true),
-            'id_emittente' => array('IN' => implode( '|', array_keys( tendinaAziendeGestite() ?? [] ) ) )
+            'id_emittente' => array('IN' => implode( '|', array_column( tendinaAziendeGestite() ?? [], 'id' ) ) )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'
         ),
     );
+
+    // debug
+    // die( print_r( $ct['view'], true ) );
 
     /**
      * configurazione della pagina
