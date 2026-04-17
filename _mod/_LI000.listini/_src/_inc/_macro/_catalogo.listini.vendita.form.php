@@ -29,7 +29,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM listini ORDER BY __label__'
+        'SELECT id, __label__ FROM listini_view ORDER BY __label__'
     );
 
    // tendina tipologie listini
