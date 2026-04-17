@@ -40,18 +40,6 @@
     );
 
     // tools archivio produzione
-    $p['produzione.tipologie.attivita.view'] = array(
-        'sitemap'            => false,
-        'title'                => array( $l        => 'tipologie attivita' ),
-        'h1'                => array( $l        => 'tipologie' ),
-        'parent'            => array( 'id'        => 'produzione.attivita.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.view.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
-    );
-
-    // tools archivio produzione
     $p['produzione.attivita.view.archiviate'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
