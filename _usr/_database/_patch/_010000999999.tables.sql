@@ -451,10 +451,9 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `font_awesome` char(24) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_articoli` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
-  `se_prodotto` tinyint(1) DEFAULT NULL,
-  `se_articolo` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1855,6 +1854,21 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000022100
+
+-- notizie_anagrafica
+CREATE TABLE IF NOT EXISTS `notizie_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000022200
 
 -- notizie_categorie
@@ -2968,6 +2982,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000053600
+
+-- tipologie_listini
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di listini
+--
+-- questa tabella contiene le tipologie di listini, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_listini` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000053800
 

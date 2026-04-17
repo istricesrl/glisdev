@@ -615,10 +615,10 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 		caratteristiche.nome,
 		caratteristiche.html_entity,
 		caratteristiche.font_awesome,
+		caratteristiche.se_prodotti,
+		caratteristiche.se_articoli,
 		caratteristiche.se_immobili,
 		caratteristiche.se_categorie_prodotti,
-		caratteristiche.se_prodotto,
-		caratteristiche.se_articolo,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
 		caratteristiche_path(
@@ -1389,6 +1389,8 @@ CREATE OR REPLACE VIEW `listini_view` AS
 	SELECT
 		listini.id,
 		listini.id_valuta,
+		listini.id_tipologia,
+		tipologie_listini_path( listini.id_tipologia ) AS tipologia,
 		valute.iso4217 AS valuta,
 		listini.nome,
 		listini.id_account_inserimento,
@@ -2492,6 +2494,23 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
         ) AS __label__                                        -- etichetta per le tendine e le liste
 	FROM tipologie_indirizzi                                  --
 ;                                                             --
+
+-- | 090000053600
+
+-- tipologie_listini_view
+CREATE OR REPLACE VIEW `tipologie_listini_view` AS
+	SELECT
+		tipologie_listini.id,
+		tipologie_listini.id_genitore,
+		tipologie_listini.ordine,
+		tipologie_listini.nome,
+		tipologie_listini.html_entity,
+		tipologie_listini.font_awesome,
+		tipologie_listini.id_account_inserimento,
+		tipologie_listini.id_account_aggiornamento,
+		tipologie_listini_path( tipologie_listini.id ) AS __label__
+	FROM tipologie_listini
+;
 
 -- | 090000053800
 
