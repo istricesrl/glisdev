@@ -27,9 +27,9 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.view',
                                                             'catalogo.listini.acquisto.view',
-                                                            'catalogo.listini.view.archiviati',
-                                                            'catalogo.listini.stampe',
-                                                            'catalogo.listini.tools' ) ),
+                                                            'catalogo.listini.vendita.view.archiviati',
+                                                            'catalogo.listini.vendita.stampe',
+                                                            'catalogo.listini.vendita.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'listini' ),
                                                                             'priority'    => '200' ) ) )
     );
@@ -43,6 +43,6 @@
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.listini.vendita.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => array(    'catalogo.catalogo.listini.vendita.form',
-                                                            'catalogo.prodotti.form.tools' ) )
+        'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.form',
+                                                            'catalogo.listini.vendita.form.tools' ) )
     );
