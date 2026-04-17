@@ -26,12 +26,50 @@
         'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'acquisti.listini.acquisto.view',
-                                                            'acquisti.listini.acquisto.view',
                                                             'acquisti.listini.acquisto.view.archiviati',
                                                             'acquisti.listini.acquisto.stampe',
                                                             'acquisti.listini.acquisto.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'listini' ),
                                                                             'priority'    => '200' ) ) )
+    );
+
+    // tools listini acquisto archiviati
+    $p['acquisti.listini.acquisto.view.archiviati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'listini acquisto archiviati' ),
+        'h1'                => array( $l        => 'archiviati' ),
+        'parent'            => array( 'id'        => 'acquisti.listini.acquisto.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.view.archiviati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'acquisti.listini.acquisto.view' )
+    );
+
+    // acquisti listini acquisto stampe
+    $p['acquisti.listini.acquisto.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'acquisti listini acquisto stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'acquisti.listini.acquisto.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'acquisti.listini.acquisto.view' )
+    );
+
+    // tools acquisti listini acquisto
+    $p['acquisti.listini.acquisto.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni acquisti listini acquisto' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'acquisti.listini.acquisto.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'acquisti.listini.acquisto.view' )
     );
 
     // geatione listini acquisto

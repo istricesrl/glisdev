@@ -46,7 +46,6 @@
         'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
     );
 
-
     // catalogo listini vendita stampe
     $p['catalogo.listini.vendita.stampe'] = array(
         'sitemap'            => false,
@@ -60,7 +59,6 @@
         'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
     );
 
-    
     // tools catalogo listini vendita
     $p['catalogo.listini.vendita.tools'] = array(
         'sitemap'            => false,
@@ -73,7 +71,6 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
     );
-
 
     // geatione listini vendita
     $p['catalogo.listini.vendita.form'] = array(
