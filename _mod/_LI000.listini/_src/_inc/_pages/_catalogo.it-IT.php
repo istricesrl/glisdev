@@ -85,11 +85,26 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.form',
+                                                            'catalogo.listini.vendita.form.archiviazione',
                                                             'catalogo.listini.vendita.form.stampe',
                                                             'catalogo.listini.vendita.form.tools' ) )
     );
 
-        // catalogo listini vendita form stampe
+    // catalogo listini vendita form archiviazione
+    $p['catalogo.listini.vendita.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione catalogo listini vendita form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.listini.vendita.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.form' )
+    );
+
+
+    // catalogo listini vendita form stampe
     $p['catalogo.listini.vendita.form.stampe'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
