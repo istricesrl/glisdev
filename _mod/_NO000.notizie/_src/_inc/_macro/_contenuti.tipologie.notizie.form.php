@@ -32,7 +32,7 @@
      */
 
     // tendina tipologie anagrafica
-    //$ct['etc']['select']['tipologie_notizie'] = tendinaTipologieNotizie();
+    $ct['etc']['select']['tipologie_notizie'] = tendinaTipologieNotizie();
 
     /**
      * macro di default

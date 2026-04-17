@@ -938,24 +938,6 @@
      * TODO documentare
      * 
      */
-    function tendinaTipologieNotizie() {
-
-        global $cf;
-
-        return mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM tipologie_notizie_view'
-        );
-
-    }
-
-    /**
-     * 
-     * TODO documentare
-     * 
-     */
     function tendinaTipologieTelefoni() {
 
         global $cf;
