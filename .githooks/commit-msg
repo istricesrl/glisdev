@@ -2,45 +2,50 @@
 
 set -euo pipefail
 
-export LC_ALL=C
-
+MSG_FILE="$1"
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+CHANGELOG_FILE="$REPO_ROOT/_etc/_changelog.json"
 
-# Esegui solo su master
+# Solo su master
 if [ "$BRANCH" != "master" ]; then
     exit 0
 fi
 
-CHANGELOG_FILE="$REPO_ROOT/_etc/_changelog.json"
 mkdir -p "$(dirname "$CHANGELOG_FILE")"
 
-# Recupero messaggio del commit, se presente nel file di prepare-commit-msg / COMMIT_EDITMSG
-COMMIT_MSG_FILE="$REPO_ROOT/.git/COMMIT_EDITMSG"
-COMMIT_TITLE=""
-COMMIT_TEXT=""
+# Rimuovo le righe commentate di Git
+CLEAN_MSG="$(mktemp)"
+sed '/^#/d' "$MSG_FILE" > "$CLEAN_MSG"
 
-if [ -f "$COMMIT_MSG_FILE" ]; then
-    # prima riga = titolo
-    COMMIT_TITLE="$(sed -n '1p' "$COMMIT_MSG_FILE" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+# Titolo = prima riga non vuota
+TITOLO="$(awk 'NF { print; exit }' "$CLEAN_MSG" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
 
-    # resto del messaggio, senza commenti di git
-    COMMIT_TEXT="$(
-        tail -n +2 "$COMMIT_MSG_FILE" \
-        | sed '/^#/d' \
-        | sed '/^[[:space:]]*$/N;/^\n$/D' \
-        | sed ':a;/^\n*$/{$d;N;ba' -e '}' 2>/dev/null || true
-    )"
-fi
+# Testo = tutto dopo la prima riga non vuota
+TESTO="$(
+    awk '
+        BEGIN { found=0 }
+        {
+            if (found == 0 && NF) {
+                found=1
+                next
+            }
+            if (found == 1) print
+        }
+    ' "$CLEAN_MSG" \
+    | sed '1{/^[[:space:]]*$/d;}' \
+    | sed ':a;/^[[:space:]]*$/{$d;N;ba;}' 2>/dev/null || true
+)"
 
-# Fallback se il messaggio non è ancora disponibile
-if [ -z "$COMMIT_TITLE" ]; then
-    COMMIT_TITLE="Aggiornamento"
+rm -f "$CLEAN_MSG"
+
+# Fallback
+if [ -z "${TITOLO:-}" ]; then
+    TITOLO="Aggiornamento"
 fi
 
 TIMESTAMP="$(date -Iseconds)"
 
-# URL repository remoto
 REMOTE_URL="$(git config --get remote.origin.url || true)"
 REPO_URL=""
 
@@ -66,7 +71,7 @@ if [ -z "$REPO_URL" ]; then
     REPO_URL="https://github.com/"
 fi
 
-# Inizializzazione file se non esiste
+# Inizializza il file se manca
 if [ ! -f "$CHANGELOG_FILE" ]; then
     echo "[]" > "$CHANGELOG_FILE"
 fi
@@ -74,8 +79,8 @@ fi
 TMP_FILE="$(mktemp)"
 
 jq \
-  --arg titolo "$COMMIT_TITLE" \
-  --arg testo "$COMMIT_TEXT" \
+  --arg titolo "$TITOLO" \
+  --arg testo "$TESTO" \
   --arg timestamp "$TIMESTAMP" \
   --arg url "$REPO_URL" \
   '
@@ -91,6 +96,6 @@ jq \
 
 mv "$TMP_FILE" "$CHANGELOG_FILE"
 
-git add "$CHANGELOG_FILE"
+git add -f "$CHANGELOG_FILE"
 
 exit 0
