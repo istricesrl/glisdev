@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+export LC_ALL=C
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+
+# Esegui solo su master
+if [ "$BRANCH" != "master" ]; then
+    exit 0
+fi
+
+CHANGELOG_FILE="$REPO_ROOT/_etc/_changelog.json"
+mkdir -p "$(dirname "$CHANGELOG_FILE")"
+
+# Recupero messaggio del commit, se presente nel file di prepare-commit-msg / COMMIT_EDITMSG
+COMMIT_MSG_FILE="$REPO_ROOT/.git/COMMIT_EDITMSG"
+COMMIT_TITLE=""
+COMMIT_TEXT=""
+
+if [ -f "$COMMIT_MSG_FILE" ]; then
+    # prima riga = titolo
+    COMMIT_TITLE="$(sed -n '1p' "$COMMIT_MSG_FILE" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
+    # resto del messaggio, senza commenti di git
+    COMMIT_TEXT="$(
+        tail -n +2 "$COMMIT_MSG_FILE" \
+        | sed '/^#/d' \
+        | sed '/^[[:space:]]*$/N;/^\n$/D' \
+        | sed ':a;/^\n*$/{$d;N;ba' -e '}' 2>/dev/null || true
+    )"
+fi
+
+# Fallback se il messaggio non è ancora disponibile
+if [ -z "$COMMIT_TITLE" ]; then
+    COMMIT_TITLE="Aggiornamento"
+fi
+
+TIMESTAMP="$(date -Iseconds)"
+
+# URL repository remoto
+REMOTE_URL="$(git config --get remote.origin.url || true)"
+REPO_URL=""
+
+if [ -n "$REMOTE_URL" ]; then
+    case "$REMOTE_URL" in
+        git@github.com:*)
+            REPO_URL="https://github.com/${REMOTE_URL#git@github.com:}"
+            REPO_URL="${REPO_URL%.git}"
+            ;;
+        https://github.com/*)
+            REPO_URL="${REMOTE_URL%.git}"
+            ;;
+        http://github.com/*)
+            REPO_URL="${REMOTE_URL%.git}"
+            ;;
+        *)
+            REPO_URL="$REMOTE_URL"
+            ;;
+    esac
+fi
+
+if [ -z "$REPO_URL" ]; then
+    REPO_URL="https://github.com/"
+fi
+
+# Inizializzazione file se non esiste
+if [ ! -f "$CHANGELOG_FILE" ]; then
+    echo "[]" > "$CHANGELOG_FILE"
+fi
+
+TMP_FILE="$(mktemp)"
+
+jq \
+  --arg titolo "$COMMIT_TITLE" \
+  --arg testo "$COMMIT_TEXT" \
+  --arg timestamp "$TIMESTAMP" \
+  --arg url "$REPO_URL" \
+  '
+  [
+    {
+      "titolo": $titolo,
+      "testo": $testo,
+      "timestamp": $timestamp,
+      "url": $url
+    }
+  ] + .
+  ' "$CHANGELOG_FILE" > "$TMP_FILE"
+
+mv "$TMP_FILE" "$CHANGELOG_FILE"
+
+git add "$CHANGELOG_FILE"
+
+exit 0
