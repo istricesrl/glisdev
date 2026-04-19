@@ -73,7 +73,9 @@
     // file di configurazione
     foreach( $cf['config']['files'] as $type => $files ) {
         foreach( $files as $file ) {
-            echo '[ -- ] file di configurazione ' . $type . ' trovato: ' . shortPath( $file ) . PHP_EOL;
+            if( file_exists( $file ) ) {
+                echo '[ -- ] file di configurazione ' . $type . ' trovato: ' . shortPath( $file ) . PHP_EOL;
+            }
         }
     }
 
@@ -207,7 +209,7 @@
     echo '-------------------' . PHP_EOL;
 
     // titolare privacy
-    if( empty( $cf['privacy']['titolare'] ) ) {
+    if( empty( $cf['privacy']['persone']['titolare'] ) ) {
         echo '[FAIL] titolare del trattamento dei dati non impostato' . PHP_EOL;
     } else {
         echo '[ OK ] titolare del trattamento dei dati impostato' . PHP_EOL;

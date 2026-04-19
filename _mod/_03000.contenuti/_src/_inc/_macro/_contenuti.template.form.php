@@ -1,21 +1,13 @@
 <?php
 
     /**
-     * macro form anagrafica
+     * macro del form di gestione dei contenuti dei template
      *
+     * Questa macro imposta la pagina di gestione dei contenuti dei template. Si noti che la pagina
+     * opera in __filesystem_mode__. La tabella __templates__ è una tabella virtuale che rappresenta
+     * i file presenti nel filesystem.
      *
-     *
-     * -# definizione della tabella del modulo
-     * -# popolazione delle tendine
-     *
-     *
-     *
-     *
-     *
-     *
-     * @todo documentare
-     *
-     * @file
+     * 
      *
      */
 
@@ -28,6 +20,7 @@
     // tabella gestita
     $ct['form']['table'] =  '__templates__';
 
+    // filesystem mode
     $ct['form']['__filesystem_mode__'] = 1;
 
     // tendina tipologie file
@@ -54,6 +47,7 @@
     // tabella della vista
     $ct['view']['table'] = '__template_files__';
 
+    // filesystem mode
     $ct['view']['data']['__filesystem_mode__'] = 1;
 
     // campi della vista

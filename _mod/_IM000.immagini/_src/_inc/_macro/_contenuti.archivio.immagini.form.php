@@ -19,7 +19,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_anagrafica = 1'
+        'SELECT id, __label__ FROM ruoli_immagini_view ORDER BY __label__'
     );
 
     $ct['etc']['select']['orientamenti'] = array( 

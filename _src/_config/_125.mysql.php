@@ -134,7 +134,7 @@
                             }
 
                             // collation
-                            mysqlQuery( $cn, 'SET collation_connection = utf8_general_ci' );
+                            mysqlQuery( $cn, 'SET NAMES utf8mb4 COLLATE utf8mb4_general_ci;' );
 
                             // timezone
                             try {
@@ -145,7 +145,7 @@
                             } catch (mysqli_sql_exception $e) {
 
                                 // ...
-                                die( 'timezone MySQL non installate, usa il comando: apt-get install tzdata && mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql' );
+                                die( 'timezone MySQL non installate, usa il comando: apt-get install tzdata && mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql OPPURE mariadb-tzinfo-to-sql /usr/share/zoneinfo | mysql -u root -p mysql' );
 
                             }                    
 
@@ -165,7 +165,10 @@
                         }
 
                     } catch( \Exception $e ) {
-                        die( 'Impossibile connettersi al server MySQL ' . $server . ': ' . $e->getMessage() );
+
+                        // die( 'Impossibile connettersi al server MySQL ' . $server . ': ' . $e->getMessage() );
+                        logger( 'impossibile connettersi al server MySQL ' . $server . ': ' . $e->getMessage(), 'mysql', LOG_ERR );
+
                     }
 
                     // debug

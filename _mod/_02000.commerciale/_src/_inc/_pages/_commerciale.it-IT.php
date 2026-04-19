@@ -11,16 +11,16 @@
      * rispettive pagine tools, oltre a una sotto pagina per il ciclo attivo e una per il ciclo passivo,
      * in modo che altri moduli possano inserirvi le proprie sotto pagine.
      * 
-     * pagina                            | genitore                    | descrizione
-     * ---------------------------------|---------------------------|---------------------
-     * commerciale                        | NULL                        | dashboard del modulo commerciale
-     * commerciale.tools                | commerciale                | strumenti per la gestione del commerciale
-     * commerciale.archivio                | commerciale                | archivio commerciale
-     * commerciale.archivio.tools        | commerciale.archivio        | strumenti per la gestione dell'archivio commerciale
-     * commerciale.ciclo.attivo            | commerciale                | ciclo attivo commerciale
-     * commerciale.ciclo.attivo.tools    | commerciale.ciclo.attivo    | strumenti per la gestione del ciclo attivo commerciale
-     * commerciale.ciclo.passivo        | commerciale                | ciclo passivo commerciale
-     * commerciale.ciclo.passivo.tools    | commerciale.ciclo.passivo    | strumenti per la gestione del ciclo passivo commerciale
+     * pagina                           | genitore                      | descrizione
+     * ---------------------------------|-------------------------------|---------------------
+     * commerciale                      | NULL                          | dashboard del modulo commerciale
+     * commerciale.tools                | commerciale                   | strumenti per la gestione del commerciale
+     * commerciale.archivio             | commerciale                   | archivio commerciale
+     * commerciale.archivio.tools       | commerciale.archivio          | strumenti per la gestione dell'archivio commerciale
+     * commerciale.ciclo.attivo         | commerciale                   | ciclo attivo commerciale
+     * commerciale.ciclo.attivo.tools   | commerciale.ciclo.attivo      | strumenti per la gestione del ciclo attivo commerciale
+     * commerciale.ciclo.passivo        | commerciale                   | ciclo passivo commerciale
+     * commerciale.ciclo.passivo.tools  | commerciale.ciclo.passivo     | strumenti per la gestione del ciclo passivo commerciale
      * 
      */
 
@@ -40,10 +40,24 @@
         'macro'            => array( $m . '_src/_inc/_macro/_commerciale.php' ),
         'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'            => array( 'tabs'    => array(    'commerciale',
+                                                        'commerciale.stampe',
                                                         'commerciale.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'commerciale' ),
                                                                         'priority'    => '2000' ) ) )                                                        
+    );
+
+    // commerciale stampe
+    $p['commerciale.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'commerciale stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'commerciale' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_commerciale.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'commerciale' )
     );
 
     // tools commerciale

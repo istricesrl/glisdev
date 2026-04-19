@@ -51,6 +51,44 @@
      * TODO documentare
      * 
      */
+    function tendinaRuoliIndirizzi() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM ruoli_indirizzi_view ORDER BY __label__ ASC',
+        );
+
+    }
+
+    /**
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaTipologieIndirizzi() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM tipologie_indirizzi_view ORDER BY __label__ ASC',
+        );
+
+    }
+
+    /**
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function updateAnagraficaViewStatic($id)
     {
 
@@ -72,6 +110,7 @@
                     anagrafica.sesso,
                     anagrafica.codice_fiscale,
                     anagrafica.partita_iva,
+                    anagrafica.id_ranking,
                     ranking.nome AS ranking,
                     anagrafica.recapiti,
                     anagrafica.anno_nascita,
@@ -93,7 +132,7 @@
             )
         );
 
-        // print_r( $riga );
+        // die( print_r( $riga, true ) );
 
         if (! empty($riga['id'])) {
 
@@ -145,6 +184,7 @@
                 $riga,
                 'anagrafica_view_static'
             );
+
         } else {
 
             mysqlQuery($cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array(array('s' => $id)));
@@ -216,6 +256,18 @@
         if ($tCat > $riga['timestamp_aggiornamento']) {
             $riga['timestamp_aggiornamento'] = $tCat;
         }
+
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE anagrafica_categorie SET timestamp_aggiornamento = ? WHERE id = ?',
+            array(
+                array('s' => $riga['timestamp_aggiornamento']),
+                array('s' => $riga['id'])
+            )
+        );
+
+        // die( 'updateAnagraficaViewStaticCategorie: ' . $riga['id'] . ' - ' . $riga['timestamp_aggiornamento'] );
+
     }
 
     /**
@@ -384,3 +436,67 @@
         );
     }
 
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSesso() {
+
+        return array( 
+            array( 'id' => '-', '__label__' => '-' ),
+            array( 'id' => 'M', '__label__' => 'uomo' ),
+            array( 'id' => 'F', '__label__' => 'donna' ),
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSePec() {
+
+        return array(
+            array( 'id' => 0, '__label__' => 'mail' ),
+            array( 'id' => 1, '__label__' => 'PEC' )
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaTipologieAnagrafica() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY __label__ ASC'
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaTipologieTelefoni() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM tipologie_telefoni_view'
+        );
+
+    }

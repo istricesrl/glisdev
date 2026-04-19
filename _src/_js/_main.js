@@ -123,7 +123,7 @@ $.fn.hasAttr = function( name ) {
  * 
  * @return      void
  * 
- * @todo l'implementazione attuale funziona solo col disabled, farla per tutti gli attributi
+ * TODO l'implementazione attuale funziona solo col disabled, farla per tutti gli attributi
  * 
  */
 $.fn.toggleAttribute = function( a ) {
@@ -153,7 +153,7 @@ $.fn.toggleAttribute = function( a ) {
  * 
  * @return      void
  * 
- * @todo l'implementazione attuale funziona solo col disabled, farlo per tutti
+ * TODO l'implementazione attuale funziona solo col disabled, farlo per tutti
  * 
  */
 $.fn.setAttribute = function( a ) {
@@ -178,7 +178,7 @@ $.fn.setAttribute = function( a ) {
  * 
  * @return      void
  * 
- * @todo l'implementazione attuale funziona solo col disabled, farlo per tutti
+ * TODO l'implementazione attuale funziona solo col disabled, farlo per tutti
  * 
  */
 $.fn.unsetAttribute = function( a ) {
@@ -325,50 +325,53 @@ $( document ).ready( function() {
     $('.focus-on-load').focus();
 
     /* sezione modal e popup */
+    if (typeof $.fn.modal === 'function') {
 
-    // apro i modal con classe in
-    $('.in').modal('show');
+        // apro i modal con classe in
+        $('.in').modal('show');
 
-    // apro i modal con classe popup-open
-    $('.popup-open').modal();
+        // apro i modal con classe popup-open
+        $('.popup-open').modal();
 
-    // apro in ritardo i modal con classe popup-delay in base al valore dell'attributo popup-delay
-    $('.popup-delay').each( function() {
-        var modal = $( this );
-        var delay = $( modal ).attr('popup-delay') * 1000;
-        setTimeout( function() {
-        $( modal ).modal();
-        }, delay );
-    });
-
-    // apro allo scroll i modal con classe popup-scroll, in base al valore dell'attributo popup-scroll
-    $('.popup-scroll').each( function() {
-        var modal = $( this );
-        var scroll = $( modal ).attr('popup-scroll');
-        console.log( 'appare al ' + scroll + '%' );
-        window.addEventListener( 'scroll', function() {
-        var used = $( modal ).attr('popup-used');
-        var progress = Math.round( 100 * $( window ).scrollTop() / ( $( document ).height() - $( window ).height() ) );
-        if( progress == scroll && used == '' ) {
+        // apro in ritardo i modal con classe popup-delay in base al valore dell'attributo popup-delay
+        $('.popup-delay').each( function() {
+            var modal = $( this );
+            var delay = $( modal ).attr('popup-delay') * 1000;
+            setTimeout( function() {
             $( modal ).modal();
-            $( modal ).attr( 'popup-used', 1 );
-        }
-        console.log( 'stato del popup: ' + used );
-        console.log( progress );
+            }, delay );
         });
-    });
 
-    // gestione popup che devono apparire su tutte le pagine
-    $('.popup-modal').on('hidden.bs.modal', function () {
-        var id = $(this).attr('id');
-        $.ajax({
-            type: "POST",
-            url: '/task/3400.popup/popup.dismiss',
-            data: {idPopup:id},
-            success: function(data) {
+        // apro allo scroll i modal con classe popup-scroll, in base al valore dell'attributo popup-scroll
+        $('.popup-scroll').each( function() {
+            var modal = $( this );
+            var scroll = $( modal ).attr('popup-scroll');
+            console.log( 'appare al ' + scroll + '%' );
+            window.addEventListener( 'scroll', function() {
+            var used = $( modal ).attr('popup-used');
+            var progress = Math.round( 100 * $( window ).scrollTop() / ( $( document ).height() - $( window ).height() ) );
+            if( progress == scroll && used == '' ) {
+                $( modal ).modal();
+                $( modal ).attr( 'popup-used', 1 );
             }
+            console.log( 'stato del popup: ' + used );
+            console.log( progress );
             });
-    });
+        });
+
+        // gestione popup che devono apparire su tutte le pagine
+        $('.popup-modal').on('hidden.bs.modal', function () {
+            var id = $(this).attr('id');
+            $.ajax({
+                type: "POST",
+                url: '/task/3400.popup/popup.dismiss',
+                data: {idPopup:id},
+                success: function(data) {
+                }
+                });
+        });
+
+    }
 
     /* sezione toggle e switch */
 
@@ -387,6 +390,8 @@ $( document ).ready( function() {
     });
 
     /* sezione tooltip e hint */
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
     /*
     // faccio il bind della funzione tooltip() ai campi con l'attributo data-toggle impostato a tooltip

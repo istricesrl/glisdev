@@ -138,6 +138,7 @@
     // ini_set( 'display_errors', 1 );
     // ini_set( 'display_startup_errors', 1 );
     // error_reporting( E_ALL );
+    // die( print_r( $ct['page']['js'], true ) );
     // echo 'DEBUG';
 
     // timer
@@ -181,6 +182,9 @@
      * 
      */
 
+    // debug
+    // die( print_r( $ct['page']['js'], true ) );
+
     // file di configurazione del template
     $ct['page']['template']['ini'] = DIR_BASE . $ct['page']['template']['path'] . 'etc/template.conf';
     $ct['page']['template']['yaml'] = DIR_BASE . $ct['page']['template']['path'] . 'etc/template.yaml';
@@ -199,8 +203,8 @@
         // unisco le direttive di configurazione del file a quelle già esistenti
         // NOTA perché prima qui era $ct['page'] = array_replace_recursive(
         $ct['page'] = array_merge_recursive(
-            $ct['page'],
-            parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
+            parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW ),
+            $ct['page']
         );
 
         // debug
@@ -209,8 +213,8 @@
         // includo i file di configurazione aggiuntivi del template
         foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
             $ct['page'] = array_merge_recursive(
-                $ct['page'],
-                parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
+                parse_ini_file( $addCnf, true, INI_SCANNER_RAW ),
+                $ct['page']
             );
         }
 
@@ -234,24 +238,25 @@
         // unisco le direttive di configurazione del file a quelle già esistenti
         // NOTA perché prima qui era $ct['page'] = array_replace_recursive(
         $ct['page'] = array_merge_recursive(
-            $ct['page'],
-            yaml_parse( file_get_contents( $ct['page']['template']['yaml'] ) )
+            yaml_parse( file_get_contents( $ct['page']['template']['yaml'] ) ),
+            $ct['page']
         );
 
         // includo i file di configurazione aggiuntivi del template
         // NOTA perché prima qui era $ct['page'] = array_replace_recursive(
         foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.yaml', GLOB_BRACE ) as $addCnf ) {
             $ct['page'] = array_merge_recursive(
-                $ct['page'],
-                yaml_parse( file_get_contents( $addCnf ) )
+                yaml_parse( file_get_contents( $addCnf ) ),
+                $ct['page']
             );
         }
 
         // debug
-        // print_r( $ct['page'] );
+        // die( print_r( $ct['page'], true ) );
         // print_r( $ct['page']['template'] );
         // var_dump( $ct['page']['template']['yaml'] );
         // die('lettura file YAML del template completata');
+        // die( print_r( $ct['page']['js'], true ) );
 
     } else {
 
@@ -272,6 +277,7 @@
     // debug
     // print_r( $ct['page'] );
     // print_r( $ct['page']['template'] );
+    // die( print_r( $ct['page']['js'], true ) );
     // die();
 
     /**
@@ -595,12 +601,12 @@
      */
 
     // scrittura dell'indice della cache
-    if( $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' ) ) {
-        memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
-    }
+    // if( $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' ) ) {
+    //     memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
+    // }
 
     // timer
-    timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
+    // timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
 
     /**
      * ricerca delle favicons
@@ -1005,6 +1011,7 @@
 
                 // estensioni
                 $twig->addExtension( new \Twig\Extension\StringLoaderExtension() );
+                $twig->addExtension( new \Twig\Extension\DebugExtension() );
 
                 // timer
                 timerCheck( $cf['speed'], '-> -> estensioni Twig' );
@@ -1251,11 +1258,11 @@
      */
 
     // se è attiva la cache delle pagine
-    if( isset( $cf['cache']['profile']['pages'] ) && $cf['cache']['profile']['pages'] === true ) {
+    if( isset( $cf['cache']['profile']['pages'] ) && ! empty( $cf['cache']['profile']['pages'] ) ) {
 
         // cache del buffer
         if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
-            writeToFile( ob_get_contents(), DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
+            writeToFile( $tidy, DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
             echo '<!-- pagina con autorizzazione al caching -->'                . PHP_EOL;
             if( FILE_CACHE_PAGE_TIME === NULL ) {
                 echo '<!-- page cached for the first time -->'                    . PHP_EOL;

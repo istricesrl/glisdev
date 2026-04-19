@@ -646,6 +646,10 @@
     // costanti per l'I/O
     define( 'PHP_INPUT'                                 , 'php://input' );
 
+    // costanti per gli ambienti di lavoro
+    define( 'RUNNING_ON_LINUX'                          , 'LINUX' );
+    define( 'RUNNING_ON_WINDOWS'                        , 'WINDOWS' );
+
     /**
      * inizializzazione dei log latest
      * ===============================
@@ -773,7 +777,7 @@
      */
 
     // versione di PHP richiesta
-    $cf['php']['required']['version'] = '7.0.0';       // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
+    $cf['php']['required']['version'] = '7.0.0';        // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
 
     // versione di PHP suggerita
     $cf['php']['preferred']['version'] = '8.2.0';       // rilasciata l'8 dicembre 2022
@@ -797,6 +801,7 @@
         'core',                                         // modulo core
         'mod_deflate',                                  // necessario per la compressione gzip
         'mod_expires',                                  // necessario per la gestione della cache lato client
+        'mod_filter',                                   // necessario per la gestione dei filtri di output
         'mod_headers',                                  // necessario per la gestione degli header HTTP
         'mod_rewrite',                                  // necessario per il rewrite degli URL
         'mod_ssl'                                       // necessario per la gestione delle connessioni sicure
@@ -808,6 +813,15 @@
      * Verifico che tutti i requisiti minimi per il funzionamento del framework siano soddisfatti.
      * 
      */
+
+    // valorizzazione dell'ambiente corrente
+    if (PHP_OS_FAMILY === 'Windows') {
+        define( 'RUNNING_ON', RUNNING_ON_WINDOWS );
+    } elseif (PHP_OS_FAMILY === 'Linux') {
+        define( 'RUNNING_ON', RUNNING_ON_LINUX );
+    } else {
+        die( 'sistema operativo non supportato: ' . PHP_OS_FAMILY );
+    }
 
     // controllo che la versione di PHP installata sia uguale o superiore a quella richiesta
     if( version_compare( PHP_VERSION, $cf['php']['required']['version'], '<' ) ) {
@@ -824,27 +838,27 @@
     if( function_exists( 'apache_get_modules' ) != false ) {
         $cf['apache']['required']['differences'] = array_diff( $cf['apache']['required']['modules'], apache_get_modules() );
         if( count( $cf['apache']['required']['differences'] ) > 0 ) {
-            die( 'alcuni moduli di Apache necessari non sono installati ('.implode( ', ', $cf['apache']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
+            die( 'alcuni moduli di Apache necessari non sono installati ('.implode( ', ', $cf['apache']['required']['differences'] ).'), lanciare _lamp.setup.sh o _nginx.setup.sh' );
         }
     }
 
     // controllo che le cartelle necessarie al funzionamento del framework esistano
     foreach( array( DIR_VAR, DIR_VAR_LOG, DIR_VAR_SITEMAP, DIR_TMP ) as $folder ) {
         if( checkPath( $folder ) == false ) {
-            die( 'impossibile creare la cartella ' . $folder . ', lanciare _lamp.permissions.open.sh' );
+            die( 'impossibile creare la cartella ' . $folder . ', lanciare _lamp.permissions.open.sh o _nginx.permissions.open.sh' );
         }
     }
 
     // controllo che il framework possa scrivere sulle cartelle necessarie al suo funzionamento
     foreach( array( DIR_VAR, DIR_VAR_LOG, DIR_VAR_SITEMAP, DIR_TMP ) as $folder ) {
         if( ! is_writeable( $folder ) ) {
-            die( 'la cartella ' . $folder . ' non è scrivibile, lanciare _lamp.permissions.secure.sh' );
+            die( 'la cartella ' . $folder . ' non è scrivibile, lanciare _lamp.permissions.secure.sh o _nginx.permissions.secure.sh' );
         }
     }
 
     // controllo che la document root NON sia scrivibile
-    if( is_writeable( DIR_BASE ) ) {
-        die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh' );
+    if( is_writeable( DIR_BASE ) && RUNNING_ON === RUNNING_ON_LINUX ) {
+        die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh o _nginx.permissions.secure.sh' );
     }
 
     // timer
@@ -852,6 +866,7 @@
 
     // debug
     // die( print_r( apache_get_modules(), true ) );
+    // die( __FILE__ );
 
     /**
      * inizializzazione dell'array di configurazione per il template manager
@@ -960,32 +975,60 @@
      * 
      */
 
-    // file di configurazione da considerare nell'ordine
+    // file di configurazione YAML da considerare nell'ordine
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'config.yaml' );
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'shadow.yaml' );
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC . 'config.yaml' );
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC . 'shadow.yaml' );
+
+    // file aggiuntivi YAML
+    $yamlConfigFiles = array_merge(
+        glob( path2custom( DIR_SRC_CONFIG_EXT . 'config.*.yaml' ) ),
+        glob( path2custom( DIR_SRC . 'config.*.yaml' ) )
+    );
+
+    // se sono presenti file YAML aggiuntivi
+    if( is_array( $yamlConfigFiles ) ) {
+        foreach( $yamlConfigFiles as $yamlConfigFile ) {
+            $cf['config']['files']['yaml'][] = $yamlConfigFile;
+        }
+    }
+
+    // file di configurazione JSON da considerare nell'ordine
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'config.json' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'shadow.json' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC . 'config.json' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC . 'shadow.json' );
 
+    // file aggiuntivi JSON
+    $jsonConfigFiles = array_merge(
+        glob( path2custom( DIR_SRC_CONFIG_EXT . 'config.*.json' ) ),
+        glob( path2custom( DIR_SRC . 'config.*.json' ) )
+    );
+
+    // se sono presenti file JSON aggiuntivi
+    if( is_array( $jsonConfigFiles ) ) {
+        foreach( $jsonConfigFiles as $jsonConfigFile ) {
+            $cf['config']['files']['json'][] = $jsonConfigFile;
+        }
+    }
+
     // lettura del file di configurazione aggiuntivi YAML o JSON
-    foreach( $cf['config']['files'] as $type => $files ) {
-        foreach( $files as $file ) {
-            if( file_exists( $file ) ) {
+    foreach( $cf['config']['files'] as $type => $configFiles ) {
+        foreach( $configFiles as $configFile ) {
+            if( file_exists( $configFile ) ) {
                 switch( $type ) {
                     case 'yaml':
-                        $cj = yaml_parse( file_get_contents( $file ) );
+                        $cj = yaml_parse( file_get_contents( $configFile ) );
                     break;
                     case 'json':
-                        $cj = json_decode( file_get_contents( $file ), true );
+                        $cj = json_decode( file_get_contents( $configFile ), true );
                     break;
                 }
                 if( empty( $cj ) ) {
-                    die( 'file di configurazione ' . $file . ' danneggiato' );
+                    die( 'file di configurazione ' . $configFile . ' danneggiato' );
                 } else {
-                    $cf['config']['read'][] = $file;
+                    $cf['config']['read'][] = $configFile;
                     $cx = array_replace_recursive( $cx, $cj );
                 }
             }
@@ -1037,6 +1080,56 @@
     timerCheck( $cf['speed'], 'fine scansione dei moduli attivi' );
 
     /**
+     * configurazione dei moduli attivi
+     * ================================
+     * 
+     */
+
+    // inclusione configurazione moduli
+    foreach( $cf['mods']['active']['array'] as $modulo ) {
+
+        if( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) ) {
+            $cm = yaml_parse( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) );
+            if( is_array( $cm ) ) {
+                $cx = array_replace_recursive( $cx, $cm );
+                $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.yaml' );
+            } else {
+                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) . ' danneggiato' );
+            }
+            if( file_exists( path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) ) ) {
+                $cm = yaml_parse( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) ) );
+                if( is_array( $cm ) ) {
+                    $cx = array_replace_recursive( $cx, $cm );
+                    $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' );
+                } else {
+                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) . ' danneggiato' );
+                }
+            }
+        } elseif( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ) ) {
+            $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ), true );
+            if( is_array( $cm ) ) {
+                $cx = array_replace_recursive( $cx, $cm );
+                $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.json' );
+            } else {
+                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.json' ) . ' danneggiato' );
+            }
+            if( file_exists( path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) ) ) {
+                $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) ), true );
+                if( is_array( $cm ) ) {
+                    $cx = array_replace_recursive( $cx, $cm );
+                    $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/shadow.json' );
+                } else {
+                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) . ' danneggiato' );
+                }
+            }
+        }
+
+    }
+
+    // debug
+    // die( __FILE__ );
+
+    /**
      * inclusione dei file di libreria
      * ===============================
      * La strategia di inclusione dei files di libreria (contenenti costanti e funzioni) è molto
@@ -1066,13 +1159,16 @@
         $locale = path2custom( $libreria );
         $aggiuntiva = str_replace( '.php', '.add.php', $locale );
         if( file_exists( $locale ) ) {
+            loggerLatest( 'inclusione libreria: ' . $locale );
             require $locale;
             timerCheck( $cf['speed'], $locale );
         } else {
+            loggerLatest( 'inclusione libreria: ' . $libreria );
             require $libreria;
             timerCheck( $cf['speed'], $libreria );
         }
         if( file_exists( $aggiuntiva ) ) {
+            loggerLatest( 'inclusione libreria: ' . $aggiuntiva );
             require $aggiuntiva;
             timerCheck( $cf['speed'], $aggiuntiva );
         }
@@ -1080,6 +1176,9 @@
 
     // timer
     timerCheck( $cf['speed'], 'fine inclusione files di libreria' );
+
+    // debug
+    // die( __FILE__ );
 
     /**
      * inclusione dei file di libreria esterni
@@ -1102,6 +1201,9 @@
     } else {
         die( 'autoload mancante, eseguire composer update' );
     }
+
+    // debug
+    // die( __FILE__ );
 
     /**
      * inclusione dei files dei runlevel
@@ -1188,10 +1290,10 @@
     sort( $cf['runlevel']['files'] );
 
     // inclusione dei files dei runlevels
-    foreach( $cf['runlevel']['files'] as $file ) {
+    foreach( $cf['runlevel']['files'] as $runLvlFile ) {
 
         // controparte locale
-        $locale = path2custom( $file );
+        $locale = path2custom( $runLvlFile );
 
         // calcolo runlevel
         $lvls = explode( '.', basename( $locale ) );
@@ -1201,13 +1303,13 @@
         if( ! in_array( $lvl, $cf['lvls']['skip'] ) ) {
 
             // inclusione file standard
-            if( is_readable( $file ) ) {                
-                loggerLatest( 'inizio: ' . $file );
-                require $file;
-                timerCheck( $cf['speed'], $file );
-                loggerLatest( 'completato: ' . $file );
+            if( is_readable( $runLvlFile ) ) {                
+                loggerLatest( 'inizio: ' . $runLvlFile );
+                require $runLvlFile;
+                timerCheck( $cf['speed'], $runLvlFile );
+                loggerLatest( 'completato: ' . $runLvlFile );
             } else {
-                loggerLatest( 'impossibile leggere il file ' . $file );
+                loggerLatest( 'impossibile leggere il file ' . $runLvlFile );
             }
 
             // inclusione file locale
@@ -1223,7 +1325,7 @@
             }
 
             // controparte moduli
-            $moduli = glob( str_replace( DIR_BASE, DIR_MOD_ATTIVI, $file ), GLOB_BRACE );
+            $moduli = glob( str_replace( DIR_BASE, DIR_MOD_ATTIVI, $runLvlFile ), GLOB_BRACE );
 
             // inclusione controparte moduli
             foreach( $moduli as $modulo ) {

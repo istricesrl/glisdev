@@ -16,11 +16,47 @@
     define('ROW_UNMODIFIED', 'INVARIATO');
 
     /**
-     *
+     * 
+     * 
+     * 
+     * 
+     * 
+     * introduzione
+     * ============
+     * 
+     * 
+     * 
+     * 
+     * modalità view
+     * =============
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * modalità modifica
+     * =================
+     * 
+     * 
+     * 
+     * 
+     * punti di inclusione delle controller
+     * ------------------------------------
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
      * TODO documentare
      *
      */
-    function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = NULL) {
+    function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = array()) {
 
         /**
          * inizializzazione delle variabili
@@ -30,7 +66,7 @@
          */
 
         // log
-        logWrite("$t/$a", 'controller');
+        logWrite("avvio controller per $t/$a", 'controller');
 
         // timer
         timerCheck( $timer, '-> -> inizio lavoro controller per ' . $t . '/' . $a );
@@ -97,7 +133,10 @@
 
             // valutazione di $v
             if (is_array($v) && substr($k, 0, 2) !== '__') {            // nel caso il valore sia un subform, viene
+
+                logWrite("subform rilevato: $k/$a", 'controller');
                 $s[$k] = $v;                                            // passato così com'è per la ricorsione
+
             } elseif (strtolower($k)    == '__firma__') {               //
                 $f = $v;                                                // firma per bypassare il controllo permessi
             } elseif (strtolower($k)    == '__method__') {              //
@@ -205,8 +244,11 @@
         // controllo modalità singola / modalità multipla
         if (count($ks) == 0 && count($s) > 0) {
 
+            logWrite("subform rilevati: " . implode(', ', array_keys($s)), 'controller');
+
             // elaborazione subform
             foreach ($s as $x => $y) {
+                logWrite("elaborazione subform: $x", 'controller');
                 controller($c, $mc, $y, $t, $a, NULL, $e, $i[$t][$x], $i['__auth__']);
             }
 
@@ -352,10 +394,11 @@
                     foreach (explode(' ', $i['__search__']) as $tks) {
                         if (!empty($tks)) {
                             $like = "%$tks%";
+                            $equal = "$tks";
                             $cond = array();
                             foreach (preg_filter('/^/', "$t$rm.", $i['__fields__']) as $field) {
-                                $cond[] = $field . ' LIKE ?';
-                                $vs[] = array('s' => $like);
+                                $cond[] = $field . ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? ' =' : ' LIKE' ) . ' ?';
+                                $vs[] = array('s' => ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? $equal : $like ) );
                             }
                             $whr[] = '(' . implode(' OR ', $cond) . ')';
                         }
@@ -372,7 +415,7 @@
                 }
 
                 /*
-                * @todo IMPORTANTE
+                * TODO IMPORTANTE
                 * implementare filtri che implichino una JOIN con filtro sulla tabella di JOIN
                 * ad es. cercare sull'anagrafica quelli che hanno un'associazione con la categoria clienti
                 * sulla tabella anagrafica_categorie (adesso la cosa è gestita maldestramente con LK)
@@ -455,6 +498,13 @@
                                                 $vs[] = array('s' => $svi);
                                             }
                                             break;
+                                        case 'NI':
+                                            $sva = explode('|', $sv);
+                                            $whr[] = "$fc NOT IN (" . implode(',', array_fill(0, count($sva), '?')) . ")";
+                                            foreach ($sva as $svi) {
+                                                $vs[] = array('s' => $svi);
+                                            }
+                                            break;
                                         case 'BT':
                                             $sva = explode('|', $sv);
                                             $whr[] = "$fc BETWEEN ? AND ?";
@@ -500,6 +550,9 @@
 
                 // log
                 logWrite("view mode / eseguo ($a) la query: $q", 'controller');
+
+                // debug
+                // echo $q;
 
                 // TODO il valore di ritorno dipende da eventuali errori
                 $i['__status__'] = 200;
@@ -914,10 +967,16 @@
 
         } else {
 
+            // log
+            logWrite("permessi insufficienti per gestire $t/$a", 'controller');
+
             // restituisco 401 unauthorized
             $i['__status__'] = 401;
 
         }
+
+        // log
+        logWrite("esito finale per $t/$a: " . $i['__status__'], 'controller');
 
         // restituzione di 200 per default
         return $i['__status__'] ?? 200;
@@ -975,3 +1034,39 @@
         }
 
     }
+
+    /**
+     * TODO documentare
+     */
+    function isFieldNumeric( $m, $c, $table, $field ) {
+
+        $field = preg_replace('/^.*\./', '', $field);
+
+        $numericTypes = [
+            'int','tinyint','smallint','mediumint','bigint',
+            'decimal','float','double','bit'
+        ];
+
+        $textTypes = [
+            'char','varchar','text','tinytext','mediumtext','longtext'
+        ];
+
+        $type = mysqlSelectCachedValue( $m, $c,
+            'SELECT DATA_TYPE
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+            array(
+                array( 's' => $table ),
+                array( 's' => $field )
+            )
+        );
+
+        if( in_array( strtolower( $type ?? '' ), $numericTypes, true ) ) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+

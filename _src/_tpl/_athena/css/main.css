@@ -240,6 +240,15 @@ nav ul ul ul {
     padding-left: 1em;
 }
 
+#form-language select,
+#form-multisite select,
+#form-navigation select {
+    border: 0px;
+    border-radius: 0px;
+    cursor: pointer;
+    height: 45px;
+}
+
 /**
  * stile della navigazione a tab
  * =============================
@@ -250,7 +259,7 @@ nav ul ul ul {
 /* stile della navigazione a tab */
 .nav-tabs {
     border-bottom: 1px solid #dddddd;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 
 /* stile della navigazione a tab secondaria */
@@ -367,6 +376,12 @@ legend .btn-sm {
     margin-bottom: 3px;
 }
 
+legend small {
+    font-weight: normal;
+    font-size: 0.8em;
+    color: #777777;
+}
+
 /* stile delle tendine dei form */
 select {
     cursor: pointer;
@@ -384,6 +399,31 @@ fieldset.form-controls-free {
     border-top: 1px solid #dddddd;
     padding-top: 10px;
     z-index: 5000;
+}
+
+fieldset.form-controls button {
+    height: 31px;
+    padding: 3px;
+    width: 31px;
+}
+
+@media (max-width: 991.98px) {
+
+    form.form-main,
+    form.form-filtro {
+        padding-bottom: 40px;
+    }
+
+    .view-controls,
+    fieldset.form-controls {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 5000;
+        padding: 10px 15px;
+        background-color: #eeeeee;
+    }
 }
 
 /* stile dei campi di input dei form con focus */
@@ -421,6 +461,10 @@ label.form-check-label {
 
 textarea.form-control {
     padding-top: .5em;
+}
+
+input[type="number"] {
+    text-align: right;
 }
 
 /**
@@ -475,6 +519,8 @@ textarea.form-control {
 }
 
 /* stile dei link nelle celle delle tabelle delle view */
+.view-table td a,
+.view-table td a:visited,
 .view-table td a:active,
 .view-table td a:hover {
     color: #000000;
@@ -672,4 +718,28 @@ textarea.form-control {
 /* stile per CodeMirror */
 .CodeMirror {
     height: 100% !important;
+}
+
+/**
+ * stili per le tooltip
+ * ====================
+ *
+ *
+ */
+
+/* stile per le tooltip */
+.custom-tooltip {
+    z-index: 6000;
+}
+
+/**
+ * stili per Trumbowyg
+ * ===================
+ * 
+ * 
+ */
+
+/* altezza del box */
+.trumbowyg-box {
+    height: 100%;
 }

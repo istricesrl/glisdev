@@ -101,6 +101,9 @@
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff', 'users', 'guests' )
         ),
+        'veicoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
 
         // TODO l'ordine alfabetico arriva fin qui
 
@@ -453,6 +456,10 @@
             CONTROL_FILTERED => array('staff')
         ),
         'sconti_listini' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'tipologie_listini' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
@@ -1142,7 +1149,40 @@
         ),
         'settori' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
-        )
+        ),
+        'offerte' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'righe_offerte' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'offerte_attive' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'righe_offerte_attive' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'marchi' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'tipologie_veicoli' => array(
+            CONTROL_FULL => array( 'roots','staff' )
+        ),
+        'mastri_tipologie_veicoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'mastri_articoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'consensi_anagrafica' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'consensi_contatti' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'tipologie_notizie' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
     );
  
     // debug

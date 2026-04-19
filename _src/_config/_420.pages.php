@@ -73,12 +73,12 @@
         foreach( $ct['page']['etc']['tabs'] as $key => $tab ) {
             if( isset( $cf['contents']['pages'][ $tab ]['auth']['groups'] ) &&
                 ( ! isset( $_SESSION['account']['gruppi'] ) ||
-                count(
-                    array_intersect(
-                    $cf['contents']['pages'][ $tab ]['auth']['groups'],
-                    $_SESSION['account']['gruppi']
-                    )
-                ) == 0
+                    count(
+                        array_intersect(
+                            $cf['contents']['pages'][ $tab ]['auth']['groups'],
+                            $_SESSION['account']['gruppi']
+                        )
+                    ) == 0
                 )
             ) {
                 unset( $ct['page']['etc']['tabs'][ $key ] );
@@ -190,3 +190,4 @@
     // print_r( $ct['page']['etc']['tabs'] );
     // print_r( $_SESSION['account']['gruppi'] );
     // echo $cf['contents']['updated'];
+    // die( print_r( $ct['page']['js'], true ) );

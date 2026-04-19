@@ -171,6 +171,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (    --
   `id_account` int(11) DEFAULT NULL,                          -- chiave esterna per l'account
   `id_gruppo` int(11) DEFAULT NULL,                           -- chiave esterna per il gruppo
   `entita` char(64) DEFAULT NULL,                             -- entità per la quale si innesca l'associazione
+  `note` text DEFAULT NULL,                                   -- note
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
@@ -307,8 +308,9 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
 -- questa tabella contiene gli articoli di magazzino, che possono essere collegati a prodotti
 --
 CREATE TABLE `articoli` (
-  `id` char(32) NOT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `codice` char(32) DEFAULT NULL,
+  `id_prodotto` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
   `isbn` char(32) DEFAULT NULL,
@@ -332,6 +334,9 @@ CREATE TABLE `articoli` (
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_codifica` text DEFAULT NULL,
+  `codice_produttore` char(64) DEFAULT NULL,	
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -415,7 +420,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `id_documento` int(11) DEFAULT NULL,                        -- chiave esterna per il documento collegato all'attività
   `id_corrispondenza` int(11) DEFAULT NULL,                   -- chiave esterna per la corrispondenza collegata all'attività
   `id_pagamento` int(11) DEFAULT NULL,                        -- chiave esterna per il pagamento collegato all'attività
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto collegato all'attività
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto collegato all'attività
   `id_contratto` int(11) DEFAULT NULL,                        -- chiave esterna per il contratto collegato all'attività
   `id_matricola` int(11) DEFAULT NULL,                        -- chiave esterna per la matricola collegata all'attività
   `id_todo` int(11) DEFAULT NULL,                             -- chiave esterna per il todo collegato all'attività
@@ -436,6 +441,25 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000002900
+
+-- caratteristiche
+CREATE TABLE IF NOT EXISTS `caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `font_awesome` char(24) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_articoli` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000003050
 
 -- carrelli_articoli
@@ -450,7 +474,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
 CREATE TABLE `carrelli_articoli` (
   `id` int(11) NOT NULL,
   `id_carrello` int(11) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
   `categorie` char(255) DEFAULT NULL,
   `prodotto` char(255) DEFAULT NULL,
   `descrizione` char(255) DEFAULT NULL,
@@ -577,6 +601,32 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000003900
+
+-- categorie_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` tinyint(1) DEFAULT NULL,
+  `se_cacheable` tinyint(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text NULL,                             -- note di archiviazione
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000004300
 
 -- categorie_progetti
@@ -619,9 +669,14 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
 -- tipologia: tabella gestita
 CREATE TABLE `colli` (
   `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
+  `id_mittente` int(11) DEFAULT NULL,
+  `id_destinatario` int(11) DEFAULT NULL,
+  `id_mastro` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
+  `raggruppamento` char(32) DEFAULT NULL,
   `larghezza` decimal(7,2) DEFAULT NULL,
   `lunghezza` decimal(7,2) DEFAULT NULL,
   `altezza` decimal(7,2) DEFAULT NULL,
@@ -634,6 +689,8 @@ CREATE TABLE `colli` (
   `note` text DEFAULT NULL,
   `timestamp_chiusura`	int(11) DEFAULT NULL,
   `note_chiusura`	text DEFAULT NULL,
+  `timestamp_spedizione`	int(11) DEFAULT NULL,
+  `note_spedizione`	text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -691,7 +748,8 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
 -- e alle note
 --
 CREATE TABLE IF NOT EXISTS `consensi` (                       --
-  `id` char(64) NOT NULL,                                     -- chiave primaria
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `codice` char(64) NOT NULL,                                 -- codice
   `nome` char(255) DEFAULT NULL,                              -- nome del consenso
   `note` text DEFAULT NULL,                                   -- note sul consenso
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
@@ -703,7 +761,7 @@ CREATE TABLE IF NOT EXISTS `consensi` (                       --
 -- TODO documentare meglio questa tabella con riferimenti al codice
 --
 
--- | 010000006500
+-- | 010000006300
 
 -- consensi_moduli
 -- tipologia: tabella assistita
@@ -733,6 +791,56 @@ CREATE TABLE `consensi_moduli` (                              --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000006400
+
+-- consensi_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: specifica quali consensi sono stati acquisiti per ogni anagrafica presente nel sistema
+-- 
+-- questa tabella contiene i consensi che vanno chiesti per ogni anagrafica acquisita, e va a integrare le informazioni già
+-- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
+-- ulteriori approfondimenti
+--
+CREATE TABLE `consensi_anagrafica` (                              --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_consenso` int(11) DEFAULT NULL,                         -- chiave esterna per il consenso
+  `id_anagrafica` int(11) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
+  `valore` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,                                   -- note sul consenso
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000006500
+
+-- consensi_contatti
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: specifica quali consensi sono stati acquisiti per ogni contatto acquisito
+-- 
+-- questa tabella contiene i consensi che sono stati acquisiti per ogni contatto acquisito, e va a integrare le informazioni già
+-- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
+-- ulteriori approfondimenti
+--
+CREATE TABLE `consensi_contatti` (                              --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_consenso` int(11) DEFAULT NULL,                         -- chiave esterna per il consenso
+  `id_contatto` int(11) DEFAULT NULL,                         -- chiave esterna per il contatto
+  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
+  `valore` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,                                   -- note sul consenso
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000006700
 
 -- contatti
@@ -749,6 +857,7 @@ CREATE TABLE IF NOT EXISTS `contatti` (                       --
   `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica collegata al contatto
   `id_inviante` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica dell'inviante
   `id_ranking` int(11) DEFAULT NULL,                          -- chiave esterna per il ranking
+  `id_sito` int(11) DEFAULT NULL,                             -- chiave esterna per il sito di acquisizione
   `utm_id` char(128) DEFAULT NULL,                            -- UTM id
   `utm_source` char(128) DEFAULT NULL,                        -- UTM source
   `utm_medium` char(128) DEFAULT NULL,                        -- UTM medium
@@ -756,8 +865,12 @@ CREATE TABLE IF NOT EXISTS `contatti` (                       --
   `utm_term` char(128) DEFAULT NULL,                          -- UTM term
   `utm_content` char(128) DEFAULT NULL,                       -- UTM content
   `nome` char(255) DEFAULT NULL,                              -- nome del contatto
+  `modulo` char(128) DEFAULT NULL,                            -- modulo di acquisizione
   `note` text DEFAULT NULL,                                   -- note sul contatto
   `json` text DEFAULT NULL,                                   -- campo JSON per informazioni aggiuntive
+  `yaml` text DEFAULT NULL,                                   -- campo YAML per informazioni aggiuntive
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text NULL,                             -- note di archiviazione
   `timestamp_contatto` int(11) DEFAULT NULL,                  -- timestamp del contatto
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il contatto
@@ -779,8 +892,8 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id` int(11) NOT NULL,                                        -- chiave primaria
   `id_lingua` int(11) DEFAULT NULL,                             -- chiave esterna per la lingua
   `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica
-  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto
-  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo
+  `id_prodotto` int(11) DEFAULT NULL,                           -- chiave esterna per il prodotto
+  `id_articolo` int(11) DEFAULT NULL,                           -- chiave esterna per l'articolo
   `id_categoria_prodotti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria dei prodotti
   `id_caratteristica` int(11) DEFAULT NULL,                     -- chiave esterna per la caratteristica
   `id_marchio` int(11) DEFAULT NULL,                            -- chiave esterna per il marchio
@@ -802,7 +915,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id_template` int(11) DEFAULT NULL,                           -- chiave esterna per il template
   `id_mailing` int(11) DEFAULT NULL,                            -- chiave esterna per il mailing
   `id_colore` int(11) DEFAULT NULL,                             -- chiave esterna per il colore
-  `id_progetto` char(32) DEFAULT NULL,                          -- chiave esterna per il progetto
+  `id_progetto` int(11) DEFAULT NULL,                           -- chiave esterna per il progetto
   `id_categoria_progetti` int(11) DEFAULT NULL,                 -- chiave esterna per la categoria dei progetti
   `id_banner` int(11) DEFAULT NULL,                             -- chiave esterna per il banner
   `path_custom` char(255) DEFAULT NULL,                         -- path custom
@@ -832,13 +945,13 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `mittente_nome` char(128) DEFAULT NULL,                       -- mittente nome
   `mittente_numero` char(128) DEFAULT NULL,                     -- mittente numero
   `mittente_mail` char(128) DEFAULT NULL,                       -- mittente mail
-  `destinatario_nome` char(128) DEFAULT NULL,                   -- destinatario nome
-  `destinatario_numero` char(128) DEFAULT NULL,                 -- destinatario numero
-  `destinatario_mail` char(128) DEFAULT NULL,                   -- destinatario mail
-  `destinatario_cc_nome` char(128) DEFAULT NULL,                -- destinatario cc nome
-  `destinatario_cc_mail` char(128) DEFAULT NULL,                -- destinatario cc mail
-  `destinatario_ccn_nome` char(128) DEFAULT NULL,               -- destinatario ccn nome
-  `destinatario_ccn_mail` char(128) DEFAULT NULL,               -- destinatario ccn mail
+  `destinatari_nome` char(128) DEFAULT NULL,                    -- destinatario nome
+  `destinatari_numero` char(128) DEFAULT NULL,                  -- destinatario numero
+  `destinatari_mail` char(128) DEFAULT NULL,                    -- destinatario mail
+  `destinatari_cc_nome` char(128) DEFAULT NULL,                 -- destinatario cc nome
+  `destinatari_cc_mail` char(128) DEFAULT NULL,                 -- destinatario cc mail
+  `destinatari_bcc_nome` char(128) DEFAULT NULL,                -- destinatario bcc nome
+  `destinatari_bcc_mail` char(128) DEFAULT NULL,                -- destinatario bcc mail
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito il contenuto
   `timestamp_aggiornamento` int(11) DEFAULT NULL,               -- timestamp di aggiornamento
@@ -877,7 +990,7 @@ CREATE TABLE `contratti` (                                    --
   `codice` char(32) DEFAULT NULL,                             -- codice del contratto
   `codice_affiliazione` char(32) DEFAULT NULL,                -- codice di affiliazione
   `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile associato al contratto
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto associato al contratto
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto associato al contratto
   `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti associata al contratto
   `id_badge` int(11) DEFAULT NULL,                            -- chiave esterna per il badge associato al contratto
   `nome` char(128) DEFAULT NULL,                              -- nome del contratto
@@ -998,6 +1111,9 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
   `id_sede_emittente` int(11) DEFAULT NULL,                   -- chiave esterna per la sede dell'anagrafica emittente
   `id_destinatario` int(11) DEFAULT NULL,                     -- chiave esterna per l'anagrafica destinataria
   `id_sede_destinatario` int(11) DEFAULT NULL,                -- chiave esterna per la sede dell'anagrafica destinataria
+  `id_destinatario_spedizione` int(11) DEFAULT NULL,          -- chiave esterna per l'anagrafica destinataria della spedizione
+  `id_sede_destinatario_spedizione` int(11) DEFAULT NULL,     -- chiave esterna per la sede dell'anagrafica destinataria della spedizione
+  `note_spedizione` text DEFAULT NULL,                        -- note per la spedizione
   `id_condizione_pagamento` int(11) DEFAULT NULL,             -- chiave esterna per la condizione di pagamento
   `esigibilita`	enum('I','D','S') DEFAULT NULL,               -- esigibilità del documento
   `codice_archivium` char(64) DEFAULT NULL ,                  -- codice per Archivium
@@ -1016,7 +1132,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
   `id_carrello` int(11) DEFAULT NULL,                         -- chiave esterna per il carrello collegato al documento
   `id_immobile` int(11) DEFAULT NULL,                         -- chiave esterna per l'immobile collegato al documento
   `id_pianificazione` int(11) DEFAULT NULL,                   -- chiave esterna per la pianificazione collegata al documento
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto collegato al documento
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto collegato al documento
   `xml` longtext DEFAULT NULL,                                -- contenuto XML per fatturazione elettronica
   `data_consegna` date DEFAULT NULL,                          -- data di consegna
   `note_consegna` text DEFAULT NULL,                          -- note sulla consegna
@@ -1057,12 +1173,12 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id_destinatario` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica destinataria
   `id_emittente` int(11) DEFAULT NULL,                          -- chiave esterna per l'anagrafica emittente
   `id_reparto` int(11) DEFAULT NULL,                            -- chiave esterna per il reparto collegato all'articolo
-  `id_progetto` char(32) DEFAULT NULL,                          -- chiave esterna per il progetto collegato all'articolo
+  `id_progetto` int(11) DEFAULT NULL,                           -- chiave esterna per il progetto collegato all'articolo
   `id_todo` int(11) DEFAULT NULL,                               -- chiave esterna per la todo collegata all'articolo
   `id_attivita` int(11) DEFAULT NULL,                           -- chiave esterna per l'attività collegata all'articolo
-  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato
+  `id_articolo` int(11) DEFAULT NULL,                           -- chiave esterna per l'articolo collegato
   `id_collo` int(11) DEFAULT NULL,                              -- chiave esterna per il collo collegato all'articolo
-  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato
+  `id_prodotto` int(11) DEFAULT NULL,                           -- chiave esterna per il prodotto collegato
   `id_mastro_provenienza` int(11) DEFAULT NULL,                 -- chiave esterna per il mastro di provenienza
   `id_mastro_destinazione` int(11) DEFAULT NULL,                -- chiave esterna per il mastro di destinazione
   `id_udm` int(11) DEFAULT NULL,                                -- chiave esterna per l'unità di misura
@@ -1074,6 +1190,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id_listino` int(11) DEFAULT NULL,                            -- chiave esterna per il listino applicato
   `costo_netto_unitario` decimal(16,2) DEFAULT NULL,            -- costo netto unitario
   `costo_netto_totale` decimal(16,2) DEFAULT NULL,              -- costo netto totale
+  `note_costi` text DEFAULT NULL,                               -- note sull'articolo
   `prezzo_netto_unitario` decimal(16,2) DEFAULT NULL,           -- prezzo netto unitario
   `prezzo_netto_totale` decimal(16,2) DEFAULT NULL,             -- prezzo netto totale
   `importo_netto_totale` decimal(16,2) DEFAULT NULL,            -- importo netto totale
@@ -1110,9 +1227,10 @@ CREATE TABLE IF NOT EXISTS `file` (                           --
   `id_ruolo` int(11) DEFAULT NULL,                            -- chiave esterna per il ruolo del file
   `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato il file
   `id_anagrafica_certificazioni` int(11) DEFAULT NULL,        -- chiave esterna per l'anagrafica certificazioni a cui è associato il file
-  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associato il file
-  `id_articolo` char(32) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associato il file
+  `id_prodotto` int(11) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associato il file
+  `id_articolo` int(11) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associato il file
   `id_categoria_prodotti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associato il file
+  `id_marchio` int(11) DEFAULT NULL,               -- chiave esterna per il marchio a cui è associato il file
   `id_todo` int(11) DEFAULT NULL,                             -- chiave esterna per la todo a cui è associato il file
   `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associato il file
   `id_template` int(11) DEFAULT NULL,                         -- chiave esterna per il template a cui è associato il file
@@ -1123,7 +1241,7 @@ CREATE TABLE IF NOT EXISTS `file` (                           --
   `id_categoria_annunci` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di annunci a cui è associato il file
   `id_risorsa` int(11) DEFAULT NULL,                          -- chiave esterna per la risorsa a cui è associato il file
   `id_categoria_risorse` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di risorse a cui è associato il file
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associato il file
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associato il file
   `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti a cui è associato il file
   `id_documento` int(11) DEFAULT NULL,                        -- chiave esterna per il documento a cui è associato il file
   `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo a cui è associato il file
@@ -1208,9 +1326,10 @@ CREATE TABLE IF NOT EXISTS `immagini` (                       --
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `id_ruolo` int(11) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'immagine
   `id_anagrafica` int(11) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associata l'immagine
-  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associata l'immagine
-  `id_articolo` char(32) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associata l'immagine
+  `id_prodotto` int(11) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associata l'immagine
+  `id_articolo` int(11) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associata l'immagine
   `id_categoria_prodotti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associata l'immagine
+  `id_marchio` int(11) DEFAULT NULL,               -- chiave esterna per il marchio a cui è associata l'immagine
   `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associata l'immagine
   `id_notizia` int(11) DEFAULT NULL,                          -- chiave esterna per la notizia a cui è associata l'immagine
   `id_categoria_notizie` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di notizie a cui è associata l'immagine
@@ -1218,7 +1337,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (                       --
   `id_categoria_annunci` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di annunci a cui è associata l'immagine
   `id_risorsa` int(11) DEFAULT NULL,                          -- chiave esterna per la risorsa a cui è associata l'immagine
   `id_categoria_risorse` int(11) DEFAULT NULL,                -- chiave esterna per la categoria di risorse a cui è associata l'immagine
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associata l'immagine
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associata l'immagine
   `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti a cui è associata l'immagine
   `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo a cui è associata l'immagine
   `id_edificio` int(11) DEFAULT NULL,                         -- chiave esterna per l'edificio a cui è associata l'immagine
@@ -1228,6 +1347,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (                       --
   `id_valutazione` int(11) DEFAULT NULL,                      -- chiave esterna per la valutazione a cui è associata l'immagine
   `id_file` int(11) DEFAULT NULL,                             -- chiave esterna per il file a cui è associata l'immagine
   `id_banner` int(11) DEFAULT NULL,                           -- chiave esterna per il banner a cui è associata l'immagine
+  `id_contatto` int(11) DEFAULT NULL,                           -- chiave esterna per il contatto a cui è associata l'immagine
   `id_lingua` int(11) DEFAULT NULL,                           -- chiave esterna per la lingua dell'immagine
   `nome` char(255) DEFAULT NULL,                              -- nome dell'immagine
   `orientamento` enum('L','P','S') DEFAULT NULL,              -- orientamento dell'immagine: L=landscape, P=portrait, S=square
@@ -1275,6 +1395,20 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
 
 -- | 010000016000
 
+-- iva
+-- tipologia: tabella standard
+-- verifica: 2021-09-23 16:52 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `iva` (
+  `id` int(11) NOT NULL,
+  `aliquota` decimal(5,2) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `descrizione` text DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000016200
+
 -- job
 -- tipologia: tabella gestita
 -- rango: tabella principale
@@ -1304,7 +1438,7 @@ CREATE TABLE IF NOT EXISTS `job` (                            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
--- | 010000016200
+-- | 010000016800
 
 -- lingue
 -- tipologia: tabella standard
@@ -1342,8 +1476,11 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `codice` char(64) DEFAULT NULL,
   `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
   `se_default_su_genitore` tinyint(1) DEFAULT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1365,8 +1502,8 @@ CREATE TABLE IF NOT EXISTS `listini` (
 CREATE TABLE IF NOT EXISTS `macro` (                            --
   `id` int(11) NOT NULL,                                        -- chiave primaria
   `id_pagina` int(11) DEFAULT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` int(11) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_annuncio` int(11) DEFAULT NULL,
@@ -1374,7 +1511,7 @@ CREATE TABLE IF NOT EXISTS `macro` (                            --
   `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
+  `id_progetto` int(11) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL, 
   `ordine` int(11) DEFAULT NULL,
@@ -1411,6 +1548,101 @@ CREATE TABLE IF NOT EXISTS `mail` (                           --
   `id_account_inserimento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha inserito l'indirizzo mail
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000018800
+
+-- mail_out
+-- tipolgia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le mail in uscita
+--
+-- questa tabella contiene le mail in uscita, con le informazioni relative al mittente, ai destinatari,
+-- all'oggetto, al corpo, agli allegati, al server di invio e allo stato di invio
+--
+CREATE TABLE IF NOT EXISTS `mail_out` (
+  `id` int(11) NOT NULL,
+  `id_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_composizione` int(11) DEFAULT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `destinatari_cc` text DEFAULT NULL,
+  `destinatari_bcc` text DEFAULT NULL,
+  `oggetto` char(254) DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
+  `allegati` text DEFAULT NULL,
+  `headers` text DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT 0,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000018900
+
+-- mail_sent
+-- tipolgia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le mail inviate
+--
+-- questa tabella contiene le mail inviate, con le informazioni relative al mittente, ai destinatari,
+-- all'oggetto, al corpo, agli allegati, al server di invio e allo stato di invio
+--
+CREATE TABLE IF NOT EXISTS `mail_sent` (
+  `id` int(11) NOT NULL,
+  `id_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_composizione` int(11) DEFAULT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `destinatari_cc` text DEFAULT NULL,
+  `destinatari_bcc` text DEFAULT NULL,
+  `oggetto` char(254) DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
+  `allegati` text DEFAULT NULL,
+  `headers` text DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT 0,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000020200
+
+-- marchi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `marchi` (
+  `id` int(11) NOT NULL,
+  `id_produttore` int(11) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
+  `note_archiviazione` text DEFAULT NULL,                     -- note per l'archiviazione del documento
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000020600
 
 -- mastri
@@ -1431,7 +1663,7 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `id_anagrafica_indirizzi` int(11) DEFAULT NULL,               -- chiave esterna per l'anagrafica indirizzi collegata al mastro
   `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata al mastro
   `id_account` int(11) DEFAULT NULL,                            -- chiave esterna per l'account collegato al mastro
-  `id_progetto` char(32) DEFAULT NULL,                          -- chiave esterna per il progetto collegato al mastro
+  `id_progetto` int(11) DEFAULT NULL,                          -- chiave esterna per il progetto collegato al mastro
   `nome` char(64) DEFAULT NULL,                                 -- nome del mastro
   `note` text DEFAULT NULL,                                     -- note sul mastro
   `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito il mastro
@@ -1439,6 +1671,28 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato il mastro
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000020800
+
+-- mastri_veicoli
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella di relazione
+-- funzione: contiene la relazione molti a molti tra mastri e veicoli
+--
+-- questa tabella contiene la relazione molti a molti tra mastri e veicoli, con le chiavi esterne per il mastro
+-- e per il veicolo e le note sull'associazione
+--
+CREATE TABLE IF NOT EXISTS `mastri_tipologie_veicoli` (                         --
+    `id` int(11) NOT NULL,                                        -- chiave primaria
+    `id_mastro` int(11) DEFAULT NULL,                                  -- chiave esterna per il mastro
+    `id_tipologia` int(11) DEFAULT NULL,                                  -- chiave esterna per il veicolo
+    `note` text DEFAULT NULL,                                     -- note sull'associazione
+    `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'associazione
+    `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+    `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'associazione
+    `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000021000
 
@@ -1454,7 +1708,7 @@ CREATE TABLE `matricole` (
   `id` int(11) NOT NULL,
   `id_marchio` int(11) DEFAULT NULL,
   `id_produttore` int(11) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
   `matricola` char(128) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -1514,8 +1768,8 @@ CREATE TABLE IF NOT EXISTS `metadati` (                         --
   `id_anagrafica` int(11) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata al metadato
   `id_account` int(11) DEFAULT NULL,                            -- chiave esterna per l'account collegato al metadato
   `id_pagina` int(11) DEFAULT NULL,                             -- chiave esterna per la pagina collegata al metadato
-  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato al metadato
-  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato al metadato
+  `id_prodotto` int(11) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato al metadato
+  `id_articolo` int(11) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato al metadato
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_annuncio` int(11) DEFAULT NULL,
@@ -1529,7 +1783,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (                         --
   `id_file` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `id_documenti_articoli` int(11) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
+  `id_progetto` int(11) DEFAULT NULL,
   `id_categoria_progetti` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
@@ -1603,6 +1857,21 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000022100
+
+-- notizie_anagrafica
+CREATE TABLE IF NOT EXISTS `notizie_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000022200
 
 -- notizie_categorie
@@ -1672,6 +1941,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `note_pagamento` text DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `id_rinnovo` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
   `id_carrelli_articoli` int(11) DEFAULT NULL,
   `id_creditore` int(11) DEFAULT NULL,
   `id_debitore` int(11) DEFAULT NULL,
@@ -1716,6 +1986,7 @@ CREATE TABLE IF NOT EXISTS `pagine` (                           --
   `template` char(255) DEFAULT NULL,                            -- template della pagina
   `schema_html` char(128) DEFAULT NULL,                         -- schema HTML della pagina
   `tema_css` char(32) DEFAULT NULL,                             -- tema CSS della pagina
+  `javascript` text NULL,                                       -- javascript della pagina
   `id_contenuti` int(11) DEFAULT NULL,                          -- chiave esterna per i contenuti della pagina
   `se_sitemap` tinyint(1) DEFAULT NULL,                         -- se la pagina deve essere inclusa nella sitemap
   `se_cacheable` tinyint(1) DEFAULT NULL,                       -- se la pagina è cacheable
@@ -1726,6 +1997,43 @@ CREATE TABLE IF NOT EXISTS `pagine` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL,               -- timestamp di aggiornamento
   `id_account_aggiornamento` int(11) DEFAULT NULL               -- chiave esterna per l'account che ha aggiornato la pagina
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000023600
+
+-- periodicita
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `periodicita` (
+  `id` int(11) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `giorni` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000025000
+
+-- prezzi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `prezzi` (
+  `id` int(11) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `fascia` char(32) DEFAULT NULL,
+  `qta_min` int(11) DEFAULT NULL,
+  `qta_max` int(11) DEFAULT NULL,
+  `sconto_articoli` decimal(16,5) DEFAULT NULL,
+  `prefisso` char(64) DEFAULT NULL,
+  `prezzo` decimal(16,5) DEFAULT NULL,
+  `suffisso` char(64) DEFAULT NULL,
+  `provvigione_percentuale` decimal(16,5) DEFAULT NULL,
+  `provvigione_fissa` decimal(16,5) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000026000
 
@@ -1738,7 +2046,8 @@ CREATE TABLE IF NOT EXISTS `pagine` (                           --
 -- questa tabella contiene i prodotti del sito, con le informazioni principali
 --
 CREATE TABLE IF NOT EXISTS `prodotti` (	
-  `id` char(32) NOT NULL,	
+  `id` int(11) NOT NULL,                                        -- chiave primaria
+  `codice` char(32) DEFAULT NULL,	
   `id_tipologia` int(11) DEFAULT NULL,	
   `nome` char(128) DEFAULT NULL,	
   `note` text DEFAULT NULL,
@@ -1753,6 +2062,24 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
   `id_marchio` int(11) DEFAULT NULL,	
   `id_produttore` int(11) DEFAULT NULL,	
   `codice_produttore` char(64) DEFAULT NULL,	
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text NULL,                               -- note di archiviazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000026400
+
+-- prodotti_categorie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
+  `id` int(11) NOT NULL,
+  `id_prodotto` int(11) DEFAULT NULL,
+  `id_categoria` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
@@ -1770,14 +2097,15 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
 -- questa tabella contiene i progetti, con le informazioni principali
 --
 CREATE TABLE IF NOT EXISTS `progetti` (                       --
-  `id` char(32) NOT NULL,                                     -- chiave primaria
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                                 -- codice del progetto
   `id_tipologia` int(11) DEFAULT NULL,                        -- chiave esterna per la tipologia di progetto
   `id_pianificazione` int(11) DEFAULT NULL,                   -- chiave esterna per la pianificazione del progetto
   `id_cliente` int(11) DEFAULT NULL,                          -- chiave esterna per l'anagrafica del cliente
   `id_indirizzo` int(11) DEFAULT NULL,                        -- chiave esterna per l'indirizzo del progetto
   `id_ranking` int(11) DEFAULT NULL,                          -- chiave esterna per il ranking del progetto
-  `id_articolo` char(32) DEFAULT NULL,                        -- chiave esterna per l'articolo collegato al progetto
-  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato al progetto
+  `id_articolo` int(11) DEFAULT NULL,                        -- chiave esterna per l'articolo collegato al progetto
+  `id_prodotto` int(11) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato al progetto
   `id_periodo` int(11) DEFAULT NULL,                          -- chiave esterna per il periodo del progetto
   `nome` char(255) DEFAULT NULL,                              -- nome del progetto
   `data_consegna` date DEFAULT NULL,                          -- data di consegna prevista
@@ -1828,7 +2156,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (                       --
 --
 CREATE TABLE IF NOT EXISTS `progetti_categorie` (             --
   `id` int(11) NOT NULL,                                      -- chiave primaria
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto
   `id_categoria` int(11) DEFAULT NULL,                        -- chiave esterna per la categoria
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
@@ -1875,8 +2203,8 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (                    --
   `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
   `id_pagina` int(11) DEFAULT NULL,                             -- ID della pagina
   `id_popup` int(11) DEFAULT NULL,                              -- ID del popup
-  `id_prodotto` char(32) DEFAULT NULL,                          -- ID del prodotto
-  `id_articolo` char(32) DEFAULT NULL,                          -- ID dell'articolo
+  `id_prodotto` int(11) DEFAULT NULL,                          -- ID del prodotto
+  `id_articolo` int(11) DEFAULT NULL,                          -- ID dell'articolo
   `id_categoria_prodotti` int(11) DEFAULT NULL,                 -- ID della categoria prodotti
   `id_notizia` int(11) DEFAULT NULL,                            -- ID della notizia
   `id_annuncio` int(11) DEFAULT NULL,                           -- ID dell'annuncio
@@ -1884,7 +2212,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (                    --
   `id_categoria_annunci` int(11) DEFAULT NULL,                  -- ID della categoria annunci
   `id_risorsa` int(11) DEFAULT NULL,                            -- ID della risorsa
   `id_categoria_risorse` int(11) DEFAULT NULL,                  -- ID della categoria risorse
-  `id_progetto` char(32) DEFAULT NULL,                          -- ID del progetto
+  `id_progetto` int(11) DEFAULT NULL,                          -- ID del progetto
   `id_categoria_progetti` INT(11) DEFAULT NULL,                 -- ID della categoria progetti
   `id_banner` INT(11) DEFAULT NULL,                             -- ID del banner
   `note` char(254) DEFAULT NULL,                                -- note sulla pubblicazione
@@ -1936,8 +2264,8 @@ CREATE TABLE `recensioni` (
   `id` int(11) NOT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_categoria_prodotti` char(32) DEFAULT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` int(11) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_notizie` char(32) DEFAULT NULL,
   `id_notizia` char(32) DEFAULT NULL,
@@ -1973,6 +2301,7 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `codice_stato_http` int(11) DEFAULT NULL,                   -- codice di stato HTTP del redirect
   `sorgente` char(255) DEFAULT NULL,                          -- sorgente del redirect
   `destinazione` char(255) DEFAULT NULL,                      -- destinazione del redirect
+  `se_query_string` tinyint(1) DEFAULT NULL,                  -- se tenere la query string nel redirect
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il redirect
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il redirect
@@ -2015,6 +2344,20 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `note` text DEFAULT NULL                                    -- note sulla regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000030300
+
+-- relazioni_anagrafica
+CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_anagrafica_collegata` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000030400
 
 -- relazioni_documenti
@@ -2035,6 +2378,44 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000030800
+
+-- reparti
+-- tipologia: tabella assistita
+CREATE TABLE IF NOT EXISTS `reparti` (
+  `id` int(11) NOT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `id_settore` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034000
+
+-- ruoli_anagrafica
+CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_produzione` tinyint(1) DEFAULT NULL,
+  `se_didattica` tinyint(1) DEFAULT NULL,
+  `se_organizzazioni` tinyint(1) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL,
+  `se_risorse` tinyint(1) DEFAULT NULL,
+  `se_notizie` tinyint(1) DEFAULT NULL,
+  `se_progetti` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_contratti` tinyint(1) DEFAULT NULL,
+  `se_proponente` tinyint(1) DEFAULT NULL,
+  `se_contraente` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034300
@@ -2087,6 +2468,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_prodotti` tinyint(1) DEFAULT NULL,
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
@@ -2119,6 +2501,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
   `se_prodotti` tinyint(1) DEFAULT NULL,                        -- se prodotti
   `se_articoli` tinyint(1) DEFAULT NULL,                        -- se articoli
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- se categorie prodotti
+  `se_marchi` tinyint(1) DEFAULT NULL,                          -- se marchi
   `se_notizie` tinyint(1) DEFAULT NULL,                         -- se notizie
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- se categorie notizie
   `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
@@ -2177,6 +2560,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
   `se_helpdesk` tinyint(1) DEFAULT NULL                       -- se l'indirizzo mail è di tipo helpdesk
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000035000
+
+-- ruoli_prodotti
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei prodotti
+--
+-- questa tabella contiene i ruoli dei prodotti, con le informazioni relative al nome, alle entità HTML
+-- e Font Awesome associate e ai vari tipi di prodotto
+-- 
+CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000035200
 
 -- ruoli_video
@@ -2200,6 +2602,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_prodotti` tinyint(1) DEFAULT NULL,
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
@@ -2364,6 +2767,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (           --
   `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `note` text DEFAULT NULL,                                   -- note della tipologia
   `sigla` char(32) DEFAULT NULL,                              -- sigla della tipologia
   `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
@@ -2409,6 +2813,52 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000050700
+
+-- tipologie_colli
+CREATE TABLE IF NOT EXISTS `tipologie_colli` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `larghezza` decimal(7,2) DEFAULT NULL,
+  `lunghezza` decimal(7,2) DEFAULT NULL,
+  `altezza` decimal(7,2) DEFAULT NULL,
+  `id_udm_dimensioni` int(11) DEFAULT NULL,
+  `peso` decimal(7,2) DEFAULT NULL,
+  `id_udm_peso` int(11) DEFAULT NULL,
+  `sigla` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000050800
+
+-- tipologie_contatti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di contatti
+--
+-- questa tabella contiene le tipologie di contatti, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000050900
 
 -- tipologie_contratti
@@ -2426,8 +2876,8 @@ CREATE TABLE `tipologie_contratti` (                          --
   `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
-  `id_prodotto` char(32) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto collegato
+  `id_prodotto` int(11) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto collegato
   `id_categoria_progetti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di progetti collegata
   `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
@@ -2536,6 +2986,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000053600
+
+-- tipologie_listini
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di listini
+--
+-- questa tabella contiene le tipologie di listini, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_listini` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000053800
 
 -- tipologie_notizie
@@ -2577,6 +3050,59 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000054600
+
+-- tipologie_prodotti
+CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_colori` tinyint(1) DEFAULT NULL,
+  `se_taglie` tinyint(1) DEFAULT NULL,
+  `se_periodicita` tinyint(1) DEFAULT NULL,
+  `se_tipologia_rinnovo` tinyint(1) DEFAULT NULL,
+  `se_dimensioni` tinyint(1) DEFAULT NULL,
+  `se_volume` tinyint(1) DEFAULT NULL,
+  `se_capacita` tinyint(1) DEFAULT NULL,
+  `se_peso` tinyint(1) DEFAULT NULL,
+  `se_imballo` tinyint(1) DEFAULT NULL,
+  `se_spedizione` tinyint(1) DEFAULT NULL,
+  `se_trasporto` tinyint(1) DEFAULT NULL,
+  `se_prodotto` tinyint(1) DEFAULT NULL,
+  `se_servizio` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000055000
+
+-- tipologie_progetti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_produzione` tinyint(1) DEFAULT NULL,
+  `se_contratto` tinyint(1) DEFAULT NULL,
+  `se_pacchetto` tinyint(1) DEFAULT NULL,
+  `se_progetto` tinyint(1) DEFAULT NULL,
+  `se_consuntivo` tinyint(1) DEFAULT NULL,
+  `se_forfait` tinyint(1) DEFAULT NULL,
+  `se_didattica` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000055400
 
 -- tipologie_pubblicazioni
@@ -2603,6 +3129,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (          --
   `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000055700
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_tesseramenti` tinyint(1) DEFAULT NULL,
+  `se_iscrizioni` tinyint(1) DEFAULT NULL,
+  `se_abbonamenti` tinyint(1) DEFAULT NULL,
+  `se_licenze` tinyint(1) DEFAULT NULL,
+  `se_contratti` tinyint(1) DEFAULT NULL,
+  `se_progetti` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000056200
 
@@ -2682,6 +3231,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (                  --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000056900
+
+-- tipologie_veicoli
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di veicoli
+--
+-- questa tabella contiene le tipologie di veicoli
+--
+CREATE TABLE IF NOT EXISTS `tipologie_veicoli` (             --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000060000
 
 -- todo
@@ -2719,7 +3291,7 @@ CREATE TABLE IF NOT EXISTS `todo` (                           --
   `nome` char(255) DEFAULT NULL,                              -- nome del todo 
   `testo` text DEFAULT NULL,                                  -- testo del todo
   `id_contatto` int(11) DEFAULT NULL,                         -- chiave esterna per il contatto associato al todo
-  `id_progetto` char(32) DEFAULT NULL,                        -- chiave esterna per il progetto associato al todo
+  `id_progetto` int(11) DEFAULT NULL,                        -- chiave esterna per il progetto associato al todo
   `id_documento` int(11) DEFAULT NULL,                        -- chiave esterna per il documento associato al todo
   `id_documenti_articoli` int(11) DEFAULT NULL,               -- chiave esterna per l'articolo del documento associato al todo
   `id_istruzione` int(11) DEFAULT NULL,                       -- chiave esterna per l'istruzione associata al todo
@@ -2798,6 +3370,33 @@ CREATE TABLE IF NOT EXISTS `valute` (
   `utf8` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000064000
+
+-- veicoli
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i veicoli del sistema
+--
+-- questa tabella contiene i veicoli del sistema, con le informazioni relative alla targa, alla marca, al modello, 
+-- al nome e alla descrizione del veicolo
+--
+CREATE TABLE IF NOT EXISTS `veicoli` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `targa` char(16) DEFAULT NULL,
+  `modello` char(64) DEFAULT NULL,
+  `id_costruttore` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `descrizione` text DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,
+  `note_archiviazione` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000065000
 
 -- video
@@ -2819,9 +3418,10 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` int(11) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_marchio` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
@@ -2830,14 +3430,14 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
+  `id_progetto` int(11) DEFAULT NULL,
   `id_categoria_progetti` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_valutazione` int(11) DEFAULT NULL, 
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `id_embed` int(11) DEFAULT NULL,
   `codice_embed` char(128) DEFAULT NULL,

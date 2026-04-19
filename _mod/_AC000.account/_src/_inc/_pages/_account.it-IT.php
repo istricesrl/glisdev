@@ -1,13 +1,27 @@
 <?php
 
     /**
-     * definizione delle pagine per la gestione dell'anagrafica
+     * definizione delle pagine per la gestione degli account
+     * 
+     * In questo file vengono definite tutte le pagine relative alla gestione degli account.
+     * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * account.view                     | anagrafica.view           | vista account
+     * account.tools                    | account.view              | strumenti account
+     * account.form                     | account.view              | gestione account
+     * account.form.attribuzione        | account.view              | gestione account attribuzione
+     * account.form.tools               | account.view              | strumenti gestione account
+     * 
+     * Vengono inoltre definite le pagine per la gestione dei gruppi:
+     * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * gruppi.view                      | account.view              | vista gruppi
+     * gruppi.form                      | gruppi.view               | gestione gruppi
+     * gruppi.form.tools                | gruppi.view               | strumenti gestione gruppi
      * 
      * 
-     * 
-     * 
-     * 
-     * TODO documentare
      * TODO finire di mettere tutte le schede dell'anagrafica
      * 
      */
@@ -57,9 +71,36 @@
         'macro'                => array( $m . '_src/_inc/_macro/_account.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots' ) ),
         'etc'                => array( 'tabs'    => array(    'account.form',
-                                                            // 'account.form.attribuzione',
+                                                            'account.form.attribuzione',
+                                                            'account.form.stampe',
                                                             'account.form.tools' ) )
     );
+
+    // gestione account attribuzione
+    $p['account.form.attribuzione'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'account form attribuzione' ),
+        'h1'                => array( $l        => 'attribuzione' ),
+        'parent'            => array( 'id'        => 'account.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'account.form.attribuzione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_account.form.attribuzione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots' ) ),
+        'etc'                => array( 'tabs'    => 'account.form')
+    );
+
+    // account form stampe
+    $p['account.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'account form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'account.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_account.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'account.form' )
+    );
+
 
     // tools account
     $p['account.form.tools'] = array(

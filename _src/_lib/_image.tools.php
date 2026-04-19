@@ -4,15 +4,15 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
+     * 
      *
      */
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function imageSize( $f ) {
@@ -21,7 +21,7 @@
         fullPath( $f );
 
     // se il file da processare esiste
-        if( file_exists( $f ) ) {
+        if( file_exists( $f ) && is_readable( $f ) ) {
 
         // debug
             // echo $f . PHP_EOL;
@@ -64,7 +64,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function imageOpen( $f ) {
@@ -91,7 +91,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function imageCut( $fs, $d = 1024, $fd = false, $b = 'MIDDLE' ) {
@@ -141,7 +141,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function imageWrite( $id, $f, $t = NULL ) {
@@ -178,7 +178,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function imageConvert( $fs, $td, $fd = NULL ) {
@@ -203,7 +203,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function imageResize( $fs, $d = 1024, $fd = false, $o = NULL ) {

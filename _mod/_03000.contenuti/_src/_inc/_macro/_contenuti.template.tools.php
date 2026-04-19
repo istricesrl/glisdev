@@ -1,11 +1,9 @@
 <?php
 
     /**
+     * macro della pagina di gestione dei tools dei template
      *
-     *
-     *
-     * TODO implementare
-     * TODO documentare
+     * Questa macro imposta la pagina di gestione dei tools dei template.
      *
      */
 
@@ -21,4 +19,3 @@
             'label' => 'elaborazioni'
         )
     );
-

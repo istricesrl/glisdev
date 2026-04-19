@@ -6,15 +6,10 @@
      * 
      * 
      * per far passare tutto il traffico web a questo file, è necessario configurare il server web
-     * Nginx o IIS in modo appropriato. Per Nginx inserire questo blocco di configurazione:
+     * Nginx o IIS in modo appropriato. Per Nginx sincerarsi di apportare le seguenti modifiche alla
+     * configurazione.
      * 
-     * ```
-     * location / {
-     *    try_files "" /index.php$is_args$args;
-     * }
-     * ```
-     * 
-     * nel blocco server del sito web. Se è presente un blocco come questo, rimuoverlo:
+     * Nel blocco server (80) del sito web, se è presente un blocco come questo, rimuoverlo:
      * 
      * ```
      * if (-f $request_filename) {
@@ -23,6 +18,45 @@
      * ```
      * 
      * in quanto farebbe servire i file statici direttamente senza passare per il front controller.
+     * Fatto questo, sostituire completamente il blocco di configurazione server (8080) con questo,
+     * sostituendo domain.tld con il dominio reale:
+     * 
+     * ```
+     * server {
+     *   listen 8080;
+     *   listen [::]:8080;
+     *   server_name www.domain.tld www1.domain.tld;
+     *   {{root}}
+     * 
+     *   include /etc/nginx/global_settings;
+     * 
+     *   index index.php;
+     * 
+     *   location / {
+     *     rewrite ^ /index.php?$query_string last;
+     *   }
+     * 
+     *   # Esegui solo index.php (opzionale ma consigliato)
+     *   location = /index.php {
+     *     include fastcgi_params;
+     *     fastcgi_intercept_errors on;
+     *     fastcgi_index index.php;
+     *     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+     *     fastcgi_read_timeout 3600;
+     *     fastcgi_send_timeout 3600;
+     *     fastcgi_param HTTPS "on";
+     *     fastcgi_param SERVER_PORT 443;
+     *     fastcgi_pass 127.0.0.1:{{php_fpm_port}};
+     *     fastcgi_param PHP_VALUE "{{php_settings}}";
+     *   }
+     * 
+     *   # Blocca l’esecuzione di qualsiasi altro .php (consigliato)
+     *   location ~ \.php$ {
+     *     return 404;
+     *   }
+     * }
+     * ```
+     * 
      * 
      */
 
@@ -34,6 +68,43 @@
 
     // debug
     // die( $URI );
+
+    /**
+     * blocchi di sicurezza
+     * ====================
+     * 
+     */
+
+    // estraggo l’estensione del file richiesto (se presente)
+    $ext = strtolower(pathinfo($URI, PATHINFO_EXTENSION));
+
+    // linguaggi non supportati
+    $deny_lang = [
+        'asp','bas','cfm','csp','jsp','shtml'
+    ];
+
+    // file con informazioni sensibili
+    $deny_sensitive = [
+        'bak','blt','cfg','conf','config','dox',
+        'htaccess','htpasswd','ini','info','json',
+        'key','lock','log','md','notes','pem',
+        'properties','save','sql','sqlite','swp',
+        'templ','trace','twig'
+    ];
+
+    // file potenzialmente dannosi
+    $deny_exec = [
+        'cgi','exe','htl','map','mdb','pl','py','sh'
+    ];
+
+    // merge di tutte le blacklist
+    $deny_all = array_merge($deny_lang, $deny_sensitive, $deny_exec);
+
+    // se l’estensione è in blacklist
+    if ($ext !== '' && in_array($ext, $deny_all, true)) {
+        http_response_code(403);
+        exit;
+    }
 
     /**
      * scorciatoie
@@ -94,31 +165,31 @@
 
     // API di logout
     if ($URI === '/api/logout') {
-        $_GET['__logout__'] = 1;
+        $_REQUEST['__logout__'] = 1;
         require('_src/_api/_user.php');
         exit;
     }
 
     // API di download generico: /var/<...> -> _src/_api/_download.php?__download__=var/...
     if (preg_match('#^/var/(.+)$#', $URI, $m)) {
-        $_GET['__download__'] = 'var/'.$m[1];
+        $_REQUEST['__download__'] = 'var/'.$m[1];
         require('_src/_api/_download.php');
         exit;
     }
 
     // API per il mailing /mailing/<id>/var/<...>
     if (preg_match('#^/mailing/([0-9]+)/var/(.+)$#', $URI, $m)) {
-        $_GET['__download__'] = 'var/'.$m[2];
-        $_GET['__mailing__']  = $m[1];
+        $_REQUEST['__download__'] = 'var/'.$m[2];
+        $_REQUEST['__mailing__']  = $m[1];
         require('_src/_api/_download.php');
         exit;
     }
 
     // API per il mailing /mailing/<id>/<dst>/var/<...>
     if (preg_match('#^/mailing/([0-9]+)/([0-9]+)/var/(.+)$#', $URI, $m)) {
-        $_GET['__download__']   = 'var/'.$m[3];
-        $_GET['__mailing__']    = $m[1];
-        $_GET['__mailing_dst__']= $m[2];
+        $_REQUEST['__download__']   = 'var/'.$m[3];
+        $_REQUEST['__mailing__']    = $m[1];
+        $_REQUEST['__mailing_dst__']= $m[2];
         require('_src/_api/_download.php');
         exit;
     }
@@ -183,7 +254,7 @@
 
     // API per la chiamata diretta dei job /job/<id>
     if (preg_match('#^/job/([0-9]+)?$#', $URI, $m)) {
-        $_GET['__id__'] = $m[1] ?? '';
+        $_REQUEST['__id__'] = $m[1] ?? '';
         require('_src/_api/_job.php');
         exit;
     }
@@ -492,15 +563,15 @@
 
     // nomepagina.xx-XX.html
     if (preg_match('#^/([A-Za-z0-9._\-/]+)\.([a-z]{2}-[A-Z]{2})\.html?$#', $URI, $m)) {
-        $_GET['__rw__'] = $m[1];
-        $_GET['__lg__'] = $m[2];
+        $_REQUEST['__rw__'] = $m[1];
+        $_REQUEST['__lg__'] = $m[2];
         require '_src/_api/_pages.php';
         exit;
     }
 
     // nomefile[.estensione] -> pages con __rw__=nomefile
     if (preg_match('#^/([A-Za-z0-9._\-/]*[A-Za-z0-9_-])(?:\.[A-Za-z0-9]+)?$#', $URI, $m)) {
-        $_GET['__rw__'] = ltrim($m[1],'/');
+        $_REQUEST['__rw__'] = ltrim($m[1],'/');
         require '_src/_api/_pages.php';
         exit;
     }

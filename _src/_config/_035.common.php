@@ -41,5 +41,5 @@
      */
 
     // debug
-    // dieText( print_r( $cf['site'], true ) );
+    // dieText( print_r( $cf['common'], true ) );
     // echo 'OUTPUT';

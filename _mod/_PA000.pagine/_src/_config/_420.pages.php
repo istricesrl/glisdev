@@ -12,9 +12,9 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
-     * @file
+     * 
      *
      */
 
@@ -99,6 +99,15 @@
         );
 
         // die( 'contenuto ' . print_r( $cnt, true ) );
+
+        // prelevo il javascript della pagina corrente dal database
+        $cf['contents']['page']['javascript'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT javascript FROM pagine WHERE id = ?',
+            array(
+                array( 's' => $cf['contents']['page']['id'] )
+            )
+        );
 
         // se sono presenti contenuti
         if( ! empty( $cnt ) ) {

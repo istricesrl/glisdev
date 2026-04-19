@@ -2,6 +2,29 @@
 Questo file serve per orientarsi all'interno del framework GlisWeb; si tratta di una sorta di guida
 generale, da tenere sotto mano mentre si studia il framework.
 
+## architettura generale
+Il framework GlisWeb, come ogni web application, risponde su chiamata e termina l'esecuzione inviando l'output al
+richiedente. Quando il framework riceve una chiamata, questa viene gestita in primo luogo dal file /.htaccess (su
+Apache) o dal file /index.php (su Nginx).
+
+L'esecuzione viene a quel punto passata a una API in grado di gestire la richiesta; ad esempio, se viene richiesta
+una pagina web, l'esecuzione passerà a /_src/_api/_pages.php (vedi sotto).
+
+Una volta passata l'esecuzione all'API di competenza, questa si occuperà innanzitutto di fare il bootstrap del framework
+includendo il file /_src/_config.php (si veda la documentazione del file per maggiori dettagli) il quale provvede a:
+
+- dichiarare le funzioni core
+- includere i file di configurazione
+- includere le librerie
+- predisporre l'ambiente
+- eseguire i runlevel
+
+Il funzionamento di /_src/_config.php è troppo complicato per essere riassunto qui, ma leggere questo file dovrebbe essere
+il primo passo per chi vuole studiare il funzionamento del framework.
+
+Una volta che l'esecuzione del kernel del framework è terminata, il controllo torna all'API chiamante che ha facoltà di
+eseguire tutte le operazioni che vuole prima di terminare inviando l'output al richiedente.
+
 ## descrizione dei file
 In questa sezione tutti i file e le cartelle del framework sono riportati in ordine logico, per dare un'idea dell'insieme.
 Ogni file contiene poi i commenti dettagliati sul proprio funzionamento.
@@ -28,9 +51,9 @@ require         | phpoffice/phpword             | *                 |
 require         | phpoffice/phpspreadsheet      | *                 |
 require         | phpoffice/phppresentation     | *                 |
 require         | html2text/html2text           | *                 |
-require         | phpmailer/phpmailer           | 6.*               |
+require         | phpmailer/phpmailer           | *                 |
 require         | tecnickcom/tcpdf              | *                 |
-require         | twig/twig                     | 2.*               |
+require         | twig/twig                     | *                 |
 require         | predis/predis                 | *                 |
 require         | codeception/codeception       | *                 |
 require         | codeception/module-phpbrowser | *                 |
@@ -200,6 +223,9 @@ Questa è la macro della pagina degli strumenti dell'archivio del modulo produzi
 ### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.php
 Questa è la macro della dashboard del modulo produzione.
 
+### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.stampe.php
+Questa è la macro della scheda stampe della dashboard del modulo produzione.
+
 ### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.tools.php
 Questa è la macro della pagina degli strumenti della dashboard del modulo produzione.
 
@@ -226,6 +252,9 @@ Questa è la macro della pagina strumenti del ciclo passivo del modulo commercia
 
 ### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.php
 Questa è la macro della dashboard del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.stampe.php
+Questa è la macro della scheda stampe della dashboard del modulo commerciale.
 
 ### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.tools.php
 Questa è la macro della pagina strumenti della dashboard del modulo commerciale.
@@ -269,6 +298,984 @@ Questa è la macro della pagina degli strumenti della dashboard del modulo conte
 ### /_mod/_03000.contenuti/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine del modulo contenuti.
 
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.archivio.php
+Questa è la macro della pagina di archivio del catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.archivio.tools.php
+Questa è la macro della pagina degli strumenti dell'archivio del catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.php
+Questa è la macro della dashboard del modulo catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.stampe.php
+Questa è la macro della scheda stampe della dashboard del modulo catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.tools.php
+Questa è la macro della pagina degli strumenti della dashboard del modulo catalogo.
+
+### /_mod/_04000.catalogo/_src/_inc/_pages/_catalogo.it-IT.php
+Qui vengono definite le pagine del modulo catalogo.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.php
+Questa è la macro della dashboard del modulo logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.archivio.php
+Questa è la macro della dashboard dell'archivio logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.archivio.tools.php
+Questa è la macro della scheda strumenti dell'archivio logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.attivo.php
+Questa è la macro della dashboard del ciclo attivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.attivo.tools.php
+Questa è la macro della scheda strumenti della dashboard del ciclo attivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.passivo.php
+Questa è la macro della dashboard del ciclo passivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.passivo.tools.php
+Questa è la macro della scheda strumenti della daashboard del ciclo passivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.tools.php
+Questa è la macro della scheda strumenti della dashboard della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_pages/_logistica.it-IT.php
+In questo file vengono definite le pagine del modulo logistica.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.php
+Questa è la macro dell'archivio dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.reparti.view.php
+Questa è la macro della pagina di vista dell'archivio reparti.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.tools.php
+Questa è la macro della pagina degli strumenti dell'archivio amministrazione
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.ciclo.attivo.php
+Questa è la macro della dashboard del ciclo attivo dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.ciclo.attivo.tools.php
+Questa è la macro della pagina degli strumenti della dashboard del ciclo attivo dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.ciclo.passivo.php
+Questa è la macro della dashboard del ciclo passivo dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.ciclo.passivo.tools.php
+Questa è la macro della pagina degli strumenti del ciclo passivo dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.php
+Questa è la macro della dashbaord dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.stampe.php
+Questa è la macro della scheda stampe della dashboard dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.tools.php
+Questa è la macro della pagina degli strumenti della dashboard dell'amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_inc/_pages/_amministrazione.it-IT.php
+Qui vengono definite le pagine del modulo amministrazione.
+
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.tools.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.tools.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_pages/_acquisti.it-IT.php
+
+### /_mod/_AC000.account/_src/_inc/_controllers/_account.before.php
+Questa controller viene eseguita al before di ogni elaborazione dell'entità account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.php
+Questa è la macro del form di gestione degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.attribuzione.php
+Questa è la macro della scheda attribuzione del form di gestione degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.stampe.php
+Questa è la macro della scheda stame del form di gestione degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.tools.php
+Questa è la macro della pagina strumenti del form di gestione degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.tools.php
+Questa è la macro degli strumenti della view degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.view.php
+Questa è la macro della view degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_gruppi.form.php
+Questa è la macro della pagina di gestione dei gruppi.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_gruppi.form.tools.php
+Questa è la macro della pagina strumenti della gestione dei gruppi.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_gruppi.view.php
+QUesta è la macro della view dei gruppi.
+
+### /_mod/_AC000.account/_src/_inc/_pages/_account.it-IT.php
+Qui vengono definite le pagine del modulo account.
+
+### /_mod/_AN000.anagrafica/_src/_api/_task/_anagrafica.view.static.popolazione.php
+Questo task si occupa di ripopolare la view static dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_controllers/_anagrafica.finally.php
+Questa controller viene eseguita al finally di ogni elaborazione dell'entità anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.form.php
+Questa è la macro della pagina di gestione degli indirizzi.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.form.tools.php
+Questa è la macro della pagina strumenti della gestione degli indirizzi.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.view.php
+Questa è la macro della view degli indirizzi.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.iban.form.php
+Questa è la macro della pagina di gestione degli IBAN.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.iban.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione degli IBAN.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.iban.view.php
+Questa è la macro della view degli IBAN.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.mail.form.php
+Questa è la macro della pagina di gestione delle mail.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.mail.form.tools.php
+Questa è la macro della pagina strumenti della gestione delle mail.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.mail.view.php
+Questa è la macro della view delle mail.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.php
+Questa è la macro della dashboard dell'archivio dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.telefoni.form.php
+Questa è la macro della pagina di gestione dei telefoni.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.telefoni.form.tools.php
+Questa è la macro della pagina strumenti della gestione telefoni.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.telefoni.view.php
+Questa è la macro della view dei telefoni.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.php
+Questa è la macro della pagina di gestione delle tipologie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.tools.php
+Questa è la macro della pagina strumenti della gestione delle tipologie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.view.php
+Questa è la macro della view delle tipologie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.tools.php
+Questa è la macro della pagina strumenti della dashboard dell'archivio dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.url.form.php
+Questa è la macro della pagina di gestione degli URL.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.url.form.tools.php
+Questa è la macro della pagina strumenti della gestione degli URL.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.archivio.url.view.php
+Questa è la macro della view degli URL.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.archiviazione.php
+Questa è la macro della scheda archiviazione della gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.cliente.php
+Questa è la macro della scheda cliente della gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.collaboratore.php
+Questa è la macro della scheda collaboratore della gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.default.php
+Questa è la macro di default inclusa in tutte le schede della gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.fornitore.php
+Questa è la macro della scheda fornitore della gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.php
+Questa è la macro della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.privacy.php
+Questa è la macro della scheda privacy del modulo di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.produttore.php
+Questa è la macro della scheda produttore della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.relazioni.php
+Questa è la macro della scheda relazioni della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.tools.php
+Queata è la macro della pagina strumenti della gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.stampe.php
+Questa è la macro della scheda stampe dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.tools.php
+Questa è la macro della pagina strumenti della view dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.view.archiviate.php
+Questa è la macro della view delle anagrafiche archiviate.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.view.php
+Questa è la macro della view delle anagrafiche.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.php
+Questa è la macro della pagina di gestione delle categorie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.anagrafiche.php
+Questa è la macro della scheda anagrafiche della pagina di gestione delle categorie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione delle categorie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.form.tools.php
+Questa è la macro della pagina strumenti della gestione delle categorie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.tools.php
+Questa è la macro della pagina strumenti della view delle categorie del'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_categorie.anagrafica.view.php
+Questa è la macro della view delle categorie dell'anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.php
+Questa è la macro della pagina di gestione del ranking
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.anagrafiche.php
+Questa è la macro della scheda anagrafiche della pagina di gestione ranking.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione ranking.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.form.tools.php
+Questa è la macro della pagina strumenti della gestione ranking.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_ranking.view.php
+Questa è la macro della view del ranking.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_pages/_anagrafica.it-IT.php
+Qui vengono definite le pagine del modulo anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_lib/_mysql.utils.add.php
+Questa libreria contiene funzioni specifiche dell'anagrafica da aggiungere a /_src/_lib/_mysql.utils.php.
+
+### /_mod/_AT000.attivita/_src/_api/_task/_attivita.archiviazione.php
+Questo task si occupa di archiviare dei gruppi di attività.
+
+### /_mod/_AT000.attivita/_src/_api/_task/_attivita.view.static.popolazione.php
+Questo task si occupa di popolare la view statica delle attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_controllers/_attivita.finally.php
+Questa controller viene eseguita al finally di ogni elaborazione dell'entità attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_anagrafica.form.attivita.php
+Questa è la macro della scheda attività della gestione anagrafica.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_anagrafica.form.lavoro.php
+Questa è la macro della scheda lavoro della gestione anagrafica.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.attivita.form.archiviazione.php
+Questa è la macro della scheda archiviazione della gestione attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.attivita.form.php
+Questa è la macro della pagina di gestione attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.attivita.form.tools.php
+Questa è la macro della pagina strumenti della gestione attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.attivita.tools.php
+Questa è la macro della pagina strumenti della view attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.attivita.view.archiviate.php
+Questa è la macro della view delle attività archiviate.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.attivita.view.php
+Questa è la macro della view delle attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.tipologie.attivita.form.php
+Questa è la macro della pagina di gestione delle tipologie di attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.tipologie.attivita.form.tools.php
+Questa è la macro della pagina degli strumenti della gestione delle tipologie di attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.tipologie.attivita.view.php
+Questa è la macro della view delle tipologie di attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_pages/_anagrafica.it-IT.php
+Qui vengono definite le pagine del modulo attività.
+
+### /_mod/_AT000.attivita/_src/_inc/_pages/_produzione.it-IT.php
+Qui vengono definite le pagine del modulo attività relative al modulo produzione.
+
+### /_mod/_AT000.attivita/_src/_lib/_mysql.utils.add.php
+In questa libreria vengono definite funzioni specifiche per le attività da aggiungere a /_src/_lib/_mysql.utils.php.
+
+### /_mod/_CO000.contenuti/_src/_inc/_controllers/_contenuti.after.php
+Questa controller viene eseguita dopo ogni ciclo di lavoro della funzione controller() per l'entità contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_controllers/_contenuti.before.php
+Questa controller viene eseguita prima di ogni ciclo di lavoro della funzione controller() per l'entità contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.contenuti.php
+Questa è la macro della scheda di gestione contenuti della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.menu.php
+Questa è la macro della scheda di gestione dei menu della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.sem.php
+Questa è la macro della scheda di gestione SEM/SMM della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.web.php
+Questa è la macro della scheda di gestione web della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.contenuti.php
+Questa è la macro della scheda contenuti del form di gestione dei marchi.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.sem.php
+Questa è la macro della scheda SEM/SMM del form di gestione dei marchi.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.web.php
+Questa è la macro della scheda web del form di gestione dei marchi.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.contenuti.php
+Questa è la macro della scheda di gestione contenuti della pagina di gestione prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.sem.php
+Questa è la macro della scheda di gestione SEM/SMM della pagina di gestione prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.web.php
+Questa è la macro della scheda di gestione web della pagina di gestione prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.php
+Questa è la macro della dashboard dell'archivio dei contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.testo.php
+Questa è la macro della pagina di gestione dell'archivio dei contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.tools.php
+Questa è la macro della pagina degli strumenti della pagina di gestione dei contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.wysiwyg.php
+Questa è la macro della scheda WYSIWYG della pagina di gestione contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.view.php
+Questa è la macro della view dei contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.contenuti.php
+Questa è la macro della pagina di gestione dei contenuti delle categorie di notizie.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.menu.php
+Questa è la pagina di gestione dei menu delle categorie di notizie.
+
+non presente in READ.md: /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.metadati.php
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.sem.php
+Questa è la macro della pagina di gestione SEM/SMM delle categorie di notizie.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.web.php
+Questa è la pagina di gestione dei contenuti web delle categorie di notizie.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.contenuti.php
+Questa è la macro della pagina di gestione dei contenuti delle notizie.
+
+non presente in READ.md: /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.metadati.php
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.sem.php
+Questa è la macro della pagina di gestione SEM/SMM delle notizie.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.web.php
+Questa è la macro della pagina di contenuti web delle notizie.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.contenuti.php
+Questa è la macro della pagina di gestione dei contenuti delle pagine.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.javascript.php
+Questa è la macro della scheda di gestione del javascript della pagina di gestione delle pagine.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.macro.php
+Questa è la macro della scheda di gestione delle macro della pagina di gestione delle pagine.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.metadati.php
+Questa è la macro della scheda di gestione metadati della pagina di gestione delle pagine.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.pagine.form.sem.php
+Quesa è la macro della pagina di gestione SEM/SMM delle pagine.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_mail.template.form.contenuti.php
+Questa è la macro della scheda contenuti della pagina di gestione dei template mail.
+
+### /_mod/_CO000.contenuti/_src/_inc/_pages/_catalogo.it-IT.php
+Questo file contiene le dichiarazioni delle pagine di gestione contenuti del catalogo prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_pages/_contenuti.it-IT.php
+Qui vengono definite le pagine del modulo contenuti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_pages/_mail.it-IT.php
+Questo file contiene la dichiarazione delle pagine di gestione contenuti dei template mail.
+
+non presente in READ.md: /_mod/_CT000.contatti/READ.md
+
+### /_mod/_CT000.contatti/_src/_config/_030.common.php
+In questo file vengono definiti i moduli di contatto standard del framework.
+
+### /_mod/_CT000.contatti/_src/_config/_035.common.php
+In questo file le configurazioni presenti in $cx vengono unite a $cf, inoltre $ct viene collegato a $cf tramite puntatore.
+
+### /_mod/_CT000.contatti/_src/_config/_750.controller.php
+Questa è la controller del modulo contatti, si occupa di gestire in primo luogo le richieste che arrivano dai moduli presenti
+sul sito valutandole in base al prefisso __ct__.
+
+### /_mod/_CT000.contatti/_src/_inc/_controllers/_form/_default.php
+Questa è la controller standard del modulo di contatti di default.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.archiviazione.php
+Questa è la macro della pagina archiviazione della gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.dati.php
+Questa è la macro della pagina di gestione dati della gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.php
+Questa è la macro della pagina di gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.tools.php
+Questa è la macro della pagina strumenti della gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.tools.php
+Questa è la macro della pagina degli strumenti della view contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.view.archiviati.php
+Questa è la macro della view dei contatti archiviati.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.view.php
+Questa è la macro della view dei contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_pages/_contenuti.it-IT.php
+Qui vengono definite le pagine del modulo contatti.
+
+### /_mod/_CT000.contatti/_src/_lib/_mysql.utils.add.php
+Questa libreria contiene funzioni specifiche per i contatti da aggiungere a /_src/_lib/_mysql.tools.php.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.aggregate.php
+Questa è la macro della scheda aggregate della pagina di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.php
+Questa è la macro della pagina di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.stampe.php
+Questa è la macro della scheda stampe della pagine di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.view.php
+Questa è la macro della view delle righe dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.archiviazione.php
+Questa è la macro della scheda archiviazione della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.documenti.articoli.php
+Questa è la macro della scheda articoli della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.evasione.php
+Questa è la macro della scheda evasione della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.pagamenti.php
+Questa è la macro della scheda pagamenti della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.php
+Questa è la macro della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.relazioni.php
+Questa è la macro della scheda relazioni della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.php
+Questa è la macro della pagina di gestione dei pagamenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione dei pagamenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.view.php
+Questa è la macro della view dei pagamenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.view.php
+Questa è la macro della view dei documenti.
+
+### /_mod/_DO000.documenti/_src/_inc/_pages/_amministrazione.it-IT.php
+Questa è la macro della dashboard dell'amministrazione.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.articoli.view.php
+Questa è la macro della view delle righe delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.archiviazione.php
+Questa è la macro della scheda archiviazione della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.documenti.articoli.php
+Questa è la macro della scheda articoli della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.pagamenti.php
+Questa è la macro della scheda pagamenti della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.php
+Questa è la macro della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.relazioni.php
+Questa è la macro della scheda relazioni della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.stampe.php
+Questa è la macro della scheda stampe della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.pagamenti.view.php
+Questa è la macro della view dei pagamenti delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.tools.php
+Questa è la macro della scheda strumenti della view delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.view.archiviate.php
+Questa è la macro della scheda archivio della view delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.view.php
+Questa è la macro della view delle fatture attive.
+
+### /_mod/_DO010.fatture/_src/_inc/_pages/_amministrazione.it-IT.php
+In questo file vengono dichiarate le pagine relative alle fatture per il modulo amministrazione.
+
+### /_mod/_DO040.offerte/_src/_inc/_pages/_commerciale.it-IT.php
+In questo file vengono dichiarate le pagine relative alle offerte per il modulo commerciale.
+
+### /_mod/_FI000.file/_src/_inc/_controllers/_file.before.php
+Questa controller viene innescata al before per ogni elaborazione della tabella file.
+
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_catalogo.marchi.form.file.php
+
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.php
+Questa è la macro della pagina di gestione dei file nell'archivio contenuti.
+
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.tools.php
+Questa è la macro della pagina degli strumenti della gestione dei file nell'archivio contenuti.
+
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.view.php
+Questa è la macro della vista dei file nell'archivio contenuti.
+
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_contenuti.categorie.notizie.form.file.php
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_contenuti.notizie.form.file.php
+
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.pagine.form.file.php
+Questa è la macro della scheda file del modulo di gestione delle pagine.
+
+### /_mod/_FI000.file/_src/_inc/_macro/_mail.out.form.file.php
+Questa è la macro di gestione dei file nella gestione delle mail in uscita.
+
+### /_mod/_FI000.file/_src/_inc/_macro/_mail.sent.form.file.php
+Questa è la macro di gestione dei file nella gestione delle mail inviate.
+
+### /_mod/_FI000.file/_src/_inc/_macro/_mail.template.form.file.php
+Questa è la macro della gestione file associati a un template mail.
+
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_pages/_catalogo.it-IT.php
+
+### /_mod/_FI000.file/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono definite le pagine del modulo file relative ai contenuti.
+
+### /_mod/_FI000.file/_src/_inc/_pages/_mail.it-IT.php
+In questo file vengono definite le pagine del modulo file relative alle mail.
+
+### /_mod/_IM000.immagini/_src/_api/_task/_images.resize.php
+Questo task seleziona un'immagine e la ridimensiona. Il framework supporta un meccanismo di scalatura automatica delle immagini
+piuttosto sofisticato, oltre a un sistema per la conversione delle immagini in formato webp. Per maggiori dettagli sulla gestione
+delle immagini da parte del framework si veda, oltre alla documentazione di questo file, anche quella dei file
+/_src/_config/_360.image.php e /_src/_config/_365.image.php.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_anagrafica.form.immagini.php
+Questa è la macro della scheda di gestione immagini dell'anagrafica.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.articoli.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione articoli.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.categorie.prodotti.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione delle categorie prodotti.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.marchi.form.immagini.php
+Questa è la macro della scheda immagini del modulo di gestione marchi.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.prodotti.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione dei prodotti.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.form.php
+Questa è la macro della pagina di gestione immagini dell'archivio contenuti.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione immagini dell'archivio contenuti.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.view.php
+Questa è la macro della vista immagini dell'archivio contenuti.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.categorie.notizie.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione delle categorie notizie.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.notizie.form.immagini.php
+Questa è la macro della scheda immagini della pagina di gestione delle notizie.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.pagine.form.immagini.php
+Questa è la macro della scheda immagini della pagina di gestione dei contenuti.
+
+### /_mod/_IM000.immagini/_src/_inc/_pages/_anagrafica.it-IT.php
+In questo file vengono definite le pagine relative alle immagini per l'anagrafica.
+
+### /_mod/_IM000.immagini/_src/_inc/_pages/_catalogo.it-IT.php
+In questo file vengono definite le pagine relative alle immagini per il catalogo.
+
+### /_mod/_IM000.immagini/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono definite le pagine relative alle immagini per i contenuti.
+
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.stampe.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.tools.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.archiviati.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.form.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.stampe.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.tools.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.archiviati.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_pages/_acquisti.it-IT.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_pages/_catalogo.it-IT.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_lib/_mysql.utils.add.php
+
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.out.php
+Questo task pulisce la coda delle mail in uscita.
+
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.sent.php
+Questo task pulisce la coda delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.resend.php
+Questo task riaccoda per l'invio una mail già inviata.
+
+### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.send.php
+Questo task elabora la coda delle mail in uscita, inviando il primo messaggio in lista.
+
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.after.php
+Questa è la controller che interviene dopo l'elaborazione di ogni oggetto della coda delle mail in uscita.
+
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.before.php
+Questa è la controller che viene eseguita prima dell'elaborazione di ogni oggetto della coda delle mail in uscita.
+
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.finally.php
+Questa controller viene eseguita alla fine di tutte le elaborazioni della coda delle mail in uscita.
+
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.after.php
+Questa controller viene eseguita dopo l'elaborazione di ogni oggetto della coda delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.before.php
+Questa controller viene eseguita prima di ogni elaborazione della coda delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.finally.php
+Questa controller viene eseguita alla fine delle elaborazioni di ogni oggetto della coda delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.form.php
+Questa è la macro del modulo di gestione delle mail in uscita.
+
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.form.tools.php
+Questa è la macro della scheda tools del modulo di gestione delle mail in uscita.
+
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.view.php
+Questa è la macro della view delle mail in uscita.
+
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.form.php
+Questa è la macro del modulo di gestione delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.form.tools.php
+Questa è la macro della scheda tools del modulo di gestione delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.view.php
+Questa è la macro della view delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_inc/_macro/_mail.tools.php
+Questa è la macro della scheda strumenti della coda delle mail inviate.
+
+### /_mod/_MA000.mail/_src/_inc/_pages/_mail.it-IT.php
+In questo file vengono definite le pagine del modulo mail.
+
+### /_mod/_NO000.notizie/_src/_config/_030.common.php
+In questo file vengono definite le variabili comuni e le costanti di base del modulo notizie.
+
+### /_mod/_NO000.notizie/_src/_config/_035.common.php
+In questo file le configurazioni comuni del modulo notizie vengono integrate con le configurazioni da file.
+
+### /_mod/_NO000.notizie/_src/_config/_310.pages.php
+Questo file si occupa di caricare i dati relativi all'albero delle categorie di notizie e delle notizie nell'albero generale
+dei contenuti del sito.
+
+### /_mod/_NO000.notizie/_src/_config/_420.pages.php
+In questo file vengono caricati i dati specifici della categoria di notizie o della notizia correntemente visualizzata.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione delle categorie di notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.php
+Questa è la macro della pagina di gestione delle categorie di notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione delle categorie di notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.tools.php
+Questa è la macro della scheda strumenti della vista delle categorie di notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.view.archiviate.php
+Questa è la macro della view delle categorie di notizie archiviate.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.view.php
+Questa è la macro della view delle categorie di notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione delle notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.php
+Questa è la macro del modulo di gestione delle notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione delle notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.tools.php
+Questa è la macro della scheda strumenti della view delle notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.archiviate.php
+Questa è la macro della view delle notizie archiviate.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.php
+Questa è la macro della view delle notizie.
+
+non presente in READ.md: /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.form.php
+non presente in READ.md: /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.view.php
+
+### /_mod/_NO000.notizie/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono definite le pagine relative ai contenuti del modulo notizie.
+
+### /_mod/_NO000.notizie/_src/_lib/_mysql.utils.add.php
+Questa è una libreria di funzioni aggiuntive per MySQL del modulo notizie.
+
+### /_mod/_PA000.pagine/_src/_config/_310.pages.php
+In questo file la struttura delle pagine viene caricata nell'albero dei contenuti del sito.
+
+### /_mod/_PA000.pagine/_src/_config/_420.pages.php
+In questo file vengono caricati i dati specifici della pagina corrente.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.archivio.menu.view.php
+Questa è la macro della view dei menu dell'archivio contenuti.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione delle pagine.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.menu.php
+Questa è la macro della scheda menu del modulo di gestione delle pagine.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.php
+Questa è la macro del modulo di gestione delle pagine.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione delle pagine.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.tools.php
+QUesta è la macro della scheda strumenti della view delle pagine.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.archiviate.php
+Questa è la macro della view delle pagine archiviate.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.php
+Questa è la macro della view delle pagine.
+
+non presente in READ.md: /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.redirect.view.php
+
+### /_mod/_PA000.pagine/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono deifinite le pagine relative alla gestione delle pagine.
+
+### /_mod/_PA000.pagine/_src/_lib/_mysql.utils.add.php
+Questa è una libreria di funzioni MySQL aggiuntive del modulo pagine.
+
+### /_mod/_PR000.prodotti/_src/_config/_030.common.php
+In questo file vengono definite le variabili comuni del modulo prodotti.
+
+### /_mod/_PR000.prodotti/_src/_config/_035.common.php
+In questo file la configurazione comune del modulo prodotti viene integrata con la configurazione letta da file.
+
+### /_mod/_PR000.prodotti/_src/_config/_310.pages.php
+In questo file l'albero delle categorie dei prodotti e dei prodotti viene integrato con l'albero generale dei
+contenuti del sito.
+
+### /_mod/_PR000.prodotti/_src/_inc/_controllers/_articoli.finally.php
+Questa controller viene eseguita alla fine di ogni gruppo di elaborazioni della tabella articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione degli articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php
+Questa è la macro della scheda caratteristiche del modulo di gestione degli articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
+Questa è la macro della scheda distinta base del modulo di gestione degli articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php
+Questa è la macro del modulo di gestione degli articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.relazioni.php
+Questa è la macro della scheda relazioni del modulo di gestione articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.view.php
+Questa è la macro della vista articoli.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione categorie prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.php
+Questa è la macro del modulo di gestione categorie prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.prodotti.php
+Questa è la macro della scheda prodotti del modulo di gestione categorie prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione categorie prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.tools.php
+Questa è la macro della scheda strumenti della vista prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.archiviati.php
+Questa è la macro della vista delle categorie prodotti archiviate.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.php
+Questa è la macro della vista categorie prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione marchi.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.php
+Questa è la macro del modulo di gestione marchi.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.prodotti.php
+Questa è la macro della scheda prodotti del modulo di gestione marchi.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione marchi.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.tools.php
+Questa è la macro della scheda strumenti della vista marchi.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.archiviati.php
+Questa è la macro della vista marchi archiviati.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.php
+Questa è la macro della vista marchi.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.articoli.php
+Questa è la macro della scheda articoli del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.caratteristiche.php
+Questa è la macro della scheda caratteristiche del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.categorie.php
+Questa è la macro della scheda categorie del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.php
+Questa è la macro del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.relazioni.php
+Questa è la macro della scheda relazioni del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.stampe.php
+Questa è la macro della scheda stampe della vista prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.tools.php
+Questa è la macro della scheda strumenti della vista prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.archiviati.php
+Questa è la macro della vista prodotti archiviati.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.php
+Questa è la macro della vista prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_pages/_catalogo.it-IT.php
+Questa è la macro della dashboard catalogo.
+
+### /_mod/_PR000.prodotti/_src/_lib/_mysql.utils.add.php
+Questa è una libreria aggiuntiva di funzioni per MySQL relative ai prodotti.
+
+### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.php
+Questa è la macro del modulo di gestione dei template mail.
+
+### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione template mail.
+
+### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.view.php
+Questa è la macro della vista template mail.
+
+### /_mod/_TE000.template/_src/_inc/_pages/_mail.it-IT.php
+In questo file vengono definite le pagine relative alla gestione dei template mail.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_anagrafica.form.video.php
+Questa è la macro della scheda video del modulo di gestione anagrafica.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.articoli.form.video.php
+Questa è la macro della scheda video del modulo di gestione articoli.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.categorie.prodotti.form.video.php
+Questa è la macro della scheda video del modulo di gestione categorie prodotti.
+
+non presente in READ.md: /_mod/_VI000.video/_src/_inc/_macro/_catalogo.marchi.form.video.php
+
+### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.prodotti.form.video.php
+Questa è la macro della scheda video del modulo di gestione prodotti.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.php
+Questa è la macro del modulo di gestione video.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione video.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.view.php
+Questa è la macro della vista video.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.categorie.notizie.form.video.php
+Questa è la macro della scheda video del modulo di gestione categorie notizie.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.notizie.form.video.php
+Questa è la macro della scheda video del modulo di gestione notizie.
+
+### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.pagine.form.video.php
+Questa è la macro della scheda video del modulo di gestione pagine.
+
+### /_mod/_VI000.video/_src/_inc/_pages/_anagrafica.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative all'anagrafica.
+
+### /_mod/_VI000.video/_src/_inc/_pages/_catalogo.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative al catalogo prodotti e articoli.
+
+### /_mod/_VI000.video/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative ai contenuti.
+
 ### /_src/_config.php
 Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
 comunque il suo compito è quello di includere tutti i componenti del framework per renderli disponibili al successivo codice sorgente. Qualsiasi
@@ -278,7 +1285,21 @@ file PHP nel quale si desidera utilizzare il framework deve iniziare o comunque 
 require '<percorso>_config.php';
 ```
 
-Laddove <percorso> è il percorso necessario a raggiungere il file /_src/_config.php.
+Laddove <percorso> è il percorso necessario a raggiungere il file /_src/_config.php. Per complicare un po' le cose, il framework potrebbe essere
+installato in una sotto cartella della document root, in questo caso è più sicuro usare:
+
+```
+// inclusione del framework
+if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+    require '<percorso>_config.php';
+} else {
+    require INCLUDE_SUBDIR . '_config.php';
+}
+```
+
+Laddove INCLUDE_SUBDIR è una costante definita dal file che chiama il framework dalla document root. Questo scenario di funzionamento è tipico del
+server web Nginx, che differentemente da Apache non supporta i file .htaccess e quindi richiede che tutto il routing sia effettuato tramite il file
+/index.php.
 
 ### /_src/_api/_bookmarks.php
 Questa API si occupa di gestire la memorizzazione di elementi nello spazio di lavoro della sessione. Il meccanismo del "pin" di elementi in sessione
@@ -309,6 +1330,14 @@ Questo file ha lo scopo di renderizzare e erogare le pagine. Svolge numerose fun
 per i dettagli. In sintesi, riceve le richieste di pagina in base alle regole del file /.htaccess e le soddisfa tramite le informazioni in suo
 possesso.
 
+### /_src/_api/_rest.php
+Questa API fondamentale per il funzionamento del framework gestisce tutte le chiamate REST in entrata. Per maggiori dettagli si rimanda alla
+lettura del codice dell'API stessa.
+
+### /_src/_api/_upload.php
+Questa API è la controparte dell'uploader Javascript creato da /_src/_js/_lib/_uploader.js e si occupa di ricevere i dati e salvarli su disco.
+Per maggiori dettagli si rimanda al codice dell'API stessa e al codice di /_src/_js/_lib/_uploader.js.
+
 ### /_src/_api/_user.php
 Questa API consente il login dell'utente, è utilizzata per le integrazioni e per il dialogo con app e altri sistemi esterni. Tramite il meccanismo di
 login è possibile ottenere un'API key temporanea per fare più rapidamente le chiamate successive. Per ulteriori dettagli sul meccanismo di login
@@ -316,6 +1345,9 @@ tramite API key si vedano i commenti a questo file e ai file dev/_src/_config/_2
 
 ### /_src/_api/_job/_test.job.php
 Questo è un job di test.
+
+### /_src/_api/_print/_default.csv.php
+Questa stampa consente di stampare in CSV tutte le view del framework; è collegata al tasto "esporta in CSV" che si trova nelle view standard.
 
 ### /_src/_api/_report/_cookie.php
 Questo report restituisce l'elenco di tutti i cookie presenti nel browser per il dominio corrente indicando se sono gestiti o meno dal
@@ -326,6 +1358,9 @@ Questo report innesca l'importazione dei file presenti in /var/spool/import/todo
 operazioni svolte. Normalmente l'importazione dei file è svolta dall'API cron, ma questo report può essere fondamentale per lo sviluppo, il test
 e il debug dei nuovi tracciati di importazione. Per accedere al report utilizzare il percorso /report/import.
 
+### /_src/_api/_report/_memcache.php
+Questo report mostra il contenuto dell'indice di memcache.
+
 ### /_src/_api/_status/_cf.php
 Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
 per evitare problemi di sicurezza. Tramite una regola di /.htaccess l'accesso a questa API è possibile tramite l'URL speciale /cf.
@@ -334,6 +1369,10 @@ per evitare problemi di sicurezza. Tramite una regola di /.htaccess l'accesso a 
 Questa API restituisce un report di auto diagnostica del framework, indicando lo stato corrente della piattaforma ed eventuali errori o warning. Si
 tratta di un file piuttosto complesso, al cui sorgente si rimanda per approfondimenti. Una regola di /.htaccess rende disponibile questa API all'URL
 speciale /status.
+
+### /_src/_api/_status/_session.php
+Questa API restituisce informazioni minimali sulla sessione corrente e viene interrogata in background dal template Athena (vedi il codice di
+/_src/_tpl/_athena/src/js/main.js dove viene chiamata come /status/session).
 
 ### /_src/_api/_task/_framework.setup.php
 TODO Questo task è ancora da implementare.
@@ -349,6 +1388,10 @@ Questo task, piuttosto semplice, scarica i dati relativi alla geografia dalla ve
 e li copia nella cartella DIR_VAR_SPOOL_IMPORT per sfruttare il normale sistema di importazione automatica dei file CSV del framework
 (dev/_src/_config/_740.controller.php) e aggiornare le informazioni relative alla geografia per il deploy corrente.
 
+### /_src/_api/_task/_log.clean.php
+Questo semplice task si occupa di pulire la cartella /log; può funzionare in modalità soft (cancella solo i log nella cartella principale) o hard
+(cancella ricorsivamente tutti i log).
+
 ### /_src/_api/_task/_memcache.clean.php
 Questo task si occupa semplicemente di svuotare la memoria di memcache.
 
@@ -361,12 +1404,21 @@ funzionale allo scopo di tenere aggiornati tutti i database di tutti i deploy se
 
 Il meccanismo di patch del database è illustrato nel dettaglio nel file /_src/_api/_task/_mysql.patch.php al quale si rimanda per approfondimenti.
 
+### /_src/_api/_task/_pages.cache.clean.php
+Questo task elimina la cache statica delle pagine (/var/cache/pages).
+
+### /_src/_api/_task/_sitemap.clean.php
+Questo task si occupa di eliminare le sitemap (da /var/sitemap).
+
 ### /_src/_api/_task/_test.cron.php
 Questo è un semplice task di test, utile per verificare il funzionamento del sistema dei task ricorrenti; non fa altro che scrivere su un file di log quando
 viene eseguito, in questo modo è facile fare dei test e del debug sul meccanismo dei task.
 
 ### /_src/_api/_task/_test.job.start.php
 Questo task avvia un job di test.
+
+### /_src/_api/_task/_twig.cache.clean.php
+Questo task svuota la cache di Twig (/var/cache/twig).
 
 ### /_src/_config/_000.debug.php
 Questo file di configurazione inizializza l'array $cf['debug'] e setta i default per le sue chiavi principali.
@@ -464,6 +1516,12 @@ la redirezione viene applicata tramite header http. In caso di redirect, l'esecu
 
 ### /_src/_config/_140.session.php
 In questo file vengono gestiti i tag UTM in $cf['session']['utm'] e inizializzate le impostazioni per l'anti spam in $cf['session']['spam'].
+
+### /_src/_config/_160.microsoft.php
+In questo file vengono dichiarate le variabili relative ai profili Microsoft.
+
+### /_src/_config/_165.microsoft.php
+In questo file vengono applicate le configurazioni relative ai profili Microsoft.
 
 ### /_src/_config/_180.privacy.php
 In questo file vengono lette dal database le impostazioni di privacy dei moduli e vengono riportate su $cf['privacy']['moduli']. Si noti che la parte relativa alla privacy è tuttora in costante sviluppo.
@@ -772,6 +1830,25 @@ e in particolare vengono cercati questi file:
 Dal momento che la creazione di così tante icone può risultare tediosa, è possibile avvalersi di strumenti come https://www.favicon-generator.org/ in
 attesa che il framework implementi una propria gestione della scalatura delle favicon.
 
+### /_src/_inc/_contents/_affiliazioni.it-IT.html
+Questo file contiene il testo della pagina standard di divulgazione delle affiliazioni.
+
+### /_src/_inc/_contents/_privacy.it-IT.html
+Questo file contiene il testo della pagina standard dell'informativa privacy e cookie.
+
+### /_src/_inc/_controllers/_default.after.php
+Questa controller viene eseguita dopo ogni ciclo di lavoro della funzione controller().
+
+### /_src/_inc/_controllers/_default.append.php
+Questa controller viene eseguita durante ogni ciclo di lavoro della funzione controller(), dopo la composizione della query e prima della sua esecuzione.
+
+### /_src/_inc/_controllers/_default.before.php
+Questa controller viene eseguita prima di ogni ciclo di lavoro della funzione controller().
+
+### /_src/_inc/_controllers/_default.finally.php
+Questa controller viene eseguita dopo ogni gruppo di cicli di lavoro della funzione controller(), cioè dopo il ciclo principale e dopo tutti i sotto cicli
+per i subform.
+
 ### /_src/_inc/_macro/_app.php
 Questa è la macro di pagina di default della pagina app. In standard non prevede particolari funzionalità, ma è pensata per essere customizzata.
 
@@ -781,27 +1858,78 @@ Questa è la macro di pagina della dashboard, la pagina principale dell'area adm
 ### /_src/_inc/_macro/_dashboard.tools.php
 Questa è la macro di pagina della dashboard tools, la pagina di strumenti della dashboard.
 
+### /_src/_inc/_macro/_delete.php
+Questa è la macro della pagina di cancellazione del template Athena e si occupa fra le altre cose di chiedere la conferma all'utente prima della cancellazione.
+
+### /_src/_inc/_macro/_password.reset.php
+Questa macro si occupa di gestire il cambio password. Per maggiori dettagli si rimanda al codice della macro stessa.
+
+### /_src/_inc/_macro/_phpinfo.php
+Questa macro si limita a visualizzare l'output di phpinfo() e a terminare l'esecuzione del framework.
+
 ### /_src/_inc/_macro/_security.php
 Questo file implementa il firewall applicativo del framework ed è quindi cruciale per la sua sicurezza. Viene incluso da /_src/_config.php e si occupa
 di filtrare le richieste potenzialmente dannose. Per i dettagli del suo funzionamento si vedano i commenti al codice.
 
+### /_src/_inc/_macro/_strumenti.php
+Questa è la macro della pagina strumenti del template Athena.
+
+### /_src/_inc/_macro/_default/_default.form.php
+Questa macro contiene le logiche comuni a tutte le pagine di tipo form.
+
+### /_src/_inc/_macro/_default/_default.form.multilingua.php
+Questa macro contiene le logiche necessarie al funzionamento dei form multilingua.
+
 ### /_src/_inc/_macro/_default/_default.tools.php
 Questo file è una macro di default inclusa soprattutto da pagine che utilizzano lo schema metro.
 
+### /_src/_inc/_macro/_default/_default.view.php
+Questa macro contiene le logiche comuni a tutte le pagine di tipo view.
+
+### /_src/_inc/_pages/_app.en-GB.php
+Questo file contiene la dichiarazione delle pagine della web app standard del framework in inglese.
+
 ### /_src/_inc/_pages/_app.it-IT.php
-Questo file contiene la dichiarazione delle pagine della web app standard del framework.
+Questo file contiene la dichiarazione delle pagine della web app standard del framework in italiano.
 
 ### /_src/_inc/_pages/_dashboard.it-IT.php
 Questo file contiene la dichiarazione delle pagine della dashboard del CMS.
 
+### /_src/_inc/_pages/_delete.it-IT.php
+Questo file contiene la dichiarazione della pagina di cancellazione del CMS.
+
+### /_src/_inc/_pages/_legal.en-GB.php
+Questo file contiene la dichiarazione delle pagine legali in inglese.
+
+### /_src/_inc/_pages/_legal.fr-FR.php
+Questo file contiene la dichiarazione delle pagine legali in francese.
+
+### /_src/_inc/_pages/_legal.it-IT.php
+Questo file contiene la dichiarazione delle pagine legali.
+
 ### /_src/_inc/_pages/_null.it-IT.php
 Questo file contiene la dichiarazione della pagina NULL utilizzata per l'errore HTTP 404.
+
+### /_src/_inc/_pages/_password.it-IT.php
+Questo file contiene la dichiarazione delle pagine per il reset della password.
 
 ### /_src/_inc/_pages/_site.it-IT.php
 Questo file è vuoto in modo che possa essere facilmente customizzato.
 
+### /_src/_inc/_pages/_strumenti.it-IT.php
+Questo file contiene la dichiarazione delle pagine strumenti del CMS.
+
 ### /_src/_js/_main.js
 Questa libreria Javascript contiene le funzioni di utilità generale del framework, nonché le operazioni da eseguire al caricamento del DOM.
+
+### /_src/_js/_lib/_rest.js
+Questa libreria Javascript contiene funzioni che semplificano l'interazione con gli endpoint REST.
+
+### /_src/_js/_lib/_selectbox.js
+Questa libreria Javascript implementa una semplice combobox per il framework.
+
+### /_src/_js/_lib/_uploader.js
+Questa libreria Javascript implementa un semplice file uploader per il framework.
 
 ### /_src/_lib/_acl.utils.php
 Questa libreria contiene le funzioni di utilità per la gestione dei permessi degli utenti.
@@ -830,6 +1958,9 @@ Questa libreria è ancora da implementare e dovrebbe contenere una collezione di
 ### /_src/_lib/_ftp.tools.php
 Questa libreria è ancora da implementare e dovrebbe contenere una collezione di funzioni per la gestione del protocollo FTP.
 
+### /_src/_lib/_image.tools.php
+Questa libreria contiene vari strumenti per la gestione delle immagini.
+
 ### /_src/_lib/_jwt.tools.php
 Questa libreria contiene le funzioni per la gestione dei token JWT.
 
@@ -839,7 +1970,13 @@ Questa libreria contiene funzioni utili per la localizzazione.
 ### /_src/_lib/_log.utils.php
 Questa libreria è inserita solo per garantire la retrocompatibilità con il vecchio sistema di log del framework.
 
+### /_src/_lib/_mail.tools.php
+Questa libreria contiene diverse funzioni per la gestione delle mail e delle code delle mail.
+
 ### /_src/_lib/_memcache.tools.php
+Questa libreria contiene funzioni per la gestione della cache su Memcache.
+
+### /_src/_lib/_memcache.utils.php
 Questa libreria contiene funzioni per la gestione della cache su Memcache.
 
 ### /_src/_lib/_menu.utils.php
@@ -853,6 +1990,9 @@ Questa libreria contiene funzioni di varia utilità basate su MySQL.
 
 ### /_src/_lib/_output.tools.php
 Questa libreria contiene funzioni per l'output.
+
+### /_src/_lib/_privacy.utils.php
+Questa libreria contiene funzioni per la privacy.
 
 ### /_src/_lib/_random.tools.php
 Questa libreria contiene funzioni utili per la generazione di dati casuali.
@@ -904,6 +2044,34 @@ nella cartella /etc/deploy/; il nome del file va specificato al netto dell'esten
 ./_src/_sh/_deploy.run.sh stable
 ```
 
+La truttura dei file properties necessari per lo script di deploy è piuttosto semplice, si tratta sostanzialmente
+di un elenco di coppie chiave/valore. Le chiavi da compilare possono variare leggermente a seconda del tipo di deploy che
+si desidera configurare, la seguente tabella riporta le più comuni:
+
+chiave                      | descrizione                                                   
+----------------------------|-----------------------------------------------------------------------------------------------------
+PRJ_NAME                    | nome del progetto                                             
+SRC_FOLDER                  | percorso assoluto della cartella del progetto sorgente        
+SRC_STAGE                   | stage del progetto sorgente                                   
+DST_FOLDER                  | percorso assoluto della cartella del progetto destinazione    
+DST_STAGE                   | stage del progetto destinazione                               
+GIT_BRANCH                  | nome della branch Git di cui effettuare il deploy             
+DST_HOST                    | nome host del server di destinazione (per i deploy remoti)    
+DST_CMD                     | comando da usare per la copia (rsync,lftp,scp)                
+FTP_USER                    | utente FTP (per i deploy via FTP)                             
+FTP_PASSWORD                | password FTP (per i deploy via FTP)                           
+SET_EXCLUDE                 | file e cartelle da escludere dal deploy (separati da spazi)
+SSH_USER                    | utente SSH (per i deploy via SSH/rsync)
+SSH_PRIVATE                 | percorso della chiave privata (per i deploy via SSH/rsync)
+SSH_PUBLIC                  | percorso della chiave pubblica (per i deploy via SSH/rsync)
+DST_PORT                    | porta di destinazione (se applicabile)
+GCP_INSTANCE                | istanza GCP da usare come destinazione per il deploy
+GCP_PROJECT                 | progetto GCP da usare come destinazione per il deploy
+GCP_ZONE                    | zona GCP da usare come destinazione per il deploy
+
+Per ulteriori informazioni sul meccanismo di deploy del framework si vedano il codice e la documentazione dello 
+script /_src/_sh/_deploy.run.sh.
+
 ### /_src/_sh/_doxygen.build.sh
 Questo script compila la documentazione tramite Doxygen. Il framework è ampiamente documentato con commenti che Doxygen è in
 grado di trasformare in documentazione HTML e PDF, e grazie a questo meccanismo è possibile risparmiare molto tempo sulla
@@ -928,6 +2096,12 @@ modalità di funzionamento predefinita del framework.
 ### /_src/_sh/_lamp.setup.sh
 Questo script fa il setup dell'ambiente LAMP necessario a far girare il framework.
 
+### /_src/_sh/_memcached.list.keys.sh
+Questo script elenca le chiavi presenti in Memcache.
+
+### /_src/_sh/_nginx.permissions.secure.sh
+Questo script normalizza i permessi per l'ambiente Nginx.
+
 ### /_src/_sh/_password.hash.sh
 Questo script genera l'hash di una password in modo che possa essere utilizzata nella configurazione o nel database del
 framework.
@@ -947,6 +2121,39 @@ configurato in modalità anonimizzazione IP.
 ### /_usr/_database/_patch/_010000999999.tables.sql
 Questo file contiene le patch base necessarie alla creazione delle tabelle nel database del framework; per ulteriori informazioni
 sul funzionamento del sistema di patch si vedano i commenti al file /_src/_api/_task/_mysql.patch.php.
+
+### /_usr/_database/_patch/_030000999999.indexes.sql
+Questo file contiene le patch base che creano gli indici delle tabelle nel database del framework.
+
+### /_usr/_database/_patch/_040000999999.acl.sql
+Questo file contiene le patch base che creano le tabelle di ACL nel database del framework.
+
+### /_usr/_database/_patch/_050000999999.data.sql
+Questo file contiene le patch base che popolano le tabelle nel database del framework.
+
+### /_usr/_database/_patch/_060000999999.constraints.sql
+Questo file contiene le patch base che creano i constraint fra le tabelle del database del framework.
+
+### /_usr/_database/_patch/_070000999999.procedures.sql
+Questo file contiene le patch base che creano le stored procedures e le functions del database del framework.
+
+### /_usr/_database/_patch/_080000999999.static.sql
+Questo file contiene le patch base che creano le tabelle per le view statiche del database del framework.
+
+### /_usr/_database/_patch/_090000999999.views.sql
+Questo file contiene le patch base che creano le view del database del framework.
+
+### /_usr/_database/_patch/_100000999999.reports.sql
+Questo file contiene le patch base che creano le tabelle di report nel database del framework.
+
+## descrizione dei moduli
+
+### CT000.contatti
+Il modulo contatti consente di compiere azioni su blocchi di dati definiti liberamente, ad esempio provenienti da moduli di
+contatto sul sito, moduli di registrazione, landing page, eccetera.
+
+Per informazioni più dettagliate sul modulo controller si veda la relativa documentazione, nonché la documentazione e i commenti relativi
+al codice del modulo.
 
 ## FAQ
 
@@ -1220,6 +2427,10 @@ Per entrare in un container ed esplorare i file (utile per vedere i file di log)
 docker exec -it <containerId> bash
 ```
 
+#### posso lanciare il container di Glisweb su Flatcar Linux?
+Per un'introduzione veloce a Flatcar Linux si veda https://github.com/the-linux-nerd/esempi-linux/blob/master/distribuzioni/flatcar.md.
+Una volta che avrete una Flatcar funzionante, potrete lanciare normalmente da Docker l'immagine del framework (vedi la relativa FAQ).
+
 #### come creo una patch per il database?
 Una patch per il database è un file contenente uno o più comandi SQL, opportunamente commentati per far capire al framework come deve considerarli.
 Per mantenere la consistenza fra database e applicazione è necessario attenersi strettamente alle seguenti regole ogni volta che si desidera
@@ -1272,6 +2483,10 @@ tre sezioni introdotte dalla sequenza -- | seguita dalla timestamp più il progr
 Per ulteriori informazioni sul funzionamento del sistema di patch del database si faccia riferimento alla documentazione del file
 /_src/_api/_task/_mysql.patch.php.
 
+#### come abilito la firma DKIM per la posta inviata dal framework?
+Le chiavi DKIM vengono memorizzate in /etc/secret/<nomeDominio>; per utilizzarle è necessario aggiungere un record DKIM al proprio DNS. Lo script
+/_src/_sh/_dkim.keygen.sh è pensato per aiutare in questo processo.
+
 #### come inserisco un'immagine in una pagina del sito?
 Per aggiungere un'immagine in una pagina del sito sfruttando il meccanismo di scalamento delle immagini nativo del framework è
 necessario prima di tutto caricare l'immagine desiderata nella scheda immagini della pagina in questione. Assegnando un ordine e un
@@ -1283,7 +2498,59 @@ ruolo all'immagine sarà poi possibile richiamarla con la macro image() come seg
 
 Supponendo in questo caso che il ruolo assegnato sia 'immagine' e l'ordine assegnato sia '10'.
 
-### template Athena
+#### come configuro Google Analytics per misurare le visite al mio sito?
+Devi compilare l'apposita sezione del file di configurazione; supponendo che tu abbia usato YAML, avrai qualcosa di simile:
+
+```
+google:
+  profiles:
+    DEV:
+      analytics:
+        ua: "IL-TUO-CODICE-ANALYTICS",
+        anonymous": true
+```
+
+#### come funziona l'aggiornamento dei report di magazzino?
+Di base l'aggiornamento dei report di magazzino viene attivata dalla controller su documenti_articoli nel modulo mastri. In pratica ogni volta che
+una riga di documento viene salvata, le relative informazioni di magazzino vengono aggiornate.
+
+#### come vengono salvate le preferenze di privacy degli utenti?
+Le preferenze relative ai cookie vengono salvate in un cookie tecnico (vedi /_src/_config/_060.privacy.php e /_src/_config/_065.privacy.php) mentre
+i consensi ai trattamenti dei dati e l'accettazione delle policy del sito vengono salvate nel database, e in particolare nella tabella
+consensi_anagrafica.
+
+Se si studia il codice del file /_mod/_CT000.contatti/_src/_config/_750.controller.php e quello della funzione associazioneConsensiContatto() si
+vedrà esattamente dove i consensi prestati con i vari moduli presenti sul sito vengono intercettati, e come vengono poi salvati.
+
+#### come associo a un modulo contatti le relative spunte privacy?
+Prima di tutto a livello di configurazione è necessario specificare i consensi collegati al modulo:
+
+```
+privacy:
+    moduli:
+        <nomemodulo>:
+            titolo:
+                it-IT: titolo del modulo
+            descrizione:
+                it-IT: descrizione del modulo
+            consensi:
+                <NOMECONSENSO>:
+                    informativa:
+                        it-IT: descrizione del consenso per l'informativa privacy
+                    label:
+                        it-IT: etichetta del consenso da mettere a fianco della spunta
+                    action: chiave per l'azione (da prelevare dai microcontenuti)
+                    page: ID della pagina di informativa da linkare
+                    required: true o false
+```
+
+Poi nel form si può utilizzare la macro che compone automaticamente le spunte per la privacy:
+
+```   
+{{ prv.checkConsensi( '__ct__', '<nomemodulo>', privacy.moduli.<nomemodulo>, ietf, tr, pages ) }}
+```
+
+### domande sul template Athena
 Questa sezione contiene domande specificamente relative all'utilizzo del template Athena.
 
 #### qual è la struttura base di una pagina di tipo form?
@@ -1327,3 +2594,33 @@ Le pagine di tipo form possono essere create a partire da questa struttura base:
 <!-- fine blocco {{ _self }}::main -->
 {% endblock main %}
 ```
+
+### domande sui problemi frequenti
+
+#### il framework mi chiede di rifare il login a ogni pagina che visito, perché?
+Questo problema si manifesta solitamente quando SSL non è configurato correttamente; accedendo a una pagina HTTP e venendo
+poi reindirizzati a una pagina HTTPS si perde il cookie di sessione e questo obbliga a rifare il login. Per verificare se
+effettivamente il problema che riscontrate è questo, monitorate il cookie di sessione dalla scheda applicazione dei tools
+per gli sviluppatori di Chrome o Firefox; se notate che il cookie appare e scompare randomicamente ogni volta che cambiate
+pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito sia configurata correttamente.
+
+#### il framework dà errore 500 su tutte le pagine
+Questo problema può essere originato da una molteplicità di fattori, ma in primo luogo è d'uopo controllare che non siano per
+qualche ragione stati cambiati inavvertitamente dei permessi. Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e
+provare di nuovo ad accedere alle pagine.
+
+#### ho creato una pagina view ma non appaiono dati, perché?
+Le cause più comuni sono a) mancano i permessi per l'entità che vuoi visualizzare (controlla /_src/_config/_250.auth.php)
+oppure b) manca la view corrispondente all'entità che vuoi visualizzare (controlla il database) infine c) verifica di non star
+includendo nella configurazione delle colonne nomi di campi che mancano nella view (questo causerebbe un errore MySQL che
+puoi trovare nei log).
+
+#### aprendo le pagine del framework ottengo un errore 500, perché?
+
+
+## glossario
+
+### macro
+Nel gergo del framework una macro è un file contenente codice tipicamente associato a una pagina, che viene eseguito
+dopo l'esecuzione principale del kernel del framework e prima del rendering della pagina. Per ulteriori dettagli si
+vedano il codice e la documentazione del file /_src/_api/_pages.php.

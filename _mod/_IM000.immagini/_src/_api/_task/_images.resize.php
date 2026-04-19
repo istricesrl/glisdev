@@ -12,7 +12,11 @@
 
     // inclusione del framework
     if( ! defined( 'CRON_RUNNING' ) ) {
-        require '../../../../../_src/_config.php';
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../../../../_src/_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
     }
 
     // inizializzo l'array del risultato
@@ -188,7 +192,7 @@
     } else {
 
         // chiudo il ciclo
-        $iter = $task['iterazioni'];
+        $iter = $task['iterazioni'] ?? 0;
 
         // status
         $status['info'][] = 'nessuna immagine da scalare';

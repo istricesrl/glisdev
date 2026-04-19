@@ -950,7 +950,7 @@
     function mysqlInsertRow($c, $r, $t, $d = true, $n = false, $u = array())
     {
 
-        logger($t . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+        logger($t . PHP_EOL . print_r($r, true), 'mysql/insertrow/' . $t);
 
         if (! empty($u)) {
 
@@ -964,13 +964,11 @@
             $r['id'] = mysqlSelectValue($c, $uQuery . implode(' AND ', $uConds));
 
             // debug
-            // var_dump( $uQuery );
+            // var_dump( $uQuery . implode(' AND ', $uConds) );
             // var_dump( $r['id'] );
 
-        }
+            logger($t . '( dopo controllo di unicità )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
 
-        if (! array_key_exists('id', $r) && $n == false) {
-            $r['id'] = NULL;
         }
 
         $r = array_map('empty2null', $r);
@@ -980,6 +978,10 @@
         $r = array_map('string2num', $r);
 
         logger($t . '( dopo string2num )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+
+        if (! array_key_exists('id', $r) && $n == false) {
+            $r['id'] = NULL;
+        }
 
         $q = 'INSERT ' . (($d === true) ? NULL : 'IGNORE') . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames($r) . ' ) '
             . 'VALUES ( ' . array2mysqlPlaceholders($r) . ' ) '

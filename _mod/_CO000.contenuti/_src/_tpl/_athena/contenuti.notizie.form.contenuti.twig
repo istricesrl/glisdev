@@ -38,14 +38,14 @@
             {% for l in tr.languages %}
 
             {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-            {{ frm.input({ 'field': { 'name': 'id_pagina', 'type': 'hidden', 'default': '__parent_id__' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_notizia', 'type': 'hidden', 'default': '__parent_id__' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
             {{ frm.input({ 'field': { 'name': 'id_lingua', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
 
             {% if request[ form.table ][ subtable ][ i ].id_lingua == session.__view__.__lang__ %}
 
             {# MODULO PRINCIPALE #}
             <fieldset>
-                <legend>contenuti della pagina</legend>
+                <legend>contenuti della notizia</legend>
 
                 <div class="form-group row">
                     <div class="col-12 col-md-4 form-col">
@@ -76,7 +76,12 @@
             </fieldset>
 
             <fieldset class="d-flex flex-column h-100">
-                <legend>testo della pagina</legend>
+                <legend>
+                    testo della notizia
+                    {% if request[ form.table ][ subtable ][ i ].id %}
+                    <small>(<a href="{{ pages['contenuti.archivio.contenuti.form.wysiwyg'].url[ ietf ] }}?contenuti[id]={{ request[ form.table ][ subtable ][ i ].id }}&__backurl__={{ page.backurl[ ietf ] }}">vai all'editor visuale</a>)</small>
+                    {% endif %}
+                </legend>
 
                 <div class="form-group row h-100">
                     <div class="col-12 col-md form-col">

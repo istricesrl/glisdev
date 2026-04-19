@@ -10,12 +10,12 @@
      * Il modulo produzione è un modulo contenitore, che fornisce una dashboard e un archivio con le
      * rispettive pagine tools, in modo che altri moduli possano inserirvi le proprie sotto pagine.
      * 
-     * pagina                        | genitore                    | descrizione
+     * pagina                       | genitore                  | descrizione
      * -----------------------------|---------------------------|---------------------
-     * produzione                    | NULL                        | dashboard del modulo produzione
-     * produzione.tools                | produzione                | strumenti per la gestione della produzione
-     * produzione.archivio            | produzione                | archivio di produzione
-     * produzione.archivio.tools    | produzione.archivio        | strumenti per la gestione dell'archivio di produzione
+     * produzione                   | NULL                      | dashboard del modulo produzione
+     * produzione.tools             | produzione                | strumenti per la gestione della produzione
+     * produzione.archivio          | produzione                | archivio di produzione
+     * produzione.archivio.tools    | produzione.archivio       | strumenti per la gestione dell'archivio di produzione
      * 
      */
 
@@ -35,10 +35,24 @@
         'macro'            => array( $m . '_src/_inc/_macro/_produzione.php' ),
         'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'            => array( 'tabs'    => array(    'produzione',
+                                                        'produzione.stampe',
                                                         'produzione.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'produzione' ),
                                                                         'priority'    => '1000' ) ) )                                                        
+    );
+
+    // anagrafica form stampe
+    $p['produzione.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'produzione stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'produzione' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_produzione.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'produzione' )
     );
 
     // tools produzione
