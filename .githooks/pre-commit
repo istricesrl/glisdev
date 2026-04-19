@@ -2,42 +2,43 @@
 
 set -euo pipefail
 
-export LC_ALL=C
-
 REPO_ROOT="$(git rev-parse --show-toplevel)"
+GIT_DIR="$(git rev-parse --git-dir)"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+CHANGELOG_FILE="$REPO_ROOT/_etc/_changelog.json"
+COMMIT_MSG_FILE="$GIT_DIR/COMMIT_EDITMSG"
 
 # Esegui solo su master
 if [ "$BRANCH" != "master" ]; then
     exit 0
 fi
 
-CHANGELOG_FILE="$REPO_ROOT/_etc/_changelog.json"
-mkdir -p "$(dirname "$CHANGELOG_FILE")"
-
-# Recupero messaggio del commit, se presente nel file di prepare-commit-msg / COMMIT_EDITMSG
-COMMIT_MSG_FILE="$REPO_ROOT/.git/COMMIT_EDITMSG"
-COMMIT_TITLE=""
-COMMIT_TEXT=""
+# Recupera la prima riga utile del messaggio commit
+RAW_MSG=""
 
 if [ -f "$COMMIT_MSG_FILE" ]; then
-    # prima riga = titolo
-    COMMIT_TITLE="$(sed -n '1p' "$COMMIT_MSG_FILE" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-
-    # resto del messaggio, senza commenti di git
-    COMMIT_TEXT="$(
-        tail -n +2 "$COMMIT_MSG_FILE" \
-        | sed '/^#/d' \
-        | sed '/^[[:space:]]*$/N;/^\n$/D' \
-        | sed ':a;/^\n*$/{$d;N;ba' -e '}' 2>/dev/null || true
-    )"
+    RAW_MSG="$(sed '/^#/d' "$COMMIT_MSG_FILE" | sed '/^[[:space:]]*$/d' | head -n 1 || true)"
 fi
 
-# Fallback se il messaggio non è ancora disponibile
-if [ -z "$COMMIT_TITLE" ]; then
-    COMMIT_TITLE="Aggiornamento"
+# Fallback
+if [ -z "$RAW_MSG" ]; then
+    RAW_MSG="Aggiornamento"
 fi
 
+# Parsing con separatore §
+if [[ "$RAW_MSG" == *"§"* ]]; then
+    TITOLO="${RAW_MSG%%§*}"
+    TESTO="${RAW_MSG#*§}"
+else
+    TITOLO="$RAW_MSG"
+    TESTO=""
+fi
+
+# Trim spazi
+TITOLO="$(printf '%s' "$TITOLO" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+TESTO="$(printf '%s' "$TESTO" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
+# Timestamp ISO
 TIMESTAMP="$(date -Iseconds)"
 
 # URL repository remoto
@@ -66,16 +67,19 @@ if [ -z "$REPO_URL" ]; then
     REPO_URL="https://github.com/"
 fi
 
-# Inizializzazione file se non esiste
+# Crea cartella/file se non esistono
+mkdir -p "$(dirname "$CHANGELOG_FILE")"
+
 if [ ! -f "$CHANGELOG_FILE" ]; then
     echo "[]" > "$CHANGELOG_FILE"
 fi
 
+# Aggiorna JSON
 TMP_FILE="$(mktemp)"
 
 jq \
-  --arg titolo "$COMMIT_TITLE" \
-  --arg testo "$COMMIT_TEXT" \
+  --arg titolo "$TITOLO" \
+  --arg testo "$TESTO" \
   --arg timestamp "$TIMESTAMP" \
   --arg url "$REPO_URL" \
   '
@@ -91,6 +95,7 @@ jq \
 
 mv "$TMP_FILE" "$CHANGELOG_FILE"
 
-git add "$CHANGELOG_FILE"
+# Aggiungi il changelog allo staging
+git add -f "$CHANGELOG_FILE"
 
 exit 0

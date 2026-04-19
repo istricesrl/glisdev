@@ -1,20 +1,8 @@
 [
   {
-    "titolo": "debug sistema di gestione automatica del changelog",
+    "titolo": "debug sistema di gestione automatica del changelogcon questa modifica viene ulteriormente stabilizzato il meccanismo di generazione automatica del changelog",
     "testo": "",
-    "timestamp": "2026-04-19T10:41:31+02:00",
-    "url": "https://github.com/istricesrl/glisdev"
-  },
-  {
-    "titolo": "debug del sistema di aggiornamento",
-    "testo": "",
-    "timestamp": "2026-04-19T10:40:42+02:00",
-    "url": "https://github.com/istricesrl/glisdev"
-  },
-  {
-    "titolo": "debug del sistema di aggiornamento",
-    "testo": "con questa fix viene sistemato l'automatismo di gestione del changelog in _etc/_changelog.json",
-    "timestamp": "2026-04-19T10:33:58+02:00",
+    "timestamp": "2026-04-19T10:44:36+02:00",
     "url": "https://github.com/istricesrl/glisdev"
   }
 ]
