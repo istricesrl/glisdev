@@ -1,8 +1,8 @@
 [
   {
-    "titolo": "debug sistema di gestione automatica del changelogcon questa modifica viene ulteriormente stabilizzato il meccanismo di generazione automatica del changelog",
-    "testo": "",
-    "timestamp": "2026-04-19T10:44:36+02:00",
+    "titolo": "debug sistema di gestione automatica del changelog",
+    "testo": "con questa modifica viene ulteriormente stabilizzato il meccanismo di generazione automatica del changelog",
+    "timestamp": "2026-04-19T10:47:01+02:00",
     "url": "https://github.com/istricesrl/glisdev"
   }
 ]
