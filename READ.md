@@ -2616,6 +2616,9 @@ includendo nella configurazione delle colonne nomi di campi che mancano nella vi
 puoi trovare nei log).
 
 #### aprendo le pagine del framework ottengo un errore 500, perché?
+Un errore 500 (Internal Server Error) può essere dovuto a molteplici fattori. Per trovare la causa, occorre cercare nei log e isolare il punto di rottura, tuttavia è consigliabile, prima di tutto, escludere che il problema sia dovuto ai permessi dei file (file non leggibili, cartelle non scrivibili). Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e provare di nuovo ad accedere alle pagine. 
+A questo punto, se il problema persiste, il passo successivo è controllare i log del server Apache e i log del framework (file var/log/latest/run.latest.log) e cercare stack trace, errori PHP, richieste fallite.
+Nel caso in cui l'errore non abbia generato un log, occorre indagare più a fondo e procedere per passaggi successivi, seguendo a ritroso l'ordine di esecuzione del framework. Esaminare i run levels (cartella: _src/_config/) e il file _src/_config.php, inserendo una riga di debug, fino a trovare il punto di rottura.  
 
 
 ## glossario
