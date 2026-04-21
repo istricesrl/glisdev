@@ -257,6 +257,11 @@
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.file' );
+    }
+
     // tools archivio produzione
     $p['catalogo.categorie.prodotti.form.prodotti'] = array(
         'sitemap'            => false,

@@ -16,7 +16,7 @@
     // modulo di questo file
     $m = DIR_MOD . '_FI000.file/';
 
-    // gestione pagine form file
+    // gestione catalogo marchi form file
     $p['catalogo.marchi.form.file'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa-regular fa-folder-open" aria-hidden="true"></i>',
@@ -27,4 +27,17 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.file.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
+
+    // gestione catalogo categorie prodotti form file
+    $p['catalogo.categorie.prodotti.form.file'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa-regular fa-folder-open" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'file' ),
+        'h1'                => array( $l        => 'file' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.file.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.file.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
     );
