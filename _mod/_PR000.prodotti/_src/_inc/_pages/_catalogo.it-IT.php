@@ -325,6 +325,11 @@
                                                             'catalogo.articoli.form.tools' ) )
     );
 
+    // RELAZIONI CON IL MODULO CONTENUTI
+    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.metadati' );
+    }
+
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.immagini' );
