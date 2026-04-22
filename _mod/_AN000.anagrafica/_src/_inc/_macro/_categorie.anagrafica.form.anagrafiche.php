@@ -33,14 +33,6 @@
     if( isset( $_REQUEST['__link_anagrafica__']['id_anagrafica'] ) ) {
 
         // link anagrafica
-        // mysqlQuery(
-        //     $cf['mysql']['connection'],
-        //     'UPDATE anagrafica SET id_ranking = ? WHERE id = ?',
-        //     array(
-        //         array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
-        //         array( 's' => $_REQUEST['__link_anagrafica__']['id_anagrafica'] )
-        //     )
-        // );
       
         mysqlQuery(
             $cf['mysql']['connection'],
@@ -52,15 +44,6 @@
             )
         );
 
-        // mysqlInsertRow(
-        //                         $cf['mysql']['connection'],
-        //                         array(
-        //                             'id_anagrafica' => $_REQUEST['__link_anagrafica__']['id_anagrafica'],
-        //                             'id_categoria' => $_REQUEST[ $ct['form']['table'] ]['id'],
-        //                             'timestamp_inserimento' => time(),
-        //                         ),
-        //                         'anagrafica_categorie'
-        //                     );
 
         updateAnagraficaViewStatic( $_REQUEST['__link_anagrafica__']['id_anagrafica'] );
 
