@@ -192,10 +192,24 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.categorie.prodotti.view',
+                                                            'catalogo.categorie.prodotti.stampe',
                                                             'catalogo.categorie.prodotti.view.archiviati',
                                                             'catalogo.categorie.prodotti.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'categorie' ),
                                                                             'priority'    => '200' ) ) )
+    );
+
+    // catalogo categorie prodotti stampe
+    $p['catalogo.categorie.prodotti.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo categorie prodotti stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.view' )
     );
 
     // tools archivio produzione
