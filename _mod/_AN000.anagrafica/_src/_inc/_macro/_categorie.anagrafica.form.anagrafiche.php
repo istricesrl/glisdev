@@ -41,18 +41,28 @@
         //         array( 's' => $_REQUEST['__link_anagrafica__']['id_anagrafica'] )
         //     )
         // );
+      
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'INSERT INTO anagrafica_categorie (id_anagrafica, id_categoria, timestamp_inserimento )  VALUES (?, ?, ?)',
+                array(
+                array( 's' => $_REQUEST['__link_anagrafica__']['id_anagrafica'] ),
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                array( 's' => time() )
+            )
+        );
 
-        mysqlInsertRow(
-                                $cf['mysql']['connection'],
-                                array(
-                                    'id_anagrafica' => $_REQUEST['__link_anagrafica__']['id_anagrafica'],
-                                    'id_categoria' => $_REQUEST[ $ct['form']['table'] ]['id'],
-                                    'timestamp_inserimento' => time(),
-                                ),
-                                'anagrafica_categorie'
-                            );
+        // mysqlInsertRow(
+        //                         $cf['mysql']['connection'],
+        //                         array(
+        //                             'id_anagrafica' => $_REQUEST['__link_anagrafica__']['id_anagrafica'],
+        //                             'id_categoria' => $_REQUEST[ $ct['form']['table'] ]['id'],
+        //                             'timestamp_inserimento' => time(),
+        //                         ),
+        //                         'anagrafica_categorie'
+        //                     );
 
-        //updateAnagraficaViewStatic( $_REQUEST['__link_anagrafica__']['id_anagrafica'] );
+        updateAnagraficaViewStatic( $_REQUEST['__link_anagrafica__']['id_anagrafica'] );
 
     } elseif( isset( $_REQUEST['__scollega_anagrafica__'] ) ) {
 
@@ -65,7 +75,7 @@
             )
         );
 
-        //updateAnagraficaViewStatic( $_REQUEST['__scollega_anagrafica__'] );
+        updateAnagraficaViewStatic( $_REQUEST['__scollega_anagrafica__'] );
 
     }
 
