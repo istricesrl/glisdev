@@ -1323,6 +1323,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS                       --
         immagini.id_valutazione,                                --
 		immagini.id_banner,                                     --
         immagini.id_rinnovo,                                    --
+        immagini.id_video,                                    --
 		immagini.id_lingua,                                     --
 		lingue.nome AS lingua,                                  --
 		immagini.id_ruolo,                                      --
@@ -2214,6 +2215,7 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
 		ruoli_immagini.se_risorse,                              --
 		ruoli_immagini.se_categorie_risorse,                    --
 		ruoli_immagini.se_immobili,                             --
+		ruoli_immagini.se_video,                             --
 	 	ruoli_immagini_path(                                    --
             ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
 	FROM ruoli_immagini                                         --
