@@ -2214,6 +2214,7 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
 		ruoli_immagini.se_risorse,                              --
 		ruoli_immagini.se_categorie_risorse,                    --
 		ruoli_immagini.se_immobili,                             --
+		ruoli_immagini.se_file,                             --
 	 	ruoli_immagini_path(                                    --
             ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
 	FROM ruoli_immagini                                         --
