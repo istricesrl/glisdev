@@ -1731,7 +1731,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.nome,
 		pagamenti.note,
 		pagamenti.note_pagamento,
-		pagamenti.id_documento,
+		coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento ) AS id_documento,
 		pagamenti.id_carrello,
 		pagamenti.id_carrelli_articoli,
         concat(
@@ -1745,10 +1745,10 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		) AS documento,
 		tipologie_documenti.id AS id_tipologia_documento,
 		group_concat( DISTINCT carrelli_articoli.id_articolo SEPARATOR '|' ) AS id_articoli,
-		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
-		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
-		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
-		group_concat( DISTINCT aree.nome ) AS aree,
+		group_concat( DISTINCT COALESCE( categorie_progetti.id, cp_disc.id ) SEPARATOR '|' ) AS id_categorie_progetti,
+		group_concat( DISTINCT COALESCE( categorie_progetti.nome, cp_disc.nome ) SEPARATOR '|' ) AS categorie_progetti,
+		group_concat( DISTINCT COALESCE( categorie_progetti_path_find_ancestor( categorie_progetti.id ), categorie_progetti_path_find_ancestor( cp_disc.id ) ) ) AS id_aree,
+		group_concat( DISTINCT COALESCE( aree.nome, aree_abb.nome ) ) AS aree,
 		group_concat( DISTINCT concat( pagamenti.id_coupon, ':', pagamenti.coupon_valore ) SEPARATOR '|' ) AS dettagli_coupon,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
@@ -1786,7 +1786,10 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
-		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
+		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
+		LEFT JOIN carrelli ON carrelli.id = pagamenti.id_carrello
+		LEFT JOIN documenti_articoli ON documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
+		LEFT JOIN documenti ON documenti.id = coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento )
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
 		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
@@ -1794,13 +1797,15 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN coupon ON coupon.id = pagamenti.id_coupon
 		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
 		-- LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
 		LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 		LEFT JOIN progetti ON IF( prodotti.id IS NOT NULL, progetti.id_prodotto = prodotti.id, progetti.id = contratti.id_progetto )
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
 		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
 		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
+		LEFT JOIN tipologie_contratti AS tc_abb ON tc_abb.id_prodotto = prodotti.id AND tc_abb.se_abbonamento = 1
+		LEFT JOIN categorie_progetti AS cp_disc ON cp_disc.id = tc_abb.id_categoria_progetti AND cp_disc.se_disciplina = 1
+		LEFT JOIN categorie_progetti AS aree_abb ON aree_abb.id = categorie_progetti_path_find_ancestor( cp_disc.id )
 --	WHERE
 --		tipologie_documenti.se_fattura = 1
 --		OR
