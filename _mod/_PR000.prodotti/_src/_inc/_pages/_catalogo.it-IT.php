@@ -335,6 +335,12 @@
         arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.file' );
+    }
+
+
     // tools archivio produzione
     $p['catalogo.articoli.form.caratteristiche'] = array(
         'sitemap'            => false,
