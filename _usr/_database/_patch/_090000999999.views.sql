@@ -1323,6 +1323,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS                       --
         immagini.id_valutazione,                                --
 		immagini.id_banner,                                     --
         immagini.id_rinnovo,                                    --
+        immagini.id_video,                                    --
 		immagini.id_lingua,                                     --
 		lingue.nome AS lingua,                                  --
 		immagini.id_ruolo,                                      --
@@ -2219,6 +2220,8 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
 		ruoli_immagini.se_risorse,                              --
 		ruoli_immagini.se_categorie_risorse,                    --
 		ruoli_immagini.se_immobili,                             --
+		ruoli_immagini.se_file,                             --
+		ruoli_immagini.se_video,                             --
 	 	ruoli_immagini_path(                                    --
             ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
 	FROM ruoli_immagini                                         --
@@ -2782,6 +2785,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.target,
 		video.orientamento,
 		video.ratio,
+		video.note,
 		video.id_account_inserimento,
 		video.id_account_aggiornamento,
 		concat(
