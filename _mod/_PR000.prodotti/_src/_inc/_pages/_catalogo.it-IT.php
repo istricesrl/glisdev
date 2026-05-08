@@ -96,6 +96,7 @@
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.web' );
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.sem' );
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.contenuti' );
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -106,6 +107,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.file' );
     }
 
     // tools archivio produzione
@@ -358,6 +364,11 @@
                                                             'catalogo.articoli.form.tools' ) )
     );
 
+    // RELAZIONI CON IL MODULO CONTENUTI
+    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.metadati' );
+    }
+
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.immagini' );
@@ -367,6 +378,12 @@
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
     }
+
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.file' );
+    }
+
 
     // tools archivio produzione
     $p['catalogo.articoli.form.caratteristiche'] = array(
