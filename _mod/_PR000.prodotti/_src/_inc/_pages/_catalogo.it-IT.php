@@ -86,6 +86,7 @@
                                                             'catalogo.prodotti.form.caratteristiche',
                                                             'catalogo.prodotti.form.articoli',
                                                             'catalogo.prodotti.form.relazioni',
+                                                            'catalogo.prodotti.form.stampe',
                                                             'catalogo.prodotti.form.archiviazione',
                                                             'catalogo.prodotti.form.tools' ) )
     );
@@ -152,6 +153,19 @@
         'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.prodotti.form.articoli.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.articoli.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.prodotti.form' )
+    );
+
+    // catalogo prodotti form stampe
+    $p['catalogo.prodotti.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo prodotti form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.stampe.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.prodotti.form' )
     );
