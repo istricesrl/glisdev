@@ -96,6 +96,7 @@
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.web' );
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.sem' );
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.contenuti' );
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
