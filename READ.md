@@ -60,6 +60,13 @@ require         | codeception/module-phpbrowser | *                 |
 require         | codeception/module-asserts    | *                 |
 suggest         | twig/extra-bundle             | *                 |
 
+### /_etc/_claude/_claude.framework.md
+Istruzioni operative per Claude Code distribuite con il framework. Contiene le regole fondamentali per lavorare correttamente sul codice
+(hard link, convenzione `_*`, come trovare le credenziali di database e degli altri servizi) e una sintesi dell'architettura. Il file non
+viene caricato automaticamente da Claude Code: ogni progetto deve importarlo esplicitamente nel proprio `CLAUDE.md` con la direttiva
+`@_etc/_claude/_claude.framework.md`, seguita dalle istruzioni specifiche del progetto che sovrascrivono quelle del framework in caso
+di conflitto.
+
 ### /_etc/_current.release e /_etc/_current.version
 Il framework viene versionato con due diverse numerazioni, le release che seguono la classica notazione a tre stage (major.minor.bugfix)
 e le versioni che sono numerate progressivamente con una timestamp (ad es. 20240502225937). La ragione di questa distinzione è che le
@@ -2163,6 +2170,13 @@ Questo script normalizza i permessi per l'ambiente Nginx.
 ### /_src/_sh/_password.hash.sh
 Questo script genera l'hash di una password in modo che possa essere utilizzata nella configurazione o nel database del
 framework.
+
+### /_src/_sh/_smoke.curl.sh
+Questo script è un helper per smoke test interattivi della web app via curl: gestisce un cookie jar in var/tmp/, esegue
+login con credenziali da variabili d'ambiente (TEST_USER, TEST_PASS) e offre sub-comandi get/post/status/check per
+verificare codici HTTP e pattern nell'HTML. Pensato per uso non interattivo (chiamate ripetute, output parseabile);
+i campi del form di login (`__login__[user]`, `__login__[pasw]`) e l'URL di default (`/login.it-IT.html`) sono
+sovrascrivibili tramite variabili d'ambiente (SMOKE_BASE_URL, SMOKE_LOGIN_PATH).
 
 ### /_src/_sh/_test.import.sh
 Questo script genera dei file di test in /var/spool/import/todo e /var/spool/import per il test del sistema di importazione
