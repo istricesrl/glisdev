@@ -2508,7 +2508,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- se categorie notizie
   `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- se categorie risorse
-  `se_immobili` tinyint(1) DEFAULT NULL                         -- se immobili
+  `se_immobili` tinyint(1) DEFAULT NULL,                         -- se immobili
+  `se_file` tinyint(1) DEFAULT NULL,                         -- se immobili
   `se_video` tinyint(1) DEFAULT NULL                            -- se video
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
