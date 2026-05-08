@@ -100,6 +100,7 @@
             $cf['mysql']['connection'],
             'SELECT
                     anagrafica.id,
+                    anagrafica.id_tipologia,
                     tipologie_anagrafica.nome AS tipologia,
                     anagrafica.codice,
                     anagrafica.riferimento,

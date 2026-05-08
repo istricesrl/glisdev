@@ -866,7 +866,6 @@
 
     // debug
     // die( print_r( apache_get_modules(), true ) );
-    // die( __FILE__ );
 
     /**
      * inizializzazione dell'array di configurazione per il template manager
@@ -1017,16 +1016,20 @@
     foreach( $cf['config']['files'] as $type => $configFiles ) {
         foreach( $configFiles as $configFile ) {
             if( file_exists( $configFile ) ) {
+                $_raw = file_get_contents( $configFile );
+                if( $_raw === false ) {
+                    die( 'file di configurazione ' . $configFile . ' non leggibile (verificare i permessi)' );
+                }
                 switch( $type ) {
                     case 'yaml':
-                        $cj = yaml_parse( file_get_contents( $configFile ) );
+                        $cj = yaml_parse( $_raw );
                     break;
                     case 'json':
-                        $cj = json_decode( file_get_contents( $configFile ), true );
+                        $cj = json_decode( $_raw, true );
                     break;
                 }
                 if( empty( $cj ) ) {
-                    die( 'file di configurazione ' . $configFile . ' danneggiato' );
+                    die( 'file di configurazione ' . $configFile . ' danneggiato' . ( $type === 'json' ? ': ' . json_last_error_msg() : '' ) );
                 } else {
                     $cf['config']['read'][] = $configFile;
                     $cx = array_replace_recursive( $cx, $cj );
@@ -1089,7 +1092,11 @@
     foreach( $cf['mods']['active']['array'] as $modulo ) {
 
         if( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) ) {
-            $cm = yaml_parse( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) );
+            $_raw = file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) );
+            if( $_raw === false ) {
+                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) . ' non leggibile (verificare i permessi)' );
+            }
+            $cm = yaml_parse( $_raw );
             if( is_array( $cm ) ) {
                 $cx = array_replace_recursive( $cx, $cm );
                 $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.yaml' );
@@ -1097,7 +1104,11 @@
                 die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) . ' danneggiato' );
             }
             if( file_exists( path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) ) ) {
-                $cm = yaml_parse( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) ) );
+                $_raw = file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) );
+                if( $_raw === false ) {
+                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) . ' non leggibile (verificare i permessi)' );
+                }
+                $cm = yaml_parse( $_raw );
                 if( is_array( $cm ) ) {
                     $cx = array_replace_recursive( $cx, $cm );
                     $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' );
@@ -1106,28 +1117,33 @@
                 }
             }
         } elseif( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ) ) {
-            $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ), true );
+            $_raw = file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.json' ) );
+            if( $_raw === false ) {
+                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.json' ) . ' non leggibile (verificare i permessi)' );
+            }
+            $cm = json_decode( $_raw, true );
             if( is_array( $cm ) ) {
                 $cx = array_replace_recursive( $cx, $cm );
                 $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.json' );
             } else {
-                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.json' ) . ' danneggiato' );
+                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.json' ) . ' danneggiato: ' . json_last_error_msg() );
             }
             if( file_exists( path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) ) ) {
-                $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) ), true );
+                $_raw = file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) );
+                if( $_raw === false ) {
+                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) . ' non leggibile (verificare i permessi)' );
+                }
+                $cm = json_decode( $_raw, true );
                 if( is_array( $cm ) ) {
                     $cx = array_replace_recursive( $cx, $cm );
                     $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/shadow.json' );
                 } else {
-                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) . ' danneggiato' );
+                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) . ' danneggiato: ' . json_last_error_msg() );
                 }
             }
         }
 
     }
-
-    // debug
-    // die( __FILE__ );
 
     /**
      * inclusione dei file di libreria
@@ -1177,9 +1193,6 @@
     // timer
     timerCheck( $cf['speed'], 'fine inclusione files di libreria' );
 
-    // debug
-    // die( __FILE__ );
-
     /**
      * inclusione dei file di libreria esterni
      * =======================================
@@ -1201,9 +1214,6 @@
     } else {
         die( 'autoload mancante, eseguire composer update' );
     }
-
-    // debug
-    // die( __FILE__ );
 
     /**
      * inclusione dei files dei runlevel
