@@ -2782,6 +2782,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.target,
 		video.orientamento,
 		video.ratio,
+		video.note,
 		video.id_account_inserimento,
 		video.id_account_aggiornamento,
 		concat(
