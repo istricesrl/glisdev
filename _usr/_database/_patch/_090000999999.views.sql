@@ -1235,15 +1235,16 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_account_inserimento,
 		file.id_account_aggiornamento,
 		concat(
-			ruoli_file.nome,
+			coalesce(ruoli_file.nome, 'nessun ruolo'),
 			' # ',
-			file.ordine,
+			coalesce(file.ordine, '§'),
 			' / ',
-			file.nome,
+			coalesce(file.nome, 'nessun nome'),
 			' / ',
 			coalesce(
 				file.path,
-				file.url
+				file.url,
+				'nessun path'
 			)
 		) AS __label__
 	FROM file
