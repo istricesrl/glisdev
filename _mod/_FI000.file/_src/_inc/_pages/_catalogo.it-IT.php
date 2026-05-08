@@ -29,6 +29,19 @@
         'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
     );
 
+    // gestione articoli form file
+    $p['catalogo.articoli.form.file'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa-regular fa-folder-open" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'file' ),
+        'h1'                => array( $l        => 'file' ),
+        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.file.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.file.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
+    );
+
     // gestione pagine form file
     $p['catalogo.prodotti.form.file'] = array(
         'sitemap'            => false,
@@ -53,4 +66,4 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.file.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
-    );      
+    );
