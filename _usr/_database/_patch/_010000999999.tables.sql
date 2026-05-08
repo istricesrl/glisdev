@@ -1259,6 +1259,7 @@ CREATE TABLE IF NOT EXISTS `file` (                           --
   `nome` char(255) DEFAULT NULL,                              -- nome del file
   `path` char(255) DEFAULT NULL,                              -- percorso del file
   `url` char(255) DEFAULT NULL,                               -- URL del file
+  `note` text DEFAULT NULL,                                   -- note sul file
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il file
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il file
