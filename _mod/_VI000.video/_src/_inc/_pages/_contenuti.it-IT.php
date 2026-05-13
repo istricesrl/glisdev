@@ -56,7 +56,7 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.video.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.archivio.video.form',
-                                                            'contenuti.archivio.form.collegamenti',
+                                                            'contenuti.archivio.video.form.collegamenti',
                                                             'contenuti.archivio.video.form.tools' ) )
     );
 
