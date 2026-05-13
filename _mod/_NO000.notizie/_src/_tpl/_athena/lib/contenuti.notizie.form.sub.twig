@@ -68,6 +68,10 @@
         {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         <div class="form-group row">
+            <div class="col col-md-2 form-col">
+                <span class="label-top">ordine</span>
+                {{ frm.input({ 'field': { 'name': 'ordine', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
             <div class="col form-col">
                 <span class="label-top">ruolo</span>
                 {{ frm.select({ 'field': { 'name': 'id_ruolo', 'required': 1, 'disabled': disabled }, 'source': { 'values': etc.select.ruoli_anagrafica }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
