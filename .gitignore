@@ -1,3 +1,8 @@
+# .claude/ è versionata di proposito (skill 'glisweb' distribuita col framework)
+# deroga alla regola "cartelle senza underscore = custom = gitignored"
+!/.claude/
+!/.claude/**
+
 /_src/_lib/_ext*
 /_usr/_docs/_html*
 /_usr/_docs/_pdf*
