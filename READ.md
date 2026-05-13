@@ -60,6 +60,13 @@ require         | codeception/module-phpbrowser | *                 |
 require         | codeception/module-asserts    | *                 |
 suggest         | twig/extra-bundle             | *                 |
 
+### /_etc/_claude/_claude.framework.md
+Istruzioni operative per Claude Code distribuite con il framework. Contiene le regole fondamentali per lavorare correttamente sul codice
+(hard link, convenzione `_*`, come trovare le credenziali di database e degli altri servizi) e una sintesi dell'architettura. Il file non
+viene caricato automaticamente da Claude Code: ogni progetto deve importarlo esplicitamente nel proprio `CLAUDE.md` con la direttiva
+`@_etc/_claude/_claude.framework.md`, seguita dalle istruzioni specifiche del progetto che sovrascrivono quelle del framework in caso
+di conflitto.
+
 ### /_etc/_current.release e /_etc/_current.version
 Il framework viene versionato con due diverse numerazioni, le release che seguono la classica notazione a tre stage (major.minor.bugfix)
 e le versioni che sono numerate progressivamente con una timestamp (ad es. 20240502225937). La ragione di questa distinzione è che le
@@ -2164,6 +2171,13 @@ Questo script normalizza i permessi per l'ambiente Nginx.
 Questo script genera l'hash di una password in modo che possa essere utilizzata nella configurazione o nel database del
 framework.
 
+### /_src/_sh/_smoke.curl.sh
+Questo script è un helper per smoke test interattivi della web app via curl: gestisce un cookie jar in var/tmp/, esegue
+login con credenziali da variabili d'ambiente (TEST_USER, TEST_PASS) e offre sub-comandi get/post/status/check per
+verificare codici HTTP e pattern nell'HTML. Pensato per uso non interattivo (chiamate ripetute, output parseabile);
+i campi del form di login (`__login__[user]`, `__login__[pasw]`) e l'URL di default (`/login.it-IT.html`) sono
+sovrascrivibili tramite variabili d'ambiente (SMOKE_BASE_URL, SMOKE_LOGIN_PATH).
+
 ### /_src/_sh/_test.import.sh
 Questo script genera dei file di test in /var/spool/import/todo e /var/spool/import per il test del sistema di importazione
 file; si veda /_src/_config/_740.controller.php per i dettagli e /_src/_api/_report/_import.php per i test del sistema.
@@ -2791,11 +2805,6 @@ effettivamente il problema che riscontrate è questo, monitorate il cookie di se
 per gli sviluppatori di Chrome o Firefox; se notate che il cookie appare e scompare randomicamente ogni volta che cambiate
 pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito sia configurata correttamente.
 
-#### il framework dà errore 500 su tutte le pagine
-Questo problema può essere originato da una molteplicità di fattori, ma in primo luogo è d'uopo controllare che non siano per
-qualche ragione stati cambiati inavvertitamente dei permessi. Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e
-provare di nuovo ad accedere alle pagine.
-
 #### ho creato una pagina view ma non appaiono dati, perché?
 Le cause più comuni sono a) mancano i permessi per l'entità che vuoi visualizzare (controlla /_src/_config/_250.auth.php)
 oppure b) manca la view corrispondente all'entità che vuoi visualizzare (controlla il database) infine c) verifica di non star
@@ -2803,6 +2812,9 @@ includendo nella configurazione delle colonne nomi di campi che mancano nella vi
 puoi trovare nei log).
 
 #### aprendo le pagine del framework ottengo un errore 500, perché?
+Un errore 500 (Internal Server Error) può essere dovuto a molteplici fattori. Per trovare la causa, occorre cercare nei log e isolare il punto di rottura, tuttavia è consigliabile, prima di tutto, escludere che il problema sia dovuto ai permessi dei file (file non leggibili, cartelle non scrivibili). Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e provare di nuovo ad accedere alle pagine. 
+A questo punto, se il problema persiste, il passo successivo è controllare i log del server Apache e i log del framework (file var/log/latest/run.latest.log) e cercare stack trace, errori PHP, richieste fallite.
+Nel caso in cui l'errore non abbia generato un log, occorre indagare più a fondo e procedere per passaggi successivi, seguendo a ritroso l'ordine di esecuzione del framework. Esaminare i run levels (cartella: _src/_config/) e il file _src/_config.php, inserendo una riga di debug, fino a trovare il punto di rottura.  
 
 
 ## glossario
