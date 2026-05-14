@@ -165,3 +165,16 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.pagine.view' )
     );
+
+   // tools archivio contenuti
+    $p['contenuti.redirect.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'contenuti redirect form' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'contenuti.redirect.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.redirect.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.redirect.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.redirect.form' )
+    );
+
