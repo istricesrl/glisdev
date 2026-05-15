@@ -2244,9 +2244,9 @@ presente, altrimenti ricade su `page.h1`; per og:url usa il canonico se definito
 ### /_src/_twig/_inc/_page.close.twig
 Questo file raccoglie tutte le operazioni standard da eseguire prima della chiusura del tag `<body>`: inclusione
 dell'overlay cookie, dichiarazione della variabile JavaScript globale `siteRoot`, caricamento differito degli
-script JS esterni, interni e del template, e inclusione condizionale dei codici di chiusura per Facebook
-Messenger, Criteo, Chart.js, Smartsupp ed Emailable. Gestisce infine i modal di pagina e inserisce nei commenti
-i link ai validatori W3C e agli strumenti di test di Google.
+script JS in cache, esterni, interni e del template, e inclusione condizionale dei codici di chiusura per
+Facebook Messenger, Criteo, Chart.js, Smartsupp ed Emailable. Gestisce infine i modal di pagina e inserisce
+nei commenti i link ai validatori W3C e agli strumenti di test di Google.
 
 ### /_src/_twig/_inc/_page.head.twig
 Questo file raccoglie tutte le operazioni standard da eseguire all'interno del tag `<head>`: inclusione
