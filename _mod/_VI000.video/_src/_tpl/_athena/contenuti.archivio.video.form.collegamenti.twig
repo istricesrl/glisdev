@@ -19,7 +19,7 @@
 
             {# SEZIONE ANAGRAFICA #}
             <fieldset>
-                <legend>collegamento anagrafica<small>{{ legend }}</small></legend>
+                <legend>anagrafiche<small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
                     <div class="col col-md form-col">
@@ -31,8 +31,9 @@
             </fieldset>
 
             {# SEZIONE PAGINE #}
+            {% if 'PA000.pagine' in mods.active.array %}
             <fieldset>
-                <legend>collegamento pagina<small>{{ legend }}</small></legend>
+                <legend>pagine<small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
                     <div class="col col-md form-col">
@@ -42,10 +43,12 @@
                 </div>
 
             </fieldset>
+            {% endif %}
 
             {# SEZIONE NOTIZIE #}
+            {% if 'NO000.notizie' in mods.active.array %}
             <fieldset>
-                <legend>collegamenti notizie<small>{{ legend }}</small></legend>
+                <legend>notizie<small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
                     <div class="col col-md form-col">
@@ -59,34 +62,40 @@
                 </div>
 
             </fieldset>
+            {% endif %}
 
             {# SEZIONE CATALOGO #}
+            {% if 'PR000.prodotti' in mods.active.array %}
             <fieldset>
-                <legend>collegamenti catalogo<small>{{ legend }}</small></legend>
+                <legend>catalogo<small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
-                    <div class="col col-md form-col">
-                        <span class="label-top">categorie prodotti</span>
-                        {{ frm.select({ 'field': { 'name': 'id_categoria_prodotti' }, 'source': { 'values': etc.select.categorie_prodotti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-                    </div>        
                     <div class="col col-md form-col">
                         <span class="label-top">prodotti</span>
                         {{ frm.select({ 'field': { 'name': 'id_prodotto' }, 'source': { 'values': etc.select.prodotti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>             
+                    <div class="col col-md form-col">
+                        <span class="label-top">categorie prodotti</span>
+                        {{ frm.select({ 'field': { 'name': 'id_categoria_prodotti' }, 'source': { 'values': etc.select.categorie_prodotti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>        
                 </div>
 
                 <div class="form-group row">
-                    <div class="col col-md form-col">
-                        <span class="label-top">marchi</span>
-                        {{ frm.select({ 'field': { 'name': 'id_marchio' }, 'source': { 'values': etc.select.marchi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-                    </div>
                     <div class="col col-md form-col">
                         <span class="label-top">articoli</span>
                         {{ frm.select({ 'field': { 'name': 'id_articolo' }, 'source': { 'values': etc.select.articoli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>                                     
                 </div>
 
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">marchi</span>
+                        {{ frm.select({ 'field': { 'name': 'id_marchio' }, 'source': { 'values': etc.select.marchi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>   
+                </div>
+
             </fieldset>
+            {% endif %}
 
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
