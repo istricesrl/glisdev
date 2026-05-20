@@ -16,7 +16,7 @@
      * catalogo.tools                   | catalogo                  | tools catalogo
      * catalogo.archivio                | catalogo                  | archivio catalogo
      * catalogo.archivio.tools          | catalogo.archivio         | tools archivio catalogo
-     * 
+     * catalogo.archivio.stampe         | catalogo.archivio         | stampe archivio catalogo
      */
 
     // lingua di questo file
@@ -95,5 +95,17 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.archivio.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.archivio' )
+    );
+
+    // archivio catalogo prezzi
+    $p['catalogo.archivio.prezzi.view'] = array(
+        'sitemap'        => false,
+        'title'            => array( $l        => 'archivio catalogo prezzi' ),
+        'h1'            => array( $l        => 'prezzi' ),
+        'parent'        => array( 'id'        => 'catalogo.archivio' ),
+        'template'        => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'            => array( $m . '_src/_inc/_macro/_catalogo.archivio.prezzi.view.php' ),
+        'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'            => array( 'tabs'    =>  'catalogo.archivio' )                                                      
     );
 

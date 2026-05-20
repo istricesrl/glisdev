@@ -1839,6 +1839,47 @@ CREATE OR REPLACE VIEW `pagine_view` AS						  --
 		pagine.id_account_aggiornamento,					  --
 		pagine_path( pagine.id ) AS __label__			  	  -- etichetta per le tendine e le liste
 	FROM pagine										  		  --
+;
+
+-- | 090000025000
+
+-- prezzi_view
+CREATE OR REPLACE VIEW `prezzi_view` AS
+	SELECT
+		prezzi.id,
+		prezzi.id_prodotto,
+		prodotti.nome AS prodotto,
+		prezzi.id_articolo,
+		articoli.nome AS articolo,
+		prezzi.fascia,
+		prezzi.qta_min,
+		prezzi.qta_max,
+		prezzi.sconto_articoli,
+		prezzi.prefisso,
+		prezzi.prezzo,
+		prezzi.suffisso,
+		prezzi.provvigione_percentuale,
+		prezzi.provvigione_fissa,
+		prezzi.id_listino,
+		listini.nome AS listino,
+		prezzi.id_iva,
+		iva.nome AS iva,
+        prezzi.data_inizio,
+        prezzi.data_fine,
+		prezzi.id_account_inserimento,
+		prezzi.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			prezzi.prodotto,
+			prezzi.articolo,
+			prezzi.prezzo
+		) AS __label__
+	FROM prezzi
+		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
+		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
+		LEFT JOIN listini ON listini.id = prezzi.id_listino
+		LEFT JOIN iva ON iva.id = prezzi.id_iva
+	GROUP BY prezzi.id
 ;															  --
 
 -- | 090000026000
