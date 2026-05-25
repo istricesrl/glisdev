@@ -32,6 +32,7 @@
         ),
         'cols' => array(
             'id' => '#',
+            'reparto' => 'reparto',
             'listino' => 'listino',
             'prodotto' => 'prodotto',
             'articolo' => 'articolo',
@@ -46,6 +47,7 @@
         ),
         'class' => array(
             'id' => 'd-none',
+            'reparto' => 'd-none',
             'listino' => 'd-none',
             'prodotto' => 'd-none',
             'articolo' => 'd-none',

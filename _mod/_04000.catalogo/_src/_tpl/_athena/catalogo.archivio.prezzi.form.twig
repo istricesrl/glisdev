@@ -23,7 +23,11 @@
 
                 {# PRIMA RIGA DI CAMPI #}
                 <div class="form-group row">
-                    <div class="col-12 col-md-3 form-col">
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">reparto</span>
+                        {{ frm.select({ 'field': { 'name': 'id_reparto' }, 'source': { 'values': etc.select.reparti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md-2 form-col">
                         <span class="label-top">listino</span>
                         {{ frm.select({ 'field': { 'name': 'id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>

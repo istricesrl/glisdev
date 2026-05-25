@@ -16,6 +16,14 @@
 
     // dati delle tendine
 
+    // tendina reparti
+    $ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM reparti_view ORDER BY __label__'
+    );
+
     // tendina listini
     $ct['etc']['select']['listini'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
