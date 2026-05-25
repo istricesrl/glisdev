@@ -1870,9 +1870,12 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		prezzi.id_account_aggiornamento,
 		concat_ws(
 			' ',
-			prezzi.prodotto,
-			prezzi.articolo,
-			prezzi.prezzo
+			listini.nome,
+			prodotti.nome,
+			articoli.nome,
+			prezzi.prefisso,
+			prezzi.prezzo,
+			prezzi.suffisso
 		) AS __label__
 	FROM prezzi
 		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
