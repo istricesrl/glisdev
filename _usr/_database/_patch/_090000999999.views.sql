@@ -1860,6 +1860,8 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		prezzi.suffisso,
 		prezzi.provvigione_percentuale,
 		prezzi.provvigione_fissa,
+		prezzi.id_reparto,
+		reparti.nome AS reparto,
 		prezzi.id_listino,
 		listini.nome AS listino,
 		prezzi.id_iva,
@@ -1880,6 +1882,7 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 	FROM prezzi
 		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
 		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
+		LEFT JOIN reparti ON reparti.id = prezzi.id_reparto
 		LEFT JOIN listini ON listini.id = prezzi.id_listino
 		LEFT JOIN iva ON iva.id = prezzi.id_iva
 	GROUP BY prezzi.id

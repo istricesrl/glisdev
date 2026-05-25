@@ -2027,6 +2027,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
   `suffisso` char(64) DEFAULT NULL,
   `provvigione_percentuale` decimal(16,5) DEFAULT NULL,
   `provvigione_fissa` decimal(16,5) DEFAULT NULL,
+  `id_reparto` int(11) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_iva` int(11) DEFAULT NULL,
   `data_inizio` date DEFAULT NULL,
