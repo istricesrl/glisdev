@@ -78,6 +78,7 @@
         'macro'            => array( $m . '_src/_inc/_macro/_catalogo.archivio.php' ),
         'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'            => array( 'tabs'    => array(    'catalogo.archivio',
+                                                        'catalogo.archivio.prezzi.view',
                                                         'catalogo.archivio.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'archivio' ),
