@@ -1806,7 +1806,9 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
 		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
 		LEFT JOIN tipologie_contratti AS tc_abb ON tc_abb.id_prodotto = prodotti.id AND tc_abb.se_abbonamento = 1
-		LEFT JOIN categorie_progetti AS cp_disc ON cp_disc.id = tc_abb.id_categoria_progetti AND cp_disc.se_disciplina = 1
+		-- la disciplina dell'abbonamento è memorizzata come metadati 'abbonamento|discipline' (multi-valore), non su tipologie_contratti.id_categoria_progetti
+		LEFT JOIN metadati AS m_abb_disc ON m_abb_disc.id_tipologia_contratti = tc_abb.id AND m_abb_disc.nome = 'abbonamento|discipline'
+		LEFT JOIN categorie_progetti AS cp_disc ON cp_disc.id = CAST( m_abb_disc.testo AS UNSIGNED ) AND cp_disc.se_disciplina = 1
 		LEFT JOIN categorie_progetti AS aree_abb ON aree_abb.id = categorie_progetti_path_find_ancestor( cp_disc.id )
 --	WHERE
 --		tipologie_documenti.se_fattura = 1
