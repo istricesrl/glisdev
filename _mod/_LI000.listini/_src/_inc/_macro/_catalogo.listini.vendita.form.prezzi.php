@@ -29,12 +29,22 @@
         ),
         'cols' => array(
             'id' => '#',
-            '__label__' => 'articolo',
+            'prodotto' => 'prezzo',
+            'articolo' => 'articolo',
+            'prefisso' => 'prefisso',
+            'prezzo' => 'prezzo',
+            'suffisso' => 'suffisso',
+            'iva' => 'iva',
             NULL => 'azioni'
         ),
         'class' => array(
             'id' => 'd-none',
-            '__label__' => 'no-wrap text-start',
+            'prodotto' => 'd-none',
+            'articolo' => 'd-none',
+            'prefisso' => 'd-none',
+            'prezzo' => 'd-none',
+            'suffisso' => 'd-none',
+            'iva' => 'd-none',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
@@ -44,7 +54,7 @@
             'id_listino' => array( 'EQ' => $_REQUEST['listini']['id'] ?? NULL )
         ),
         '__sort__' => array(
-            '__label__' => 'ASC'
+            'prodotto' => 'ASC'
         ),
     );
 
