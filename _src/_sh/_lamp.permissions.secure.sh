@@ -53,6 +53,12 @@ chown -R $FTPUSER:www-data ./$SUB/src/templates
 chown -R $FTPUSER:www-data ./$SUB/src/tpl
 chown -R www-data:www-data ./$SUB/tmp
 chown -R $FTPUSER:www-data ./$SUB/var
+# Il chown sopra cambia owner anche ai file in var/log/ creati da www-data
+# (umask 0022 → mode 644). Da quel momento www-data resta solo nel gruppo e
+# non può più appendere ai log esistenti (mode 644 = no write per gruppo),
+# causando warning ricorrenti "fopen ... Permesso negato" su loggerLatest().
+# Forziamo 660 sui file di log per ripristinare la scrivibilità di gruppo.
+find ./$SUB/var/log -type f -exec chmod 660 {} +
 chown -R www-data:www-data ./$SUB/var/cache
 
 ## cartella .git
@@ -69,20 +75,58 @@ fi
 echo "impostati proprietari e gruppi, modifico i permessi"
 
 ## cambio permessi (silenzioso)
-find ./$SUB/                    -type d         -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
-find ./$SUB/                    -type f         -not \( -path ".git" -prune \)      -exec chmod 640 {} \;
-find ./$SUB/                    -name '*.sh'    -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
+#
+# Note sulle ottimizzazioni rispetto alla versione storica:
+#
+# 1. `-exec ... +` invece di `-exec ... \;`
+#    Con `\;` find lancia una fork+exec di chmod per ogni singolo file. Su un
+#    deploy con decine di migliaia di file sono decine di migliaia di fork e lo
+#    script impiega minuti. Con `+` find raggruppa gli argomenti come fa xargs e
+#    invoca chmod una volta ogni ARG_MAX file: il numero di fork crolla di un
+#    paio di ordini di grandezza e il tempo totale passa da minuti a secondi.
+#
+# 2. Prune di `.git` e `var/log`
+#    - `.git` è già gestito sopra (chown -R root:root) e non deve essere toccato
+#      dai find generici. La vecchia clausola `-not \( -path ".git" -prune \)`
+#      NON pruneva nulla: `-path` confronta con il path completo prodotto da
+#      find (es. `./dev/.git`), non con il singolo segmento `.git`.
+#    - `var/log` contiene tipicamente ~90% dei file del deploy. È popolato a
+#      runtime da Apache/PHP-FPM con permessi già corretti del processo
+#      scrivente, quindi resettarlo ad ogni giro è lavoro inutile. In più i suoi
+#      file venivano in precedenza chmoddati due volte (prima 640 dal find
+#      generico, poi 660 dal find su `var/`).
+#
+# Pattern di prune usato:
+#     find ROOT \( -path P1 -o -path P2 \) -prune -o <filtro> -exec ... +
+# La sotto-espressione `\( ... \) -prune` matcha i path da escludere e ne
+# impedisce la discesa; l'`-o` finale fa sì che `-exec` venga applicato solo
+# agli elementi che NON hanno fatto match con la prune.
 
-# permessi aggiuntivi per le cartelle
-find ./$SUB/.git/hooks          -type f                                             -exec chmod ug+x {} \;
-find ./$SUB/src/tpl             -type d                                             -exec chmod 770 {} \;
-find ./$SUB/tmp                 -type d                                             -exec chmod 770 {} \;
-find ./$SUB/var                 -type d                                             -exec chmod 770 {} \;
+# permessi base sull'intero deploy (escludendo .git e var/log)
+find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d                                  -exec chmod 550 {} +
+find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type f                                  -exec chmod 640 {} +
+find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -name '*.sh'                             -exec chmod 550 {} +
 
-find ./$SUB/src/tpl             -type f                                             -exec chmod 660 {} \;
-find ./$SUB/mod/*/src/tpl       -type f                                             -exec chmod 660 {} \;
-find ./$SUB/tmp                 -type f                                             -exec chmod 660 {} \;
-find ./$SUB/var                 -type f                                             -exec chmod 660 {} \;
+# permessi aggiuntivi per le cartelle scrivibili dal framework
+# (su `var/` si esclude di nuovo `var/log` per non descendervi)
+find ./$SUB/.git/hooks          -type f                                                                                                 -exec chmod ug+x {} +
+find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 770 {} +
+find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 770 {} +
+find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 770 {} + 2>/dev/null
+find ./$SUB/tmp                 -type d                                                                                                 -exec chmod 770 {} +
+find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type d                                  -exec chmod 770 {} +
+
+find ./$SUB/src/tpl             -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/src/templates       -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/mod/*/src/tpl       -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/mod/*/src/templates -type f                                                                                                 -exec chmod 660 {} + 2>/dev/null
+find ./$SUB/tmp                 -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type f                                  -exec chmod 660 {} +
+
+# var/log è pruned dai find sopra per non resettare i ~90% dei file del deploy
+# che vivono lì; ma la dir radice stessa deve comunque essere scrivibile dal
+# framework runtime (Apache/PHP-FPM) altrimenti non può creare nuovi log file.
+[ -d "./$SUB/var/log" ] && chmod 770 ./$SUB/var/log
 
 # informazioni
 echo "permessi modificati"

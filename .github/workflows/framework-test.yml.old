@@ -1,0 +1,54 @@
+name: Test PHP Framework
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del codice
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        coverage: xdebug
+        tools: composer:v2
+
+    - name: Ottieni la cache delle dipendenze di Composer
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Installa le dipendenze di Composer
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Setup Chrome and Chromedriver
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: stable
+
+    - name: Start Chromedriver
+      run: |
+        chromedriver --port=9515 --url-base=/wd/hub &
+        sleep 5
+
+    - name: Start PHP built-in web server
+      run: |
+        php -S 127.0.0.1:8000 /_src/_api/_status/_framework.php &
+        echo "PHP web server started on 127.0.0.1:8000"
+
+    - name: Wait for web server to be ready
+      run: |
+        timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' 127.0.0.1:8000)" != "200" ]]; do sleep 1; done'
+
+    - name: Esegui i test di Codeception
+      run: _src/_sh/_codeception.run.sh
