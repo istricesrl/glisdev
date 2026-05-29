@@ -256,6 +256,7 @@
                                                             'anagrafica.archivio.iban.view',
                                                             'anagrafica.archivio.anagrafica.indirizzi.view',
                                                             'anagrafica.archivio.tipologie.anagrafica.view',
+                                                            'anagrafica.archivio.ruoli.anagrafica.view',
                                                             'anagrafica.archivio.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'archivio' ),
                                                                             'priority'    => '900' ) ) )
@@ -501,6 +502,19 @@
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'anagrafica.archivio.tipologie.anagrafica.form' )
+    );
+
+    // anagrafica archivio ruoli anagrafica
+    $p['anagrafica.archivio.ruoli.anagrafica.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio ruoli anagrafica' ),
+        'h1'                => array( $l        => 'ruoli anagrafica' ),
+        'tab'                => array( $l        => 'ruoli' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.ruoli.anagrafica.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
     );
 
     // tools anagrafica
