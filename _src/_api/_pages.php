@@ -790,14 +790,20 @@
                     break;
                 }
                 if( strpos( $js, '.min.js' ) === false ) {
-                    $new = str_replace( '.js', '.min.js', $js );
+                    // Fix 2026-05-18: anchored su `.js` finale (fine path o prima di ?query).
+                    // Pre-fix str_replace greedy corrompeva URL tipo cdn.jsdelivr.net/npm/chart.js
+                    // → cdn.min.jsdelivr.net/npm/chart.min.js (host distrutto), generando 404 e
+                    // file cache da 1 byte che servivano <script> vuoti.
+                    $new = preg_replace( '/\.js($|\?)/', '.min.js$1', $js );
                     if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
                         logger( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
                         $js = $new;
                     }
                 }
             }
+            unset( $js );
         }
+        unset( $rJs );
     }
 
     // timer
@@ -820,29 +826,38 @@
      */
 
     // caching locale dei CSS esterni
+    // I CSS in $ct['page']['css'][$tier] possono avere DUE strutture:
+    //  - nested  [media => [url, ...]]   tipica dei template.yaml (es. _src/_tpl/_athena)
+    //  - piatta  [idx => url]            tipica dei template.conf INI (es. _src/_templates/_athena)
+    // Il template .twig e l'HTML legacy iterano la struttura nested; per i template INI piatti
+    // il caching CSS resta inattivo (gli URL restano in external e vengono serviti dai CDN).
     if( isset( $ct['page']['css']['external'] ) && is_array( $ct['page']['css']['external'] ) ) {
         foreach( $ct['page']['css']['external'] as $media => $sheets ) {
-            if( is_array( $sheets ) ) {
-                foreach( $sheets as $sheet => $css ) {
-                    $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
-                    if( ! file_exists( $cachefile ) ) {
-                        $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
-                        $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
-                        $content = file_get_contents( $css );
-                        writeToFile( $content, $cachefile );
-                        $extRes = preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
-                        foreach( $matches[1] as $match ) {
-                            $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
-                            $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
-                            $content = file_get_contents( $res );
-                            writeToFile( $content, $cachefile );
+            if( ! is_array( $sheets ) ) { continue; }
+            foreach( $sheets as $sheet => $css ) {
+                // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.head.twig: non cachabili
+                if( strpos( $css, '{{' ) !== false || strpos( $css, '{%' ) !== false || strpos( $css, '{#' ) !== false ) {
+                    continue;
+                }
+                $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
+                if( ! file_exists( $cachefile ) ) {
+                    $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
+                    $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
+                    $content = file_get_contents( $css );
+                    writeToFile( $content, $cachefile );
+                    preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
+                    foreach( $matches[1] as $match ) {
+                        $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
+                        $resCache = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
+                        if( ! file_exists( $resCache ) ) {
+                            writeToFile( file_get_contents( $res ), $resCache );
                         }
-                    } else {
-                        $content = readStringFromFile( $cachefile );
-                        if( ! empty( $content ) ) {
-                            $ct['page']['css']['cached'][ $media ][] = shortPath( $cachefile );
-                            unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
-                        }
+                    }
+                } else {
+                    $content = readStringFromFile( $cachefile );
+                    if( ! empty( $content ) ) {
+                        $ct['page']['css']['cached'][ $media ][] = shortPath( $cachefile );
+                        unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
                     }
                 }
             }
@@ -850,19 +865,41 @@
     }
 
     // caching locale dei JS esterni
+    // Alcune librerie (es. CKEditor 4) all'avvio autocalcolano la propria basePath
+    // dall'URL del proprio <script src> e da lì scaricano asset accessori (config.js,
+    // lang/<lingua>.js, skins/<skin>/editor.css, plugins/...). Cachare il solo file
+    // principale rompe l'autoload: i 404 sugli asset accessori impediscono
+    // l'inizializzazione. Skip-list per i pacchetti multi-file noti: restano in
+    // page.js.external e vengono caricati direttamente dalla CDN.
+    $jsCacheSkipPrefixes = array(
+        'cdn.ckeditor.com/',
+    );
     if( isset( $ct['page']['js']['external'] ) && is_array( $ct['page']['js']['external'] ) ) {
         foreach( $ct['page']['js']['external'] as $idx => $js ) {
             // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.close.twig: non cachabili
             if( strpos( $js, '{{' ) !== false || strpos( $js, '{%' ) !== false || strpos( $js, '{#' ) !== false ) {
                 continue;
             }
+            // skip pacchetti multi-file che si rompono se serviti da basePath diversa dalla CDN
+            $jsHost = str_replace( array( 'http://', 'https://' ), '', $js );
+            foreach( $jsCacheSkipPrefixes as $prefix ) {
+                if( strpos( $jsHost, $prefix ) === 0 ) {
+                    continue 2;
+                }
+            }
             $cachefile = DIR_VAR_CACHE . 'js/' . str_replace( array( 'http://', 'https://' ), '', $js );
             if( ! file_exists( $cachefile ) ) {
-                $content = file_get_contents( $js );
-                writeToFile( $content, $cachefile );
+                $content = @file_get_contents( $js );
+                // Fix 2026-05-18: scrivi in cache solo se il fetch ha portato contenuto reale.
+                // Pre-fix un 404/DNS-fail produceva file da 0-1 byte che al request successivo
+                // passavano il check `! empty($content)` (es. "\n") e venivano serviti come
+                // <script> vuoti, mascherando rotture in pagina.
+                if( $content !== false && strlen( trim( $content ) ) > 0 ) {
+                    writeToFile( $content, $cachefile );
+                }
             } else {
                 $content = readStringFromFile( $cachefile );
-                if( ! empty( $content ) ) {
+                if( ! empty( trim( $content ) ) ) {
                     $ct['page']['js']['cached'][] = shortPath( $cachefile );
                     unset( $ct['page']['js']['external'][ $idx ] );
                 }
