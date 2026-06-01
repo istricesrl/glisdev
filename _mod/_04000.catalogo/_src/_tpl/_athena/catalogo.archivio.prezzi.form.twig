@@ -53,7 +53,7 @@
                     </div>
                     <div class="col col-md-auto form-col">
                         <span class="label-top">prezzo</span>
-                        {{ frm.input({ 'field': { 'name': 'prezzo', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                        {{ frm.input({ 'field': { 'name': 'prezzo', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                     <div class="col col-md-auto form-col">
                         <span class="label-top">suffisso</span>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="col form-col">
                         <span class="label-top">provv. fissa</span>
-                        {{ frm.input({ 'field': { 'name': 'provvigione_fissa', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                        {{ frm.input({ 'field': { 'name': 'provvigione_fissa', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                     <div class="col form-col">
                         <span class="label-top">data inizio</span>
