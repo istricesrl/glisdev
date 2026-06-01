@@ -37,8 +37,6 @@
             'valuta' => 'valuta',
             'prodotto' => 'prodotto',
             'articolo' => 'articolo',
-            'qta_min' => 'q.tà min',
-            'qta_max' => 'q.tà max',
             'prefisso' => 'prefisso',
             'prezzo' => 'prezzo',
             'suffisso' => 'suffisso',
@@ -48,28 +46,26 @@
         ),
         'class' => array(
             'id' => 'd-none',
-            'reparto' => 'd-none',
-            'listino' => 'd-none',
-            'valuta' => 'd-none',
-            'prodotto' => 'd-none',
-            'articolo' => 'd-none',
-            'qta_min' => 'd-none',
-            'qta_max' => 'd-none',
-            'prefisso' => 'd-none',
-            'prezzo' => 'd-none',
-            'suffisso' => 'd-none',
-            'sconto_articoli' => 'd-none',
-            'iva' => 'd-none',
+            'reparto' => 'text-start no-wrap',
+            'listino' => 'text-start no-wrap',
+            'valuta' => 'text-start no-wrap',
+            'prodotto' => 'text-start no-wrap',
+            'articolo' => 'text-start no-wrap',
+            'prefisso' => 'text-start no-wrap',
+            'prezzo' => 'text-start no-wrap',
+            'suffisso' => 'text-start no-wrap',
+            'sconto_articoli' => 'text-start no-wrap',
+            'iva' => 'text-start no-wrap',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            '__label__' => array( 'NN' => true )
+           
         ),
         '__sort__' => array(
-            '__label__' => 'ASC'
+            'listino' => 'ASC'
         ),
     );
 

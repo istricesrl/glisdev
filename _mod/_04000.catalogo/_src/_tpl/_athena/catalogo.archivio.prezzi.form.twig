@@ -95,11 +95,11 @@
                     </div>
                     <div class="col-4 col-md form-col">
                         <span class="label-top">sconto</span>
-                        {{ frm.input({ 'field': { 'name': 'sconto_articoli', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                        {{ frm.input({ 'field': { 'name': 'sconto_articoli', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                     <div class="col-6 col-md form-col">
                         <span class="label-top">provv. %</span>
-                        {{ frm.input({ 'field': { 'name': 'provvigione_percentuale', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                        {{ frm.input({ 'field': { 'name': 'provvigione_percentuale', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                     <div class="col-6 col-md form-col">
                         <span class="label-top">provv. fissa</span>
