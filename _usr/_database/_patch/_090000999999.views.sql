@@ -1877,7 +1877,8 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 			articoli.nome,
 			prezzi.prefisso,
 			prezzi.prezzo,
-			prezzi.suffisso
+			prezzi.suffisso,
+			iva.nome
 		) AS __label__
 	FROM prezzi
 		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
