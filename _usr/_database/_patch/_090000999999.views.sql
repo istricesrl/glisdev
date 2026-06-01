@@ -1864,6 +1864,7 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		reparti.nome AS reparto,
 		prezzi.id_listino,
 		listini.nome AS listino,
+		valute.utf8 AS valuta,
 		prezzi.id_iva,
 		iva.nome AS iva,
         prezzi.data_inizio,
@@ -1885,6 +1886,7 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
 		LEFT JOIN reparti ON reparti.id = prezzi.id_reparto
 		LEFT JOIN listini ON listini.id = prezzi.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN iva ON iva.id = prezzi.id_iva
 	GROUP BY prezzi.id
 ;															  --
