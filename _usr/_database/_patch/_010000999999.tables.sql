@@ -2016,8 +2016,8 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `prezzi` (
   `id` int(11) NOT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` int(11) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
   `fascia` char(32) DEFAULT NULL,
   `qta_min` int(11) DEFAULT NULL,
   `qta_max` int(11) DEFAULT NULL,
