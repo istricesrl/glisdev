@@ -2179,6 +2179,8 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_contratti,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
+		ruoli_anagrafica.id_account_inserimento,
+		ruoli_anagrafica.id_account_aggiornamento,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
 ;
