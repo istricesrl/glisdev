@@ -29,7 +29,8 @@
         ),
         'cols' => array(
             'id' => '#',
-            'prodotto' => 'prezzo',
+            'reparto' => 'reparto',
+            'prodotto' => 'prodotto',
             'articolo' => 'articolo',
             'prefisso' => 'prefisso',
             'prezzo' => 'prezzo',
@@ -39,12 +40,13 @@
         ),
         'class' => array(
             'id' => 'd-none',
-            'prodotto' => 'd-none',
-            'articolo' => 'd-none',
-            'prefisso' => 'd-none',
-            'prezzo' => 'd-none',
-            'suffisso' => 'd-none',
-            'iva' => 'd-none',
+            'reparto' => 'no-wrap text-start',
+            'prodotto' => 'no-wrap text-start',
+            'articolo' => 'no-wrap text-start',
+            'prefisso' => 'no-wrap text-start',
+            'prezzo' => 'no-wrap text-start',
+            'suffisso' => 'no-wrap text-start',
+            'iva' => 'no-wrap text-start',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
