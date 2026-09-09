@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md o il burndown.md di un progetto, e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md, il DONE.md, il CHAT.md o il burndown.md di un progetto, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
@@ -46,13 +46,61 @@ un'esigenza sia davvero senza precedenti in questo framework.
 non regge in quel caso e proponi la variante minima che se ne discosta. La deroga è una decisione, non un
 effetto collaterale.
 
-## Cose da fare
+## Release e version: come si capisce che framework ha in mano un deploy
 
-Il backlog di un progetto sta in `TODO.md` nella root del deploy, il `burndown.md` accanto è generato e non
-si tocca a mano. I marcatori validi sono quattro — `- [ ]` da fare, `- [?]` da approfondire, `- [v]` fatta,
-`- [x]` scartata — e i conteggi sono ancorati a inizio riga, quindi il `- ` iniziale e l'assenza di
-indentazione non sono dettagli stilistici. La regola completa sta nella sezione **"Cose da fare"** di
-`_etc/_claude/_claude.framework.md`, che è la fonte autorevole: leggila prima di modificare un `TODO.md`.
+Fonte autorevole: **`READ.md` del framework, sezione `/_etc/_current.release e /_etc/_current.version`**.
+Leggila prima di dedurre alcunché dalle date dei file: le due numerazioni dicono cose diverse.
+
+- **`_etc/_current.release`** — `major.minor.bugfix`. Si cambia **a mano**, quando si crea una nuova
+  release branch, quindi si muove di rado;
+- **`_etc/_current.version`** — un timestamp (`20260908161248`). Lo scrive il git hook
+  `.githooks/pre-commit` **a ogni commit sul repository di sviluppo del framework**, quindi si muove
+  quotidianamente ma **solo dove il framework si sviluppa**, non sui deploy dei clienti.
+
+A runtime `_src/_config/_030.common.php` confronta la version locale con quella pubblicata su
+`https://glisweb.istricesrl.it/current.version`, e **`_src/_api/_status/_framework.php` dice se
+l'installazione è aggiornata, obsoleta o di sviluppo**. Quando serve sapere com'è messo un deploy,
+la risposta viene da lì, non da un `ls -l` su `_src/`.
+
+⚠ **Trappola documentata**: `core.hooksPath` è configurazione locale della copia di lavoro e non
+viaggia col repository. Finché non si esegue `bash .githooks/install.sh`, git cerca gli hook in
+`.git/hooks/` e **la version resta ferma senza che nulla lo segnali** — si vedono commit recenti con
+una version di mesi prima. Se le due cose non tornano, è quasi sempre questo, non un deploy vecchio.
+
+### Quando questa skill vale, e quando no
+
+Vale sui deploy che **dichiarano una release** in `_etc/_current.release`. Un deploy senza quel file
+è su una versione anteriore all'introduzione della release: le convenzioni descritte qui — runlevel
+`N0`/`N5`, `profiles`, `config.yaml`, `_mod/`, l'upgrade — lì non ci sono, e seguirle significa
+cercare strutture inesistenti. In quel caso si guarda **com'è fatto quel codice** e si riusano i
+suoi pattern, che è comunque la regola d'oro.
+
+Il `CLAUDE.md` di quei progetti lo dichiara in testa. Se ci lavori e non lo dice, aggiungilo.
+
+## Cose da fare: tre file, non uno
+
+Nella root del deploy vivono **tre file di stato** con tre tempi di vita diversi, più il `burndown.md` che è
+generato e non si tocca a mano:
+
+- **`TODO.md`** — solo lavoro **aperto** ( `- [ ]` da fare, `- [?]` da approfondire ). Quando una voce
+  chiude non resta qui: si sposta;
+- **`DONE.md`** — l'archivio del **fatto** ( `- [v]` fatta, `- [x]` scartata ) e delle cronache di come è
+  andata. Si consulta con `grep`, non si rilegge;
+- **`CHAT.md`** — lo **stato attuale** della conversazione col cliente: cosa aspetta lui, cosa aspettiamo
+  noi, cosa c'è da dirgli, con data e canale di ogni contatto. **Si riscrive**, non si accumula.
+
+Due regole che valgono più di tutte le altre:
+
+1. **una cosa sta in un file solo.** Se la stessa riga è in due file, il prossimo che legge non sa quale
+   delle due è vera;
+2. **prima di scrivere al cliente si legge `CHAT.md`**, e prima di scrivere "da chiedere a X" si cerca in
+   `CHAT.md` e `DONE.md` se la risposta esiste già. Chiedere a un cliente una cosa a cui ha già risposto
+   gli dice che quello che ha detto non è stato registrato.
+
+I conteggi sono ancorati a inizio riga, quindi il `- ` iniziale e l'assenza di indentazione non sono
+dettagli stilistici: le aperte si contano in `TODO.md`, le chiuse in `TODO.md` **e** `DONE.md`. La regola
+completa sta nella sezione **"Cose da fare"** di `_etc/_claude/_claude.framework.md`, che è la fonte
+autorevole: leggila prima di modificare uno di questi file.
 
 ## ⚠ Regola fondamentale: governance cliente vs upstream
 
@@ -263,6 +311,46 @@ Riferimenti tipici a `_claude.framework.md`:
 
 Se quel file non è presente nel framework che stai usando, fallback su `READ.md` nella root del framework e
 ispeziona direttamente `_src/_config.php` per il bootstrap.
+
+### 3.1 Come aggiornare il framework in un progetto cliente
+
+Il framework di un deploy cliente si aggiorna **solo** con lo script che il framework stesso spedisce:
+
+```bash
+# path assoluto dello script dentro la document root del deploy, e il branch come argomento
+/var/www/<deploy>/dev/_src/_sh/_gw.upgrade.sh <branch>
+```
+
+Il branch giusto è quello dichiarato in `update.branch.conf` nella root del deploy — il livello che
+contiene `dev/`, non la document root. È lo stesso che usa il cron notturno `/etc/cron.daily/upgrades`:
+allinearsi a quello evita che l'aggiornamento manuale e quello automatico si rincorrano.
+
+**Non è un `git pull`, e non lo si sostituisce con git.** Un deploy cliente non è un checkout del
+framework: `_src/`, `_mod/`, `_etc/` e `_usr/` arrivano dallo zip di GitHub, non da git. Se in macchina
+esiste un checkout del framework (p.es. `/var/www/glisweb.istricesrl.it/dev/`) quello serve a **leggere** —
+`git log`, `git blame`, confronti — e aggiornarlo **non aggiorna nessun deploy cliente**. Confondere le due
+cose porta a credere di essersi allineati e continuare a lavorare sul framework vecchio, che è il modo
+peggiore di sbagliare: silenzioso.
+
+Cosa fa lo script, nell'ordine: backup `tar.gz` del deploy un livello sopra la document root; copia in
+`../disallineamenti.<ts>/` i file modificati dopo l'ultimo upgrade (`_*/` **più** `.claude/`, `.github/`,
+`.htaccess` e `composer.json`); scarica ed estrae lo zip del branch facendo `rm -rf ./_*`; mette da parte e
+ripristina il vendor `_src/_lib/_ext`; lancia `composer update`; riallinea i permessi con
+`_lamp.permissions.secure.sh`; scrive `var/latest.upgrade.conf`; genera un `.diff` accanto a ogni file
+disallineato.
+
+Tre conseguenze operative:
+
+- **si aggiorna prima di mettere le mani su un file `_*`**, non dopo: partendo da una base vecchia il
+  `.diff` che arriverà al manutentore conterrà anche differenze che non sono tue, e diventa invalutabile.
+- **dopo l'upgrade si legge l'elenco dei disallineati**: sono le modifiche locali che l'aggiornamento ha
+  appena ribaltato. Non sono perse (stanno in `../disallineamenti.<ts>/` col loro `.diff`) ma sul deploy
+  non ci sono più, e se servivano vanno riapplicate. Attenzione ai falsi positivi: il confronto è sulla
+  mtime, quindi un file toccato ma non modificato compare nell'elenco con un `.diff` **vuoto** — quelli
+  si ignorano.
+- **anche `.claude/` viene sovrascritto**: la skill e i suoi file arrivano dallo zip come tutto il resto.
+  Una modifica alla skill fatta su un deploy cliente è temporanea esattamente come una a `_src/`, e segue
+  lo stesso percorso di promozione (disallineamento → valutazione upstream).
 
 ## 4. Configurazione multi-ambiente: `profiles` / `profile`
 

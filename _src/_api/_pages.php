@@ -131,6 +131,31 @@
         require INCLUDE_SUBDIR . '_config.php';
     }
 
+    /**
+     * pagine che puntano fuori dal sito
+     * =================================
+     * Una pagina con 'forced' valorizzato non e' una pagina: e' un rimando a un documento che
+     * sta altrove — un manuale, un allegato, un servizio esterno. Il framework le calcola gia'
+     * il percorso a NULL e l'URL uguale al valore dichiarato ( _src/_config/_320.pages.php ),
+     * e la navigazione la linka correttamente ( _src/_lib/_menu.utils.php ).
+     *
+     * Restava pero' RAGGIUNGIBILE al proprio URL interno, dove non ha ne' template ne' macro:
+     * rispondeva 200 con due Notice di PHP e il percorso della document root nel corpo, anche
+     * a un anonimo. Verificato l'8 settembre 2026 sul primo uso vivo di 'forced' in tutto il
+     * framework: /manuale.it-IT.html dava 200 invece di 404.
+     *
+     * Qui la si manda dov'e' davvero. Il rimando e' 302 e non 301 perche' l'URL di destinazione
+     * si compone dalla configurazione ( es. da $cf['site']['url'] ) e puo' cambiare fra un
+     * ambiente e l'altro: un 301 resterebbe nella cache del browser anche dopo.
+     */
+    if( ! empty( $ct['page']['forced'][ $cf['localization']['language']['ietf'] ] ) ) {
+
+        header( 'Location: ' . $ct['page']['forced'][ $cf['localization']['language']['ietf'] ], true, 302 );
+
+        exit;
+
+    }
+
     // debug
     // print_r( $ct['page'] );
     // die(print_r($ct['page']));
@@ -893,8 +918,21 @@
     // principale rompe l'autoload: i 404 sugli asset accessori impediscono
     // l'inizializzazione. Skip-list per i pacchetti multi-file noti: restano in
     // page.js.external e vengono caricati direttamente dalla CDN.
+    //
+    // Stessa skip-list per i loader che si autoaggiornano. api.js di reCAPTCHA non e' una
+    // libreria: e' un bootstrap di 977 byte che inserisce a runtime lo script vero da
+    // gstatic, con la release CABLATA nell'URL e un hash SRI. Google ruota quelle release,
+    // e la copia in cache resta ferma alla release del giorno in cui e' stata scaricata:
+    // dopo la rotazione il browser chiede uno script che risponde 404, e con l'integrity
+    // non ha nemmeno la possibilita' di cavarsela. Misurato il 04/09/2026 su questo deploy:
+    // la copia del 10/06 puntava alla release ne1iDVwClkE7nKD3uA9Vqsvl, sparita, mentre
+    // Google serviva 8x-4t2pegToiW8KmThtO4AQt. Effetto in pagina: i bottoni protetti da
+    // reCAPTCHA rispondono al secondo o al terzo clic invece che al primo.
+    //
+    // Non ha senso nemmeno cacharlo: sono 977 byte e non e' il file che pesa.
     $jsCacheSkipPrefixes = array(
         'cdn.ckeditor.com/',
+        'www.google.com/recaptcha/',
     );
     if( isset( $ct['page']['js']['external'] ) && is_array( $ct['page']['js']['external'] ) ) {
         foreach( $ct['page']['js']['external'] as $idx => $js ) {
