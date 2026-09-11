@@ -12,6 +12,39 @@ sovrascrivono eventualmente ciò che è definito qui.
 
 ---
 
+## REGOLA D'ORO: non inventare, riusa i pattern esistenti
+
+**Non si inventa MAI niente se nel framework c'è già implementato qualcosa di simile.** La coerenza interna del
+progetto è ESSENZIALE e i pattern di sviluppo devono RIPETERSI IL PIÙ POSSIBILE: si riusano i pattern esistenti,
+oppure — se c'è davvero da creare qualcosa di nuovo — lo si fa **a partire da quelli**, rispettando lo stile e la
+struttura del resto del codice.
+
+Viene prima di ogni altra regola di questo file e vale per tutto: nomi, forma dei file, ordine dei runlevel,
+firme delle funzioni, struttura dei template, formattazione, commenti, messaggi di log.
+
+**Cercare il precedente è un passo obbligatorio, non un'ottimizzazione.** Prima di scrivere una riga nuova:
+
+```bash
+grep -rn "<parola chiave>" _src/_lib/ _mod/ src/ mod/ | head -30   # esiste già qualcosa che fa una cosa simile?
+ls _src/_lib/ _src/_config/ _mod/ _src/_twig/                      # com'è fatto e come si chiama il suo tipo?
+```
+
+Poi si aprono **due o tre esempi esistenti dello stesso tipo** e se ne copia la forma. "Simile" non vuol dire che
+faccia la stessa cosa: vuol dire che è dello **stesso tipo** — un altro runlevel, un'altra libreria di quel gruppo,
+un altro modulo, un'altra pagina, un altro script di `_src/_sh/`, un altro job. Se non si trova niente di simile,
+quasi sempre vuol dire che non si è cercato abbastanza: è raro che un'esigenza sia senza precedenti qui dentro.
+
+**La forma dell'esistente comanda, anche quando non piace.** Se il framework usa `array( … )` non si scrive
+`[ … ]`; se mette gli spazi dentro le parentesi si mettono; se i file di un certo tipo si chiamano in un certo
+modo, il nuovo si chiama così. Una soluzione più elegante ma diversa dalle altre venti è **peggiore** di una
+identica alle altre venti — leggere e manutenere venti varianti dello stesso pattern costa più di qualunque
+guadagno locale.
+
+**Se un pattern esistente non regge**, non si devia in silenzio: lo si dice all'utente, si spiega perché, e si
+propone la variante minima che se ne discosta. La deroga è una decisione, non un effetto collaterale.
+
+---
+
 ## Regola fondamentale: non rompere mai i file standard
 
 I file e le cartelle il cui nome inizia con `_` sono **file standard del framework** — non vanno mai modificati
@@ -51,6 +84,58 @@ Per personalizzare un file standard, creare il corrispondente senza underscore i
 `_src/_config.php` rileva e carica i file custom automaticamente tramite `path2custom()` e `glob2custom()`.
 
 ---
+
+## Backup: mai dentro la document root
+
+La document root è `<progetto>/dev/`. **Nessun backup ci va dentro**, nemmeno in `dev/var/`: né copie di
+sicurezza prima di una modifica, né file di appoggio, né scarti. Vanno in **`<progetto>/var/<identificativo>/`**,
+un livello sopra la document root, col nome originale del file (l'identificativo è la data, o `data-motivo`).
+
+Rusco da non lasciare mai in giro: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`, `nome.php.bak.<data>`.
+
+Non è ordine, è sicurezza. Il `.htaccess` nega le estensioni pericolose con un `FilesMatch` **ancorato alla
+fine del nome**, quindi `pagina.php.bak.20260827` non fa match e Apache lo serve in chiaro. Verificato:
+`zz.test.php.bak` → 403, `zz.test.php.bak.20260827` → **200 col contenuto**. Proprio la convenzione di
+mettere la data in fondo, che sembra più ordinata, è quella che aggira la protezione.
+
+## Cose da fare: `TODO.md` e `burndown.md`
+
+Il backlog del progetto sta in `TODO.md`, nella **root del deploy** (il livello che contiene `dev/`), non
+dentro `dev/`. Accanto c'è `burndown.md`, che è **generato**: non si modifica a mano, lo riscrive ogni notte
+`/etc/cron.daily/burndown`.
+
+Li gestisce [avanzamenti-todo](https://github.com/the-linux-nerd/avanzamenti-todo), che conta le voci con
+espressioni **ancorate a inizio riga**. Le regole che seguono non sono questioni di stile: se non le rispetti
+i conteggi sbagliano in silenzio, e te ne accorgi settimane dopo guardando una curva che non torna.
+
+### I quattro marcatori
+
+| marcatore | significato | stato |
+|---|---|---|
+| `- [ ]` | da fare | aperta |
+| `- [?]` | da fare, ma prima serve un approfondimento | aperta |
+| `- [v]` | fatta | chiusa |
+| `- [x]` | scartata, tenuta solo per memoria storica | chiusa |
+
+`[ ]` e `[?]` contano entrambe nel residuo. **Non esistono altri marcatori**: se ne incontri uno diverso
+(`[y]`, `[X]`, `[-]`, …) è un errore, normalizzalo a uno dei quattro invece di inventare uno stato nuovo.
+
+### Come si scrive una voce
+
+- una voce per riga, che **inizia a colonna 1** con `- ` seguito dal marcatore e da uno spazio;
+- niente indentazione: una sotto-voce rientrata non viene contata;
+- il `- ` iniziale non è facoltativo — una riga che inizia direttamente con `[ ]` sfugge al conteggio;
+- se devi **citare** un marcatore dentro una frase o un esempio, non metterlo a inizio riga, o verrà
+  contato come una cosa da fare.
+
+### Come si aggiorna
+
+- le voci si raggruppano in sezioni datate, con l'intestazione `AAAA-MM-GG [HH:MM] TITOLO` sottolineata
+  da `=`; le voci nuove vanno in fondo, in una sezione con la data di oggi;
+- quando un lavoro finisce, si cambia il marcatore in `[v]`: **non si cancella la riga**, la storia serve;
+- quando un lavoro si abbandona, `[x]`, sempre senza cancellare;
+- una riga `SAL PIANIFICATA <data>` viene raccolta nel cruscotto `/root/avanzamenti.sh` fra le prossime
+  scadenze (funzione disponibile, oggi non usata da nessun progetto).
 
 ## Come trovare le credenziali del database (e degli altri servizi)
 
