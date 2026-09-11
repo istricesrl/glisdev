@@ -82,12 +82,48 @@
 
         global $cf;
 
+        // Fix 2026-07-10: ritorna `anagrafica_indirizzi.id`, non `id_indirizzo`.
+        // Il valore alimenta solo `documenti.id_sede_emittente` / `id_sede_destinatario`,
+        // che dalla migrazione del 2026-07-10 hanno FK su `anagrafica_indirizzi` (prima
+        // su `indirizzi`). Le query di lettura del modulo documenti, dall'upgrade
+        // framework del 27/06, filtrano su `anagrafica_indirizzi.id` e leggono
+        // l'indirizzo inline da quella tabella.
+
+        // Fix 2026-07-31 (Polisportiva Masi): questa funzione è l'unico punto in cui i vari flussi
+        // di emissione (checkout app, cassa, coupon, controller finally dei moduli) risolvono le
+        // sedi del documento, quindi è qui che va tolta la causa a monte di "richiesto indirizzo
+        // sede destinatario". Il difetto della query storica sotto: guarda SOLO `id_ruolo IN (1,4)`
+        // e non verifica che l'indirizzo sia completo di comune, mentre la query di stampa
+        // (_mod/_0400.documenti/_src/_lib/_mysql.utils.add.php) pretende la catena comune →
+        // provincia → regione → stato. Risultato: o NULL (indirizzo con ruolo diverso) o un
+        // puntatore a una riga che la stampa non sa rendere — in entrambi i casi ricevuta bloccata.
+        //
+        // `documentoIdSedeStampabile()` (mod/0400.documenti/src/lib/pdf.tools.add.php) applica gli
+        // stessi INNER JOIN della stampa, preferendo comunque i ruoli 1/4. È in un modulo di
+        // progetto, quindi il function_exists() non è cosmetico: se il modulo documenti non è
+        // attivo — o se un upgrade del framework fa sparire il placeholder che ne carica la
+        // libreria — si torna semplicemente al comportamento storico, senza errori fatali.
+        //
+        // NB: modifica a un file FRAMEWORK, sarà persa al prossimo `_gw.upgrade.sh`. Perderla
+        // rimette i NULL in emissione ma non rompe le stampe: la riparazione al volo vive in
+        // `src/config/605.common.php` + `mod/0400.documenti/src/lib/pdf.tools.add.php`, che
+        // l'upgrade non tocca.
+        if( function_exists( 'documentoIdSedeStampabile' ) ) {
+
+            $idSedeStampabile = documentoIdSedeStampabile( $idAnagrafica );
+
+            if( ! empty( $idSedeStampabile ) ) {
+                return $idSedeStampabile;
+            }
+
+        }
+
         return mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT id_indirizzo 
-                FROM anagrafica_indirizzi 
-                WHERE id_anagrafica = ? 
-                AND anagrafica_indirizzi.id_ruolo IN ( 1, 4 ) 
+            'SELECT id
+                FROM anagrafica_indirizzi
+                WHERE id_anagrafica = ?
+                AND anagrafica_indirizzi.id_ruolo IN ( 1, 4 )
                 LIMIT 1',
             array(array('s' => $idAnagrafica))
         );
@@ -541,6 +577,15 @@
 
     function inserisciIndirizzo($indirizzo, $cap, $comune, $provincia, $localita = NULL, $stato = NULL, $idComune = NULL, $idProvincia = NULL, $idStato = NULL)
     {
+        // Fix 2026-05-29: evita strtolower(null)/trim(null) (PHP 8) e righe indirizzi vuote quando manca la residenza
+        $indirizzo = (string) $indirizzo;
+        $cap       = (string) $cap;
+        $comune    = (string) $comune;
+        $provincia = (string) $provincia;
+        $localita  = (string) $localita;
+        $stato     = (string) $stato;
+        if( '' === $indirizzo . $cap . $comune . $provincia . $localita . $stato ) return null;
+
 
         // dati globali
         global $cf;

@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'video';
+    $ct['form']['table'] = 'file';
 
     //tendina pagine
     $ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery(
@@ -21,6 +21,30 @@
         $cf['mysql']['connection'],
         'SELECT id, __label__ FROM pagine_view ORDER BY __label__'
     );
+
+    //tendina template
+    $ct['etc']['select']['templates'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM template_view ORDER BY __label__'
+    );
+
+    //tendina mail_out
+    $ct['etc']['select']['mail_out'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM mail_out_view ORDER BY __label__'
+    );   
+
+    //tendina mail_sent
+    $ct['etc']['select']['mail_sent'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM mail_sent_view ORDER BY __label__'
+    );   
 
     //tendina notizie
     $ct['etc']['select']['notizie'] = mysqlCachedIndexedQuery(
