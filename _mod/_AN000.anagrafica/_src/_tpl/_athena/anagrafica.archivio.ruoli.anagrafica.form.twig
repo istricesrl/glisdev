@@ -39,11 +39,6 @@
                 </div>
             </fieldset>
 
-            {# BOTTONI E COMANDI DEL MODULO #}
-            <fieldset class="form-controls mt-auto">
-                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
-            </fieldset>
-
             {# SEZIONE FLAG #}
             <fieldset>
                 <legend>ruoli dell'applicazione<small>{{ legend }}</small></legend>
@@ -85,6 +80,12 @@
                 </div>
 
             </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+            
         </form>
     </div>
 </section>
