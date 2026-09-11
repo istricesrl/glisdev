@@ -121,7 +121,19 @@
         'macro'            => array( $m . '_src/_inc/_macro/_catalogo.archivio.prezzi.form.php' ),
         'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'            => array( 'tabs'    =>  array('catalogo.archivio.prezzi.form',
-                                                        'catalogo.archivio.form.tools'
+                                                        'catalogo.archivio.prezzi.form.tools'
                                                         ) )                                                      
     );
 
+    // gestione archivio catalogo prezzi form tools
+    $p['catalogo.archivio.prezzi.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni form catalogo archivio prezzi' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.archivio.prezzi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.archivio.prezzi.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.archivio.prezzi.form' )
+    );
