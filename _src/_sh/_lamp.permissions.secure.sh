@@ -62,12 +62,18 @@ find ./$SUB/var/log -type f -exec chmod 660 {} +
 chown -R www-data:www-data ./$SUB/var/cache
 
 ## cartella .git
-if [ -d ".git" ]; then
+# NB: il test va fatto sul percorso completo. Qui siamo nella cartella SUPERIORE al deploy
+# ( piu' sopra c'e' `cd $RP` ), quindi `[ -d ".git" ]` guardava <sito>/.git, che non esiste
+# quasi mai: il ramo non entrava e .git restava root:www-data come tutto il resto, cioe'
+# leggibile dal gruppo di Apache. Non e' un buco - il .htaccess nega .git - ma il codice non
+# faceva quello che dice, e il prune dei find piu' sotto da' per scontato che questo chown
+# sia avvenuto.
+if [ -d "./$SUB/.git" ]; then
     chown -R root:root ./$SUB/.git
 fi
 
 ## cartella .github
-if [ -d ".github" ]; then
+if [ -d "./$SUB/.github" ]; then
     chown -R root:root ./$SUB/.github
 fi
 
@@ -102,19 +108,38 @@ echo "impostati proprietari e gruppi, modifico i permessi"
 # impedisce la discesa; l'`-o` finale fa sì che `-exec` venga applicato solo
 # agli elementi che NON hanno fatto match con la prune.
 
+# IL 2 DAVANTI AL MODO DELLE DIRECTORY E' IL SETGID, E NON E' UN REFUSO
+#
+# Senza setgid, un file creato da root dentro queste cartelle nasce root:root, perche' eredita
+# il gruppo primario di chi lo crea. Apache gira come www-data e NON lo legge: risponde 403, e
+# se il file e' il .htaccess o una cartella alta risponde 403 a TUTTO il sito.
+#
+# Non e' teoria: e' successo su glisweb, dove il sito ha servito 403 dal 25 agosto all'8
+# settembre 2026, con 54.000 errori al giorno e 16 MB di log, mentre gli altri deploy della
+# flotta interrogavano invano current.version per sapere se erano aggiornati.
+#
+# A creare file da root qui dentro sono git ( merge, checkout, i riallineamenti ), gli script
+# di resync e qualunque salvataggio che scriva un file nuovo invece di riscriverlo in place.
+# Con il setgid il gruppo lo eredita la cartella, e il problema non si pone a prescindere da
+# chi scrive.
+#
+# Il setgid sopravvive ai chmod successivi: Linux non lo azzera quando si da' un modo assoluto
+# a una DIRECTORY ( a differenza dei file ). Quindi basta impostarlo qui una volta.
+
 # permessi base sull'intero deploy (escludendo .git e var/log)
-find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d                                  -exec chmod 550 {} +
+find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d                                  -exec chmod 2550 {} +
 find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type f                                  -exec chmod 640 {} +
 find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -name '*.sh'                             -exec chmod 550 {} +
 
 # permessi aggiuntivi per le cartelle scrivibili dal framework
 # (su `var/` si esclude di nuovo `var/log` per non descendervi)
 find ./$SUB/.git/hooks          -type f                                                                                                 -exec chmod ug+x {} +
-find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 770 {} +
-find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 770 {} +
-find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 770 {} + 2>/dev/null
-find ./$SUB/tmp                 -type d                                                                                                 -exec chmod 770 {} +
-find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type d                                  -exec chmod 770 {} +
+find ./$SUB/.githooks           -type f                                                                                                 -exec chmod ug+x {} +
+find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 2770 {} +
+find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 2770 {} +
+find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 2770 {} + 2>/dev/null
+find ./$SUB/tmp                 -type d                                                                                                 -exec chmod 2770 {} +
+find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type d                                  -exec chmod 2770 {} +
 
 find ./$SUB/src/tpl             -type f                                                                                                 -exec chmod 660 {} +
 find ./$SUB/src/templates       -type f                                                                                                 -exec chmod 660 {} +

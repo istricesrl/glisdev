@@ -3,6 +3,34 @@
     var formChanged = false;
     var submitFormOkay = false;
 
+    // dice se un modulo e' stato modificato DAVVERO
+    //
+    // formChanged da solo non basta: e' acceso da un binding su 'keyup change' del form, e keyup
+    // scatta anche su Tab, frecce ed Esc, cioe' semplicemente spostandosi fra i campi senza
+    // toccare niente. Da li' il popup "esci da questa pagina" su schede mai modificate.
+    //
+    // Qui si confronta lo stato attuale del modulo con quello fotografato al caricamento. CKEditor
+    // va chiesto a parte, perche' riversa il suo contenuto nella textarea solo al submit e quindi
+    // una sua modifica in serialize() non si vedrebbe.
+    function glisModuloModificato() {
+
+        if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {
+            for( var i in CKEDITOR.instances ) {
+                if( CKEDITOR.instances[i].checkDirty() ) { return true; }
+            }
+        }
+
+        var modificato = false;
+
+        $('.warning-if-changed').each( function() {
+            if( $(this).serialize() !== $(this).data('glis-stato-iniziale') ) { modificato = true; }
+        });
+
+        return modificato;
+
+    }
+
+
     // duplica un subform
     function duplicate( f ) {
 
@@ -160,7 +188,7 @@
             var p11 = $( '<div>', { "class" : "col-1" } );
             var p12 = $( '<div>', { "class" : "col-2" } );
             var p13 = $( '<div>', { "class" : "col" } );
-            var p14 = $( '<div>', { "class" : "col-2 text-right" } );
+            var p14 = $( '<div>', { "class" : "col-2 text-end" } );
 
             var p111 = $( '<p>' ).text( articolo.quantita + 'x' );
             var p121 = $( '<p>' ).text( articolo.id_articolo );
@@ -278,13 +306,21 @@
 
         // attivo le verifiche per le modifiche ai form
         window.addEventListener("beforeunload", function(e) {
-            if( formChanged == true && ! submitFormOkay ) {
+            if( formChanged == true && ! submitFormOkay && glisModuloModificato() ) {
             var confirmationMessage = 'sei sicuro di voler abbandonare la pagina?';
             ( e || window.event ).returnValue = confirmationMessage;
             }
         });
 
-        $('.warning-if-changed').on( 'keyup change', function() { formChanged = true; } );
+        // fotografia dello stato del modulo appena caricato, per glisModuloModificato()
+        $('.warning-if-changed').each( function() { $(this).data( 'glis-stato-iniziale', $(this).serialize() ); } );
+
+        // i comandi di una vista ( ricerca, filtri, ordinamento, paginazione ) sono navigazione,
+        // non modifiche ai dati: non devono marcare il modulo come sporco
+        $('.warning-if-changed').on( 'keyup change', function( e ) {
+            if( $( e.target ).closest( '.view-filters, .view-controls, .view-table' ).length ) { return; }
+            formChanged = true;
+        } );
 
         if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {
             for( var i in CKEDITOR.instances) {
@@ -326,6 +362,7 @@
         });
 
         var fgSliders = [];
+        var fgAttese = [];
 
         // attivazione dei job in foreground
         $('.foreground-job-slider').each( function() {
@@ -353,13 +390,31 @@
                     pgBar.attr( 'aria-valuemax', d.totale );
 
                     var percentuale = Math.round( percentuale = d.corrente / d.totale * 100 );
+                    if( ! isFinite( percentuale ) ) { percentuale = 0; }
+                    if( percentuale > 100 ) { percentuale = 100; }
 
                     pgBar.width( percentuale + '%' );
 
                     var container = pgBar.closest('.foreground-job-container');
                     var parent = pgBar.closest('.progress');
 
+                    // Fix 2026-08-03 (rimessa il 2026-08-05, vedi TODO.md): NON ci si ferma appena
+                    // lavorata l'ultima riga ( d.corrente >= d.totale ). A quel punto il job non e'
+                    // ancora chiuso: ogni file di job scrive timestamp_completamento nell'iterazione
+                    // SUCCESSIVA, quella con corrente > totale, ed e' la stessa iterazione che
+                    // valorizza result.label ( il riepilogo di fine barra ). Fermandosi prima, il job
+                    // restava aperto finche' _cron.php non lo portava in background ( soglia 10
+                    // minuti ) e il riepilogo non compariva quasi mai.
+                    var chiuso = ( ! d.id ) || ( !! d.timestamp_completamento ) || ( d.corrente > d.totale );
+
+                    // uscita di sicurezza: si aspetta l'iterazione di chiusura al massimo per un
+                    // minuto ( 20 giri da 3 secondi ), e solo a righe finite, cosi' un job lento non
+                    // viene mai interrotto mentre sta ancora lavorando
                     if( d.corrente >= d.totale ) {
+                        fgAttese[ jobId ] = ( fgAttese[ jobId ] || 0 ) + 1;
+                    }
+
+                    if( chiuso || fgAttese[ jobId ] > 20 ) {
 
                         clearInterval( fgSliders[ jobId ] );
 

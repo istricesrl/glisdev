@@ -249,6 +249,23 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
 -- articoli_view
 CREATE OR REPLACE VIEW `articoli_view` AS
 	SELECT
+		coalesce( pubblicazioni.id_tipologia, pubblicazioni_prodotto.id_tipologia ) AS id_tipologia_pubblicazione,
+		tipologie_pubblicazioni.nome AS pubblicazione,
+		-- TIPOLOGIA DI VOCE A LISTINO: SOTTOQUERY, NON JOIN
+		--
+		-- prima erano tre LEFT JOIN su articoli_caratteristiche piu' un max( CASE ... ) sotto il
+		-- GROUP BY. Funziona, ma moltiplica le righe per le caratteristiche di ogni articolo, e
+		-- quando quella tabella si riempie la vista non si regge piu': l'08/09/2026, con le 7.580
+		-- righe arrivate dalla migrazione del catalogo, la vista e' passata da meno di un secondo
+		-- a cinque. La sottoquery scalare da' lo stesso valore e non tocca la cardinalita'
+		( SELECT tipo_voce.nome
+			FROM articoli_caratteristiche AS ac_tipo
+			INNER JOIN caratteristiche_prodotti AS tipo_voce ON tipo_voce.id = ac_tipo.id_caratteristica
+			INNER JOIN caratteristiche_prodotti AS radice_tipo ON radice_tipo.id = tipo_voce.id_genitore
+			WHERE ac_tipo.id_articolo = articoli.id
+			AND radice_tipo.nome = 'TIPO DI VOCE A LISTINO'
+			LIMIT 1
+		) AS tipologia_listino,
 		articoli.id,
 		articoli.codice,
 		articoli.id_prodotto,
@@ -310,9 +327,33 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 				''
 			)
 		) AS nome,
-		group_concat( DISTINCT prodotti_categorie.id_categoria SEPARATOR ' | ' ) AS id_categorie,
-		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
-		group_concat( DISTINCT concat_ws( ' ', listini.nome, valute.iso4217, format( prezzi.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' ) AS prezzi,
+		-- CATEGORIE E PREZZI: SOTTOQUERY, NON JOIN PIU' GROUP BY
+		--
+		-- stessa ragione della sottoquery di tipologia_listino qui sopra, ma il guasto era peggiore:
+		-- il GROUP BY impedisce all'ottimizzatore di spingere dentro la vista una condizione
+		-- espressa con un SEGNAPOSTO, e il framework interroga sempre con statement preparati.
+		-- Misurato l'08/09/2026: SELECT * ... WHERE id = ? passava da 2,36 secondi a 0,032, e un
+		-- elenco di venti righe da 2,76 a 0,26 - perche' categorie_prodotti_path(), che e' una
+		-- funzione ricorsiva, adesso viene chiamata solo per le righe che si mostrano davvero e
+		-- non per tutte quelle della vista.
+		--
+		-- il coalesce a stringa vuota NON e' pignoleria: con la LEFT JOIN un articolo senza
+		-- categorie dava '' e non NULL, perche' categorie_prodotti_path( NULL ) torna '' e il
+		-- group_concat trovava comunque una riga. id_categorie invece resta NULL come prima.
+		( SELECT group_concat( DISTINCT pc.id_categoria SEPARATOR ' | ' )
+			FROM prodotti_categorie AS pc
+		   WHERE pc.id_prodotto = articoli.id_prodotto
+		) AS id_categorie,
+		coalesce( ( SELECT group_concat( DISTINCT categorie_prodotti_path( pc.id_categoria ) SEPARATOR ' | ' )
+			FROM prodotti_categorie AS pc
+		   WHERE pc.id_prodotto = articoli.id_prodotto
+		), '' ) AS categorie,
+		coalesce( ( SELECT group_concat( DISTINCT concat_ws( ' ', l.nome, v.iso4217, format( p.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' )
+			FROM prezzi AS p
+			LEFT JOIN listini AS l ON l.id = p.id_listino
+			LEFT JOIN valute AS v ON v.id = l.id_valuta
+		   WHERE p.id_articolo = articoli.id
+		), '' ) AS prezzi,
         coalesce( articoli.data_archiviazione, prodotti.data_archiviazione ) AS data_archiviazione,
 		articoli.id_account_inserimento,                      --
 		articoli.timestamp_inserimento,                       --
@@ -356,13 +397,11 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
-		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_prodotto
-		LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id
-		LEFT JOIN listini ON listini.id = prezzi.id_listino
-		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN periodicita ON periodicita.id = articoli.id_periodicita
 		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = articoli.id_tipologia_rinnovo
-	GROUP BY articoli.id
+		LEFT JOIN pubblicazioni ON pubblicazioni.id_articolo = articoli.id
+		LEFT JOIN pubblicazioni AS pubblicazioni_prodotto ON pubblicazioni_prodotto.id_prodotto = articoli.id_prodotto
+		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = coalesce( pubblicazioni.id_tipologia, pubblicazioni_prodotto.id_tipologia )
 ;
 
 -- | 090000001800
@@ -625,6 +664,32 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
             caratteristiche.id
         ) AS __label__
 	FROM caratteristiche
+;
+
+-- | 090000003000
+
+-- caratteristiche_prodotti_view
+--
+-- e' l'albero delle caratteristiche usato dal modulo prodotti; caratteristiche_view qui sopra e'
+-- la tabella piatta del framework, che i moduli non usano. L'etichetta e' il PERCORSO e non il
+-- solo nome, come per tutte le altre viste ad albero: senza il gruppo davanti, in un elenco
+-- "Attacco mandrino" compare quattro volte identico e non si sa quale scegliere.
+CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
+	SELECT
+		caratteristiche_prodotti.id,
+		caratteristiche_prodotti.id_genitore,
+		caratteristiche_prodotti.nome,
+		caratteristiche_prodotti.html_entity,
+		caratteristiche_prodotti.font_awesome,
+		caratteristiche_prodotti.se_categoria,
+		caratteristiche_prodotti.se_prodotto,
+		caratteristiche_prodotti.se_articolo,
+		caratteristiche_prodotti.id_account_inserimento,
+		caratteristiche_prodotti.id_account_aggiornamento,
+		caratteristiche_prodotti_path(
+            caratteristiche_prodotti.id
+        ) AS __label__
+	FROM caratteristiche_prodotti
 ;
 
 -- | 090000003100
@@ -951,6 +1016,44 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
             ON lingue.id = contenuti.id_lingua                  --
 ;                                                               --
 
+-- | 090000009750
+
+-- colli_view
+CREATE OR REPLACE VIEW `colli_view` AS
+	SELECT
+		colli.id,
+		colli.id_documento,
+		colli.ordine,
+		colli.codice,
+		colli.raggruppamento,
+		colli.larghezza,
+		colli.lunghezza,
+		colli.altezza,
+		colli.id_udm_dimensioni,
+		colli.peso,
+		colli.id_udm_peso,
+		colli.volume,
+		colli.id_udm_volume,
+		colli.nome,
+		colli.id_mastro,
+		mastri_path( colli.id_mastro ) AS mastro,
+		colli.id_anagrafica,
+		a2.denominazione AS anagrafica,
+		GROUP_CONCAT( DISTINCT anagrafica.denominazione SEPARATOR '|' ) AS destinatari,
+		colli.id_account_inserimento,
+		colli.id_account_aggiornamento,
+		colli.timestamp_chiusura,
+		IF( colli.timestamp_chiusura IS NOT NULL AND colli.timestamp_chiusura > 0,
+			'<i class="fa fa-check text-success"></i>', '' ) AS chiuso,    -- indicatore collo chiuso
+		CONCAT_WS( ' ', colli.codice, tipologie_colli_path( colli.id_tipologia ), colli.nome ) AS __label__
+	FROM colli
+		LEFT JOIN documenti_articoli ON documenti_articoli.id_collo = colli.id
+		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_packing_list
+		LEFT JOIN anagrafica ON anagrafica.id = documenti.id_destinatario
+		LEFT JOIN anagrafica a2 ON a2.id = colli.id_anagrafica
+	GROUP BY colli.id
+;
+
 -- | 090000009800
 
 -- documenti_view
@@ -978,7 +1081,30 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_condizione_pagamento,
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.esigibilita, 
-		sum( coalesce( pagamenti.importo_lordo_finale, pagamenti.importo_lordo_totale, 0 ) ) AS totale_lordo_finale,
+		-- Il totale di un documento e' quello che vale la prestazione, non i soli contanti.
+		--
+		-- Fix 2026-09-08. `importo_lordo_finale` e' la sola parte pagata in denaro: una ricevuta
+		-- saldata per intero con un coupon ci metteva dentro ZERO. E non in modo coerente, perche'
+		-- il ripiego su `importo_lordo_totale` scattava solo con NULL e mai con `0.00`, che i vari
+		-- flussi di checkout scrivono uno per uno: due ricevute della stessa tornata finivano cosi'
+		-- a dichiarare l'importo in due modi diversi ( segreteria Polisportiva Masi, 08/09/2026 ).
+		--
+		-- Il coupon e' un modo di pagare, non uno sconto sul dovuto: va sommato al contante. E'
+		-- la stessa somma che la stampa della ricevuta usa da sempre come totale pagato
+		-- ( coupon_valore + importo_lordo_finale ). Il ripiego sul nominale resta per il solo caso
+		-- in cui non si sa ne' quanto e' stato incassato ne' quanto coperto dal buono: la rata
+		-- pianificata e non ancora saldata.
+		--
+		-- NOTA per chi tocchera' questa vista: la `sum()` sta dentro un GROUP BY che ha in JOIN
+		-- anche `relazioni_documenti` ( r1/r2 ), quindi su un documento con N pagamenti e M
+		-- documenti collegati il totale risulta moltiplicato per M. Difetto reale ma indipendente
+		-- da questo, e non verificabile qui: su questo deploy `relazioni_documenti` e' vuota.
+		sum(
+			CASE WHEN pagamenti.importo_lordo_finale IS NULL AND pagamenti.coupon_valore IS NULL
+			     THEN coalesce( pagamenti.importo_lordo_totale, 0 )
+			     ELSE coalesce( pagamenti.importo_lordo_finale, 0 ) + coalesce( pagamenti.coupon_valore, 0 )
+			END
+		) AS totale_lordo_finale,
 		sum( coalesce( pagamenti.coupon_valore, 0 ) ) AS totale_coupon,
 		documenti.codice_archivium,
     	documenti.codice_sdi,
@@ -1033,7 +1159,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
         LEFT JOIN anagrafica AS a3 ON a3.id = documenti.id_destinatario_spedizione
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienzagggggggggggg
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
 		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
         LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id
@@ -1056,6 +1182,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
+		documenti.codice AS codice_documento,
         concat(
 			tipologie_documenti.sigla,
 			' ',
@@ -1121,7 +1248,22 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		mastri_path( m2.id ) AS mastro_destinazione,
 		documenti_articoli.id_udm,
 		documenti_articoli.quantita,
-        sum( coalesce( sotto_righe.quantita, 0 ) ) AS sotto_righe_quantita,
+        -- LA QUANTITA' DELLE SOTTO RIGHE: SOTTOQUERY, NON JOIN PIU' GROUP BY
+        --
+        -- era una LEFT JOIN su se stessa piu' un sum() sotto GROUP BY, ed e' l'unica ragione per
+        -- cui questa vista aveva un GROUP BY. Costava carissimo, ma solo dove non si vedeva: con
+        -- un valore letterale nel WHERE l'ottimizzatore spinge la condizione dentro la vista e
+        -- legge una riga sola, con un SEGNAPOSTO non ci riesce e materializza tutte le righe
+        -- passando per venti join. Il framework interroga SEMPRE con statement preparati, quindi
+        -- pagava sempre il prezzo pieno.
+        --
+        -- Misurato l'08/09/2026 su 50.213 righe: SELECT * ... WHERE id = ? passa da 11,1 secondi a
+        -- 0,012, e la tendina delle righe genitore da 9,0 a 0,17. Le due versioni danno righe
+        -- identiche, verificate una per una.
+        ( SELECT coalesce( sum( sotto_righe.quantita ), 0 )
+            FROM documenti_articoli AS sotto_righe
+           WHERE sotto_righe.id_genitore = documenti_articoli.id
+        ) AS sotto_righe_quantita,
 		documenti_articoli.id_listino,		
 		documenti_articoli.id_pianificazione,
 		listini.id_valuta,
@@ -1184,9 +1326,6 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN udm AS udm_riga ON udm_riga.id = documenti_articoli.id_udm
-        LEFT JOIN documenti_articoli AS sotto_righe ON sotto_righe.id_genitore = documenti_articoli.id
-    GROUP BY
-        documenti_articoli.id
 ;
 
 -- | 090000015000
@@ -1557,22 +1696,40 @@ CREATE OR REPLACE VIEW `marchi_view` AS
 -- | 090000020800
 
 -- mastri_tipologie_veicoli_view
+-- la tabella associa a un mastro una TIPOLOGIA di veicolo, non un veicolo: il join era su
+-- `veicoli` e faceva combaciare l'id_tipologia con un id di veicolo, restituendo una targa a
+-- caso o NULL ( e la maschera, che riempie la tendina da tipologie_veicoli, scriveva altro )
+-- la colonna `tipologie` porta su OGNI riga l'elenco completo delle tipologie associate a quel
+-- mastro, separate da virgola: serve agli elenchi, dove interessa sapere con che mezzi si arriva
+-- a una collocazione senza doverne leggere le righe una per una. La grana della vista resta
+-- quella della tabella ( una riga per associazione, GROUP BY sulla chiave primaria ) perche' il
+-- controller standard fa SELECT * FROM <tabella>_view WHERE id = ? per caricare il record
 CREATE OR REPLACE VIEW `mastri_tipologie_veicoli_view` AS
     SELECT
         mastri_tipologie_veicoli.id,
         mastri_tipologie_veicoli.id_mastro,
         mastri_path( mastri_tipologie_veicoli.id_mastro ) AS mastro,
         mastri_tipologie_veicoli.id_tipologia,
-        veicoli.targa AS veicolo,
+        tipologie_veicoli_path( mastri_tipologie_veicoli.id_tipologia ) AS tipologia,
+        group_concat(
+            DISTINCT tipologie_veicoli_path( altre.id_tipologia )
+            ORDER BY tipologie_veicoli_path( altre.id_tipologia )
+            SEPARATOR ', '
+        ) AS tipologie,
         mastri_tipologie_veicoli.id_account_inserimento,
         mastri_tipologie_veicoli.id_account_aggiornamento,
         concat_ws(
             ' / ',
             mastri_path( mastri_tipologie_veicoli.id_mastro ),
-            veicoli.targa
+            group_concat(
+                DISTINCT tipologie_veicoli_path( altre.id_tipologia )
+                ORDER BY tipologie_veicoli_path( altre.id_tipologia )
+                SEPARATOR ', '
+            )
         ) AS __label__
     FROM mastri_tipologie_veicoli
-    LEFT JOIN veicoli ON veicoli.id = mastri_tipologie_veicoli.id_tipologia
+    LEFT JOIN mastri_tipologie_veicoli AS altre ON altre.id_mastro = mastri_tipologie_veicoli.id_mastro
+    GROUP BY mastri_tipologie_veicoli.id
 ;
 
 -- | 090000021600
@@ -1879,6 +2036,8 @@ CREATE OR REPLACE VIEW `pagine_view` AS						  --
 -- prodotti_view
 CREATE OR REPLACE VIEW `prodotti_view` AS
 	SELECT
+		pubblicazioni.id_tipologia AS id_tipologia_pubblicazione,
+		tipologie_pubblicazioni.nome AS pubblicazione,
 		prodotti.id,
 		prodotti.codice,
 		prodotti.id_tipologia,
@@ -1891,7 +2050,13 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		prodotti.id_produttore,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
 		prodotti.codice_produttore,
-		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		-- SOTTOQUERY E NON JOIN PIU' GROUP BY: vedi la nota in articoli_view. Misurato
+		-- l'08/09/2026: SELECT * ... WHERE id = ? da 0,81 secondi a 0,011, un elenco di venti
+		-- righe da 0,74 a 0,017.
+		coalesce( ( SELECT group_concat( DISTINCT categorie_prodotti_path( pc.id_categoria ) SEPARATOR ' | ' )
+			FROM prodotti_categorie AS pc
+		   WHERE pc.id_prodotto = prodotti.id
+		), '' ) AS categorie,
 		prodotti.id_sito,
 		prodotti.template,
 		prodotti.schema_html,
@@ -1910,8 +2075,9 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
 		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
 		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
-		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
-	GROUP BY prodotti.id
+		LEFT JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id
+		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia
+
 ;
 
 -- | 090000026400
@@ -2851,3 +3017,57 @@ CREATE OR REPLACE VIEW test_view AS                           --
 ;                                                             --
 
 -- | FINE FILE
+
+-- | 090000999200
+
+-- __report_evasione_ordini__
+-- Stato di avanzamento delle consegne, un DDT per riga: data, cliente e stato ricavato
+-- dall'ultima attivita' collegata al documento. Grana: il documento.
+-- NB: esiste anche __report_evasione_righe_ordini__, che risponde a una domanda diversa
+-- ( di questo ordine cosa manca ) con grana di riga. I due nomi si somigliano perche' fino
+-- al 2026-09-01 erano lo stesso nome su database diversi, con due definizioni incompatibili.
+CREATE OR REPLACE VIEW `__report_evasione_ordini__` AS with a as (select `attivita`.`id_documento` AS `id_documento`,`attivita`.`id_tipologia` AS `id_tipologia`,row_number() over ( partition by `attivita`.`id_documento` order by `attivita`.`data_attivita` desc) AS `rank` from `attivita`)select `documenti`.`data` AS `data`,`anagrafica`.`codice` AS `codice`,concat_ws(' ',`anagrafica`.`nome`,`anagrafica`.`cognome`,`anagrafica`.`denominazione`) AS `cliente`,coalesce(`tipologie_attivita`.`nome`,'ancora da iniziare') AS `stato` from (((`documenti` join `anagrafica` on(`anagrafica`.`id` = `documenti`.`id_destinatario`)) left join `a` on(`a`.`id_documento` = `documenti`.`id` and `a`.`rank` = 1)) left join `tipologie_attivita` on(`tipologie_attivita`.`id` = `a`.`id_tipologia`)) where `documenti`.`id_tipologia` = 4 group by `documenti`.`id`
+;
+
+-- | 090000999201
+
+-- __report_evasione_righe_ordini__
+-- Evasione riga per riga: quanto e' stato ordinato, quanto evaso, quanto resta, con l'unita'
+-- di misura. Grana: la riga d'ordine.
+CREATE OR REPLACE VIEW `__report_evasione_righe_ordini__` AS select `ordine`.`id_documento` AS `id_documento`,`ordine`.`id_ordine` AS `id_ordine`,`ordine`.`codice_prodotto` AS `codice_prodotto`,`ordine`.`prodotto` AS `prodotto`,sum(`ordine`.`quantita_ordinata` / `udm`.`conversione`) AS `quantita_ordinata`,sum(`ordine`.`quantita_evasa` / `udm`.`conversione`) AS `quantita_evasa`,sum(`ordine`.`quantita_ordinata` / `udm`.`conversione`) - sum(`ordine`.`quantita_evasa` / `udm`.`conversione`) AS `quantita_da_evadere`,`udm`.`sigla` AS `udm` from ((select `relazioni_documenti`.`id_documento` AS `id_documento`,`documenti`.`id` AS `id_ordine`,coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`) AS `codice_prodotto`,`prodotti`.`nome` AS `prodotto`,`documenti_articoli`.`id_articolo` AS `codice_articolo`,coalesce(`documenti_articoli`.`quantita` * `udm`.`conversione`,0) AS `quantita_ordinata`,0 AS `quantita_evasa`,`udm_base`.`sigla` AS `udm_base`,`udm`.`id` AS `id_udm` from (((((((`documenti` left join `relazioni_documenti` on(`relazioni_documenti`.`id_documento_collegato` = `documenti`.`id`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id_documento` = `documenti`.`id`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) left join `prodotti` on(`prodotti`.`id` = coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`))) left join `udm` on(`udm`.`id` = `documenti_articoli`.`id_udm`)) left join `udm` `udm_base` on(`udm_base`.`id` = `udm`.`id_base`)) where `tipologie_documenti`.`se_ordine` is not null having `codice_prodotto` is not null union select `relazioni_documenti`.`id_documento` AS `id_documento`,`relazioni_documenti`.`id_documento_collegato` AS `id_ordine`,coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`) AS `codice_prodotto`,`prodotti`.`nome` AS `prodotto`,`documenti_articoli`.`id_articolo` AS `codice_articolo`,0 AS `quantita_ordinata`,coalesce(`articoli`.`peso` * `udm`.`conversione` * `documenti_articoli`.`quantita`,0) AS `quantita_evasa`,`udm_base`.`sigla` AS `udm_base`,`udm`.`id` AS `id_udm` from (((((((`documenti` join `relazioni_documenti` on(`relazioni_documenti`.`id_documento` = `documenti`.`id`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id_documento` = `documenti`.`id`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) left join `prodotti` on(`prodotti`.`id` = coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`))) left join `udm` on(`udm`.`id` = `articoli`.`id_udm_peso`)) left join `udm` `udm_base` on(`udm_base`.`id` = `udm`.`id_base`)) where `tipologie_documenti`.`se_trasporto` is not null having `codice_prodotto` is not null) `ordine` left join `udm` on(`udm`.`id` = (select coalesce(max(`documenti_articoli`.`id_udm`),max(`articoli`.`id_udm_peso`)) from (`documenti_articoli` left join `articoli` on(`articoli`.`id` = `ordine`.`codice_articolo`)) where `documenti_articoli`.`id_documento` in (`ordine`.`id_documento`,`ordine`.`id_ordine`) and (`documenti_articoli`.`id_prodotto` = `ordine`.`codice_prodotto` or `articoli`.`id` = `ordine`.`codice_articolo`)))) group by `ordine`.`id_documento`,`ordine`.`id_ordine`,`ordine`.`codice_prodotto`,`ordine`.`prodotto`,`udm`.`conversione`,`udm`.`sigla`
+;
+
+-- | 090000999210
+
+-- todo_view
+-- Le sei colonne che vengono da `istruzioni` ( id_documento .. istruzione ) erano il motivo per
+-- cui questa vista aveva 40 colonne su connor e 34 altrove: vedi 2026090105.
+CREATE OR REPLACE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipologia` AS `id_tipologia`,`tipologie_todo`.`nome` AS `tipologia`,`todo`.`codice` AS `codice`,`tipologie_todo`.`se_agenda` AS `se_agenda`,`todo`.`id_anagrafica` AS `id_anagrafica`,coalesce(`a1`.`denominazione`,concat(`a1`.`cognome`,' ',`a1`.`nome`),'') AS `anagrafica`,`todo`.`id_cliente` AS `id_cliente`,coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`),'') AS `cliente`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat_ws(' ',`indirizzi`.`indirizzo`,`indirizzi`.`civico`,`indirizzi`.`cap`,`indirizzi`.`localita`,`comuni`.`nome`,`provincie`.`sigla`) AS `indirizzo`,`todo`.`id_luogo` AS `id_luogo`,`luoghi_path`(`todo`.`id_luogo`) AS `luogo`,`todo`.`timestamp_apertura` AS `timestamp_apertura`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`ore_programmazione` AS `ore_programmazione`,`todo`.`data_chiusura` AS `data_chiusura`,`todo`.`nome` AS `nome`,`todo`.`id_contatto` AS `id_contatto`,`todo`.`id_progetto` AS `id_progetto`,`progetti`.`nome` AS `progetto`,group_concat(distinct if(`d`.`id`,`categorie_progetti_path`(`d`.`id`),NULL) separator ' | ') AS `discipline`,`todo`.`id_documento` AS `id_documento`,concat(`tipologie_documenti`.`sigla`,' ',concat_ws('/',`documenti`.`numero`,`documenti`.`sezionale`),' del ',`documenti`.`data`) AS `documento`,`todo`.`id_documenti_articoli` AS `id_documenti_articoli`,concat(`documenti_articoli`.`data`,' / ',`tipologie_documenti`.`sigla`,' / ',`documenti_articoli`.`quantita`,' x ',`documenti_articoli`.`id_articolo`) AS `documenti_articoli`,`todo`.`id_istruzione` AS `id_istruzione`,concat(`istruzioni`.`id_tipologia`,coalesce(`istruzioni`.`id_prodotto`,`istruzioni`.`id_articolo`),`istruzioni`.`nome`) AS `istruzione`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`id_immobile` AS `id_immobile`,`todo`.`data_archiviazione` AS `data_archiviazione`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,`todo`.`id_account_aggiornamento` AS `id_account_aggiornamento`,concat(`todo`.`nome`,coalesce(concat(' per ',`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`)),''),coalesce(concat(' su ',`todo`.`id_progetto`,' ',`progetti`.`nome`),'')) AS `__label__` from ((((((((((((((`todo` left join `anagrafica` `a1` on(`a1`.`id` = `todo`.`id_anagrafica`)) left join `anagrafica` `a2` on(`a2`.`id` = `todo`.`id_cliente`)) left join `indirizzi` on(`indirizzi`.`id` = `todo`.`id_indirizzo`)) left join `comuni` on(`comuni`.`id` = `indirizzi`.`id_comune`)) left join `provincie` on(`provincie`.`id` = `comuni`.`id_provincia`)) left join `tipologie_todo` on(`tipologie_todo`.`id` = `todo`.`id_tipologia`)) left join `progetti` on(`progetti`.`id` = `todo`.`id_progetto`)) left join `progetti_categorie` on(`progetti_categorie`.`id_progetto` = `progetti`.`id`)) left join `categorie_progetti` `d` on(`d`.`id` = `progetti_categorie`.`id_categoria` and `d`.`se_disciplina` = 1)) left join `documenti` on(`documenti`.`id` = `todo`.`id_documento`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id` = `todo`.`id_documenti_articoli`)) left join `tipologie_documenti` `tipologie_documenti_articoli` on(`tipologie_documenti_articoli`.`id` = `documenti_articoli`.`id_tipologia`)) left join `istruzioni` on(`istruzioni`.`id` = `todo`.`id_istruzione`)) group by `todo`.`id`
+;
+
+
+-- | 090000063500
+
+-- taglie_view
+CREATE OR REPLACE VIEW `taglie_view` AS
+	SELECT
+		taglie.id,
+		taglie.nome AS __label__
+	FROM taglie
+;
+
+-- | 090000063600
+
+-- periodicita_view
+--
+-- la TABELLA periodicita era gia' in queste patch, la VISTA no, e il framework la usa in otto
+-- macro diverse ( articoli, contratti, pianificazioni, corsi, tesseramenti, abbonamenti, progetti ),
+-- tre delle quali ordinano per giorni. Aggiunta l'08/09/2026.
+CREATE OR REPLACE VIEW `periodicita_view` AS
+	SELECT
+		periodicita.id,
+		periodicita.nome,
+		periodicita.giorni,
+		periodicita.nome AS __label__
+	FROM periodicita
+;
