@@ -323,7 +323,22 @@
                 // unisco la tabella di ACL se presente
                 if (!empty($aclTb)) {
                     $q .= " LEFT JOIN $aclTb ON $aclTb.id_entita = $t$rm.id ";
-                    $q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = $aclTb.id_gruppo OR gruppi_path_check( $aclTb.id_gruppo, account_gruppi.id_gruppo ) OR $aclTb.id_account = ? )";
+                    // NOTA il filtro sull'account sta QUI e non solo nella WHERE. Senza, MySQL
+                    // incrocia ogni riga della tabella di ACL con TUTTE le righe di
+                    // account_gruppi, e per ognuna invoca gruppi_path_check(): una funzione
+                    // NOT DETERMINISTIC che fa una SELECT a ogni chiamata. Su crm.eurosnodi.it
+                    // erano oltre 130.000 chiamate per l'elenco anagrafica, 21 secondi di cui 20
+                    // di sola funzione; filtrando qui si scende a 1,3 secondi.
+                    // E' equivalente perche' la WHERE qui sotto pretende comunque
+                    // account_gruppi.id_account = <account>: le righe degli altri account non
+                    // potevano contribuire nemmeno prima, venivano calcolate e scartate.
+                    // Verificato il 10/09/2026 confrontando l'insieme esatto degli id visibili,
+                    // vecchia contro nuova, su tutti e 17 gli account di quel deploy: identici.
+                    // Il valore e' interpolato come intero e non come segnaposto perche' i
+                    // parametri di questa query sono posizionali e aggiungerne uno sposterebbe il
+                    // binding di tutti quelli successivi; id_account e' int(11) e $aclId viene da
+                    // $_SESSION['account']['id'].
+                    $q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_account = " . ( (int) $aclId ) . " AND ( account_gruppi.id_gruppo = $aclTb.id_gruppo OR gruppi_path_check( $aclTb.id_gruppo, account_gruppi.id_gruppo ) OR $aclTb.id_account = ? ) )";
                     $whr[] = "( account_gruppi.id_account = ? OR $t$rm.id_account_inserimento = ? )";
                     $vs[] = array('s' => $aclId);
                     $vs[] = array('s' => $aclId);
@@ -575,6 +590,18 @@
                 logWrite("diritti sufficienti per $t/$a", 'controller');
                 logWrite("modalità di inserimento, modifica, cancellazione per $t/$a: " . print_r($i, true), 'details/controller/'.$t.'.'.$a);
 
+                /**
+                 * Fix 2026-09-11: gli errori segnalati dai controller non vanno più persi
+                 * ----------------------------------------------------------------------
+                 * Un controller before o append può bloccare l'operazione segnalando un errore in
+                 * $i['__status__'] e azzerando $a (p.es. _file.before.php, che rifiuta un file senza
+                 * path); prima di questa fix lo stato veniva però sovrascritto con un 200 subito dopo,
+                 * qui e più sotto, e l'operazione falliva in perfetto silenzio: niente query, niente
+                 * errore a video, niente riga di log. Registro quindi lo stato all'ingresso in $sb, in
+                 * modo da riconoscere un errore segnalato da un controller e conservarlo.
+                 */
+                $sb = $i['__status__'] ?? NULL;
+
                 // controller pre query (before)
                 $cn = 'before.php';
                 $ct = array_merge(
@@ -588,8 +615,13 @@
                     timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
                 }
 
-                // ...
-                $i['__status__'] = 200;
+                // stato di default, a meno che un controller before non abbia segnalato un errore
+                $sg = ( isset( $i['__status__'] ) && $i['__status__'] >= 400 && $i['__status__'] !== $sb );
+                if( $sg ) {
+                    logWrite( "controller before ha bloccato $t/$a con stato " . $i['__status__'], 'controller', LOG_ERR );
+                } else {
+                    $i['__status__'] = 200;
+                }
 
                 // variabile per confronto prima/dopo
                 $before = NULL;
@@ -784,7 +816,11 @@
                 }
 
 
-                $i['__status__'] = 200;
+                // stato di default, a meno che un controller before o append non abbia segnalato un errore
+                $sg = ( isset( $i['__status__'] ) && $i['__status__'] >= 400 && $i['__status__'] !== $sb );
+                if( ! $sg ) {
+                    $i['__status__'] = 200;
+                }
 
                 // gestione degli errori
                 if (isset($e['__codes__']) && is_array($e['__codes__'])) {
@@ -801,19 +837,17 @@
 
                 } elseif (empty($a)) {
 
-                    // di default imposto lo stato a 'OK'
-                    $i['__status__'] = 200;
-
                     // log
-                    logWrite("nessuna azione intrapresa per l'entità $t", 'controller');
+                    if( $sg ) {
+                        logWrite("nessuna azione intrapresa per l'entità $t: bloccata da un controller con stato " . $i['__status__'], 'controller', LOG_ERR);
+                    } else {
+                        logWrite("nessuna azione intrapresa per l'entità $t", 'controller');
+                    }
 
                 } else {
 
                     // log
                     logWrite("row mode / eseguo ($a) la query: $q", 'controller');
-
-                    // di default imposto lo stato a 'OK'
-                    $i['__status__'] = 200;
 
                 }
 
@@ -941,7 +975,7 @@
                     glob(path2custom($cb . $cn), GLOB_BRACE),
                     glob(path2custom($cm . $cn), GLOB_BRACE)
                 );
-                logWrite(print_r($ct, true), 'controllers/' . $t, LOG_ERR);
+                // logWrite(print_r($ct, true), 'controllers/' . $t, LOG_ERR);	// debug disattivato: dump a ogni controller, saturava var/log/controllers/*.err
                 foreach ($ct as $f) {
                     require $f;
                     timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
