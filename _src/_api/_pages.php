@@ -131,6 +131,31 @@
         require INCLUDE_SUBDIR . '_config.php';
     }
 
+    /**
+     * pagine che puntano fuori dal sito
+     * =================================
+     * Una pagina con 'forced' valorizzato non e' una pagina: e' un rimando a un documento che
+     * sta altrove — un manuale, un allegato, un servizio esterno. Il framework le calcola gia'
+     * il percorso a NULL e l'URL uguale al valore dichiarato ( _src/_config/_320.pages.php ),
+     * e la navigazione la linka correttamente ( _src/_lib/_menu.utils.php ).
+     *
+     * Restava pero' RAGGIUNGIBILE al proprio URL interno, dove non ha ne' template ne' macro:
+     * rispondeva 200 con due Notice di PHP e il percorso della document root nel corpo, anche
+     * a un anonimo. Verificato l'8 settembre 2026 sul primo uso vivo di 'forced' in tutto il
+     * framework: /manuale.it-IT.html dava 200 invece di 404.
+     *
+     * Qui la si manda dov'e' davvero. Il rimando e' 302 e non 301 perche' l'URL di destinazione
+     * si compone dalla configurazione ( es. da $cf['site']['url'] ) e puo' cambiare fra un
+     * ambiente e l'altro: un 301 resterebbe nella cache del browser anche dopo.
+     */
+    if( ! empty( $ct['page']['forced'][ $cf['localization']['language']['ietf'] ] ) ) {
+
+        header( 'Location: ' . $ct['page']['forced'][ $cf['localization']['language']['ietf'] ], true, 302 );
+
+        exit;
+
+    }
+
     // debug
     // print_r( $ct['page'] );
     // die(print_r($ct['page']));
@@ -437,7 +462,29 @@
     if( getPagePermission( $ct['page'] ) !== true ) {
         $loginSchema = ( file_exists( DIR_BASE . $ct['page']['template']['path'] . 'login.twig' ) ) ? 'login.twig' : 'login.html';
         $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : $loginSchema;
-    } 
+
+        /**
+         * Fix 2026-09-01: a permessi insufficienti non si eseguono nemmeno le macro.
+         *
+         * Fin qui il controllo cambiava soltanto lo SCHEMA — la pagina veniva renderizzata con
+         * `login.html` invece che col suo template — ma poi il flusso tirava dritto e poco piu'
+         * sotto includeva comunque tutte le macro della pagina. Una pagina riservata eseguiva
+         * quindi per intero il proprio codice anche per un anonimo.
+         *
+         * Il sintomo visibile sono i notice delle macro che danno per scontata la sessione
+         * autenticata (tipicamente `$_SESSION['account']['id_anagrafica']` letto senza guardia),
+         * stampati sopra il form di login. Il problema vero e' che fra quelle macro ce ne sono
+         * che SCRIVONO: cambiano password, toccano il carrello, creano righe. Non eseguirle e'
+         * la cosa giusta a prescindere dal messaggio a video, ed e' anche quello che si aspetta
+         * chi legge `auth.groups` sulla pagina.
+         *
+         * Le pagine pubbliche non sono toccate: `getPagePermission()` ritorna `true` quando la
+         * pagina non dichiara `auth.groups`. Lo schema di login non legge da `$ct` niente che
+         * venga dalle macro, quindi la pagina resa e' identica a prima, meno i notice.
+         */
+        $ct['page']['macro'] = array();
+
+    }
 
     // switch dello schema in caso di schema non specificato
     if( ! isset( $ct['page']['template']['schema'] ) ) {
@@ -871,8 +918,21 @@
     // principale rompe l'autoload: i 404 sugli asset accessori impediscono
     // l'inizializzazione. Skip-list per i pacchetti multi-file noti: restano in
     // page.js.external e vengono caricati direttamente dalla CDN.
+    //
+    // Stessa skip-list per i loader che si autoaggiornano. api.js di reCAPTCHA non e' una
+    // libreria: e' un bootstrap di 977 byte che inserisce a runtime lo script vero da
+    // gstatic, con la release CABLATA nell'URL e un hash SRI. Google ruota quelle release,
+    // e la copia in cache resta ferma alla release del giorno in cui e' stata scaricata:
+    // dopo la rotazione il browser chiede uno script che risponde 404, e con l'integrity
+    // non ha nemmeno la possibilita' di cavarsela. Misurato il 04/09/2026 su questo deploy:
+    // la copia del 10/06 puntava alla release ne1iDVwClkE7nKD3uA9Vqsvl, sparita, mentre
+    // Google serviva 8x-4t2pegToiW8KmThtO4AQt. Effetto in pagina: i bottoni protetti da
+    // reCAPTCHA rispondono al secondo o al terzo clic invece che al primo.
+    //
+    // Non ha senso nemmeno cacharlo: sono 977 byte e non e' il file che pesa.
     $jsCacheSkipPrefixes = array(
         'cdn.ckeditor.com/',
+        'www.google.com/recaptcha/',
     );
     if( isset( $ct['page']['js']['external'] ) && is_array( $ct['page']['js']['external'] ) ) {
         foreach( $ct['page']['js']['external'] as $idx => $js ) {
@@ -1049,12 +1109,26 @@
                 }
 
                 // aggiungo il percorso con le macro standard e custom
-                // TODO considerare anche 'src/twig/' e '_mod/.../_src/_twig/' e 'mod/.../src/twig/'
+                // TODO considerare anche 'src/twig/' e 'mod/.../src/twig/'
                 if( file_exists( DIR_SRC_TWIG ) ) {
                     $loader->addPath( DIR_SRC_TWIG );
                     if( file_exists( path2custom( DIR_SRC_TWIG ) ) ) {
                         $loader->addPath( path2custom( DIR_SRC_TWIG ) );
                     }
+                }
+
+                // aggiungo i percorsi twig dei moduli attivi
+                //
+                // Un modulo puo' portarsi i propri snippet in _mod/<modulo>/_src/_twig/, cosi' come
+                // porta le proprie librerie e i propri task: e' il modo per tenere fuori dal core il
+                // codice che vale solo dove quel modulo c'e'. La glob gira su DIR_MOD_ATTIVI, quindi
+                // il percorso esiste solo per i moduli ATTIVI, ed e' la ragione per cui uno snippet
+                // di modulo non puo' finire in una pagina di un deploy che quel modulo non ha.
+                //
+                // I percorsi si aggiungono DOPO quello del core, perche' addPath() accoda: a parita'
+                // di nome vince lo snippet standard, e un modulo non puo' scavalcarlo per sbaglio.
+                foreach( array_unique( glob( glob2custom( DIR_MOD_ATTIVI_SRC_TWIG ), GLOB_BRACE ) ) as $add ) {
+                    $loader->addPath( $add );
                 }
 
                 // log
