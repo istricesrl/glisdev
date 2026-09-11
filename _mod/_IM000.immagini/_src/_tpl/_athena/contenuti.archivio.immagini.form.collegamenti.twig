@@ -30,6 +30,36 @@
 
             </fieldset>
 
+            {# SEZIONE FILE #}
+            {% if 'FI000.file' in mods.active.array %}
+            <fieldset>
+                <legend>file<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">file</span>
+                        {{ frm.select({ 'field': { 'name': 'id_file' }, 'source': { 'values': etc.select.file }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                 
+                </div>
+
+            </fieldset>
+            {% endif %}
+
+            {# SEZIONE VIDEO #}
+            {% if 'VI000.video' in mods.active.array %}
+            <fieldset>
+                <legend>video<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">video</span>
+                        {{ frm.select({ 'field': { 'name': 'id_video' }, 'source': { 'values': etc.select.video }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                 
+                </div>
+
+            </fieldset>
+            {% endif %}
+
             {# SEZIONE PAGINE #}
             {% if 'PA000.pagine' in mods.active.array %}
             <fieldset>
