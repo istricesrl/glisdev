@@ -40,7 +40,6 @@
             'prefisso' => 'prefisso',
             'prezzo' => 'prezzo',
             'suffisso' => 'suffisso',
-            'sconto_articoli' => '% su articoli',
             'iva' => 'iva',
             NULL => 'azioni'
         ),
