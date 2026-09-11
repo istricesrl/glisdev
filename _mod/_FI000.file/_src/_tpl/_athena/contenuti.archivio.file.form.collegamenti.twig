@@ -45,6 +45,40 @@
             </fieldset>
             {% endif %}
 
+            {# SEZIONE TEMPLATES #}
+            {% if 'TE000.template' in mods.active.array %}
+            <fieldset>
+                <legend>template<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">template</span>
+                        {{ frm.select({ 'field': { 'name': 'id_template' }, 'source': { 'values': etc.select.templates }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                 
+                </div>
+
+            </fieldset>
+            {% endif %}
+
+            {# SEZIONE MAIL #}
+            {% if 'MA000.mail' in mods.active.array %}
+            <fieldset>
+                <legend>mail<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">in uscita</span>
+                        {{ frm.select({ 'field': { 'name': 'id_mail_out' }, 'source': { 'values': etc.select.mail_out }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">inviate</span>
+                        {{ frm.select({ 'field': { 'name': 'id_mail_sent' }, 'source': { 'values': etc.select.mail_sent }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                              
+                </div>
+
+            </fieldset>
+            {% endif %}
+
             {# SEZIONE NOTIZIE #}
             {% if 'NO000.notizie' in mods.active.array %}
             <fieldset>

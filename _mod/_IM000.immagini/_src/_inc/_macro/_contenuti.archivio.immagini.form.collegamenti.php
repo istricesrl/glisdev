@@ -12,7 +12,24 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'video';
+    $ct['form']['table'] = 'immagini';
+
+    //tendina file
+    $ct['etc']['select']['file'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM file_view ORDER BY __label__'
+    );
+
+    //tendina video
+    $ct['etc']['select']['video'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM video_view ORDER BY __label__'
+    );
+
 
     //tendina pagine
     $ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery(
