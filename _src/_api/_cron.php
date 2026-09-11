@@ -162,10 +162,90 @@
     $cf['cron']['token'] = getToken( __FILE__ );
 
     /**
+     * Fix 2026-07-24: durata massima di un run, in secondi.
+     *
+     * Il cron di sistema chiama questa API ogni minuto: il tetto sta sotto al minuto così ogni run
+     * fa in tempo a chiudersi e a liberare il lock prima che parta il successivo. Sovrascrivibile
+     * da `src/config.json` (chiave `cron.durata_massima`).
+     */
+    if( empty( $cf['cron']['durata_massima'] ) ) {
+        $cf['cron']['durata_massima'] = 45;
+    }
+
+    /**
+     * Fix 2026-09-07: quante passate di cron un job puo' restare fermo prima di essere chiuso
+     * d'ufficio.
+     *
+     * Serve a garantire che un job non possa restare aperto per sempre. Un job che a ogni passata
+     * viene preso in carico e non fa avanzare `corrente` non sta lavorando: o e' in attesa di
+     * qualcosa che non arrivera' mai, o muore sempre nello stesso punto. Senza questa guardia il
+     * cron continuerebbe a riprenderlo a ogni giro, in silenzio, finche' qualcuno non se ne
+     * accorge guardando la tabella.
+     *
+     * Trenta passate sono mezz'ora di cron al minuto: larghe per qualunque attesa legittima
+     * ( il polling di un servizio esterno fa avanzare `corrente` a ogni interrogazione, quindi
+     * non e' uno stallo ) e brevi abbastanza perche' un job piantato non resti in giro per
+     * giorni. Sovrascrivibile da `src/config.json` ( chiave `cron.stalli_massimi` ).
+     */
+    if( empty( $cf['cron']['stalli_massimi'] ) ) {
+        $cf['cron']['stalli_massimi'] = 30;
+    }
+
+    /**
+     * Fix 2026-07-24: guardia anti-sovrapposizione dei run di cron.
+     *
+     * Il lock applicato su `task.token` non basta a impedire run concorrenti: `timestamp_esecuzione`
+     * viene scritto solo ALLA FINE del task (vedi UPDATE più sotto), quindi durante l'esecuzione resta
+     * fermo al run precedente. Dopo 10 minuti la query di "recupero dei task fermi" azzera il token
+     * anche se il run è ancora vivo, e il run successivo riparte in parallelo. Con task che durano più
+     * di 10 minuti se ne accumula uno nuovo ogni 10 minuti, ciascuno con la propria connessione MySQL e
+     * ~190 tabelle aperte: su un server condiviso questo satura `table_open_cache` e `max_connections`,
+     * bloccando tutti i siti ospitati (incidente del 2026-07-24).
+     *
+     * GET_LOCK è per-connessione e le connessioni qui NON sono persistenti (`mysqli_real_connect` senza
+     * prefisso `p:` in `_src/_config/_125.mysql.php`): se il processo muore il lock si libera da solo,
+     * quindi non può restare appeso. Il nome è costruito con `database()` perché GET_LOCK ha visibilità
+     * di ISTANZA: su mysql03 convivono più siti e un nome fisso li bloccherebbe a vicenda.
+     */
+    $cf['cron']['lock'] = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT GET_LOCK( concat( database(), ".cron" ), 0 )'
+    );
+
+    // se un altro run è ancora in corso esco senza eseguire nulla: il prossimo minuto ritenta
+    if( empty( $cf['cron']['lock'] ) ) {
+
+        // log
+        logger( 'run di cron già in corso: esco senza eseguire task e job', 'cron', LOG_WARNING );
+        loggerLatest( 'run di cron già in corso: esecuzione saltata', FILE_LATEST_CRON );
+
+        // status
+        $cf['cron']['status']['saltato'] = date( 'Y-m-d H:i:s' );
+        $cf['cron']['info'][] = 'run precedente ancora in esecuzione, esecuzione saltata';
+
+        // output
+        buildJson(
+            $cf['cron'],
+            ENCODING_UTF8,
+            array(
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Cache-Lifetime' => '0',
+                'X-Proxy-Cache' => 'BYPASS',
+            )
+        );
+
+        // chiusura esplicita: `build()` termina già lo script, questo è solo un presidio
+        exit;
+
+    }
+
+    /**
      * esecuzione task
      * ===============
-     * 
-     * 
+     *
+     *
      */
 
     // provo a recuperare i task fermi
@@ -246,6 +326,31 @@
                     // iterazioni del task
                     for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
 
+                        /**
+                         * Fix 2026-07-24: tetto di durata del run.
+                         *
+                         * `max_execution_time` è 0 (illimitato), quindi un task lento può tenere occupato
+                         * il run — e con esso il lock di cui sopra — per ore, di fatto fermando tutti gli
+                         * altri task (mail e SMS in coda compresi). Osservato il 2026-07-24: un singolo run
+                         * ancora vivo dopo 46 minuti, perché il task 6 esegue una SELECT da 7-15s per
+                         * ciascuna delle sue 12 iterazioni.
+                         *
+                         * Superata la soglia si interrompono le iterazioni residue e si passa al task
+                         * successivo: i task sono incrementali (lavorano su una riga per iterazione), quindi
+                         * il run del minuto dopo riprende da dove si era arrivati senza perdere lavoro.
+                         */
+                        if( ( time() - $cf['cron']['time'] ) >= $cf['cron']['durata_massima'] ) {
+
+                            // log
+                            logger( 'raggiunta la durata massima del run (' . $cf['cron']['durata_massima'] . 's): interrompo il task ' . $task['id'] . ' alla iterazione #' . $iter, 'cron', LOG_WARNING );
+
+                            // status
+                            $cf['cron']['task'][ $task['id'] ]['info'][] = 'interrotto per durata massima del run alla iterazione #' . $iter . ' di ' . $task['iterazioni'];
+
+                            break;
+
+                        }
+
                         // ...
                         logger( 'iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
@@ -321,6 +426,30 @@
      * 
      */
 
+    // do un riferimento temporale ai job che non ne hanno ancora uno
+    //
+    // i due recuperi qui sotto filtrano su "timestamp_esecuzione < ?" e in SQL il
+    // confronto con NULL non e' mai vero, quindi un job appena inserito - che ha
+    // timestamp_esecuzione NULL, perche' la colonna e' DEFAULT NULL e le INSERT
+    // non la valorizzano - e' invisibile a entrambi. Le conseguenze:
+    //
+    // - un job creato con se_foreground non verrebbe MAI riportato in background,
+    //   quindi se nessuno apre l'interfaccia per farlo avanzare resta fermo per
+    //   sempre invece di essere completato dal cron;
+    // - un job a cui _job.php ha messo il token (senza scrivere
+    //   timestamp_esecuzione) e che si interrompe prima della prima iterazione
+    //   resta lockato per sempre, perche' lo sblocco non lo vede.
+    //
+    // stampando qui il riferimento, il conto dei 10 minuti parte dal primo giro di
+    // cron successivo alla creazione e i due recuperi tornano a funzionare.
+    mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE job SET timestamp_esecuzione = ? WHERE timestamp_esecuzione IS NULL AND timestamp_completamento IS NULL',
+        array(
+            array( 's' => $cf['cron']['time'] )
+        )
+    );
+
     // provo a recuperare i job fermi
     mysqlQuery(
         $cf['mysql']['connection'],
@@ -384,7 +513,78 @@
                 // eseguo il job
                 if( ! empty( $job['iterazioni'] ) ) {
 
+                    /**
+                     * Fix 2026-09-07: guardia contro il job che non finisce mai.
+                     *
+                     * Il contatore si incrementa PRIMA di lavorare e si scrive subito a database,
+                     * con una query sua. E' l'unico modo perche' regga anche quando il job muore
+                     * dentro il require: l'UPDATE del workspace in fondo a questo blocco, in quel
+                     * caso, non viene mai raggiunta, e un contatore incrementato solo alla fine
+                     * non conterebbe proprio le passate che interessano.
+                     *
+                     * Si azzera appena `corrente` avanza, quindi un job che lavora non lo vede
+                     * mai. Un job che invece viene ripreso passata dopo passata senza avanzare
+                     * viene chiuso d'ufficio con un log di errore: meglio un lavoro dichiarato
+                     * fallito che uno che resta aperto in eterno senza che nessuno lo sappia.
+                     */
+                    $avanzamentoIniziale = ( isset( $job['corrente'] ) ) ? $job['corrente'] : 0;
+
+                    $job['workspace']['__stalli__'] = ( isset( $job['workspace']['__stalli__'] ) ) ? $job['workspace']['__stalli__'] + 1 : 1;
+
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE job SET workspace = ? WHERE id = ?',
+                        array(
+                            array( 's' => json_encode( $job['workspace'] ) ),
+                            array( 's' => $job['id'] )
+                        )
+                    );
+
+                    if( $job['workspace']['__stalli__'] > $cf['cron']['stalli_massimi'] ) {
+
+                        // log
+                        logger( 'il job ' . $job['id'] . ' -> ' . $job['job'] . ' non avanza da ' . $cf['cron']['stalli_massimi'] . ' passate ( fermo a ' . $avanzamentoIniziale . ' di ' . $job['totale'] . ' ): lo chiudo d ufficio', 'cron', LOG_ERR );
+
+                        // status
+                        $cf['cron']['job'][ $job['id'] ]['errors'][] = 'chiuso d ufficio dopo ' . $cf['cron']['stalli_massimi'] . ' passate senza avanzamento';
+
+                        // chiusura d'ufficio: si libera anche il lock, altrimenti la riga resta
+                        // appesa a un token che nessuno azzerera' piu'
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE job SET timestamp_completamento = ?, token = NULL WHERE id = ?',
+                            array(
+                                array( 's' => time() ),
+                                array( 's' => $job['id'] )
+                            )
+                        );
+
+                        continue;
+
+                    }
+
                     for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
+
+                        /**
+                         * Fix 2026-07-24: stesso tetto di durata applicato ai task (vedi sopra).
+                         *
+                         * Qui è anche più necessario: i job hanno `iterazioni` molto alte (2000 per i
+                         * `report.lezioni.corsi.popolazione`) e restano aperti finché non arrivano a
+                         * completamento, quindi un singolo run può occupare il server per ore. Il job non
+                         * viene chiuso: mantiene il suo token, e il run successivo riprende da dove era
+                         * arrivato.
+                         */
+                        if( ( time() - $cf['cron']['time'] ) >= $cf['cron']['durata_massima'] ) {
+
+                            // log
+                            logger( 'raggiunta la durata massima del run (' . $cf['cron']['durata_massima'] . 's): interrompo il job ' . $job['id'] . ' alla iterazione #' . $iter, 'cron', LOG_WARNING );
+
+                            // status
+                            $cf['cron']['job'][ $job['id'] ]['info'][] = 'interrotto per durata massima del run alla iterazione #' . $iter . ' di ' . $job['iterazioni'];
+
+                            break;
+
+                        }
 
                         // ...
                         logger( 'iterazione #' . $iter . ' di ' . $job['iterazioni'] . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
@@ -404,6 +604,11 @@
                         // ...
                         loggerLatest( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . $job['corrente'] . '.' . microtime( true ) . '.log' );
 
+                    }
+
+                    // il job ha avanzato: non e' in stallo, azzero il contatore
+                    if( isset( $job['corrente'] ) && $job['corrente'] > $avanzamentoIniziale ) {
+                        unset( $job['workspace']['__stalli__'] );
                     }
 
                     // aggiorno la tabella di avanzamento lavori

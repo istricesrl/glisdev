@@ -1,9 +1,10 @@
 #!/bin/bash
 
-## SCRIPT PER IL BACKUP DELLA DOCUMEBNT ROOT
+## SCRIPT PER IL BACKUP DELLA DOCUMENT ROOT
 #
 # questo script crea un file di backup della document root del sito posizionandolo
-# nella cartella genitore della document root
+# in <progetto>/$BACKUP_SUBDIR/, cioe' nella sottocartella degli archivi del progetto,
+# un livello sopra la document root
 #
 # NOTA questo script deve girare nella cartella SUPERIORE a quella di installazione!
 #
@@ -37,7 +38,12 @@ cd $RP
 echo "lavoro su: $(pwd)"
 
 ## nome del file di backup
-BKFILE="backup.$( date +%Y%m%d%H%M%S ).tar.gz"
+#
+# Sta in $BACKUP_SUBDIR/ e non piu' nella root del progetto: la cartella la si crea qui perche'
+# questo script si lancia anche a mano, su un progetto che puo' non averla ancora.
+mkdir -p "$BACKUP_SUBDIR"
+
+BKFILE="$BACKUP_SUBDIR/backup.$( date +%Y%m%d%H%M%S ).tar.gz"
 
 ## file e directory da escludere
 EXCLUDE=".git .github _src/_lib/_ext _usr/_docs/_html _usr/_docs/_pdf tmp var/log var/cache var/spool"
