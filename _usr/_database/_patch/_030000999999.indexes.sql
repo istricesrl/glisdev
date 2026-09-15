@@ -688,8 +688,9 @@ ALTER TABLE `documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `codice` (`codice`),
-	ADD UNIQUE KEY `unico_codice` (`codice`,`id_tipologia`),
+	ADD UNIQUE KEY `unico_codice` (`codice`,`id_tipologia_documento`),
 	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_tipologia_documento` (`id_tipologia_documento`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
@@ -716,13 +717,13 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `importo_netto_totale` (`importo_netto_totale`),
 	ADD KEY `importo_lordo_totale` (`importo_lordo_totale`),
 	ADD KEY `importo_lordo_finale` (`importo_lordo_finale`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
-	ADD KEY `indice_progetto_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
-	ADD KEY `indice_progetto_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
-	ADD KEY `indice_todo_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
-	ADD KEY `indice_todo_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
-	ADD KEY `indice_attivita_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
-	ADD KEY `indice_attivita_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
+	ADD KEY `indice_progetto_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
+	ADD KEY `indice_progetto_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
+	ADD KEY `indice_todo_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
+	ADD KEY `indice_todo_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
+	ADD KEY `indice_attivita_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
+	ADD KEY `indice_attivita_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`);
 
 -- | 030000010001
 
@@ -1513,6 +1514,7 @@ ALTER TABLE `regioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- relazioni_documenti
 ALTER TABLE `relazioni_documenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_documento`,`id_documento_collegato`,`id_ruolo`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
@@ -1844,6 +1846,28 @@ ALTER TABLE `tipologie_documenti`
 -- tipologie_documenti
 ALTER TABLE `tipologie_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000052700
+
+-- tipologie_documenti_articoli
+ALTER TABLE `tipologie_documenti_articoli`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `sigla` (`sigla`),
+	ADD KEY `se_raggruppamento` (`se_raggruppamento`),
+	ADD KEY `se_somma` (`se_somma`),
+	ADD KEY `se_alternativa` (`se_alternativa`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`se_raggruppamento`,`se_somma`,`se_alternativa`);
+
+-- | 030000052701
+
+-- tipologie_documenti_articoli
+ALTER TABLE `tipologie_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000053000
 
 -- tipologie_indirizzi
@@ -2076,6 +2100,17 @@ ALTER TABLE `valute`
 -- valute
 ALTER TABLE `valute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000063500
+
+-- taglie
+ALTER TABLE `taglie`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia_prodotti` (`id_tipologia_prodotti`);
+
+-- | 030000063501
+
+-- taglie
+ALTER TABLE `taglie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000065000
 
 -- video
@@ -2121,38 +2156,6 @@ ALTER TABLE `test`
 -- test
 ALTER TABLE `test` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
--- | FINE FILE
-
--- | 030000999010
-
--- ruoli_anagrafica
--- NB: senza questa PRIMARY KEY il vincolo notizie_anagrafica.id_ruolo -> ruoli_anagrafica.id
--- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
-ALTER TABLE `ruoli_anagrafica`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_genitore` (`id_genitore`);
-
--- | 030000999011
-
--- ruoli_anagrafica
-ALTER TABLE `ruoli_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
--- | 030000999012
-
--- notizie_anagrafica
-ALTER TABLE `notizie_anagrafica`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_notizia` (`id_notizia`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-
--- | 030000999013
-
--- notizie_anagrafica
-ALTER TABLE `notizie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
 -- | 030000999002
 
 -- carrelli
@@ -2187,11 +2190,6 @@ ALTER TABLE `carrelli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
 
--- | 030000999102
-
--- carrelli
-ALTER TABLE `carrelli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
 -- | 030000999003
 
 -- rinnovi
@@ -2212,30 +2210,6 @@ ALTER TABLE `rinnovi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `rinnovi_ibfk_08_nofollow` (`id_pianificazione`);
 
--- | 030000999103
-
--- rinnovi
-ALTER TABLE `rinnovi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
--- | 030000999003
-
--- contratti_anagrafica
-ALTER TABLE `contratti_anagrafica`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_contratto`,`id_anagrafica`,`id_ruolo`),
-	ADD KEY `id_contratto` (`id_contratto`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
-	ADD KEY `ordine` (`ordine`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
-
--- | 030000999103
-
--- contratti_anagrafica
-ALTER TABLE `contratti_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
 -- | 030000999004
 
 -- licenze
@@ -2255,10 +2229,49 @@ ALTER TABLE `licenze`
 	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`id_rivenditore`,`codice`,`postazioni`,`nome`,`giorni_validita`,`giorni_rinnovo`,`timestamp_distribuzione`,`timestamp_inizio`,`timestamp_fine`),
 	ADD KEY `licenze_ibfk_03_nofollow` (`id_rivenditore`);
 
--- | 030000999104
+-- | 030000999005
 
--- licenze
-ALTER TABLE `licenze` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+-- contratti_anagrafica
+ALTER TABLE `contratti_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_contratto`,`id_anagrafica`,`id_ruolo`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+-- | 030000999010
+
+-- ruoli_anagrafica
+-- NB: senza questa PRIMARY KEY il vincolo notizie_anagrafica.id_ruolo -> ruoli_anagrafica.id
+-- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
+ALTER TABLE `ruoli_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000999011
+
+-- ruoli_anagrafica
+ALTER TABLE `ruoli_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999012
+
+-- notizie_anagrafica
+ALTER TABLE `notizie_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000999013
+
+-- notizie_anagrafica
+ALTER TABLE `notizie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000999020
 
@@ -2275,14 +2288,24 @@ ALTER TABLE `istruzioni`
 ALTER TABLE `istruzioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 
--- | 030000063500
+-- | 030000999102
 
--- taglie
-ALTER TABLE `taglie`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_tipologia_prodotti` (`id_tipologia_prodotti`);
+-- carrelli
+ALTER TABLE `carrelli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
--- | 030000063501
+-- | 030000999103
 
--- taglie
-ALTER TABLE `taglie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+-- rinnovi
+ALTER TABLE `rinnovi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999104
+
+-- licenze
+ALTER TABLE `licenze` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999105
+
+-- contratti_anagrafica
+ALTER TABLE `contratti_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | FINE FILE

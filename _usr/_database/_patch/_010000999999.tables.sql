@@ -347,7 +347,7 @@ CREATE TABLE `articoli` (
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
--- rango: tabella di collegamento
+-- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: collega un articolo alle sue caratteristiche
 --
@@ -497,7 +497,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
 -- rango: tabella principale
--- struttura: tabella ad albero
+-- struttura: tabella ricorsiva
 -- funzione: l'albero delle caratteristiche di prodotti e articoli
 --
 -- e' l'albero vero usato dal modulo prodotti: i nodi di primo livello sono i gruppi ( "Linea
@@ -528,7 +528,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
 
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
--- rango: tabella di collegamento
+-- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: collega un prodotto alle sue caratteristiche
 --
@@ -1255,7 +1255,8 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
 CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo genitore (per articoli composti)
-  `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia di articolo
+  `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia della riga (tipologie_documenti_articoli)
+  `id_tipologia_documento` bigint(20) DEFAULT NULL,                -- chiave esterna per la tipologia del documento (tipologie_documenti), fino al 2026-09-15 si chiamava id_tipologia
   `codice` char(32) DEFAULT NULL,                               -- codice dell'articolo
   `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
   `id_documento` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento di appartenenza
@@ -1770,8 +1771,8 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
 
 -- mastri_veicoli
 -- tipologia: tabella gestita
--- rango: tabella secondaria
--- struttura: tabella di relazione
+-- rango: tabella di relazione
+-- struttura: tabella base
 -- funzione: contiene la relazione molti a molti tra mastri e veicoli
 --
 -- questa tabella contiene la relazione molti a molti tra mastri e veicoli, con le chiavi esterne per il mastro
@@ -3065,6 +3066,36 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (            --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000052700
+
+-- tipologie_documenti_articoli
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie delle righe dei documenti
+--
+-- questa tabella qualifica la singola RIGA di un documento, non il documento che la contiene:
+-- serve a marcare le righe che sono un raggruppamento, quelle che concorrono al totale e quelle
+-- che descrivono un'alternativa. La tipologia del documento sta in tipologie_documenti ed e'
+-- riferita da documenti.id_tipologia e da documenti_articoli.id_tipologia_documento
+--
+CREATE TABLE IF NOT EXISTS `tipologie_documenti_articoli` (   --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                                 -- nome della tipologia
+  `sigla` char(16) DEFAULT NULL,                                -- sigla della tipologia
+  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome per la tipologia
+  `se_raggruppamento` tinyint(1) DEFAULT NULL,                  -- se la riga raggruppa le righe figlie invece di essere una riga a sé
+  `se_somma` tinyint(1) DEFAULT NULL,                           -- se le righe raggruppate concorrono al totale del documento
+  `se_alternativa` tinyint(1) DEFAULT NULL,                     -- se le righe raggruppate sono alternative fra loro e non si sommano
+  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000053000
 
 -- tipologie_indirizzi
@@ -3457,8 +3488,8 @@ CREATE TABLE IF NOT EXISTS `url` (                            --
 -- | 010000063000
 
 -- valute
--- tipologia: tabella principale
--- rango: tabella standard
+-- tipologia: tabella standard
+-- rango: tabella principale
 -- struttura: tabella base
 -- funzione: contiene le valute utilizzate nel sistema
 --
@@ -3472,6 +3503,28 @@ CREATE TABLE IF NOT EXISTS `valute` (
   `utf8` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000063500
+
+-- taglie
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: le taglie degli articoli
+--
+-- articoli.id_taglia punta qui, e _mod/_4100.prodotti/_src/_inc/_macro/_articoli.form.php popola
+-- la sua tendina da taglie_view. La tabella pero' non era mai stata scritta in queste patch: sui
+-- database dove non c'era, la scheda articolo faceva fallire quella query a ogni apertura.
+-- Aggiunta l'08/09/2026 nella forma che ha sui deploy dove esiste.
+--
+CREATE TABLE IF NOT EXISTS `taglie` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la tipologia di prodotto
+  `nome` char(64) DEFAULT NULL,                                 -- nome della taglia
+  `sesso` enum('M','F','-') DEFAULT NULL,                       -- sesso a cui la taglia si riferisce
+  `taglia_internazionale` char(8) DEFAULT NULL,                 -- corrispondenza internazionale
+  `circonferenza_testa_min` int(11) DEFAULT NULL,               -- per i capi che si misurano sulla testa
+  `circonferenza_testa_max` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- | 010000064000
 
 -- veicoli
@@ -3570,8 +3623,6 @@ CREATE TABLE IF NOT EXISTS `test` (                           --
   `codice` char(32) DEFAULT NULL,                             -- codice univoco
   `nome` char(255) DEFAULT NULL                               -- dato di test
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
-
--- | FINE FILE
 
 -- | 010000999001
 
@@ -3757,26 +3808,4 @@ CREATE TABLE IF NOT EXISTS `istruzioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL               -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
--- | 010000063500
-
--- taglie
--- tipologia: tabella gestita
--- rango: tabella di appoggio
--- struttura: tabella base
--- funzione: le taglie degli articoli
---
--- articoli.id_taglia punta qui, e _mod/_4100.prodotti/_src/_inc/_macro/_articoli.form.php popola
--- la sua tendina da taglie_view. La tabella pero' non era mai stata scritta in queste patch: sui
--- database dove non c'era, la scheda articolo faceva fallire quella query a ogni apertura.
--- Aggiunta l'08/09/2026 nella forma che ha sui deploy dove esiste.
---
-CREATE TABLE IF NOT EXISTS `taglie` (
-  `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_tipologia_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la tipologia di prodotto
-  `nome` char(64) DEFAULT NULL,                                 -- nome della taglia
-  `sesso` enum('M','F','-') DEFAULT NULL,                       -- sesso a cui la taglia si riferisce
-  `taglia_internazionale` char(8) DEFAULT NULL,                 -- corrispondenza internazionale
-  `circonferenza_testa_min` int(11) DEFAULT NULL,               -- per i capi che si misurano sulla testa
-  `circonferenza_testa_max` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- | FINE FILE
