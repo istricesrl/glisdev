@@ -155,6 +155,46 @@ body {
     font-weight: 600;
 }
 
+/*
+ * i template e i moduli sono decine: in fila con gli altri capitoli coprirebbero l'indice, e stanno
+ * percio' in un sottomenu che si apre. E' un <details>, quindi funziona senza una riga di
+ * JavaScript e resta aperto sul gruppo che si sta leggendo; la sua testata e' insieme
+ * l'interruttore e la voce del capitolo che documenta la famiglia.
+ */
+.sidebar-nav details.gruppo > summary {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    margin-left: -.9rem;
+    list-style: none;
+    cursor: pointer;
+}
+.sidebar-nav details.gruppo > summary::-webkit-details-marker {
+    display: none;
+}
+.sidebar-nav details.gruppo > summary::before {
+    content: "\25B8";
+    width: .7rem;
+    font-size: .7rem;
+    color: var(--fg-faint);
+}
+.sidebar-nav details.gruppo[open] > summary::before {
+    content: "\25BE";
+}
+.sidebar-nav details.gruppo > summary a {
+    flex: 1 1 auto;
+}
+.sidebar-nav .gruppo-voci {
+    display: flex;
+    flex-direction: column;
+    margin: .1rem 0 .3rem .1rem;
+    padding-left: .45rem;
+    border-left: 1px solid var(--line);
+}
+.sidebar-nav .gruppo-voci a {
+    font-size: .8rem;
+}
+
 .sidebar-foot {
     margin-top: 1.4rem;
     padding-top: .8rem;
@@ -385,6 +425,16 @@ td code, th code { white-space: nowrap; }
 
 /* ---------------------------------------------------------------- stampa */
 
+/*
+ * il formato del foglio lo decide questa regola e non chi stampa: chromium, che e' lo strumento
+ * con cui nasce il PDF, senza @page userebbe il suo default, che e' letter — un foglio che in
+ * Italia non esiste, e che in stampa taglia o scala tutto.
+ */
+@page {
+    size: A4;
+    margin: 18mm 15mm;
+}
+
 @media print {
     .sidebar, .skip { display: none; }
     .content { max-width: none; padding: 0; }
@@ -392,6 +442,19 @@ td code, th code { white-space: nowrap; }
     pre, .tw { break-inside: avoid; }
     h2 { break-before: page; }
     a { color: inherit; text-decoration: none; }
+}
+
+/*
+ * la pagina unica — tutti i capitoli di seguito, ed e' quella da cui nasce il PDF — si stampa al
+ * contrario di una pagina di capitolo: li' ogni sezione comincia su un foglio nuovo, qui sarebbe
+ * un foglio per sezione per cento capitoli. Il salto va sul capitolo, cioe' sull'h1.
+ */
+@media print {
+    .unica h2 { break-before: auto; }
+    .unica h1 { break-before: page; }
+    .unica h1:first-child { break-before: auto; }
+    .unica section { break-before: page; }
+    .unica section:first-of-type { break-before: auto; }
 }
 
 /* ---------------------------------------------------------------- callout */
