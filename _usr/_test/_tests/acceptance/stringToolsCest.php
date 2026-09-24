@@ -131,7 +131,7 @@ class stringToolsCest
         $I->see("9 => string 'E_USER_WARNING' (length=14)");
         $I->see("10 => string 'E_USER_NOTICE' (length=13)");
         $I->see("11 => string 'E_STRICT' (length=8)");
-        $I->see("12 => null");
+        $I->see("12 => string 'E_RECOVERABLE_ERROR' (length=19)");
     }
 
     // ts2string() -> deve restituire una data leggibile a partire da un timestamp

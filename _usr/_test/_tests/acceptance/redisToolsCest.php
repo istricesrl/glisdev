@@ -57,7 +57,7 @@ class redisToolsCest
     public function redisFlush(AcceptanceTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_redis.tools/_redisFlush.01.php');
-        $I->see("string 'OK'");
+        $I->see('boolean true');
     }
 
     // settaggi post test
