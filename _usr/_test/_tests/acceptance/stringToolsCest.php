@@ -63,9 +63,9 @@ class stringToolsCest
     public function riduciStringa(AcceptanceTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_string.tools/_riduciStringa.01.php');
-        $I->see("string 'st~01' (length=5)");
         $I->see("string 'str~01' (length=6)");
-        $I->see("string 'str+01' (length=6)");
+        $I->see("string 'str~ 01' (length=7)");
+        $I->see("string 'str+ 01' (length=7)");
     }
 
     // int2month() -> deve restituire il nome del mese a partire da un intero
