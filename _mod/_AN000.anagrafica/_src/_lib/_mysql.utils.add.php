@@ -195,6 +195,38 @@
     }
 
     /**
+     * aggiorna alcune colonne della riga di anagrafica_view_static
+     *
+     * Serve alle funzioni updateAnagraficaViewStatic{Categorie,Indirizzi,Telefoni,Mail}() quando sono
+     * chiamate da sole, senza la $riga che costruisce updateAnagraficaViewStatic(): prima inserivano
+     * una riga col solo id, perdendo i dati appena calcolati. Se la riga statica esiste si aggiornano
+     * solo le colonne passate, altrimenti la si ricostruisce per intero.
+     *
+     * @param       integer     $id     id dell'anagrafica
+     * @param       array       $dati   colonne da aggiornare
+     *
+     */
+    function updateAnagraficaViewStaticColonne($id, $dati)
+    {
+
+        global $cf;
+
+        if (empty($id)) {
+            return;
+        }
+
+        if (mysqlSelectValue($cf['mysql']['connection'], 'SELECT id FROM anagrafica_view_static WHERE id = ?', array(array('s' => $id)))) {
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array_merge((is_array($dati) ? $dati : array()), array('id' => $id)),
+                'anagrafica_view_static'
+            );
+        } else {
+            updateAnagraficaViewStatic($id);
+        }
+    }
+
+    /**
      * 
      * 
      * 
@@ -239,13 +271,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $categorie);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
 
         $tCat = mysqlSelectValue(
@@ -257,17 +285,6 @@
         if ($tCat > $riga['timestamp_aggiornamento']) {
             $riga['timestamp_aggiornamento'] = $tCat;
         }
-
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'UPDATE anagrafica_categorie SET timestamp_aggiornamento = ? WHERE id = ?',
-            array(
-                array('s' => $riga['timestamp_aggiornamento']),
-                array('s' => $riga['id'])
-            )
-        );
-
-        // die( 'updateAnagraficaViewStaticCategorie: ' . $riga['id'] . ' - ' . $riga['timestamp_aggiornamento'] );
 
     }
 
@@ -320,13 +337,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $indirizzi);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
     }
 
@@ -361,13 +374,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $telefoni);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
     }
 
@@ -402,13 +411,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $mail);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
     }
 
@@ -473,6 +478,25 @@
         return array(
             array( 'id' => 0, '__label__' => 'mail' ),
             array( 'id' => 1, '__label__' => 'PEC' )
+        );
+
+    }
+
+    /**
+     * tendina dello stato di un consenso
+     *
+     * Restituisce le due voci per il campo `se_prestato` di `anagrafica_consensi`. NOTA il salvataggio passa da
+     * empty2null(), quindi una revoca finisce sul database come NULL e non come zero: chi legge la tabella deve
+     * contare NULL come revoca, e la macro della linguetta privacy riporta il NULL a zero per mostrarlo.
+     *
+     * @return  array   le voci della tendina
+     *
+     */
+    function tendinaSePrestato() {
+
+        return array(
+            array( 'id' => 1, '__label__' => 'prestato' ),
+            array( 'id' => 0, '__label__' => 'revocato' )
         );
 
     }
