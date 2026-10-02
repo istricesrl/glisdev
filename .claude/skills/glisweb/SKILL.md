@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare uno dei cinque file di progetto ( CLAUDE.md, READ.md, TODO.md, DONE.md, CHAT.md ) o il burndown.md, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown". Attivare in particolare quando si CHIUDE una voce o si finisce un lavoro: la chiusura non si esaurisce nello spostamento in DONE.md, se è una cosa che il cliente vede o che stava aspettando la stessa riga va anche in CHAT.md, nella sezione "Da dirgli alla prossima occasione", il giorno stesso — vedi la sezione "Quando una voce chiude, il giro non finisce nel DONE.md". Per i dettagli: i cinque marcatori ([ ] da fare e nel carico, [=] in attesa di un altro e FUORI dal carico, [?] sospesa e FUORI dal carico, [v] fatta, [x] annullata), l'organizzazione del TODO per aree e non per data, i tre flag di urgenza/rilevanza/impatto e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "I cinque file di un progetto" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare anche quando Claude Code avvisa che i file di istruzioni superano il limite ("instruction files add up to … over the 150.0k-char total limit"), quando un CLAUDE.md di progetto cresce o gli si vuole aggiungere una sezione lunga, e quando il contesto della sessione supera i 120k: la sezione "Il contesto costa" e riferimenti/contesto.md dicono come si lavora parsimoniosi e dove vanno le trattazioni. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare uno dei cinque file di progetto ( CLAUDE.md, READ.md, TODO.md, DONE.md, CHAT.md ) o il burndown.md, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown". Attivare in particolare quando si CHIUDE una voce o si finisce un lavoro: la chiusura non si esaurisce nello spostamento in DONE.md, se è una cosa che il cliente vede o che stava aspettando la stessa riga va anche in CHAT.md, nella sezione "Da dirgli alla prossima occasione", il giorno stesso — vedi la sezione "Quando una voce chiude, il giro non finisce nel DONE.md". Attivare anche quando durante il lavoro nasce una domanda che solo il cliente può sciogliere: va scritta nello stesso turno nel CHAT.md, in "Da chiedergli alla prossima occasione", e non lasciata in conversazione — vedi "Quando nasce una domanda per il cliente". Per i dettagli: i cinque marcatori ([ ] da fare e nel carico, [=] in attesa di un altro e FUORI dal carico, [?] sospesa e FUORI dal carico, [v] fatta, [x] annullata), l'organizzazione del TODO per aree e non per data, i tre flag di urgenza/rilevanza/impatto e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "I cinque file di un progetto" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare anche quando Claude Code avvisa che i file di istruzioni superano il limite ("instruction files add up to … over the 150.0k-char total limit"), quando un CLAUDE.md di progetto cresce o gli si vuole aggiungere una sezione lunga, e quando il contesto della sessione supera i 120k: la sezione "Il contesto costa" e riferimenti/contesto.md dicono come si lavora parsimoniosi e dove vanno le trattazioni. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
@@ -113,6 +113,10 @@ se non l'hai già fatto nella sessione.
 `DONE.md` con com'è andata e perché, e — se il cliente la vede o l'aspettava — la stessa riga nel
 `CHAT.md`, in `### Da dirgli alla prossima occasione`, **il giorno stesso**. Uno sviluppo finito e non
 comunicato, per il cliente, non è finito.
+
+⚠ **Una domanda per il cliente si scrive quando nasce**: nello stesso turno va nel `CHAT.md`, in
+`### Da chiedergli alla prossima occasione` della persona giusta, con data e voce di origine. Una
+domanda rimasta solo in conversazione muore col `/clear`, e il dialogo col cliente perde continuità.
 
 ## Commenti al codice
 
@@ -282,7 +286,7 @@ Cosa c'è in ciascuna, in una riga:
 | `_etc/` | configurazione di supporto: dizionari di traduzione, liste di sicurezza, robots, Doxygen, release e version |
 | `_src/` | il codice: `_config.php` (bootstrap), `_api/` (entry point HTTP), `_cli/` (entry point da riga di comando), `_config/` (runlevel), `_lib/` (librerie), `_sh/` (script di shell), `_twig/` e `_tpl/` (template) |
 | `_mod/` | i moduli; un modulo è attivo **solo se esiste** la cartella omonima in `mod/` |
-| `_usr/` | quello che non è codice: `_database/_patch/`, `_docs/`, `_examples/`, `_test/` |
+| `_usr/` | quello che non è codice: `_config/` ( modelli di configurazione ), `_database/_patch/`, `_deploy/` ( modelli per il deploy ), `_docs/`, `_examples/` |
 | `var/` | stato locale: log, cache, spool, sitemap, marcatori. **Gitignored, escluso dal deploy** |
 | `tmp/` | temporanei di lavoro, senza aspettativa di sopravvivenza |
 
@@ -466,6 +470,38 @@ Riferimenti tipici a `_claude.framework.md`:
 
 Se quel file non è presente nel framework che stai usando, fallback su `READ.md` nella root del framework e
 ispeziona direttamente `_src/_config.php` per il bootstrap.
+
+### ⚠ Le prove sull'applicazione le fa Claude, loggato, e non le gira a Fabio
+
+Regola stabilita da Fabio il 01/10/2026. Quando un lavoro va verificato **dentro l'applicazione** — una
+scheda dopo una patch del database, una form dopo una modifica, una pagina dietro login — **la prova la fa
+Claude**, e non chiude con "aprila tu dal browser".
+
+- **Le credenziali si leggono dal `READ.md` della root del deploy**, sezione *Accessi e credenziali*
+  ( di solito `### Applicazione` ). Fabio le ha messe lì perché si usino: leggerle per fare il login è
+  autorizzato. Non si ripetono in conversazione e non si scrivono in file versionati: si estraggono
+  dentro lo script che le usa. Gli account in `$cf['auth']['accounts']` del config possono essere
+  vecchi: fa fede il `READ.md`.
+- **Il browser è chromium headless** ( `/usr/bin/chromium`, sui server Debian non c'è playwright ). Il
+  login di glisweb non vuole token CSRF e funziona su **qualunque** pagina, quindi si apre una pagina
+  locale che fa la POST di `__login__[user]` e `__login__[pasw]` direttamente sull'URL da provare.
+  Così ogni prova è un comando solo, e il cookie di sessione non deve sopravvivere fra un avvio e l'altro:
+
+  ```bash
+  timeout 60 chromium --headless --no-sandbox --disable-gpu --virtual-time-budget=15000 \
+      --dump-dom "file://<scratchpad>/login.html" > pagina.dom
+  ```
+
+  La pagina locale va nella scratchpad ( contiene la password ) e si cancella subito dopo. Per una
+  raccolta veloce di status e link basta `curl` con cookie jar, sempre col login sulla POST.
+- **Gli URL non sono `<id-pagina>.it-IT.html`**, ma il percorso dell'albero ( `catalogo/prodotti/gestione.it-IT.html?prodotti[id]=1` ):
+  si ricavano dai link delle pagine di elenco, non si costruiscono dall'id.
+- **Cosa si guarda**: niente form di login nella risposta ( `__login__` assente ), niente *pagina non
+  trovata*, niente `Fatal`/`Warning`/`Notice`/errore Twig, e il contenuto atteso nel testo. Si leggono il
+  testo e i conteggi, non lo screenshot ( vedi *testo prima dello screenshot* ). **Pagine tutte della stessa
+  dimensione vogliono dire che sono tutte la stessa pagina d'errore**.
+- **Si prova in DEV.** In PROD si apre in sola lettura, e una prova che scrive dati si fa solo se Fabio
+  la chiede.
 
 ### 3.1 Come aggiornare il framework in un progetto cliente
 

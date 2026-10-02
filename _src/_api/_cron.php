@@ -61,6 +61,11 @@
      * tabella task, la cui struttura è simile a quella del file /etc/crontab di Linux. Ogni volta che viene chiamata
      * l'API cron (/api/cron) il framework controlla se ci sono task da eseguire in quel momento, e nel caso
      * provvede ad eseguirli.
+     *
+     * La somiglianza con crontab si ferma ai nomi dei campi: ciascuno contiene un solo valore ( NULL vale "ogni" ),
+     * senza intervalli, liste né passi, e giorno_della_settimana va da 1 ( lunedì ) a 7 ( domenica ) perché si
+     * confronta con date( 'N' ). La domenica è 7 e non 0 come in crontab: un task con 0 non parte mai. È lo stesso
+     * range della tendina del form dei task ( _mod/_0030.strumenti/_src/_inc/_macro/_task.form.php ).
      * 
      * test dei task
      * -------------
@@ -84,10 +89,13 @@
      * I log dei task sono raggruppati per ID del task (con riferimento all'ID che il task ha sulla tabella dei task).
      * Quando un task viene chiamato manualmente è prassi fare riferimento soprattutto all'output JSON che genera, mentre
      * quando viene eseguito da cron è possibile consultare i log per avere informazioni più dettagliate. I file di
-     * log dei task pianificati sono /var/log/task/TASKID.log (che contiene informazioni generali sull'esecuzione del task)
-     * e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica esecuzione
-     * del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e suddiviso
-     * in piccole parti ognuna relativa a una data esecuzione.
+     * log dei task pianificati sono /var/log/task/TASKID.AAAAMM.log (che contiene informazioni generali sull'esecuzione del
+     * task) e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica
+     * esecuzione del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e
+     * suddiviso in piccole parti ognuna relativa a una data esecuzione.
+     *
+     * Il primo ha il mese nel nome come gli altri log del framework, e lo pota chi pota quelli; i secondi sono un file
+     * per iterazione e li pota _src/_api/_task/_log.task.clean.php, che va pianificato.
      * 
      * esecuzione dei job
      * ==================
@@ -407,7 +415,7 @@
             }
 
             // log
-            loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.log' );
+            loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.' . date( 'Ym' ) . '.log' );
 
         }
 
