@@ -1,17 +1,17 @@
 <?php
 
     /**
-     * popolazione della vista statica attivita_view_static
+     * popolazione della vista statica articoli_view_static
      *
      * Wrapper su syncStaticView() ( _src/_lib/_mysql.tools.php ), che fa il lavoro vero: cerca fino a un lotto
      * di righe rimaste indietro ( mancanti nella statica, o con i timestamp NULL o piu' vecchi della tabella
-     * base ) e le rigenera. Il nome e il percorso restano quelli di sempre, perche' le pianificazioni dei deploy
-     * e i pulsanti degli strumenti lo chiamano cosi'.
+     * base ) e le rigenera. E' nato il 04/10/2026 con la corte di task della statica, nella stessa forma degli
+     * altri task di popolazione.
      *
-     * Gemello di _mod/_0200.attivita/_src/_api/_task/_attivita.view.static.popolazione.php.
+     * Gemello di _mod/_4100.prodotti/_src/_api/_task/_articoli.view.static.popolazione.php.
      *
-     * Chiamata standard: /task/AT000.attivita/attivita.view.static.popolazione
-     * Chiamata forzata, che riscrive una riga sola: /task/AT000.attivita/attivita.view.static.popolazione?id=<id>
+     * Chiamata standard: /task/PR000.prodotti/articoli.view.static.popolazione
+     * Chiamata forzata, che riscrive una riga sola: /task/PR000.prodotti/articoli.view.static.popolazione?id=<id>
      *
      * Fa parte della corte di task della statica: popolazione ( questo ), pulizia ( righe sparite dalla tabella
      * base ) e svuotamento ( solo per le emergenze ). Il ricalcolo completo non e' una pianificazione: a
@@ -40,7 +40,7 @@
     if( ! isset( $_REQUEST['id'] ) ) {
 
         // riallineo un lotto di righe rimaste indietro
-        $status['riallineate'] = syncStaticView( $cf['mysql']['connection'], 'attivita' );
+        $status['riallineate'] = syncStaticView( $cf['mysql']['connection'], 'articoli' );
         $status['modalita'] = 'standard';
 
         // metroLoopWs() ripete la chiamata finche' aggiornare.id non e' vuoto
@@ -52,7 +52,7 @@
         $status['aggiornare']['id'] = $_REQUEST['id'];
         $status['modalita'] = 'forzata';
         $status['done'] = true;
-        refreshStaticView( $cf['mysql']['connection'], 'attivita', $status['aggiornare']['id'] );
+        updateArticoliViewStatic( $status['aggiornare']['id'] );
 
     }
 
