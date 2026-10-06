@@ -6109,6 +6109,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `se_anteprima` tinyint(1) DEFAULT NULL,                       -- se anteprima, visibile solo al gruppo anteprima
   `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
