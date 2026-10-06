@@ -4,12 +4,12 @@ class csvToolsCest
 {
 
     // settaggi pre test
-    public function _before(AcceptanceTester $I)
+    public function _before(UnitTester $I)
     {
     }
 
     // csvFile2array() -> deve restituire il contenuto del CSV di test
-    public function csvFile2array(AcceptanceTester $I)
+    public function csvFile2array(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvFile2array.01.php');
         $I->see("'col1' => string 'val1' (length=4)");
@@ -18,7 +18,7 @@ class csvToolsCest
     }
 
     // csvString2array() -> deve restituire il contenuto del CSV di test
-    public function csvString2array(AcceptanceTester $I)
+    public function csvString2array(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvString2array.01.php');
         $I->see("'col1' => string 'val1' (length=4)");
@@ -27,7 +27,7 @@ class csvToolsCest
     }
 
     // csvString2array() -> deve restituire il contenuto del CSV di test
-    public function csvArray2array(AcceptanceTester $I)
+    public function csvArray2array(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvArray2array.01.php');
         $I->see("'col1' => string 'val1' (length=4)");
@@ -36,7 +36,7 @@ class csvToolsCest
     }
 
     // csvFile2matrix() -> deve restituire il contenuto del CSV di test
-    public function csvFile2matrix(AcceptanceTester $I)
+    public function csvFile2matrix(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvFile2matrix.01.php');
         $I->see("0 => string 'val1' (length=4)");
@@ -45,7 +45,7 @@ class csvToolsCest
     }
 
     // csvString2matrix() -> deve restituire il contenuto del CSV di test
-    public function csvString2matrix(AcceptanceTester $I)
+    public function csvString2matrix(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvString2matrix.01.php');
         $I->see("0 => string 'val1' (length=4)");
@@ -54,7 +54,7 @@ class csvToolsCest
     }
 
     // csvArray2matrix() -> deve restituire il contenuto del CSV di test
-    public function csvArray2matrix(AcceptanceTester $I)
+    public function csvArray2matrix(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvArray2matrix.01.php');
         $I->see("0 => string 'val1' (length=4)");
@@ -63,7 +63,7 @@ class csvToolsCest
     }
 
     // array2csvFile() -> deve restituire il contenuto del CSV di test
-    public function array2csvFile(AcceptanceTester $I)
+    public function array2csvFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_array2csvFile.01.php');
         $I->see("col1,col2,col3");
@@ -71,7 +71,7 @@ class csvToolsCest
     }
 
     // array2csvString() -> deve restituire il contenuto del CSV di test
-    public function array2csvString(AcceptanceTester $I)
+    public function array2csvString(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_array2csvString.01.php');
         $I->see("col1,col2,col3");
@@ -79,7 +79,7 @@ class csvToolsCest
     }
 
     // array2csvArray() -> deve restituire il contenuto del CSV di test
-    public function array2csvArray(AcceptanceTester $I)
+    public function array2csvArray(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_array2csvArray.01.php');
         $I->see("0 => string 'col1,col2,col3'");
@@ -87,7 +87,7 @@ class csvToolsCest
     }
 
     // matrix2csvFile() -> deve restituire il contenuto del CSV di test
-    public function matrix2csvFile(AcceptanceTester $I)
+    public function matrix2csvFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_matrix2csvFile.01.php');
         $I->see("col1,col2,col3");
@@ -95,7 +95,7 @@ class csvToolsCest
     }
 
     // matrix2csvString() -> deve restituire il contenuto del CSV di test
-    public function matrix2csvString(AcceptanceTester $I)
+    public function matrix2csvString(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_matrix2csvString.01.php');
         $I->see("col1,col2,col3");
@@ -103,7 +103,7 @@ class csvToolsCest
     }
 
     // matrix2csvArray() -> deve restituire il contenuto del CSV di test
-    public function matrix2csvArray(AcceptanceTester $I)
+    public function matrix2csvArray(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_matrix2csvArray.01.php');
         $I->see("0 => string 'col1,col2,col3'");
@@ -111,14 +111,14 @@ class csvToolsCest
     }
 
     // guessCsvSeparator() -> deve restituire il separatore del CSV di test
-    public function guessCsvSeparator(AcceptanceTester $I)
+    public function guessCsvSeparator(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_guessCsvSeparator.01.php');
         $I->see("string ';' (length=1)");
     }
 
     // csvRow2array() -> deve restituire il contenuto del CSV di test
-    public function csvRow2array(AcceptanceTester $I)
+    public function csvRow2array(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvRow2array.01.php');
         $I->see("'col1' => string 'val1' (length=4)");
@@ -127,7 +127,7 @@ class csvToolsCest
     }
 
     // csvRow2vector() -> deve restituire il contenuto del CSV di test
-    public function csvRow2vector(AcceptanceTester $I)
+    public function csvRow2vector(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvRow2vector.01.php');
         $I->see("0 => string 'val1' (length=4)");
@@ -136,7 +136,7 @@ class csvToolsCest
     }
 
     // settaggi post test
-    public function _after(AcceptanceTester $I)
+    public function _after(UnitTester $I)
     {
     }
 

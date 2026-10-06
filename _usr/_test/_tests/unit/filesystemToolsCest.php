@@ -4,12 +4,12 @@ class filesystemToolsCest
 {
 
     // settaggi pre test
-    public function _before(AcceptanceTester $I)
+    public function _before(UnitTester $I)
     {
     }
 
     // fullPath() -> deve restituire il percorso assoluto partendo da quello relativo
-    public function fullPath(AcceptanceTester $I)
+    public function fullPath(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_fullPath.01.php');
         $I->see("'/var/www/glisdev.istricesrl.com/dev/src/config.json'");
@@ -17,7 +17,7 @@ class filesystemToolsCest
     }
 
     // getFullPath() -> deve restituire il percorso assoluto partendo da quello relativo
-    public function getFullPath(AcceptanceTester $I)
+    public function getFullPath(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFullPath.01.php');
         $I->see("'/var/www/glisdev.istricesrl.com/dev/src/config.json'");
@@ -25,7 +25,7 @@ class filesystemToolsCest
     }
 
     // shortPath() -> deve restituire il percorso relativo partendo da quello assoluto
-    public function shortPath01(AcceptanceTester $I)
+    public function shortPath01(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_shortPath.01.php');
         $I->see("'src/config.json'");
@@ -33,7 +33,7 @@ class filesystemToolsCest
     }
 
     // shortPath() -> deve restituire il percorso relativo partendo da quello assoluto
-    public function shortPath02(AcceptanceTester $I)
+    public function shortPath02(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_shortPath.02.php');
         $I->see("'src/config.json'");
@@ -41,7 +41,7 @@ class filesystemToolsCest
     }
 
     // getShortPath() -> deve restituire il percorso relativo partendo da quello assoluto
-    public function getShortPath(AcceptanceTester $I)
+    public function getShortPath(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getShortPath.01.php');
         $I->see("'src/config.json'");
@@ -49,7 +49,7 @@ class filesystemToolsCest
     }
 
     // absoultePath() -> deve restituire il percorso pulito da punti e barre
-    public function absoultePath(AcceptanceTester $I)
+    public function absoultePath(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_absolutePath.01.php');
         $I->see("'/_etc/_common/_lorem.conf'");
@@ -58,7 +58,7 @@ class filesystemToolsCest
     }
 
     // openFile() -> deve restituire una risorsa puntatore a file
-    public function openFile(AcceptanceTester $I)
+    public function openFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_openFile.01.php');
         $I->see(':resource');
@@ -66,7 +66,7 @@ class filesystemToolsCest
     }
 
     // closeFile() -> deve restituire true in caso di chiusura effettuata con successo del file
-    public function closeFile(AcceptanceTester $I)
+    public function closeFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_closeFile.01.php');
         $I->see('boolean true');
@@ -74,7 +74,7 @@ class filesystemToolsCest
     }
 
     // writeToFile() -> deve restituire true in caso di scrittura effettuata con successo
-    public function writeToFile(AcceptanceTester $I)
+    public function writeToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_writeToFile.01.php');
         $I->see('boolean true');
@@ -83,7 +83,7 @@ class filesystemToolsCest
     }
 
     // overwriteFile() -> deve restituire true in caso di sovrascrittura effettuata con successo
-    public function overwriteToFile(AcceptanceTester $I)
+    public function overwriteToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_overwriteToFile.01.php');
         $I->see('boolean true');
@@ -92,7 +92,7 @@ class filesystemToolsCest
     }
 
     // appendToFile() -> deve restituire true in caso di aggiunta effettuata con successo
-    public function appendToFile(AcceptanceTester $I)
+    public function appendToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_appendToFile.01.php');
         $I->see('boolean true');
@@ -101,7 +101,7 @@ class filesystemToolsCest
     }
 
     // readFromFile() -> deve restituire il contenuto del file in forma di array
-    public function readFromFileAsArray(AcceptanceTester $I)
+    public function readFromFileAsArray(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_readFromFile.01.php');
         $I->see('boolean true');
@@ -111,7 +111,7 @@ class filesystemToolsCest
     }
 
     // readFromFile() -> deve restituire il contenuto del file in forma di stringa
-    public function readFromFileAsString(AcceptanceTester $I)
+    public function readFromFileAsString(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_readFromFile.02.php');
         $I->see('boolean true');
@@ -120,7 +120,7 @@ class filesystemToolsCest
     }
 
     // readStringFromFile() -> deve restituire il contenuto del file in forma di stringa
-    public function readStringFromFile(AcceptanceTester $I)
+    public function readStringFromFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_readStringFromFile.01.php');
         $I->see('boolean true');
@@ -129,7 +129,7 @@ class filesystemToolsCest
     }
 
     // readArrayFromFile() -> deve restituire il contenuto del file in forma di array
-    public function readArrayFromFile(AcceptanceTester $I)
+    public function readArrayFromFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_readArrayFromFile.01.php');
         $I->see('boolean true');
@@ -139,7 +139,7 @@ class filesystemToolsCest
     }
 
     // writeArrayToFile() -> deve restituire true in caso di scrittura effettuata con successo
-    public function writeArrayToFile(AcceptanceTester $I)
+    public function writeArrayToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_writeArrayToFile.01.php');
         $I->see('boolean true');
@@ -150,7 +150,7 @@ class filesystemToolsCest
     }
 
     // readKeyValueArrayFromFile() -> deve restituire il contenuto del file in forma di array
-    public function readKeyValueArrayFromFile(AcceptanceTester $I)
+    public function readKeyValueArrayFromFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_readKeyValueArrayFromFile.01.php');
         $I->see('boolean true');
@@ -161,7 +161,7 @@ class filesystemToolsCest
     }
 
     // writeKeyValueArrayToFile() -> deve restituire true in caso di scrittura effettuata con successo
-    public function writeKeyValueArrayToFile(AcceptanceTester $I)
+    public function writeKeyValueArrayToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_writeKeyValueArrayToFile.01.php');
         $I->see('boolean true');
@@ -172,7 +172,7 @@ class filesystemToolsCest
     }
 
     // fileTrimLines() -> deve restituire un file senza le righe tagliate
-    public function fileTrimLines(AcceptanceTester $I)
+    public function fileTrimLines(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_fileTrimLines.01.php');
         $I->see('boolean true');
@@ -183,7 +183,7 @@ class filesystemToolsCest
     }
 
     // getFolderIterator() -> deve restituire un iteratore di directory
-    public function getFolderIterator(AcceptanceTester $I)
+    public function getFolderIterator(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFolderIterator.01.php');
         $I->see('object(RecursiveIteratorIterator)');
@@ -191,7 +191,7 @@ class filesystemToolsCest
     }
 
     // checkFolder() -> deve creare una cartella se non esiste
-    public function checkFolder(AcceptanceTester $I)
+    public function checkFolder(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_checkFolder.01.php');
         $I->see('boolean true');
@@ -199,7 +199,7 @@ class filesystemToolsCest
     }
 
     // checkFile() -> deve creare un file se non esiste
-    public function checkFile(AcceptanceTester $I)
+    public function checkFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_checkFile.01.php');
         $I->see('boolean true');
@@ -207,7 +207,7 @@ class filesystemToolsCest
     }
 
     // deleteFolder() -> deve eliminare una cartella
-    public function deleteFolder(AcceptanceTester $I)
+    public function deleteFolder(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_deleteFolder.01.php');
         $I->see('boolean true');
@@ -215,7 +215,7 @@ class filesystemToolsCest
     }
 
     // deleteFile() -> deve eliminare un file
-    public function deleteFile(AcceptanceTester $I)
+    public function deleteFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_deleteFile.01.php');
         $I->see('boolean true');
@@ -223,7 +223,7 @@ class filesystemToolsCest
     }
 
     // recursiveDelete() -> deve eliminare una cartella e tutto il suo contenuto
-    public function recursiveDelete(AcceptanceTester $I)
+    public function recursiveDelete(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_recursiveDelete.01.php');
         $I->see('boolean true');
@@ -231,7 +231,7 @@ class filesystemToolsCest
     }
 
     // emptyFolder() -> deve svuotare una cartella
-    public function emptyFolder(AcceptanceTester $I)
+    public function emptyFolder(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_emptyFolder.01.php');
         $I->see('boolean true');
@@ -239,7 +239,7 @@ class filesystemToolsCest
     }
 
     // moveFile() -> deve spostare un file in una cartella data
-    public function moveFileToFolder(AcceptanceTester $I)
+    public function moveFileToFolder(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_moveFile.01.php');
         $I->see('boolean true');
@@ -247,7 +247,7 @@ class filesystemToolsCest
     }
 
     // moveFile() -> deve spostare un file in un percorso dato
-    public function moveFileToFile(AcceptanceTester $I)
+    public function moveFileToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_moveFile.02.php');
         $I->see('boolean true');
@@ -255,7 +255,7 @@ class filesystemToolsCest
     }
 
     // copyFile() -> deve copiare un file in una cartella data
-    public function copyFileToFolder(AcceptanceTester $I)
+    public function copyFileToFolder(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.01.php');
         $I->see('boolean true');
@@ -263,7 +263,7 @@ class filesystemToolsCest
     }
 
     // copyFile() -> deve copiare un file in un percorso dato
-    public function copyFileToFile(AcceptanceTester $I)
+    public function copyFileToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.01.php');
         $I->see('boolean true');
@@ -271,7 +271,7 @@ class filesystemToolsCest
     }
 
     // copyFile() -> deve copiare un file remoto in una cartella data
-    public function copyFileFromRemoteToFolder(AcceptanceTester $I)
+    public function copyFileFromRemoteToFolder(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.01.php');
         $I->see('boolean true');
@@ -279,7 +279,7 @@ class filesystemToolsCest
     }
 
     // copyFile() -> deve copiare un file remoto in un percorso dato
-    public function copyFileFromRemoteToFile(AcceptanceTester $I)
+    public function copyFileFromRemoteToFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.01.php');
         $I->see('boolean true');
@@ -287,7 +287,7 @@ class filesystemToolsCest
     }
 
     // dirTree2Array() -> deve restituire un array con la struttura delle cartelle
-    public function dirTreeToArray(AcceptanceTester $I)
+    public function dirTreeToArray(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_dirTreeToArray.01.php');
         $I->see('boolean true');
@@ -297,7 +297,7 @@ class filesystemToolsCest
     }
 
     // getFileSize() -> deve restituire la dimensione di un file
-    public function getFileSize(AcceptanceTester $I)
+    public function getFileSize(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFileSize.01.php');
         $I->see('boolean true');
@@ -305,7 +305,7 @@ class filesystemToolsCest
     }
 
     // getFolderSize() -> deve restituire la dimensione di una cartella
-    public function getFolderSize(AcceptanceTester $I)
+    public function getFolderSize(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFolderSize.01.php');
         $I->see('boolean true');
@@ -313,7 +313,7 @@ class filesystemToolsCest
     }
 
     // getSize() -> deve restituire la dimensione di un file o di una cartella
-    public function getSize(AcceptanceTester $I)
+    public function getSize(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getSize.01.php');
         $I->see('boolean true');
@@ -321,7 +321,7 @@ class filesystemToolsCest
     }
 
     // getRecursiveFileList() -> deve restituire un array con la lista dei file
-    public function getRecursiveFileList(AcceptanceTester $I)
+    public function getRecursiveFileList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getRecursiveFileList.01.php');
         $I->see('boolean true');
@@ -332,7 +332,7 @@ class filesystemToolsCest
     }
 
     // getFilteredFileList() -> deve restituire un array con la lista dei file filtrata
-    public function getFilteredFileList(AcceptanceTester $I)
+    public function getFilteredFileList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFilteredFileList.01.php');
         $I->see('boolean true');
@@ -341,7 +341,7 @@ class filesystemToolsCest
     }
 
     // getFileList() -> deve restituire un array con la lista dei file
-    public function getFileList(AcceptanceTester $I)
+    public function getFileList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFileList.01.php');
         $I->see('boolean true');
@@ -353,104 +353,104 @@ class filesystemToolsCest
 
     // getRecursiveFolderList() -> deve restituire un array con la lista delle cartelle
     // TODO test non ancora implementato
-    public function getRecursiveFolderList(AcceptanceTester $I)
+    public function getRecursiveFolderList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getRecursiveFolderList.01.php');
     }
 
     // getFilteredFolderList() -> deve restituire un array con la lista delle cartelle filtrata
     // TODO test non ancora implementato
-    public function getFilteredFolderList(AcceptanceTester $I)
+    public function getFilteredFolderList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFilteredFolderList.01.php');
     }
 
     // getFolderList() -> deve restituire un array con la lista delle cartelle
     // TODO test non ancora implementato
-    public function getFolderList(AcceptanceTester $I)
+    public function getFolderList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFolderList.01.php');
     }
 
     // getRecursiveFullList() -> deve restituire un array con la lista di file e cartelle
     // TODO test non ancora implementato
-    public function getRecursiveFullList(AcceptanceTester $I)
+    public function getRecursiveFullList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getRecursiveFullList.01.php');
     }
 
     // getFullList() -> deve restituire un array con la lista di file e cartelle
     // TODO test non ancora implementato
-    public function getFullList(AcceptanceTester $I)
+    public function getFullList(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFullList.01.php');
     }
 
     // getFolderName() -> deve restituire il nome della cartella
     // TODO test non ancora implementato
-    public function getFolderName(AcceptanceTester $I)
+    public function getFolderName(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFolderName.01.php');
     }
 
     // getFileExtension() -> deve restituire l'estensione del file
     // TODO test non ancora implementato
-    public function getFileExtension(AcceptanceTester $I)
+    public function getFileExtension(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFileExtension.01.php');
     }
 
     // getFileNameWithoutExtension() -> deve restituire il nome del file senza estensione
     // TODO test non ancora implementato
-    public function getFileNameWithoutExtension(AcceptanceTester $I)
+    public function getFileNameWithoutExtension(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFileNameWithoutExtension.01.php');
     }
 
     // globRecursive() -> deve restituire un array con la lista di file e cartelle
     // TODO test non ancora implementato
-    public function globRecursive(AcceptanceTester $I)
+    public function globRecursive(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_globRecursive.01.php');
     }
 
     // findFileType() -> deve restituire il mime type di un file
     // TODO test non ancora implementato
-    public function findFileType(AcceptanceTester $I)
+    public function findFileType(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_findFileType.01.php');
     }
 
     // isBinaryFile() -> deve restituire true se il file è binario
     // TODO test non ancora implementato
-    public function isBinaryFile(AcceptanceTester $I)
+    public function isBinaryFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_isBinaryFile.01.php');
     }
 
     // fileExists() -> deve restituire true se il file esiste
     // TODO test non ancora implementato
-    public function fileExists(AcceptanceTester $I)
+    public function fileExists(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_fileExists.01.php');
     }
 
     // getFileModifiedTime() -> deve restituire il timestamp dell'ultima modifica del file
     // TODO test non ancora implementato
-    public function getFileModifiedTime(AcceptanceTester $I)
+    public function getFileModifiedTime(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_getFileModifiedTime.01.php');
     }
 
     // checkFileConsistency() -> deve restituire true se il file è stato modificato entrò un certo intervallo di tempo
     // TODO test non ancora implementato
-    public function checkFileConsistency(AcceptanceTester $I)
+    public function checkFileConsistency(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_checkFileConsistency.01.php');
     }
 
     // settaggi post test
-    public function _after(AcceptanceTester $I)
+    public function _after(UnitTester $I)
     {
     }
 

@@ -6,12 +6,12 @@ class ftpToolsCest
 {
 
     // settaggi pre test
-    public function _before(AcceptanceTester $I)
+    public function _before(UnitTester $I)
     {
     }
 
     // ftpConnect() -> si connette al server FTP
-    public function ftpConnect(AcceptanceTester $I)
+    public function ftpConnect(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_ftp.tools/_ftpConnect.01.php');
         $I->see("FTP Buffer");
@@ -19,7 +19,7 @@ class ftpToolsCest
     }
 
     // ftpClose() -> chiude la connessione al server FTP
-    public function ftpClose(AcceptanceTester $I)
+    public function ftpClose(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_ftp.tools/_ftpClose.01.php');
         $I->see("boolean true");
@@ -27,7 +27,7 @@ class ftpToolsCest
     }
 
     // ftpPutFile() -> carica un file sul server FTP
-    public function ftpPutFile(AcceptanceTester $I)
+    public function ftpPutFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_ftp.tools/_ftpPutFile.01.php');
         $I->see("boolean true");
@@ -35,7 +35,7 @@ class ftpToolsCest
     }
 
     // ftpGetFile() -> scarica un file dal server FTP
-    public function ftpGetFile(AcceptanceTester $I)
+    public function ftpGetFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_ftp.tools/_ftpGetFile.01.php');
         $I->see("(length=10)");
@@ -43,7 +43,7 @@ class ftpToolsCest
     }
 
     // ftpGetUploadTypeByFile() -> restituisce il tipo di upload in base al file
-    public function ftpGetUploadTypeByFile(AcceptanceTester $I)
+    public function ftpGetUploadTypeByFile(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_ftp.tools/_ftpGetUploadTypeByFile.01.php');
         $I->see("int 1");
@@ -51,7 +51,7 @@ class ftpToolsCest
     }
 
     // settaggi post test
-    public function _after(AcceptanceTester $I)
+    public function _after(UnitTester $I)
     {
     }
 
