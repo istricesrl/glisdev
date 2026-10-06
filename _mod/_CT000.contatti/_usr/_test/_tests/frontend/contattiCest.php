@@ -7,10 +7,9 @@
      * compilati; la pagina e' quella del sito di esempio di glisdev, un deploy con una pagina contatti diversa
      * sostituisce questo test con mod/CT000.contatti/usr/test/tests/frontend/contattiCest.php
      *
-     * il test si ferma al file che il controller scrive in var/spool/contatti/ prima della verifica anti spam,
-     * perche' il reCAPTCHA v3 da' punteggio zero al browser headless e la riga in contatti non viene scritta;
-     * verifica quindi tutto il percorso lato client ( pagina, JavaScript, token reCAPTCHA, invio ) ma non il
-     * salvataggio nel database
+     * durante la suite il reCAPTCHA e' spento dall'helper \Helper\Glisweb ( il browser headless prende punteggio
+     * zero ), quindi il test arriva fino alla riga salvata in contatti; la pagina genera comunque il token, e il
+     * test verifica che arrivi al server
      *
      */
 
@@ -55,7 +54,6 @@
             $I->click( '#esempioform button.g-recaptcha' );
 
             // il modulo arriva al server, col token reCAPTCHA ottenuto dal JavaScript della pagina
-            $I->waitForElement( '#esempioform', 20 );
             $ricevuto = false;
             for( $i = 0; $i < 20 && $ricevuto === false; $i++ ) {
                 foreach( glob( DIR_VAR_SPOOL . 'contatti/default.*.log' ) as $file ) {
@@ -67,8 +65,12 @@
             }
 
             $I->assertNotFalse( $ricevuto, 'il modulo contatti non e\' arrivato al server' );
-            $I->assertStringContainsString( 'test@example.com', $ricevuto );
             $I->assertMatchesRegularExpression( '/\[__recaptcha_token__\] => \S+/', $ricevuto );
+
+            // e viene salvato in contatti
+            $yaml = $I->grabFromDatabase( 'SELECT yaml FROM contatti WHERE yaml LIKE ?', array( '%' . $nome . '%' ) );
+            $I->assertNotEmpty( $yaml, 'il contatto non e\' stato salvato in contatti' );
+            $I->assertStringContainsString( 'test@example.com', $yaml );
 
         }
 

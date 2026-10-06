@@ -26,6 +26,13 @@
      * da chiamare nel metodo _after() del Cest. La pulizia si fa anche prima del test, per lo stesso motivo
      * degli account.
      *
+     * reCAPTCHA
+     * ---------
+     * Il reCAPTCHA v3 da' punteggio zero al browser headless, quindi per la durata della suite l'helper crea il
+     * file var/test/recaptcha.off, che _src/_config/_115.google.php legge per togliere la chiave privata: i form
+     * protetti ( contatti, login ) accettano quello che il test invia. Fuori produzione e per un'ora al massimo;
+     * il file si toglie alla fine della suite. Con recaptcha: true nella configurazione il reCAPTCHA resta attivo.
+     *
      * pagine
      * ------
      * I percorsi delle pagine si ricavano dai titoli e cambiano da un deploy all'altro: nei test di back-end le
@@ -35,6 +42,7 @@
      * configurazione
      * --------------
      * - gruppi: i gruppi per cui creare un account di test, p.es. [ roots, staff ]; [] per non crearne
+     * - recaptcha: true per lasciare attivo il reCAPTCHA durante la suite, di default false
      * - login: la pagina di login, di default /admin.it-IT.html, la dashboard, che a chi non e' loggato mostra il form
      *
      */
@@ -58,6 +66,7 @@
          */
         protected $config = array(
             'gruppi'    => array( 'roots' ),
+            'recaptcha' => false,
             'login'     => '/admin.it-IT.html'
         );
 
@@ -82,17 +91,26 @@
                 $this->creaAccountTest( $gruppo );
             }
 
+            // reCAPTCHA spento per la durata della suite, vedi _src/_config/_115.google.php
+            if( ! $this->config['recaptcha'] ) {
+                touch( DIR_VAR . 'test/recaptcha.off' );
+            }
+
         }
 
         /**
          * chiusura della suite
          *
-         * toglie gli account del giro
+         * toglie gli account del giro e riaccende il reCAPTCHA
          *
          */
         public function _afterSuite() {
 
             $this->rimuoviAccountTest();
+
+            if( file_exists( DIR_VAR . 'test/recaptcha.off' ) ) {
+                unlink( DIR_VAR . 'test/recaptcha.off' );
+            }
 
         }
 

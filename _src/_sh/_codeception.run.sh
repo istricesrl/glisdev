@@ -139,6 +139,9 @@ if [ -n "$CHROMEDRIVER_PID" ]; then
     kill $CHROMEDRIVER_PID 2>/dev/null
 fi
 
+## reCAPTCHA riacceso anche se la suite si e' interrotta ( vedi _src/_config/_115.google.php )
+rm -f var/test/recaptcha.off
+
 ## codice di uscita
 exit $CODECEPTION_EXIT_CODE
 
