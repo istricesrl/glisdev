@@ -120,6 +120,13 @@ caratteri ): **non si copia mai nel `READ.md` e non si consegna mai a nessuno co
 05/10/2026 un hash è stato mandato al cliente come password di root. Se la password in chiaro non è
 nel `READ.md`, **se ne genera una nuova** ( `password_hash()` di PHP ), si scrive l'hash in `shadow.json`
 di dev e stable ( copia del vecchio in `var/` prima ), e la password in chiaro va nel `READ.md`; come si usano per le prove è più sotto, in *Le prove sull'applicazione le fa Claude*.
+⚠ **TASSATIVO: chi cambia una password aggiorna il `READ.md` nello stesso turno**, nella sezione
+dell'accesso all'applicazione ( o in quella del servizio toccato: DB, SSH, Adminer ). Lo si fa **prima di
+qualunque altra cosa**, anche quando si tratta di una rotazione di sicurezza, e **per ogni installazione**
+se dev e stable divergono, scrivendo su quali vale. Poi si **prova il login** con la password appena
+scritta: se non entra, il `READ.md` è sbagliato. Regola di Fabio del 06/10/2026: il 04/10 la password di
+root di un dev è stata ruotata senza scriverla, e per due giorni nessuno è più potuto entrare nel proprio
+gestionale.
 
 ⚠ **Chiudere una voce sono tre gesti nello stesso turno**: marcatore `[v]` o `[x]`, trasloco nel
 `DONE.md` con com'è andata e perché, e — se il cliente la vede o l'aspettava — la stessa riga nel
