@@ -1079,12 +1079,14 @@ CREATE OR REPLACE VIEW `audio_view` AS
 
 -- badge_view
 -- tipologia: tabella gestita
-CREATE OR REPLACE VIEW badge_view AS
+CREATE OR REPLACE VIEW `badge_view` AS
 	SELECT
 		badge.id,
-		badge.nome,
+		badge.id_tipologia,
+		tipologie_badge.nome AS tipologia,
 		badge.codice,
-		badge.rfid,
+		badge.nome,
+		badge.id_anagrafica,
 		concat_ws(
 			' ',
 			anagrafica.codice,
@@ -1096,24 +1098,36 @@ CREATE OR REPLACE VIEW badge_view AS
 				''
 			)
 		) AS anagrafica,
-		concat_ws( 
-			' | ', 
+		badge.id_contratto,
+		contratti.nome AS contratto,
+		badge.rfid,
+		badge.note,
+		badge.id_account_inserimento,
+		badge.id_account_aggiornamento,
+		concat_ws(
+			' | ',
 			lpad( badge.id, 8, 0),
 			coalesce( badge.codice, badge.rfid, badge.nome ),
-			concat_ws(
-				' ',
-				anagrafica.codice,
-				coalesce(
-					anagrafica.soprannome,
-					anagrafica.denominazione,
-					concat_ws(' ', coalesce( anagrafica.cognome, ''),
-					coalesce( anagrafica.nome, '') ),
-					'NON ASSEGNATO'
+			if(
+				badge.id_anagrafica IS NULL,
+				'NON ASSEGNATO',
+				concat_ws(
+					' ',
+					anagrafica.codice,
+					coalesce(
+						anagrafica.soprannome,
+						anagrafica.denominazione,
+						concat_ws(' ', coalesce( anagrafica.cognome, ''),
+						coalesce( anagrafica.nome, '') ),
+						''
+					)
 				)
 			)
 		) AS __label__
 	FROM badge
-	LEFT JOIN anagrafica ON anagrafica.id_badge = badge.id
+		LEFT JOIN tipologie_badge ON tipologie_badge.id = badge.id_tipologia
+		LEFT JOIN anagrafica ON anagrafica.id = badge.id_anagrafica
+		LEFT JOIN contratti ON contratti.id = badge.id_contratto
 ;
 
 -- | 090000002301

@@ -825,20 +825,32 @@ CREATE TABLE IF NOT EXISTS `audio` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i badge
+-- funzione: contiene i badge, cioè i dispositivi di identificazione ( tesserini, chiavette RFID e simili )
 --
-CREATE TABLE IF NOT EXISTS `badge` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `rfid` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- un badge è un dispositivo, fisico o digitale, che identifica chi lo porta; si gestisce col modulo dei badge e
+-- serve per i controlli di accesso e per gli scenari di automazione e domotica; il tipo di dispositivo è indicato
+-- dalla tipologia, da tipologie_badge
+--
+-- NOTA un'anagrafica può essere titolare di più badge, e a un contratto possono essere associati più badge: per
+-- questo il legame sta qui, nelle chiavi esterne id_*, come per le tabelle dei media, e non in una colonna id_badge
+-- delle tabelle collegate; anagrafica.id_badge e contratti.id_badge escono con la revisione dello schema canonico
+--
+-- NOTA le chiavi esterne verso anagrafica e contratti sono SET NULL e non CASCADE come per i media: il badge è un
+-- oggetto a sé, e se il titolare o il contratto vengono cancellati resta, non assegnato
+--
+CREATE TABLE IF NOT EXISTS `badge` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del badge
+  `codice` char(32) DEFAULT NULL,                                 -- codice del badge, unico per tipologia
+  `nome` char(255) DEFAULT NULL,                                  -- nome del badge
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica titolare del badge
+  `id_contratto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contratto a cui è associato il badge
+  `rfid` char(32) DEFAULT NULL,                                   -- codice RFID del badge, unico
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000002300

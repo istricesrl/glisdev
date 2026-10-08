@@ -476,15 +476,16 @@ ALTER TABLE `audio` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `badge`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `indice_codice` (`codice`), 
-	ADD UNIQUE KEY `unica` (`rfid`), 
-	ADD UNIQUE KEY `codice` (`id_tipologia`, `codice`), 
-	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD UNIQUE KEY `unica` (`rfid`),
+	ADD UNIQUE KEY `unica_codice` (`id_tipologia`,`codice`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `codice` (`codice`),
 	ADD KEY `nome` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_contratto`, `codice`, `rfid`,`nome`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_anagrafica`,`id_contratto`,`rfid`);
 
 -- | 030000002251
 
