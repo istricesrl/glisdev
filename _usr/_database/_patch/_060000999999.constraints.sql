@@ -830,7 +830,7 @@ ALTER TABLE `documenti`
 -- documenti_articoli
 ALTER TABLE `documenti_articoli`
     ADD CONSTRAINT `documenti_articoli_ibfk_01_nofollow`      FOREIGN KEY (`id_genitore`) REFERENCES `documenti_articoli` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-    ADD CONSTRAINT `documenti_articoli_ibfk_02_nofollow`      FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_documenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `documenti_articoli_ibfk_02_nofollow`      FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_documenti_articoli` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `documenti_articoli_ibfk_03_nofollow`      FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `documenti_articoli_ibfk_04_nofollow`      FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `documenti_articoli_ibfk_05_nofollow`      FOREIGN KEY (`id_destinatario`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -1266,7 +1266,7 @@ ALTER TABLE `mastri`
 -- mastri_articoli
 ALTER TABLE `mastri_articoli`
     ADD CONSTRAINT `mastri_articoli_ibfk_01_nofollow`                       FOREIGN KEY (`id_mastro`) REFERENCES `mastri` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `mastri_articoli_ibfk_02_nofollow`                       FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `mastri_articoli_ibfk_02`                                FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `mastri_articoli_ibfk_03_nofollow`                       FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mastri_articoli_ibfk_98_nofollow`                       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mastri_articoli_ibfk_99_nofollow`                       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
@@ -1275,7 +1275,7 @@ ALTER TABLE `mastri_articoli`
 
 -- mastri_tipologie_veicoli
 ALTER TABLE `mastri_tipologie_veicoli`
-    ADD CONSTRAINT `mastri_tipologie_veicoli_ibfk_01_nofollow`              FOREIGN KEY (`id_mastro`) REFERENCES `mastri` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `mastri_tipologie_veicoli_ibfk_01`                       FOREIGN KEY (`id_mastro`) REFERENCES `mastri` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `mastri_tipologie_veicoli_ibfk_02_nofollow`              FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_veicoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `mastri_tipologie_veicoli_ibfk_98_nofollow`              FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mastri_tipologie_veicoli_ibfk_99_nofollow`              FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

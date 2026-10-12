@@ -47,6 +47,29 @@
             $( box ).prop( 'required', true );
         }
 
+        /*
+         * IL REQUIRED DEL BOX NON BASTA ( 09/10/2026 )
+         *
+         * Il valore che parte col form e' quello del campo nascosto, ma il required sta sul box
+         * visibile, e il browser controlla solo che il box non sia vuoto. Basta scrivere qualcosa
+         * senza sceglierlo dall'elenco - il keyup svuota il campo nascosto - e il form parte
+         * senza valore; lo stesso quando si svuota il box e il focusout ci rimette l'etichetta
+         * del valore di prima. E' cosi' che il 29/09 su Lughese una riga d'offerta si e' salvata
+         * senza documento in un modulo che lo dichiarava obbligatorio.
+         *
+         * Il box si dichiara quindi non valido quando ha del testo e il campo nascosto e' vuoto.
+         * Resta un controllo lato client: il rifiuto vero lo deve fare il controller.
+         */
+        var verifica = function() {
+            if( $( select ).attr( 'data-required' ) == 'true' && $( box ).length ) {
+                if( $( box ).val() != '' && ( $( select ).val() == '' || $( select ).val() === null ) ) {
+                    $( box )[0].setCustomValidity( 'scegliere un elemento dall\'elenco' );
+                } else {
+                    $( box )[0].setCustomValidity( '' );
+                }
+            }
+        };
+
         // prelevo il valore corrente
         // NOTA perché .text() e non .html()?
         var current = $( select ).find( 'option:selected' ).text().trim();
@@ -74,6 +97,7 @@
                 if( $( box ).val() == ''){
                     $( box ).val( $( select ).attr( 'placeholder-api' ) );
                 }
+                verifica();
               });
         /* ...fin qui era commentato, perché? */
         } else {
@@ -91,7 +115,8 @@
          */
         var api = $( select ).attr( 'populate-api' );
 
-        if( current != '' && typeof api !== 'undefined' && api != '' ) {
+        // su una <select> senza niente di scelto val() e' null, non '': anche quello e' "niente da ripescare"
+        if( current != null && current != '' && typeof api !== 'undefined' && api != '' ) {
             // alert( 'prelevo #' + current + ' da ' + api );
             console.log( 'prelevo #' + current + ' da ' + api );
             /*
@@ -139,6 +164,18 @@
                         console.log( data );
                         box.val( data.__label__ );
                         $( select ).val( current );
+                        /*
+                         * SU UNA <select> L'ETICHETTA VA ANCHE NELL'<option>
+                         *
+                         * Una <select> con populate-api porta in pagina solo l'<option> del valore
+                         * gia' scelto, senza testo: e' il modo di non spedire migliaia di opzioni
+                         * ( i 7.974 comuni facevano pesare 1,88 MB una pagina di donazione ). Chi
+                         * legge poi option:selected per sapere cosa e' scelto deve trovarci
+                         * l'etichetta, non il vuoto.
+                         */
+                        if( $( select ).is( 'select' ) ) {
+                            $( select ).find( 'option:selected' ).text( data.__label__ );
+                        }
                     } else {
                         box.val( current );
                         console.error( 'selectbox ' + base_id + ': /api/' + api + ' non ha restituito __label__ per ' + current + ', resta il valore' );
@@ -182,6 +219,9 @@
             var force = false;
             $( select ).val( '' );
         }
+
+        // il campo nascosto e' stato svuotato: il box non vale finche' non si sceglie
+        verifica();
 
         // debug
         console.log( 'valore della select al click -> ' + $( select ).val() );
@@ -283,12 +323,24 @@
                                     var opzione = $( li ).html();
                                     var valore = $( li ).attr( 'value' );
                                     $( li ).bind( 'click', function() {
+                                        /*
+                                         * SU UNA <select> L'<option> SCELTA VA CREATA
+                                         *
+                                         * Un input hidden accetta qualunque valore, una <select> solo
+                                         * quelli che ha fra le sue <option>: senza questa riga la scelta
+                                         * fatta dalla lista dell'API la lasciava vuota, e il form partiva
+                                         * senza il campo.
+                                         */
+                                        if( $( select ).is( 'select' ) && $( select ).find( 'option' ).filter( function() { return $( this ).val() == valore; } ).length == 0 ) {
+                                            $( select ).append( new Option( $.parseHTML( opzione )[0].nodeValue, valore ) );
+                                        }
                                         $( select ).val( valore );
                                         $( box ).val( $.parseHTML( opzione )[0].nodeValue );
                                         $( box ).addClass( 'combobox-base-background' );
                                         $( box ).removeClass( 'combobox-active-background' );
                                         // $( box ).css( 'background-color', '#ffffff' );
                                         $( lista ).hide();
+                                        verifica();
                                         // console.log( 'valore della select al click -> ' + $( select ).val() );
                                     });
                                 });
@@ -352,6 +404,7 @@
                     $( box ).removeClass( 'combobox-active-background' );
                     // $( box ).css( 'background-color', '#ffffff' );
                     $( lista ).hide();
+                    verifica();
                     // console.log( 'valore della select al click -> ' + $( select ).val() );
                 });
                 // console.log( 'bind a ' + valore + ' di ' + opzione );
