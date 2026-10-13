@@ -1120,15 +1120,19 @@ ALTER TABLE `consensi_moduli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000006500
 
 -- consensi_contatti
+-- tipologia: tabella gestita
+-- verifica: 2026-10-13 punto 6, riga 51
 ALTER TABLE `consensi_contatti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_consenso`, `id_contatto`, `modulo`), 
-	ADD KEY `id_consenso` (`id_consenso`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_contatto`,`id_consenso`,`modulo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_contatto` (`id_contatto`),
+	ADD KEY `id_consenso` (`id_consenso`),
 	ADD KEY `modulo` (`modulo`),
+	ADD KEY `se_prestato` (`se_prestato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_consenso`, `id_contatto`, `modulo`);
+	ADD KEY `indice` (`id`,`ordine`,`id_contatto`,`id_consenso`,`modulo`,`se_prestato`);
 
 -- | 030000006501
 

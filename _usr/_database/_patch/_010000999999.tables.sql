@@ -1854,26 +1854,32 @@ CREATE TABLE IF NOT EXISTS `consensi_moduli` (                --
 
 -- consensi_contatti
 -- tipologia: tabella gestita
--- rango: tabella secondaria
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: specifica quali consensi sono stati acquisiti per ogni contatto acquisito
--- 
--- questa tabella contiene i consensi che sono stati acquisiti per ogni contatto acquisito, e va a integrare le informazioni già
--- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
--- ulteriori approfondimenti
+-- funzione: collega i contatti ( le ricezioni dei moduli contatti ) ai consensi prestati
 --
-CREATE TABLE IF NOT EXISTS `consensi_contatti` (                              --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_consenso` bigint(20) DEFAULT NULL,                         -- chiave esterna per il consenso
-  `id_contatto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contatto
-  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
-  `valore` int(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,                                   -- note sul consenso
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- questa tabella registra, per ogni contatto ricevuto da un modulo contatti, i consensi ( privacy, marketing... )
+-- prestati da chi ha compilato il modulo; e' la prova legale del consenso, quindi le righe si scrivono sempre e non
+-- si cancellano a mano. La scrive associazioneConsensiContatto() di _src/_lib/_privacy.utils.php.
+--
+-- NOTA: modulo e' la chiave del modulo contatti su cui e' stato prestato il consenso, la stessa che finisce in
+-- contatti.modulo; la si tiene qui perche' fa parte della prova. La chiave unica ( id_contatto, id_consenso, modulo )
+-- impedisce di registrare due volte lo stesso consenso per lo stesso contatto.
+--
+CREATE TABLE IF NOT EXISTS `consensi_contatti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_contatto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il contatto su cui e' stato prestato il consenso
+  `id_consenso` bigint(20) DEFAULT NULL,                        -- chiave esterna per il consenso
+  `modulo` char(32) DEFAULT NULL,                               -- chiave del modulo contatti su cui e' stato prestato il consenso
+  `note` text DEFAULT NULL,                                     -- note sul consenso
+  `se_prestato` tinyint(1) DEFAULT NULL,                        -- flag consenso prestato
+  `timestamp_consenso` int(11) DEFAULT NULL,                    -- timestamp di prestazione del consenso
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000006700
 

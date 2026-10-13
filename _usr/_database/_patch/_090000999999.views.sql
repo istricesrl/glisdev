@@ -1954,25 +1954,24 @@ CREATE OR REPLACE VIEW `consensi_moduli_view` AS
 -- | 090000006500
 
 -- consensi_contatti_view
-CREATE OR REPLACE VIEW `consensi_contatti_view` AS            --
-  SELECT                                                      --
-	consensi_contatti.id,                                       --
-    consensi_contatti.id_consenso,                              --
-	consensi.nome AS consenso,                                            --
-	consensi_contatti.id_contatto,                              --
-    consensi_contatti.modulo,                                   --
-	consensi_contatti.valore,
-    consensi_contatti.id_account_inserimento,                   --
-    consensi_contatti.id_account_aggiornamento,                 --
-    concat(                                                   --
-      'consenso ',                                            --
-      consensi.nome,                            --
-      ' per modulo ',                                         --
-      consensi_contatti.modulo                                  --
-    ) AS __label__                                            -- etichetta per le tendine e le liste
-  FROM consensi_contatti                                        --
-    INNER JOIN consensi ON consensi.id = consensi_contatti.id_consenso	--
-;                                                             --
+-- tipologia: tabella gestita
+-- verifica: 2026-10-13 punto 6, riga 51
+CREATE OR REPLACE VIEW `consensi_contatti_view` AS
+	SELECT
+		consensi_contatti.id,
+		consensi_contatti.ordine,
+		consensi_contatti.id_contatto,
+		consensi_contatti.id_consenso,
+		consensi.nome AS consenso,
+		consensi_contatti.modulo,
+		consensi_contatti.note,
+		consensi_contatti.se_prestato,
+		consensi_contatti.timestamp_consenso,
+		consensi_contatti.id_account_inserimento,
+		consensi_contatti.id_account_aggiornamento,
+		concat( 'consenso ', coalesce( consensi.nome, consensi_contatti.id_consenso ), ' contatto #', coalesce( consensi_contatti.id_contatto, '' ), ' modulo ', coalesce( consensi_contatti.modulo, '' ) ) AS __label__
+	FROM consensi_contatti
+		LEFT JOIN consensi ON consensi.id = consensi_contatti.id_consenso;
 
 -- | 090000006700
 
