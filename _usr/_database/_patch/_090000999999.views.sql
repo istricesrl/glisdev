@@ -756,6 +756,8 @@ CREATE OR REPLACE VIEW `asset_view` AS
 		asset.id_genitore,
 		asset.id_tipologia,
 		tipologie_asset_path( asset.id_tipologia ) AS tipologia,
+		asset.id_condizione,
+		condizioni.nome AS condizione,
 		asset.codice,
 		asset.nome,
 		asset.hostname,
@@ -768,6 +770,7 @@ CREATE OR REPLACE VIEW `asset_view` AS
 		asset.timestamp_aggiornamento,
 		concat_ws( ' ', concat( '#', asset.codice ), asset_path( asset.id ) ) AS __label__
 	FROM asset
+		LEFT JOIN condizioni ON condizioni.id = asset.id_condizione
 ;
 
 -- | 090000001800
@@ -1816,8 +1819,6 @@ CREATE OR REPLACE VIEW classi_energetiche_view AS
 -- | 090000005101
 
 -- colori_view
--- tipologia: tabella di supporto
--- verifica: 2021-06-03 15:05 Fabio Mosti
 CREATE OR REPLACE VIEW colori_view AS
 	SELECT
 		colori.id,
@@ -1833,6 +1834,7 @@ CREATE OR REPLACE VIEW colori_view AS
 		colori.m,
 		colori.y,
 		colori.k,
+		colori.css,
 		colori_path( colori.id ) AS __label__
 	FROM colori
 ;
@@ -1873,71 +1875,81 @@ CREATE OR REPLACE VIEW comuni_view AS                         --
 -- | 090000006000
 
 -- condizioni_pagamento_view
-CREATE OR REPLACE VIEW condizioni_pagamento_view AS
+-- tipologia: tabella standard
+-- funzione: espone le condizioni di pagamento con l'etichetta codice - nome per le tendine dei documenti
+CREATE OR REPLACE VIEW `condizioni_pagamento_view` AS
 	SELECT
 		condizioni_pagamento.id,
 		condizioni_pagamento.codice,
 		condizioni_pagamento.nome,
 		condizioni_pagamento.note,
-		concat( condizioni_pagamento.codice, ' - ', condizioni_pagamento.nome) AS __label__
-	FROM
-		condizioni_pagamento
+		condizioni_pagamento.id_account_inserimento,
+		condizioni_pagamento.id_account_aggiornamento,
+		concat( condizioni_pagamento.codice, ' - ', condizioni_pagamento.nome ) AS __label__
+	FROM condizioni_pagamento
 ;
 
 -- | 090000006001
 
 -- condizioni_view
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
 CREATE OR REPLACE VIEW condizioni_view AS
 	SELECT
 		condizioni.id,
 		condizioni.nome,
-		condizioni.se_immobili,
+		condizioni.se_asset,
 		condizioni.se_catalogo,
+		condizioni.se_immobili,
+		condizioni.id_account_inserimento,
+		condizioni.id_account_aggiornamento,
 		condizioni.nome AS __label__
-	FROM
-		condizioni
+	FROM condizioni
 ;
 
 -- | 090000006200
 
 -- consensi_view
-CREATE OR REPLACE VIEW `consensi_view` AS                     --   
-  SELECT                                                      --  
-    consensi.id,                                              --
-    consensi.nome,                                            --
-    consensi.id_account_inserimento,                          --
-    consensi.id_account_aggiornamento,                        --    
-    consensi.nome AS __label__                                -- etichetta per le tendine e le liste
-  FROM consensi                                               --
-;                                                             --
+-- tipologia: tabella standard
+-- funzione: espone i consensi con il nome come etichetta per le tendine dei form privacy
+CREATE OR REPLACE VIEW `consensi_view` AS
+	SELECT
+		consensi.id,
+		consensi.codice,
+		consensi.nome,
+		consensi.note,
+		consensi.id_account_inserimento,
+		consensi.id_account_aggiornamento,
+		consensi.nome AS __label__
+	FROM consensi
+;
 
 -- | 090000006300
 
--- consensi_moduli
-CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
-  SELECT                                                      --
-    consensi_moduli.id,                                       --
-    consensi_moduli.id_lingua,                                --
-    consensi_moduli.id_consenso,                              --
-    consensi_moduli.modulo,                                   --
-    consensi_moduli.ordine,                                   --
-    consensi_moduli.azione,                                   --
-    consensi_moduli.nome,                                     --
-    consensi_moduli.informativa,                              --
-    consensi_moduli.pagina,                                   --
-    consensi_moduli.se_richiesto,                             --
-    consensi_moduli.id_account_inserimento,                   --
-    consensi_moduli.id_account_aggiornamento,                 --
-    concat(                                                   --
-      'consenso ',                                            --
-      consensi_moduli.id_consenso,                            --
-      ' per modulo ',                                         --
-      consensi_moduli.modulo                                  --
-    ) AS __label__                                            -- etichetta per le tendine e le liste
-  FROM consensi_moduli                                        --
-;                                                             --
+-- consensi_moduli_view
+-- tipologia: tabella assistita
+-- funzione: espone i consensi chiesti dai moduli col codice e il nome del consenso e la lingua
+CREATE OR REPLACE VIEW `consensi_moduli_view` AS
+	SELECT
+		consensi_moduli.id,
+		consensi_moduli.ordine,
+		consensi_moduli.nome,
+		consensi_moduli.id_lingua,
+		lingue.ietf AS lingua,
+		consensi_moduli.id_consenso,
+		consensi.codice AS codice_consenso,
+		consensi.nome AS consenso,
+		consensi_moduli.modulo,
+		consensi_moduli.azione,
+		consensi_moduli.informativa,
+		consensi_moduli.pagina,
+		consensi_moduli.note,
+		consensi_moduli.se_richiesto,
+		consensi_moduli.id_account_inserimento,
+		consensi_moduli.id_account_aggiornamento,
+		concat_ws( ' ', consensi_moduli.modulo, lingue.ietf, consensi.nome ) AS __label__
+	FROM consensi_moduli
+		LEFT JOIN consensi ON consensi.id = consensi_moduli.id_consenso
+		LEFT JOIN lingue ON lingue.id = consensi_moduli.id_lingua
+;
 
 -- | 090000006500
 
@@ -4151,6 +4163,8 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 				''
 			)
 		) AS articolo,
+		matricole.id_condizione,
+		condizioni.nome AS condizione,
 		matricole.matricola,
 		matricole.data_scadenza,
 		matricole.nome,
@@ -4197,6 +4211,7 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN condizioni ON condizioni.id = matricole.id_condizione
 ;
 
 -- | 090000021600
