@@ -267,7 +267,10 @@ Se da un progetto cliente serve correggere il framework standard, il workflow è
    `develop`) con la procedura della skill `riallineamento`: **si applicano gli hunk, mai il file intero**,
    con `stat` degli inode prima e dopo ( glisweb e glisdev condividono i file ), `php -l`/`bash -n`,
    permessi su entrambi, un commit che spiega il perché e cita il deploy d'origine, push su `develop`. Se
-   la modifica non è generalizzabile, non sale: si sposta in `src/`/`mod/` del progetto. Se tocca
+   la modifica non è generalizzabile, non sale: si sposta in `src/`/`mod/` del progetto. Se si promuove
+   codice che nel progetto vive in un `.add.php`, **lo si toglie dal progetto nello stesso gesto**: il
+   `.add.php` si carica in più dello standard, e al primo aggiornamento ogni pagina va in
+   `Cannot redeclare` ( vedi `_claude.framework.md`, sotto la tabella degli override ). Se tocca
    autenticazione, permessi, pagamenti o cancellazioni, o toglie righe che a monte esistono, si chiede
    prima di promuovere.
 4. **Ridistribuzione subito dopo il push**: `./dev/_src/_sh/_gw.upgrade.sh "$(cat update.branch.conf)"`
@@ -549,6 +552,14 @@ Claude**, e non chiude con "aprila tu dal browser".
   dimensione vogliono dire che sono tutte la stessa pagina d'errore**.
 - **Si prova in DEV.** In PROD si apre in sola lettura, e una prova che scrive dati si fa solo se Fabio
   la chiede.
+- ⚠ **"Non ho un account per provare" non è mai una risposta** ( Fabio, 14/10/2026, dopo averlo ripetuto
+  troppe volte ). L'ordine è fisso: **1)** si legge il `READ.md` della root del deploy, *Accessi e
+  credenziali*; **2)** si prova il login **nell'ambiente che serve**: un account può entrare in DEV e non in
+  PROD ( quelli di `account` stanno nel database di ciascun ambiente, solo quelli dello `shadow.json` sono
+  uguali dappertutto se l'hash è lo stesso ); **3)** se non c'è o non entra, **lo si crea** — hash in
+  `shadow.json` di dev e stable come sopra, oppure una riga in `account` col gruppo giusto — e lo si
+  **scrive subito nel `READ.md`**, con l'ambiente in cui vale. Solo dopo si chiude, e si chiude
+  **dopo aver provato**: una verifica rinviata a Fabio "perché mancava l'account" è un lavoro lasciato a metà.
 
 ### ⚠ TASSATIVO: applicazione e test sempre allineati
 
