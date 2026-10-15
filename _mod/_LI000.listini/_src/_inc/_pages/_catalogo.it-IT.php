@@ -75,7 +75,7 @@
             'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.view' )
         );
 
-    // geatione listini vendita
+    // gestione listini vendita
     $p['catalogo.listini.vendita.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo listini vendita form' ),
@@ -85,9 +85,22 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.listini.vendita.form',
+                                                            'catalogo.listini.vendita.form.prezzi',
                                                             'catalogo.listini.vendita.form.archiviazione',
                                                             'catalogo.listini.vendita.form.stampe',
                                                             'catalogo.listini.vendita.form.tools' ) )
+    );
+
+    // catalogo listini vendita form prezzi
+    $p['catalogo.listini.vendita.form.prezzi'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo listini vendita form prezzi' ),
+        'h1'                => array( $l        => 'prezzi' ),
+        'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.listini.vendita.form.prezzi.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.prezzi.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.listini.vendita.form' )
     );
 
     // catalogo listini vendita form archiviazione
