@@ -204,7 +204,7 @@ le trappole note. Il fatto che GlisWeb ripeta ovunque gli stessi schemi lo rende
 particolarmente favorevole: un assistente che ha capito un modulo sa scriverne un altro.
 
 **Integrare l'AI nelle applicazioni: solo le basi.** C'è la configurazione per ambiente delle
-credenziali OpenAI ( e su glisweb un esempio di chiamata alle API in `_usr/_examples/_openai/`, che
+credenziali OpenAI ( e un esempio di chiamata alle API in `_usr/_examples/_lab/_openai.01.php`, che
 usa un modello ormai dismesso da OpenAI ), ma nessuna funzione del CMS o dei moduli usa ancora un
 modello linguistico. Chi vuole integrare l'AI in un progetto ha l'infrastruttura per le chiamate REST, non una
 funzione pronta.
@@ -319,7 +319,7 @@ porta al CMS.
 | **manuale utente**: le schermate e le operazioni quotidiane | [`_usr/_docs/_user/`](https://github.com/istricesrl/glisdev/tree/develop/_usr/_docs/_user/) |
 | **domande frequenti** e glossario | [`_usr/_docs/_read/910.faq.md`](https://github.com/istricesrl/glisdev/blob/develop/_usr/_docs/_read/910.faq.md), [`950.glossario.md`](https://github.com/istricesrl/glisdev/blob/develop/_usr/_docs/_read/950.glossario.md) |
 | documentazione dei singoli moduli e template | il `READ.md` di ogni cartella in `_mod/` e `_src/_tpl/` |
-| **esempi** di codice per il nucleo e le librerie ( su glisweb ce ne sono per una trentina di servizi ) | [`_usr/_examples/`](https://github.com/istricesrl/glisdev/tree/develop/_usr/_examples/) |
+| **esempi** di codice per il nucleo e le librerie ( e per una trentina di servizi e moduli ) | [`_usr/_examples/`](https://github.com/istricesrl/glisdev/tree/develop/_usr/_examples/) |
 | dove si legge tutto questo via web, e come si genera | [`READ.md`](https://github.com/istricesrl/glisdev/blob/develop/READ.md) |
 
 I manuali sono scritti in markdown e si generano in HTML e PDF con `_src/_sh/_docs.build.sh --all`.
