@@ -60,11 +60,27 @@ if [ "$SUITE" = "tutte" ]; then
     SUITE="unit backend frontend"
 fi
 
+## porta di chromedriver
+# la prima libera da 9515 in su: con una porta fissa due deploy che fanno girare i test insieme si pestano i
+# piedi, perche' il secondo chromedriver non parte e il primo, a fine giro, spegne quello che usano tutti e due;
+# i .suite.yml la leggono come %GLISWEB_CHROMEDRIVER_PORT%
+PORTA=9515
+while (echo > /dev/tcp/127.0.0.1/$PORTA) 2>/dev/null; do
+    PORTA=$(( PORTA + 1 ))
+done
+
+## porta del finto REST
+# il finto REST dei test ( _usr/_test/_rest.mock.php ) gira su 127.0.0.1, alla prima porta libera da 8790 in su
+PORTA_REST=8790
+while (echo > /dev/tcp/127.0.0.1/$PORTA_REST) 2>/dev/null; do
+    PORTA_REST=$(( PORTA_REST + 1 ))
+done
+
 ## esecuzione come www-data se lanciato da root
 if [ "$(id -u)" = "0" ]; then
-    ESEGUI="sudo -u www-data env HOME=$(pwd)/var/test"
+    ESEGUI="sudo -u www-data env HOME=$(pwd)/var/test GLISWEB_CHROMEDRIVER_PORT=$PORTA"
 else
-    ESEGUI="env HOME=$(pwd)/var/test"
+    ESEGUI="env HOME=$(pwd)/var/test GLISWEB_CHROMEDRIVER_PORT=$PORTA"
 fi
 
 ## PHP col bootstrap del framework
@@ -133,6 +149,13 @@ for s in $SUITE; do
 
 done
 
+## finto REST
+# la cartella delle risposte e delle richieste riparte vuota, e var/test/rest.mock con la porta e' l'interruttore che
+# _src/_config/_595.rest.php legge per deviare le chiamate di restCall() ( vedi _src/_config/_590.rest.php )
+rm -rf var/test/rest.mock.d
+mkdir -p var/test/rest.mock.d/risposte
+echo $PORTA_REST > var/test/rest.mock
+
 ## permessi
 if [ "$(id -u)" = "0" ]; then
     chown -R www-data:www-data var/test var/spool/test
@@ -140,10 +163,20 @@ fi
 
 ## browser per le suite che ne hanno bisogno
 if [[ " $SUITE " =~ " backend " || " $SUITE " =~ " frontend " ]]; then
-    $ESEGUI chromedriver --port=9515 > var/test/output/chromedriver.log 2>&1 &
+    $ESEGUI chromedriver --port=$PORTA > var/test/output/chromedriver.log 2>&1 &
     CHROMEDRIVER_PID=$!
     sleep 1
 fi
+
+## avvio del finto REST
+# l'output del server integrato non si tiene, perche' riporta gli URL con la query e quindi anche le chiavi che ci
+# viaggiano; le richieste, con le credenziali mascherate, le registra il finto REST in var/test/rest.mock.d/
+$ESEGUI php -S 127.0.0.1:$PORTA_REST -t var/test/rest.mock.d _usr/_test/_rest.mock.php > /dev/null 2>&1 &
+REST_MOCK_PID=$!
+for i in $(seq 30); do
+    (echo > /dev/tcp/127.0.0.1/$PORTA_REST) 2>/dev/null && break
+    sleep 0.1
+done
 
 ## generazione degli actor
 $ESEGUI $CODECEPT build -c _usr/_test/codeception.yml --no-ansi > /dev/null
@@ -152,6 +185,7 @@ CODECEPTION_EXIT_CODE=$?
 ## esecuzione delle suite
 if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
     for s in $SUITE; do
+        touch var/test/rest.mock
         $ESEGUI $CODECEPT run $s -c _usr/_test/codeception.yml --no-colors --steps --html $s.report.html --xml $s.report.xml "$@" 2>&1 | tee var/test/output/$s.log
         ESITO=${PIPESTATUS[0]}
         [ "$ESITO" = "0" ] || CODECEPTION_EXIT_CODE=$ESITO
@@ -163,6 +197,11 @@ if [ -n "$CHROMEDRIVER_PID" ]; then
     pkill -P $CHROMEDRIVER_PID 2>/dev/null
     kill $CHROMEDRIVER_PID 2>/dev/null
 fi
+
+## arresto del finto REST
+pkill -P $REST_MOCK_PID 2>/dev/null
+kill $REST_MOCK_PID 2>/dev/null
+rm -f var/test/rest.mock
 
 ## reCAPTCHA riacceso anche se la suite si e' interrotta ( vedi _src/_config/_115.google.php )
 rm -f var/test/recaptcha.off
@@ -201,6 +240,10 @@ if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
 else
     ESITO="falliti ( codice $CODECEPTION_EXIT_CODE )"
 fi
+SALTATI=$(awk '
+    /^Signature: / { firma = $2 }
+    /I mark test (skipped|incomplete) / { m = $0; sub( /^.*I mark test (skipped|incomplete) "?/, "", m ); sub( /"$/, "", m ); printf( "- `%s`: %s\n", firma, m ) }
+' "$ESECUZIONE/test.log" 2>/dev/null)
 {
     echo "# esecuzione del $DATA"
     echo
@@ -248,6 +291,18 @@ fi
         done
         grep -q "^esecuzione fallita prima dei test" "$ESECUZIONE/errori.log" && echo "- $(cat "$ESECUZIONE/errori.log")"
     fi
+    # i test saltati non fanno fallire l'esecuzione, ma sono test che non hanno girato: quasi sempre al deploy
+    # manca una risorsa ( una configurazione, un segreto, un servizio ), e la cosa giusta e' dargliela; il
+    # motivo non sta nel report JUnit, che ha solo <skipped/>, quindi si prende dal log, dove con --steps
+    # Codeception scrive la firma del test e poi la riga "I mark test skipped" col messaggio
+    if [ -n "$SALTATI" ]; then
+        echo
+        echo "## saltati"
+        echo
+        echo "Non hanno girato: vanno fatti girare dando al deploy le risorse che chiedono."
+        echo
+        echo "$SALTATI"
+    fi
 } > "$ESECUZIONE/esito.md"
 [ "$(id -u)" = "0" ] && chown -R www-data:www-data "$ESECUZIONE"
 
@@ -258,6 +313,14 @@ fi
 
 echo
 echo "risultati in $ESECUZIONE/"
+
+## avviso dei test saltati
+# non cambia il codice di uscita, perche' un test saltato non e' un test fallito, ma non deve passare inosservato
+if [ -n "$SALTATI" ]; then
+    echo >&2
+    echo "ATTENZIONE: $(echo "$SALTATI" | wc -l) test saltati, che vanno fatti girare dando al deploy le risorse che chiedono:" >&2
+    echo "$SALTATI" | sed 's/`//g' >&2
+fi
 
 ## codice di uscita
 exit $CODECEPTION_EXIT_CODE
