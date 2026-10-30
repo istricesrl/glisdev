@@ -71,7 +71,7 @@
      * ---------------------------------|---------------------------------------------------------------
      * logger()                         | core
      * fullPath()                       | _src/_lib/_filesystem.tools.php
-     * array2csvFile()                  | _src/_lib/_csv.tools.php
+     * matrix2csvFile()                 | _src/_lib/_csv.tools.php
      * PhpOffice\PhpSpreadsheet         | phpoffice/phpspreadsheet ( Composer )
      *
      * changelog
@@ -85,6 +85,7 @@
      * 2023-03-14       | Fabio Mosti          | aggiunta xlsNumber2mysql()
      * 2026-10-29       | Fabio Mosti          | xlsLoad(), difese contro le CVE-2026-108358/108359/108360
      * 2026-10-30       | Fabio Mosti          | documentazione
+     * 2026-10-30       | Fabio Mosti          | correzione di xls2csv() e xlsNumber2mysql()
      *
      * licenza
      * =======
@@ -191,17 +192,15 @@
     /**
      * converte il foglio attivo di un file in un file CSV
      *
-     * Questa funzione apre il file con xlsLoad(), legge il foglio attivo come matrice di valori e lo scrive in un file
-     * CSV accanto all'originale, con lo stesso nome e l'estensione `.csv` al posto di `.xlsx` o `.xls`; un CSV già
-     * esistente con quel nome viene sovrascritto. Il percorso del file può essere relativo alla root del deploy, perché
-     * viene normalizzato con fullPath(). Se il file non si può leggere restituisce false.
+     * Questa funzione apre il file con xlsLoad(), legge il foglio attivo come matrice di valori e lo scrive con
+     * matrix2csvFile() in un file CSV separato da punto e virgola, accanto all'originale: il nome è quello del file senza
+     * l'estensione `.xlsx` o `.xls`, maiuscola o minuscola, più `.csv`, e un CSV già esistente con quel nome viene
+     * sovrascritto. Un file con un'altra estensione si tiene il nome intero ( `foglio.csv` diventa `foglio.csv.csv` ),
+     * così il file di partenza non viene mai sovrascritto. Il percorso del file può essere relativo alla root del deploy,
+     * perché viene normalizzato con fullPath(). Se il file non si può leggere restituisce false.
      *
-     * TODO la chiamata ad array2csvFile() passa i parametri nell'ordine sbagliato: FILE_WRITE_OVERWRITE finisce nel
-     * separatore e `;` nelle intestazioni, quindi il CSV esce separato da `w+`. In più toArray() restituisce righe non
-     * associative, che array2csvFile() non si aspetta: la funzione giusta per una matrice è matrix2csvFile().
-     *
-     * TODO la sostituzione dell'estensione distingue le maiuscole: per un file `.XLSX` il nome del CSV resta quello del
-     * file di partenza, che viene sovrascritto.
+     * Fino al 2026-10-30 la funzione chiamava array2csvFile() coi parametri sfasati, e il CSV usciva separato da `w+`;
+     * in più l'estensione si sostituiva distinguendo le maiuscole, e un file `.XLSX` veniva sovrascritto dal suo CSV.
      *
      * @param       string      $file           il file da convertire
      *
@@ -223,10 +222,10 @@
         $arr = $xls->getActiveSheet()->toArray();
 
         // nuovo file
-        $nFile = str_replace( array( '.xlsx', '.xls' ), '.csv', $file );
+        $nFile = preg_replace( '/\.xlsx?$/i', '', $file ) . '.csv';
 
         // converto l'array in CSV
-        array2csvFile( $arr, $nFile, FILE_WRITE_OVERWRITE, ';' );
+        matrix2csvFile( $arr, $nFile, ';' );
 
         // restituisco il nome del file creato
         return $nFile;
@@ -368,29 +367,41 @@
     /**
      * converte un numero letto da una cella nel formato numerico di MySQL
      *
-     * Questa funzione è pensata per portare un numero scritto con i separatori all'italiana ( `1.234,56` ) o
-     * all'inglese ( `1,234.56` ) nella forma che MySQL accetta ( `1234.56` ): con la sola virgola la virgola diventa il
-     * punto decimale, con entrambi i separatori si toglie quello delle migliaia, cioè il primo dei due.
+     * Questa funzione porta un numero scritto con i separatori all'italiana ( `1.234,56` ) o all'inglese ( `1,234.56` )
+     * nella forma che MySQL accetta ( `1234.56` ): con la sola virgola la virgola diventa il punto decimale, con entrambi
+     * i separatori si toglie quello delle migliaia, cioè il primo dei due; un numero senza virgola resta com'è. Un
+     * valore numerico, come lo restituisce una cella di tipo numero, viene restituito come stringa e per il resto
+     * invariato.
      *
-     * TODO allo stato attuale la funzione non fa niente. Gli argomenti di strpos() sono invertiti, quindi cerca il
-     * numero dentro il separatore e non lo trova mai; e il risultato non viene restituito né scritto nel parametro, che
-     * non è passato per riferimento. La funzione restituisce sempre NULL.
+     * NOTA con un solo tipo di separatore la funzione non può capire se è quello delle migliaia: `1.234` resta `1.234`, e
+     * `1,234,567` diventa `1.234.567`, che MySQL non accetta.
      *
-     * @param       string      $d              il numero letto dalla cella
+     * Fino al 2026-10-30 la funzione non faceva niente: gli argomenti di strpos() erano invertiti e il risultato non
+     * veniva restituito.
      *
-     * @return      void
+     * @param       mixed       $d              il numero letto dalla cella
+     *
+     * @return      string                      il numero nel formato di MySQL
      *
      */
     function xlsNumber2mysql( $d ) {
-        $dot = strpos( '.', $d );
-        $com = strpos( ',', $d );
-        if( ! empty( $com ) && empty( $dot ) ) {
+
+        // posizione dei separatori
+        $d = (string) $d;
+        $dot = strpos( $d, '.' );
+        $com = strpos( $d, ',' );
+
+        // la virgola diventa il punto decimale, il separatore delle migliaia sparisce
+        if( $com !== false && $dot === false ) {
             $d = str_replace( ',', '.', $d );
-        } elseif( ! empty( $com ) && ! empty( $dot ) ) {
+        } elseif( $com !== false && $dot !== false ) {
             if( $dot < $com ) {
-                $d = str_replace( ',', '.', str_replace( '.', NULL, $d ) );
+                $d = str_replace( ',', '.', str_replace( '.', '', $d ) );
             } else {
-                $d = str_replace( ',', NULL, $d );
+                $d = str_replace( ',', '', $d );
             }
         }
+
+        return $d;
+
     }
