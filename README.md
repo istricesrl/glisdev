@@ -286,8 +286,8 @@ che prevede **una ricompensa in denaro** per le segnalazioni confermate.
 MySQL/MariaDB. Su questa linea funziona anche con **Nginx** ( per esempio su CloudPanel ) e IIS,
 grazie al front controller `index.php`, che su glisweb non c'è. Gli script di
 amministrazione sono scritti per Debian e Ubuntu e su altri sistemi potrebbero non funzionare. Su
-Windows si sviluppa con XAMPP. Il framework è anche su Docker Hub ( `istricesrl/glisdev` per questa linea,
-`istricesrl/glisweb` per la stable ), e l'immagine gira su Docker e Kubernetes.
+Windows si sviluppa con XAMPP. Il framework è anche su GitHub Container Registry ( `ghcr.io/istricesrl/glisdev` per questa linea,
+`ghcr.io/istricesrl/glisweb` per la stable ), e l'immagine gira su Docker e Kubernetes.
 
 ## Come si comincia
 
