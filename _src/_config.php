@@ -1108,6 +1108,7 @@
     define( 'DIR_VAR_SPOOL_MAIL'                        , DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'                     , DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'                       , DIR_BASE . 'var/spool/print/' );
+    define( 'DIR_VAR_SPOOL_REBUILD'                     , DIR_BASE . 'var/spool/rebuild/' );
     define( 'DIR_VAR_SPOOL_SECURITY'                    , DIR_BASE . 'var/spool/security/' );
     define( 'DIR_VAR_SPOOL_SECURITY_BAN'                , DIR_BASE . 'var/spool/security/ban/' );
     define( 'DIR_VAR_SPOOL_SECURITY_GLOBAL'             , DIR_BASE . 'var/spool/security/globale/' );
@@ -1131,6 +1132,9 @@
     define( 'FILE_SECURITY_DATASERVER_TOKEN'            , DIR_BASE . 'etc/secret/dataserver.token' );
     define( 'FILE_SECURITY_GLOBAL_BANS'                 , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.txt' );
     define( 'FILE_SECURITY_GLOBAL_BANS_LOCK'            , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.lock' );
+
+    // lock dell'importazione dallo spool, che un giro del cron tiene da _740.controller.php a _750.controller.php
+    define( 'FILE_IMPORT_LOCK'                          , DIR_VAR_SPOOL_IMPORT . 'import.lock' );
 
     // file che contengono la release e la versione corrente del framework
     define( 'FILE_CURRENT_RELEASE'                      , DIR_ETC . '_current.release' );
