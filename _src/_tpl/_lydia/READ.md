@@ -30,6 +30,7 @@ account.twig                            | il modulo dell'account: dati anagrafic
 password.reset.twig                     | la reimpostazione della password in tre passaggi ( ramo `__pwreset__` )
 inc/header.twig                         | il logo
 inc/navbar.twig                         | i due menu della testata: `icons` e `main`
+inc/flags.twig                          | le bandiere del cambio lingua in coda a `icons`, con la macro `nav.flags()`, solo se il sito ha più di una lingua
 inc/categorie.twig                      | il menu `categorie` nella barra grigia
 inc/search.twig                         | la casella di ricerca, verso la pagina `ricerche.risultati`
 inc/megamenu.twig                       | il menu `mega`, solo se la pagina lo ha
@@ -48,8 +49,9 @@ inc/flags.twig                          | segnaposto per il selettore delle ling
 
 ## menu
 I menu si dichiarano in `template.menu` e le pagine ci entrano con la chiave `menu` della loro definizione:
-`icons` e `main` in testata, `categorie` nella barra grigia, `mega` sotto la barra ( il blocco compare solo se
-`page.template.menu.mega` è valorizzato ) e `sottomenu`. Su schermo stretto i due menu della testata si aprono
+`icons` e `main` in testata, `categorie` nella barra grigia ( senza voci la barra resta, con la sola ricerca, ma
+senza menu né pulsante ), `mega` sotto la barra ( il blocco compare solo se `page.template.menu.mega` è
+valorizzato ) e `sottomenu`. Su schermo stretto i due menu della testata si aprono
 con un solo pulsante, quello delle categorie e il menu esteso col proprio; il sottomenu resta sempre visibile.
 
 ## logo
