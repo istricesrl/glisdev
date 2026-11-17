@@ -37,8 +37,8 @@
 # DOPO LE PATCH riesegue i file base di procedure, viste, statiche e report se sono cambiati dall'ultima volta
 # ( impronte md5 nella tabella __canone__ ): e' una deroga voluta da Fabio il 04/11/2026 al principio "ai deploy
 # arrivano solo le patch", perche' dal 26/10 le patch non creano viste e i file base non arrivavano mai. Si saltano
-# gli oggetti che il progetto ridefinisce in usr/database/patch/, si riprova al giro dopo se qualcosa fallisce, e con
-# --fino non si ricarica niente ( lo schema resterebbe a meta' ). Dettaglio in mysqlPatchReload() di
+# gli oggetti che il progetto ridefinisce in usr/database/owned/ ( o ancora in patch/ ), si riprova al giro dopo
+# se qualcosa fallisce, e con --fino non si ricarica niente ( lo schema resterebbe a meta' ). Dettaglio in mysqlPatchReload() di
 # _src/_lib/_mysql.tools.php e in 300.database.md, *il ricaricamento dei file base*.
 #
 # PRIMA DI APPLICARE fa un dump del database nella cartella dei backup del progetto, un livello
