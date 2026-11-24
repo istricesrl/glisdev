@@ -10,7 +10,8 @@
 -- Cosa fa: crea diritti con le quattro righe e diritti_view, crea pubblicazioni_gruppi e la sua vista; sulle 38 tabelle
 -- aggiunge id_account_proprietario, id_gruppo_proprietario, id_diritto_proprietario, id_diritto_gruppo e
 -- id_diritto_altri con le KEY e le FK 92-96; aggiunge le stesse colonne, allo stesso posto della vista, alle statiche di
--- anagrafica, articoli, attivita, documenti e todo; ricrea le 38 viste.
+-- anagrafica, articoli, attivita, documenti e todo; ricrea le 38 viste, tranne le 17 che chiamano funzioni di
+-- _070000999999.procedures.sql, che restano al ricaricamento dei file base ( 24/11, vedi la 202611121259 ).
 --
 -- Cosa NON fa: il riordino delle colonne sulle tabelle ( le nuove finiscono in coda, punto 12 ); il DROP delle tabelle
 -- __acl_<entita>__ ( restano per i moduli legacy di glisweb ); il codice che legge e scrive i diritti ( TODO.md ).
@@ -857,286 +858,40 @@ ALTER TABLE `risorse`
 -- | 202611121243
 
 -- anagrafica_view_static: le colonne nuove della vista, allo stesso posto
--- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
--- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
-CALL `__patch_statiche_forma__`( 'anagrafica_view_static', 'ALTER TABLE `anagrafica_view_static`
-	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `data_archiviazione`,
-	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`' );
+-- spostata alla 202611121287 ( 24/11 ): qui la procedura delle statiche su un deploy poteva non esserci ancora ( www2 di bernispa:
+-- prima 1146 sulla statica mancante, poi 1305 sulla procedura ); un blocco di soli commenti non si applica e non si registra
 
 -- | 202611121244
 
 -- articoli_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
--- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
--- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
-CALL `__patch_statiche_forma__`( 'articoli_view_static', 'ALTER TABLE `articoli_view_static`
-	ADD COLUMN IF NOT EXISTS `id_tipologia_pubblicazione` bigint(20) DEFAULT NULL FIRST,
-	ADD COLUMN IF NOT EXISTS `pubblicazione` char(32) DEFAULT NULL AFTER `id_tipologia_pubblicazione`,
-	ADD COLUMN IF NOT EXISTS `tipologia_listino` char(64) DEFAULT NULL AFTER `pubblicazione`,
-	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `id`,
-	ADD COLUMN IF NOT EXISTS `id_prodotto` bigint(20) DEFAULT NULL AFTER `codice`,
-	ADD COLUMN IF NOT EXISTS `prodotto` char(255) DEFAULT NULL AFTER `id_prodotto`,
-	ADD COLUMN IF NOT EXISTS `ordine` int(11) DEFAULT NULL AFTER `prodotto`,
-	ADD COLUMN IF NOT EXISTS `ean` char(32) DEFAULT NULL AFTER `ordine`,
-	ADD COLUMN IF NOT EXISTS `isbn` char(32) DEFAULT NULL AFTER `ean`,
-	ADD COLUMN IF NOT EXISTS `codice_produttore` char(64) DEFAULT NULL AFTER `isbn`,
-	ADD COLUMN IF NOT EXISTS `id_reparto` bigint(20) DEFAULT NULL AFTER `codice_produttore`,
-	ADD COLUMN IF NOT EXISTS `id_taglia` bigint(20) DEFAULT NULL AFTER `id_reparto`,
-	ADD COLUMN IF NOT EXISTS `id_colore` bigint(20) DEFAULT NULL AFTER `id_taglia`,
-	ADD COLUMN IF NOT EXISTS `id_periodicita` bigint(20) DEFAULT NULL AFTER `id_colore`,
-	ADD COLUMN IF NOT EXISTS `periodicita` char(32) DEFAULT NULL AFTER `id_periodicita`,
-	ADD COLUMN IF NOT EXISTS `id_tipologia_rinnovo` bigint(20) DEFAULT NULL AFTER `periodicita`,
-	ADD COLUMN IF NOT EXISTS `tipologia_rinnovo` char(32) DEFAULT NULL AFTER `id_tipologia_rinnovo`,
-	ADD COLUMN IF NOT EXISTS `larghezza` decimal(12,5) DEFAULT NULL AFTER `tipologia_rinnovo`,
-	ADD COLUMN IF NOT EXISTS `lunghezza` decimal(12,5) DEFAULT NULL AFTER `larghezza`,
-	ADD COLUMN IF NOT EXISTS `altezza` decimal(12,5) DEFAULT NULL AFTER `lunghezza`,
-	ADD COLUMN IF NOT EXISTS `id_udm_dimensioni` bigint(20) DEFAULT NULL AFTER `altezza`,
-	ADD COLUMN IF NOT EXISTS `udm_dimensioni` char(32) DEFAULT NULL AFTER `id_udm_dimensioni`,
-	ADD COLUMN IF NOT EXISTS `peso` decimal(12,5) DEFAULT NULL AFTER `udm_dimensioni`,
-	ADD COLUMN IF NOT EXISTS `id_udm_peso` bigint(20) DEFAULT NULL AFTER `peso`,
-	ADD COLUMN IF NOT EXISTS `udm_peso` char(32) DEFAULT NULL AFTER `id_udm_peso`,
-	ADD COLUMN IF NOT EXISTS `volume` decimal(12,5) DEFAULT NULL AFTER `udm_peso`,
-	ADD COLUMN IF NOT EXISTS `id_udm_volume` bigint(20) DEFAULT NULL AFTER `volume`,
-	ADD COLUMN IF NOT EXISTS `udm_volume` char(32) DEFAULT NULL AFTER `id_udm_volume`,
-	ADD COLUMN IF NOT EXISTS `capacita` decimal(12,5) DEFAULT NULL AFTER `udm_volume`,
-	ADD COLUMN IF NOT EXISTS `id_udm_capacita` bigint(20) DEFAULT NULL AFTER `capacita`,
-	ADD COLUMN IF NOT EXISTS `udm_capacita` char(32) DEFAULT NULL AFTER `id_udm_capacita`,
-	ADD COLUMN IF NOT EXISTS `durata` decimal(12,5) DEFAULT NULL AFTER `udm_capacita`,
-	ADD COLUMN IF NOT EXISTS `id_udm_durata` bigint(20) DEFAULT NULL AFTER `durata`,
-	ADD COLUMN IF NOT EXISTS `udm_durata` char(32) DEFAULT NULL AFTER `id_udm_durata`,
-	ADD COLUMN IF NOT EXISTS `nome` varchar(512) DEFAULT NULL AFTER `udm_durata`,
-	ADD COLUMN IF NOT EXISTS `note` text AFTER `nome`,
-	ADD COLUMN IF NOT EXISTS `note_codifica` text AFTER `note`,
-	ADD COLUMN IF NOT EXISTS `id_categorie` char(255) DEFAULT NULL AFTER `note_codifica`,
-	ADD COLUMN IF NOT EXISTS `categorie` char(255) DEFAULT NULL AFTER `id_categorie`,
-	ADD COLUMN IF NOT EXISTS `prezzi` text DEFAULT NULL AFTER `categorie`,
-	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `prezzi`,
-	ADD COLUMN IF NOT EXISTS `note_archiviazione` text AFTER `data_archiviazione`,
-	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `note_archiviazione`,
-	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
-	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
-	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
-	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
-	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`' );
+-- spostata alla 202611121288 ( 24/11 ): qui la procedura delle statiche su un deploy poteva non esserci ancora ( www2 di bernispa:
+-- prima 1146 sulla statica mancante, poi 1305 sulla procedura ); un blocco di soli commenti non si applica e non si registra
 
 -- | 202611121245
 
 -- attivita_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
--- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
--- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
-CALL `__patch_statiche_forma__`( 'attivita_view_static', 'ALTER TABLE `attivita_view_static`
-	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
-	ADD COLUMN IF NOT EXISTS `tipologia` char(64) DEFAULT NULL AFTER `id_tipologia`,
-	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
-	ADD COLUMN IF NOT EXISTS `id_cliente` bigint(20) DEFAULT NULL AFTER `codice`,
-	ADD COLUMN IF NOT EXISTS `codice_cliente` char(64) DEFAULT NULL AFTER `id_cliente`,
-	ADD COLUMN IF NOT EXISTS `cliente` char(255) DEFAULT NULL AFTER `codice_cliente`,
-	ADD COLUMN IF NOT EXISTS `id_contatto` bigint(20) DEFAULT NULL AFTER `cliente`,
-	ADD COLUMN IF NOT EXISTS `contatto` char(255) DEFAULT NULL AFTER `id_contatto`,
-	ADD COLUMN IF NOT EXISTS `id_indirizzo` bigint(20) DEFAULT NULL AFTER `contatto`,
-	ADD COLUMN IF NOT EXISTS `indirizzo` text AFTER `id_indirizzo`,
-	ADD COLUMN IF NOT EXISTS `id_luogo` bigint(20) DEFAULT NULL AFTER `indirizzo`,
-	ADD COLUMN IF NOT EXISTS `luogo` char(255) DEFAULT NULL AFTER `id_luogo`,
-	ADD COLUMN IF NOT EXISTS `id_messaggio` bigint(20) DEFAULT NULL AFTER `luogo`,
-	ADD COLUMN IF NOT EXISTS `id_asset` bigint(20) DEFAULT NULL AFTER `id_messaggio`,
-	ADD COLUMN IF NOT EXISTS `asset` char(255) DEFAULT NULL AFTER `id_asset`,
-	ADD COLUMN IF NOT EXISTS `data_riferimento` date DEFAULT NULL AFTER `asset`,
-	ADD COLUMN IF NOT EXISTS `ora_inizio_riferimento` time DEFAULT NULL AFTER `data_riferimento`,
-	ADD COLUMN IF NOT EXISTS `ora_fine_riferimento` time DEFAULT NULL AFTER `ora_inizio_riferimento`,
-	ADD COLUMN IF NOT EXISTS `anagrafica_riferimento` char(255) DEFAULT NULL AFTER `ora_fine_riferimento`,
-	ADD COLUMN IF NOT EXISTS `data_scadenza` date DEFAULT NULL AFTER `anagrafica_riferimento`,
-	ADD COLUMN IF NOT EXISTS `ora_scadenza` time DEFAULT NULL AFTER `data_scadenza`,
-	ADD COLUMN IF NOT EXISTS `data_programmazione` date DEFAULT NULL AFTER `ora_scadenza`,
-	ADD COLUMN IF NOT EXISTS `ora_inizio_programmazione` time DEFAULT NULL AFTER `data_programmazione`,
-	ADD COLUMN IF NOT EXISTS `ora_fine_programmazione` time DEFAULT NULL AFTER `ora_inizio_programmazione`,
-	ADD COLUMN IF NOT EXISTS `id_anagrafica_programmazione` bigint(20) DEFAULT NULL AFTER `ora_fine_programmazione`,
-	ADD COLUMN IF NOT EXISTS `anagrafica_programmazione` char(255) DEFAULT NULL AFTER `id_anagrafica_programmazione`,
-	ADD COLUMN IF NOT EXISTS `ore_programmazione` decimal(5,2) DEFAULT NULL AFTER `anagrafica_programmazione`,
-	ADD COLUMN IF NOT EXISTS `se_confermata` tinyint(1) DEFAULT NULL AFTER `ore_programmazione`,
-	ADD COLUMN IF NOT EXISTS `data_attivita` date DEFAULT NULL AFTER `se_confermata`,
-	ADD COLUMN IF NOT EXISTS `giorno_attivita` int(2) DEFAULT NULL AFTER `data_attivita`,
-	ADD COLUMN IF NOT EXISTS `mese_attivita` int(2) DEFAULT NULL AFTER `giorno_attivita`,
-	ADD COLUMN IF NOT EXISTS `anno_attivita` int(4) DEFAULT NULL AFTER `mese_attivita`,
-	ADD COLUMN IF NOT EXISTS `ora_inizio` time DEFAULT NULL AFTER `anno_attivita`,
-	ADD COLUMN IF NOT EXISTS `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL AFTER `ora_inizio`,
-	ADD COLUMN IF NOT EXISTS `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL AFTER `latitudine_ora_inizio`,
-	ADD COLUMN IF NOT EXISTS `data_fine` date DEFAULT NULL AFTER `longitudine_ora_inizio`,
-	ADD COLUMN IF NOT EXISTS `ora_fine` time DEFAULT NULL AFTER `data_fine`,
-	ADD COLUMN IF NOT EXISTS `latitudine_ora_fine` decimal(11,7) DEFAULT NULL AFTER `ora_fine`,
-	ADD COLUMN IF NOT EXISTS `longitudine_ora_fine` decimal(11,7) DEFAULT NULL AFTER `latitudine_ora_fine`,
-	ADD COLUMN IF NOT EXISTS `id_anagrafica` bigint(20) DEFAULT NULL AFTER `longitudine_ora_fine`,
-	ADD COLUMN IF NOT EXISTS `anagrafica` char(255) DEFAULT NULL AFTER `id_anagrafica`,
-	ADD COLUMN IF NOT EXISTS `id_account` bigint(20) DEFAULT NULL AFTER `anagrafica`,
-	ADD COLUMN IF NOT EXISTS `ore` decimal(5,2) DEFAULT NULL AFTER `id_account`,
-	ADD COLUMN IF NOT EXISTS `id_articolo` bigint(20) DEFAULT NULL AFTER `ore`,
-	ADD COLUMN IF NOT EXISTS `quantita_prevista` decimal(9,2) DEFAULT NULL AFTER `id_articolo`,
-	ADD COLUMN IF NOT EXISTS `nome` char(255) DEFAULT NULL AFTER `quantita_prevista`,
-	ADD COLUMN IF NOT EXISTS `id_documento` bigint(20) DEFAULT NULL AFTER `nome`,
-	ADD COLUMN IF NOT EXISTS `documento` char(255) DEFAULT NULL AFTER `id_documento`,
-	ADD COLUMN IF NOT EXISTS `id_corrispondenza` bigint(20) DEFAULT NULL AFTER `documento`,
-	ADD COLUMN IF NOT EXISTS `corrispondenza` char(255) DEFAULT NULL AFTER `id_corrispondenza`,
-	ADD COLUMN IF NOT EXISTS `id_progetto` bigint(20) DEFAULT NULL AFTER `corrispondenza`,
-	ADD COLUMN IF NOT EXISTS `progetto` char(255) DEFAULT NULL AFTER `id_progetto`,
-	ADD COLUMN IF NOT EXISTS `id_contratto` bigint(20) DEFAULT NULL AFTER `progetto`,
-	ADD COLUMN IF NOT EXISTS `contratto` char(255) DEFAULT NULL AFTER `id_contratto`,
-	ADD COLUMN IF NOT EXISTS `discipline` char(255) DEFAULT NULL AFTER `contratto`,
-	ADD COLUMN IF NOT EXISTS `id_matricola` bigint(20) DEFAULT NULL AFTER `discipline`,
-	ADD COLUMN IF NOT EXISTS `id_immobile` bigint(20) DEFAULT NULL AFTER `id_matricola`,
-	ADD COLUMN IF NOT EXISTS `id_step` bigint(20) DEFAULT NULL AFTER `id_immobile`,
-	ADD COLUMN IF NOT EXISTS `step` char(255) DEFAULT NULL AFTER `id_step`,
-	ADD COLUMN IF NOT EXISTS `id_pianificazione` bigint(20) DEFAULT NULL AFTER `step`,
-	ADD COLUMN IF NOT EXISTS `id_todo` bigint(20) DEFAULT NULL AFTER `id_pianificazione`,
-	ADD COLUMN IF NOT EXISTS `todo` char(255) DEFAULT NULL AFTER `id_todo`,
-	ADD COLUMN IF NOT EXISTS `id_mastro_provenienza` bigint(20) DEFAULT NULL AFTER `todo`,
-	ADD COLUMN IF NOT EXISTS `mastro_provenienza` char(64) DEFAULT NULL AFTER `id_mastro_provenienza`,
-	ADD COLUMN IF NOT EXISTS `id_mastro_destinazione` bigint(20) DEFAULT NULL AFTER `mastro_provenienza`,
-	ADD COLUMN IF NOT EXISTS `mastro_destinazione` char(64) DEFAULT NULL AFTER `id_mastro_destinazione`,
-	ADD COLUMN IF NOT EXISTS `codice_archivium` char(32) DEFAULT NULL AFTER `mastro_destinazione`,
-	ADD COLUMN IF NOT EXISTS `token` char(128) DEFAULT NULL AFTER `codice_archivium`,
-	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `token`,
-	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
-	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
-	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
-	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
-	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `timestamp_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `data_archiviazione`' );
+-- spostata alla 202611121289 ( 24/11 ): qui la procedura delle statiche su un deploy poteva non esserci ancora ( www2 di bernispa:
+-- prima 1146 sulla statica mancante, poi 1305 sulla procedura ); un blocco di soli commenti non si applica e non si registra
 
 -- | 202611121246
 
 -- documenti_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
--- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
--- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
-CALL `__patch_statiche_forma__`( 'documenti_view_static', 'ALTER TABLE `documenti_view_static`
-	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
-	ADD COLUMN IF NOT EXISTS `tipologia` char(255) DEFAULT NULL AFTER `id_tipologia`,
-	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
-	ADD COLUMN IF NOT EXISTS `numero` char(32) DEFAULT NULL AFTER `codice`,
-	ADD COLUMN IF NOT EXISTS `sezionale` char(32) DEFAULT NULL AFTER `numero`,
-	ADD COLUMN IF NOT EXISTS `numero_sezionale` varchar(65) DEFAULT NULL AFTER `sezionale`,
-	ADD COLUMN IF NOT EXISTS `data` date DEFAULT NULL AFTER `numero_sezionale`,
-	ADD COLUMN IF NOT EXISTS `nome` char(255) DEFAULT NULL AFTER `data`,
-	ADD COLUMN IF NOT EXISTS `id_emittente` bigint(20) DEFAULT NULL AFTER `nome`,
-	ADD COLUMN IF NOT EXISTS `emittente` varchar(320) DEFAULT NULL AFTER `id_emittente`,
-	ADD COLUMN IF NOT EXISTS `id_referente_emittente` bigint(20) DEFAULT NULL AFTER `emittente`,
-	ADD COLUMN IF NOT EXISTS `id_sede_emittente` bigint(20) DEFAULT NULL AFTER `id_referente_emittente`,
-	ADD COLUMN IF NOT EXISTS `id_destinatario` bigint(20) DEFAULT NULL AFTER `id_sede_emittente`,
-	ADD COLUMN IF NOT EXISTS `destinatario` varchar(320) DEFAULT NULL AFTER `id_destinatario`,
-	ADD COLUMN IF NOT EXISTS `id_sede_destinatario` bigint(20) DEFAULT NULL AFTER `destinatario`,
-	ADD COLUMN IF NOT EXISTS `id_destinatario_spedizione` bigint(20) DEFAULT NULL AFTER `id_sede_destinatario`,
-	ADD COLUMN IF NOT EXISTS `destinatario_spedizione` varchar(320) DEFAULT NULL AFTER `id_destinatario_spedizione`,
-	ADD COLUMN IF NOT EXISTS `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL AFTER `destinatario_spedizione`,
-	ADD COLUMN IF NOT EXISTS `id_condizione_pagamento` bigint(20) DEFAULT NULL AFTER `id_sede_destinatario_spedizione`,
-	ADD COLUMN IF NOT EXISTS `condizione_pagamento` char(32) DEFAULT NULL AFTER `id_condizione_pagamento`,
-	ADD COLUMN IF NOT EXISTS `esigibilita` enum(\'I\',\'D\',\'S\') DEFAULT NULL AFTER `condizione_pagamento`,
-	ADD COLUMN IF NOT EXISTS `cig` char(16) DEFAULT NULL AFTER `esigibilita`,
-	ADD COLUMN IF NOT EXISTS `cup` char(16) DEFAULT NULL AFTER `cig`,
-	ADD COLUMN IF NOT EXISTS `riferimento` char(255) DEFAULT NULL AFTER `cup`,
-	ADD COLUMN IF NOT EXISTS `totale_lordo_finale` decimal(16,2) DEFAULT NULL AFTER `riferimento`,
-	ADD COLUMN IF NOT EXISTS `totale_coupon` decimal(16,2) DEFAULT NULL AFTER `totale_lordo_finale`,
-	ADD COLUMN IF NOT EXISTS `codice_sdi` char(64) DEFAULT NULL AFTER `totale_coupon`,
-	ADD COLUMN IF NOT EXISTS `codice_archivium` char(64) DEFAULT NULL AFTER `codice_sdi`,
-	ADD COLUMN IF NOT EXISTS `progressivo_invio` char(5) DEFAULT NULL AFTER `codice_archivium`,
-	ADD COLUMN IF NOT EXISTS `timestamp_invio` int(11) DEFAULT NULL AFTER `progressivo_invio`,
-	ADD COLUMN IF NOT EXISTS `data_consegna` date DEFAULT NULL AFTER `timestamp_invio`,
-	ADD COLUMN IF NOT EXISTS `id_coupon` bigint(20) DEFAULT NULL AFTER `data_consegna`,
-	ADD COLUMN IF NOT EXISTS `id_carrello` bigint(20) DEFAULT NULL AFTER `id_coupon`,
-	ADD COLUMN IF NOT EXISTS `id_carrelli_articoli` bigint(20) DEFAULT NULL AFTER `id_carrello`,
-	ADD COLUMN IF NOT EXISTS `id_mastro_provenienza` bigint(20) DEFAULT NULL AFTER `id_carrelli_articoli`,
-	ADD COLUMN IF NOT EXISTS `mastro_provenienza` char(64) DEFAULT NULL AFTER `id_mastro_provenienza`,
-	ADD COLUMN IF NOT EXISTS `id_mastro_destinazione` bigint(20) DEFAULT NULL AFTER `mastro_provenienza`,
-	ADD COLUMN IF NOT EXISTS `mastro_destinazione` char(64) DEFAULT NULL AFTER `id_mastro_destinazione`,
-	ADD COLUMN IF NOT EXISTS `id_causale` bigint(20) DEFAULT NULL AFTER `mastro_destinazione`,
-	ADD COLUMN IF NOT EXISTS `id_trasportatore` bigint(20) DEFAULT NULL AFTER `id_causale`,
-	ADD COLUMN IF NOT EXISTS `porto` enum(\'franco\',\'assegnato\',\'-\') DEFAULT NULL AFTER `id_trasportatore`,
-	ADD COLUMN IF NOT EXISTS `id_pianificazione` bigint(20) DEFAULT NULL AFTER `porto`,
-	ADD COLUMN IF NOT EXISTS `id_progetto` bigint(20) DEFAULT NULL AFTER `id_pianificazione`,
-	ADD COLUMN IF NOT EXISTS `documenti_antecedenti` text AFTER `id_progetto`,
-	ADD COLUMN IF NOT EXISTS `documenti_successivi` text AFTER `documenti_antecedenti`,
-	ADD COLUMN IF NOT EXISTS `timestamp_chiusura` int(11) DEFAULT NULL AFTER `documenti_successivi`,
-	ADD COLUMN IF NOT EXISTS `data_ora_chiusura` char(16) DEFAULT NULL AFTER `timestamp_chiusura`,
-	ADD COLUMN IF NOT EXISTS `id_account_archiviazione` bigint(20) DEFAULT NULL AFTER `data_ora_chiusura`,
-	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `id_account_archiviazione`,
-	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `data_archiviazione`,
-	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
-	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
-	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
-	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
-	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`' );
+-- spostata alla 202611121290 ( 24/11 ): qui la procedura delle statiche su un deploy poteva non esserci ancora ( www2 di bernispa:
+-- prima 1146 sulla statica mancante, poi 1305 sulla procedura ); un blocco di soli commenti non si applica e non si registra
 
 -- | 202611121247
 
 -- todo_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
--- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
--- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
-CALL `__patch_statiche_forma__`( 'todo_view_static', 'ALTER TABLE `todo_view_static`
-	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
-	ADD COLUMN IF NOT EXISTS `tipologia` char(64) DEFAULT NULL AFTER `id_tipologia`,
-	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
-	ADD COLUMN IF NOT EXISTS `se_agenda` tinyint(1) DEFAULT NULL AFTER `codice`,
-	ADD COLUMN IF NOT EXISTS `id_anagrafica` bigint(20) DEFAULT NULL AFTER `se_agenda`,
-	ADD COLUMN IF NOT EXISTS `anagrafica` char(255) DEFAULT NULL AFTER `id_anagrafica`,
-	ADD COLUMN IF NOT EXISTS `id_cliente` bigint(20) DEFAULT NULL AFTER `anagrafica`,
-	ADD COLUMN IF NOT EXISTS `cliente` char(255) DEFAULT NULL AFTER `id_cliente`,
-	ADD COLUMN IF NOT EXISTS `id_indirizzo` bigint(20) DEFAULT NULL AFTER `cliente`,
-	ADD COLUMN IF NOT EXISTS `indirizzo` char(255) DEFAULT NULL AFTER `id_indirizzo`,
-	ADD COLUMN IF NOT EXISTS `id_luogo` bigint(20) DEFAULT NULL AFTER `indirizzo`,
-	ADD COLUMN IF NOT EXISTS `luogo` char(255) DEFAULT NULL AFTER `id_luogo`,
-	ADD COLUMN IF NOT EXISTS `timestamp_apertura` int(11) DEFAULT NULL AFTER `luogo`,
-	ADD COLUMN IF NOT EXISTS `data_scadenza` date DEFAULT NULL AFTER `timestamp_apertura`,
-	ADD COLUMN IF NOT EXISTS `ora_scadenza` time DEFAULT NULL AFTER `data_scadenza`,
-	ADD COLUMN IF NOT EXISTS `data_programmazione` date DEFAULT NULL AFTER `ora_scadenza`,
-	ADD COLUMN IF NOT EXISTS `ora_inizio_programmazione` time DEFAULT NULL AFTER `data_programmazione`,
-	ADD COLUMN IF NOT EXISTS `ora_fine_programmazione` time DEFAULT NULL AFTER `ora_inizio_programmazione`,
-	ADD COLUMN IF NOT EXISTS `anno_programmazione` year(4) DEFAULT NULL AFTER `ora_fine_programmazione`,
-	ADD COLUMN IF NOT EXISTS `settimana_programmazione` int(11) DEFAULT NULL AFTER `anno_programmazione`,
-	ADD COLUMN IF NOT EXISTS `ore_programmazione` decimal(5,2) DEFAULT NULL AFTER `settimana_programmazione`,
-	ADD COLUMN IF NOT EXISTS `data_chiusura` date DEFAULT NULL AFTER `ore_programmazione`,
-	ADD COLUMN IF NOT EXISTS `nome` char(255) DEFAULT NULL AFTER `data_chiusura`,
-	ADD COLUMN IF NOT EXISTS `id_contatto` bigint(20) DEFAULT NULL AFTER `nome`,
-	ADD COLUMN IF NOT EXISTS `id_progetto` bigint(20) DEFAULT NULL AFTER `id_contatto`,
-	ADD COLUMN IF NOT EXISTS `progetto` char(255) DEFAULT NULL AFTER `id_progetto`,
-	ADD COLUMN IF NOT EXISTS `discipline` char(255) DEFAULT NULL AFTER `progetto`,
-	ADD COLUMN IF NOT EXISTS `id_documento` bigint(20) DEFAULT NULL AFTER `discipline`,
-	ADD COLUMN IF NOT EXISTS `documento` char(255) DEFAULT NULL AFTER `id_documento`,
-	ADD COLUMN IF NOT EXISTS `id_documenti_articoli` bigint(20) DEFAULT NULL AFTER `documento`,
-	ADD COLUMN IF NOT EXISTS `documenti_articoli` char(255) DEFAULT NULL AFTER `id_documenti_articoli`,
-	ADD COLUMN IF NOT EXISTS `id_istruzione` bigint(20) DEFAULT NULL AFTER `documenti_articoli`,
-	ADD COLUMN IF NOT EXISTS `istruzione` char(255) DEFAULT NULL AFTER `id_istruzione`,
-	ADD COLUMN IF NOT EXISTS `id_pianificazione` bigint(20) DEFAULT NULL AFTER `istruzione`,
-	ADD COLUMN IF NOT EXISTS `id_immobile` bigint(20) DEFAULT NULL AFTER `id_pianificazione`,
-	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `id_immobile`,
-	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `data_archiviazione`,
-	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
-	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
-	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
-	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
-	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text DEFAULT NULL AFTER `timestamp_aggiornamento`' );
+-- spostata alla 202611121291 ( 24/11 ): qui la procedura delle statiche su un deploy poteva non esserci ancora ( www2 di bernispa:
+-- prima 1146 sulla statica mancante, poi 1305 sulla procedura ); un blocco di soli commenti non si applica e non si registra
 
 -- | 202611121248
 
@@ -1206,243 +961,10 @@ CREATE OR REPLACE VIEW `anagrafica_view` AS
 -- | 202611121249
 
 -- attivita_view
-CREATE OR REPLACE VIEW `attivita_view` AS                     --
-	SELECT	                                                  --
-		attivita.id,                                          --
-		attivita.id_tipologia,                                --
-		tipologie_attivita.nome AS tipologia,                 -- nome della tipologia
-		attivita.codice,                                      --
-		attivita.id_cliente,                                  --
-		a2.codice AS codice_cliente,                          -- codice del cliente
-		coalesce(                                             --
-            a2.denominazione,                                 --
-            concat(                                           --
-                a2.cognome, ' ', a2.nome                      --
-            ), ''                                             --
-        ) AS cliente,                                         -- denominazione o cognome e nome del cliente
-		attivita.id_contatto,                                 --
-		c1.nome AS contatto,                                  -- nome del contatto
-		attivita.id_indirizzo,                                --
-		indirizzi.indirizzo AS indirizzo,                     -- indirizzo
-		attivita.id_luogo,                                    --
-		luoghi_path(                                          --
-            coalesce(                                         --
-                attivita.id_luogo, todo.id_luogo              --
-            )                                                 --
-        ) AS luogo,                                           -- percorso del luogo
-		attivita.id_messaggio,                                --
-		attivita.id_asset,                                    --
-		concat( asset.id, ' ', asset.nome ) AS asset,         -- id e nome dell'asset su cui si svolge l'attività
-        coalesce(                                             --
-            attivita.data_attivita,                           --
-            attivita.data_programmazione                      --
-        ) AS data_riferimento,                                -- data di riferimento per ordinamento
-		coalesce(                                             --
-            attivita.ora_inizio,                              --
-            attivita.ora_inizio_programmazione                --
-        ) AS ora_inizio_riferimento,                          -- ora di inizio di riferimento
-		coalesce(                                             --
-            attivita.ora_fine,                                --
-            attivita.ora_fine_programmazione                  --
-        ) AS ora_fine_riferimento,                            -- ora di fine di riferimento
-		coalesce(                                             --
-            a1.denominazione,                                 --
-            concat(                                           --
-                a1.cognome, ' ', a1.nome                      --
-            ),                                                --
-            a3.denominazione,                                 --
-            concat(                                           --
-                a3.cognome, ' ', a3.nome                      --
-            ),                                                --
-            ''                                                --
-        ) AS anagrafica_riferimento,                          -- denominazione o cognome e nome dell'anagrafica di programmazione o di esecuzione
-		attivita.data_scadenza,                               --
-		attivita.ora_scadenza,                                --
-		attivita.data_programmazione,                         --
-		attivita.ora_inizio_programmazione,                   --
-		attivita.ora_fine_programmazione,                     --
-		attivita.id_anagrafica_programmazione,                --
-		coalesce(                                             --
-            a3.denominazione,                                 --
-            concat(                                           --
-                a3.cognome, ' ', a3.nome                      --
-            ),                                                --
-            ''                                                --
-        ) AS anagrafica_programmazione,                       -- denominazione o cognome e nome dell'anagrafica di programmazione
-		attivita.ore_programmazione,                          --
-		attivita.se_confermata,                               --
-		attivita.data_attivita,                               --
-		day( data_attivita ) as giorno_attivita,              -- giorno di attivita
-		month( data_attivita ) as mese_attivita,              -- mese di attivita
-		year( data_attivita ) as anno_attivita,               -- anno di attivita
-		attivita.ora_inizio,                                  --
-		attivita.latitudine_ora_inizio,                       --
-		attivita.longitudine_ora_inizio,                      --
-		attivita.data_fine,                                   --
-		attivita.ora_fine,                                    --
-		attivita.latitudine_ora_fine,                         --
-		attivita.longitudine_ora_fine,                        --
-		attivita.id_anagrafica,                               --
-		coalesce(                                             --
-            a1.denominazione,                                 --
-            concat( a1.cognome, ' ', a1.nome ),               --
-            ''                                                --
-        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
-		attivita.id_account,                                  --
-		attivita.ore,                                         --
-        da.id_articolo,                                       -- id dell'articolo previsto
-        da.quantita AS quantita_prevista,                     -- quantità prevista
-		attivita.nome,                                        --
-		attivita.id_documento,                                --
-		concat(                                               --
-			td.sigla,                                         --
-			' ',                                              --
-			documenti.numero,                                 --
-			'/',                                              --
-			documenti.sezionale,                              --
-			' del ',                                          --
-			documenti.data                                    --
-		) AS documento,                                       -- tipologia, numero, sezionale e data del documento
-		attivita.id_corrispondenza,                           --
-		concat_ws(                                            --
-            ' ',                                              --
-            'da',                                             --
-            coalesce(                                         --
-                a4.denominazione,                             --
-                concat( a4.cognome, ' ', a4.nome ),           --
-                ''                                            --
-            ),                                                --
-            concat(                                           --
-                '(',                                          --
-                organizzazioni_path(                          --
-                    cr.id_organizzazione_mittente             --
-                ),                                            --   
-                ')'                                           --
-            ),                                                --
-            tipologie_corrispondenza_path(                    --
-                cr.id_tipologia                               --
-            ),                                                --
-            'per',                                            --
-            coalesce(                                         --
-                cr.destinatario_denominazione,                --
-                concat(                                       --
-                    cr.destinatario_cognome,                  --
-                    ' ',                                      --
-                    cr.destinatario_nome                      --
-                ),                                            --
-                ''                                            --
-            )                                                 --
-        ) AS corrispondenza,                                  -- descrizione della corrispondenza
-		attivita.id_progetto,                                 --
-		progetti.nome AS progetto,                            -- nome del progetto
-		attivita.id_contratto,                                --
-		concat_ws(                                            --
-            ' ',                                              --
-            tc.nome,                                          --
-            c.nome                                            --
-        ) AS contratto,                                       -- tipologia e nome del contratto
-		group_concat(                                         --
-            DISTINCT                                          --
-            if(                                               --
-                d.id,                                         --
-                categorie_progetti_path( d.id ),              --
-                null                                          --
-            )                                                 --
-            SEPARATOR ' | '                                   --
-        ) AS discipline,                                      -- elenco delle discipline del progetto separate da |
-		attivita.id_matricola,                                --
-        attivita.id_immobile,                                 --
-        attivita.id_step,                                     --
-        step.nome AS step,                                    -- nome dello step
-		attivita.id_pianificazione,                           --
-		attivita.id_todo,                                     --
-		todo.nome AS todo,                                    -- nome del todo
-		attivita.id_mastro_provenienza,                       --
-		m1.nome AS mastro_provenienza,                        --
-		attivita.id_mastro_destinazione,                      --
-		m2.nome AS mastro_destinazione,                       --
-		attivita.codice_archivium,                            --
-		attivita.token,                                       --
-		attivita.id_account_proprietario,                     --
-		attivita.id_gruppo_proprietario,                      --
-		attivita.id_diritto_proprietario,                     --
-		attivita.id_diritto_gruppo,                           --
-		attivita.id_diritto_altri,                            --
-		attivita.id_account_inserimento,                      --
-		attivita.timestamp_inserimento,                       --
-		attivita.id_account_aggiornamento,                    --
-		attivita.timestamp_aggiornamento,                     --
-		attivita.data_archiviazione,                          --
-		concat(                                               --
-			attivita.nome,                                    --
-			' / ',                                            --
-			attivita.ore,                                     --
-			' / ',                                            --
-			coalesce(                                         --
-                a1.denominazione,                             --
-                concat(                                       --
-                    a1.cognome,                               --
-                    ' ',                                      --
-                    a1.nome                                   --
-                ),                                            --
-                ''                                            --
-            )                                                 --
-		) AS __label__                                        -- etichetta per le tendine e le liste
-	FROM attivita                                             --
-		LEFT JOIN tipologie_attivita                          --
-            ON tipologie_attivita.id = attivita.id_tipologia  --
-		LEFT JOIN anagrafica AS a1                            --
-            ON a1.id = attivita.id_anagrafica                 --
-		LEFT JOIN anagrafica AS a2                            --
-            ON a2.id = attivita.id_cliente                    --
-		LEFT JOIN anagrafica AS a3                            --
-            ON a3.id = attivita.id_anagrafica_programmazione  --
-		LEFT JOIN anagrafica AS a4                            --
-            ON a4.id = attivita.id_corrispondenza             --
-		LEFT JOIN contatti AS c1                              --
-            ON c1.id = attivita.id_contatto                   --
-		LEFT JOIN todo                                        --
-            ON todo.id = attivita.id_todo                     --
-		LEFT JOIN step                                        --
-            ON step.id = attivita.id_step                     --
-		LEFT JOIN progetti_categorie AS pc                    --
-            ON pc.id_progetto = attivita.id_progetto          --
-		LEFT JOIN progetti                                    --
-            ON progetti.id = coalesce(                        --
-                attivita.id_progetto,                         --
-                todo.id_progetto                              --
-            )                                                 --
-		LEFT JOIN categorie_progetti                          --
-            ON categorie_progetti.id = pc.id_categoria        --
-		LEFT JOIN categorie_progetti AS d                     --
-            ON d.id = pc.id_categoria                         --
-                AND d.se_disciplina = 1                       --
-		LEFT JOIN indirizzi                                   --
-            ON indirizzi.id = attivita.id_indirizzo           --
-		LEFT JOIN mastri AS m1                                --
-            ON m1.id = attivita.id_mastro_provenienza         --
-		LEFT JOIN mastri AS m2                                --
-            ON m2.id = attivita.id_mastro_destinazione        --
-		LEFT JOIN documenti                                   --
-            ON documenti.id = attivita.id_documento           --
-		LEFT JOIN tipologie_documenti AS td                   --
-            ON td.id = documenti.id_tipologia                 --
-		LEFT JOIN contratti AS c                              --
-            ON c.id = attivita.id_contratto                   --
-		LEFT JOIN tipologie_contratti AS tc                   --
-            ON tc.id = c.id_tipologia                         --
-		LEFT JOIN corrispondenza AS cr                        --
-            ON cr.id = attivita.id_corrispondenza             --
-		LEFT JOIN organizzazioni AS o                         --
-            ON o.id = cr.id_organizzazione_mittente           --
-		LEFT JOIN tipologie_corrispondenza AS tc2             --
-            ON tc2.id = cr.id_tipologia                       --
-		LEFT JOIN asset                                       --
-            ON asset.id = attivita.id_asset                   --
-		LEFT JOIN documenti_articoli AS da                    --
-            ON da.id = todo.id_documenti_articoli             --
-	GROUP BY attivita.id                                      --
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121250
 
@@ -1453,67 +975,10 @@ CREATE OR REPLACE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipo
 -- | 202611121251
 
 -- progetti_view
-CREATE OR REPLACE VIEW `progetti_view` AS
-	SELECT
-		progetti.id,
-		progetti.id_tipologia,
-		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
-		progetti.codice,
-		progetti.nome,
-		a1.id_ranking,
-		ranking.nome AS ranking,
-		progetti.id_prodotto,
-		progetti.id_articolo,
-		progetti.id_periodo,
-		progetti.id_cliente,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
-		progetti.id_indirizzo,
-		progetti.id_pianificazione,
-		progetti.note,
-		progetti.entrate_previste,
-		progetti.ore_previste,
-		progetti.uscite_previste,
-		progetti.id_periodicita_prevista,
-		progetti.data_accettazione,
-		progetti.entrate_accettazione,
-		progetti.id_periodicita_accettazione,
-		progetti.data_apertura,
-		progetti.data_consegna,
-		progetti.data_chiusura,
-		progetti.entrate_totali,
-		progetti.ore_totali,
-		progetti.uscite_totali,
-		-- SOTTOQUERY E NON JOIN PIU' GROUP BY: vedi la nota in articoli_view ( 22/10/2026, come prodotti_view )
-		coalesce( ( SELECT group_concat( DISTINCT categorie_progetti_path( pc.id_categoria ) SEPARATOR ' | ' )
-			FROM progetti_categorie AS pc
-		   WHERE pc.id_progetto = progetti.id
-		), '' ) AS categorie,
-		progetti.template,
-		progetti.schema_html,
-		progetti.tema_css,
-		progetti.se_sitemap,
-		progetti.se_cacheable,
-		progetti.id_sito,
-		progetti.id_pagina,
-		progetti.data_archiviazione,
-		progetti.id_account_proprietario,
-		progetti.id_gruppo_proprietario,
-		progetti.id_diritto_proprietario,
-		progetti.id_diritto_gruppo,
-		progetti.id_diritto_altri,
-		progetti.id_account_inserimento,
-		progetti.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			progetti.codice,
-			progetti.nome,
-			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
-		) AS __label__
-	FROM progetti
-		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
-		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
-		LEFT JOIN ranking ON ranking.id = a1.id_ranking
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121252
 
@@ -1740,101 +1205,6 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 -- | 202611121254
 
 -- pagamenti_view
-CREATE OR REPLACE VIEW `pagamenti_view` AS
-	SELECT
-		pagamenti.id,
-		coalesce( pagamenti.id_tipologia, documenti.id_tipologia ) AS id_tipologia,
-		pagamenti.codice,
-		pagamenti.id_modalita_pagamento,
-		concat(modalita_pagamento.codice_sdi, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
-		tipologie_pagamenti.nome AS tipologia,
-		pagamenti.ordine,
-		pagamenti.nome,
-		pagamenti.note,
-		pagamenti.note_pagamento,
-		coalesce( pagamenti.id_documento, carrelli_documenti.id_documento, documenti_articoli.id_documento ) AS id_documento,
-		pagamenti.id_carrello,
-		pagamenti.id_carrelli_articoli,
-        concat(
-			tipologie_documenti.sigla,
-			' ',
-			documenti.numero,
-			'/',
-			year( documenti.data ),
-			' del ',
-			documenti.data
-		) AS documento,
-		tipologie_documenti.id AS id_tipologia_documento,
-		group_concat( DISTINCT carrelli_articoli.id_articolo SEPARATOR '|' ) AS id_articoli,
-		group_concat( DISTINCT COALESCE( categorie_progetti.id, cp_disc.id ) SEPARATOR '|' ) AS id_categorie_progetti,
-		group_concat( DISTINCT COALESCE( categorie_progetti.nome, cp_disc.nome ) SEPARATOR '|' ) AS categorie_progetti,
-		group_concat( DISTINCT COALESCE( categorie_progetti_path_find_ancestor( categorie_progetti.id ), categorie_progetti_path_find_ancestor( cp_disc.id ) ) ) AS id_aree,
-		group_concat( DISTINCT COALESCE( aree.nome, aree_abb.nome ) ) AS aree,
-		group_concat( DISTINCT concat( pagamenti.id_coupon, ':', pagamenti.coupon_valore ) SEPARATOR '|' ) AS dettagli_coupon,
-		pagamenti.id_mastro_provenienza,
-		m1.nome AS mastro_provenienza,
-		pagamenti.id_mastro_destinazione,
-		m2.nome AS mastro_destinazione,
-		coalesce( documenti.id_emittente, pagamenti.id_creditore ) AS id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		coalesce( documenti.id_destinatario, pagamenti.id_debitore ) AS id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		pagamenti.id_iban,
-		iban.iban AS iban,
-		pagamenti.importo_lordo_totale,
-		pagamenti.id_coupon,
-		pagamenti.coupon_valore,
-		pagamenti.importo_lordo_finale,
-		pagamenti.id_listino,
-		listini.nome AS listino,
-		pagamenti.id_pianificazione,
-		pagamenti.data_scadenza,
-		day( pagamenti.data_scadenza ) as giorno_scadenza,
-		month( pagamenti.data_scadenza ) as mese_scadenza,
-		year( pagamenti.data_scadenza ) as anno_scadenza,
-        documenti.data_archiviazione,
-		pagamenti.timestamp_pagamento,
-		from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
-		day( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as giorno_pagamento,
-		month( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as mese_pagamento,
-		year( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as anno_pagamento,
-		pagamenti.id_account_proprietario,
-		pagamenti.id_gruppo_proprietario,
-		pagamenti.id_diritto_proprietario,
-		pagamenti.id_diritto_gruppo,
-		pagamenti.id_diritto_altri,
-		pagamenti.id_account_inserimento,
-		pagamenti.id_account_aggiornamento,
-		pagamenti.nome AS __label__
-	FROM pagamenti
-		LEFT JOIN tipologie_pagamenti ON tipologie_pagamenti.id = pagamenti.id_tipologia
-		LEFT JOIN mastri AS m1 ON m1.id = pagamenti.id_mastro_provenienza
-		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
-		LEFT JOIN listini ON listini.id = pagamenti.id_listino
-		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
-		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
-		LEFT JOIN carrelli ON carrelli.id = pagamenti.id_carrello
-		LEFT JOIN carrelli_documenti ON carrelli_documenti.id_carrello = carrelli.id
-		LEFT JOIN documenti_articoli ON documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
-		LEFT JOIN documenti ON documenti.id = coalesce( pagamenti.id_documento, carrelli_documenti.id_documento, documenti_articoli.id_documento )
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
-		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
-		LEFT JOIN iban ON iban.id = pagamenti.id_iban
-		LEFT JOIN coupon ON coupon.id = pagamenti.id_coupon
-		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
-		-- LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-		LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-		LEFT JOIN progetti ON IF( prodotti.id IS NOT NULL, progetti.id_prodotto = prodotti.id, progetti.id = contratti.id_progetto )
-		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
-		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
-		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
-		LEFT JOIN tipologie_contratti AS tc_abb ON tc_abb.id_prodotto = prodotti.id AND tc_abb.se_abbonamento = 1
-		-- la disciplina dell'abbonamento è memorizzata come metadati 'abbonamento|discipline' (multi-valore), non su tipologie_contratti.id_categoria_progetti
-		LEFT JOIN metadati AS m_abb_disc ON m_abb_disc.id_tipologia_contratti = tc_abb.id AND m_abb_disc.nome = 'abbonamento|discipline'
-		LEFT JOIN categorie_progetti AS cp_disc ON cp_disc.id = CAST( m_abb_disc.testo AS UNSIGNED ) AND cp_disc.se_disciplina = 1
-		LEFT JOIN categorie_progetti AS aree_abb ON aree_abb.id = categorie_progetti_path_find_ancestor( cp_disc.id )
 --	WHERE
 --		tipologie_documenti.se_fattura = 1
 --		OR
@@ -1843,69 +1213,18 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 --		tipologie_documenti.se_ricevuta = 1
 --		OR
 --		tipologie_documenti.se_pro_forma = 1
-	GROUP BY pagamenti.id
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121255
 
 -- crediti_view
-CREATE OR REPLACE VIEW `crediti_view` AS
-	SELECT
-		crediti.id,
-		crediti.nome,
-		crediti.id_pianificazione,
-		crediti.id_documenti_articolo,
-		concat(
-			tipologie_documenti.sigla,
-			' ',
-			documenti.numero,
-			'/',
-			year( documenti.data ),
-			' del ',
-			documenti.data,
-			' ',
-			documenti_articoli.id_articolo
-		) AS riga_documento,
-		crediti.id_account_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS account_emittente,
-		crediti.id_account_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS account_destinatario,
-		crediti.id_mastro_provenienza,
-		mastri_path( m1.id ) AS mastro_provenienza,
-		crediti.id_mastro_destinazione,
-		mastri_path( m2.id ) AS mastro_destinazione,
-		crediti.quantita,
-		crediti.note,
-		crediti.data,
-		crediti.id_account_proprietario,
-		crediti.id_gruppo_proprietario,
-		crediti.id_diritto_proprietario,
-		crediti.id_diritto_gruppo,
-		crediti.id_diritto_altri,
-		crediti.id_account_inserimento,
-		crediti.id_account_aggiornamento,
-		concat(
-			crediti.data,
-			' / ',
-			tipologie_documenti.sigla,
-			' / ',
-			crediti.quantita,
-			' x ',
-			documenti_articoli.id_articolo,
-			' / ',
-			crediti.nome
-		) AS __label__
-	FROM crediti
-		LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-		LEFT JOIN account AS acc1 ON acc1.id = crediti.id_account_emittente
-		LEFT JOIN anagrafica AS a1 ON a1.id = acc1.id_anagrafica
-		LEFT JOIN account AS acc2 ON acc2.id = crediti.id_account_destinatario
-		LEFT JOIN anagrafica AS a2 ON a2.id = acc2.id_anagrafica
-		LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
-		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121256
 
@@ -1979,106 +1298,18 @@ CREATE OR REPLACE VIEW contatti_view AS
 -- | 202611121258
 
 -- corrispondenza_view
-CREATE OR REPLACE VIEW `corrispondenza_view` AS
-	SELECT
-		corrispondenza.id,
-		corrispondenza.id_tipologia,
-		tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
-		corrispondenza.codice,
-		corrispondenza.nome,
-		corrispondenza.id_mittente,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS mittente,
-		corrispondenza.id_organizzazione_mittente,
-		organizzazioni_path( corrispondenza.id_organizzazione_mittente ) AS organizzazione_mittente,
-		corrispondenza.id_commesso,
-		coalesce( commessi.denominazione , concat( commessi.cognome, ' ', commessi.nome ), '' ) AS commesso,
-		corrispondenza.destinatario_id_anagrafica,
-		coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ) AS destinatario,
-		coalesce(
-			concat( corrispondenza.destinatario_indirizzo, ' ', corrispondenza.destinatario_civico, ', ', corrispondenza.destinatario_cap, ' ', coalesce( corrispondenza.destinatario_citta, '' ), comuni.nome, ' ', provincie.sigla ),
-			concat( comuni.nome, ' ', provincie.sigla ),
-			concat_ws( ' ', corrispondenza.destinatario_cap, stati.nome ),
-			''
-		) AS destinazione,
-		corrispondenza.id_formato,
-		formati_tipologie_corrispondenza.nome AS formato,
-		corrispondenza.id_peso,
-		pesi_tipologie_corrispondenza.nome AS peso_tipologia,
-		corrispondenza.peso,
-		corrispondenza.id_udm_peso,
-		corrispondenza.quantita,
-		corrispondenza.id_distinta_spedizione,
-		corrispondenza.timestamp_consegna,
-		corrispondenza.timestamp_elaborazione,
-		corrispondenza.timestamp_gestione,
-		corrispondenza.id_account_proprietario,
-		corrispondenza.id_gruppo_proprietario,
-		corrispondenza.id_diritto_proprietario,
-		corrispondenza.id_diritto_gruppo,
-		corrispondenza.id_diritto_altri,
-		corrispondenza.id_account_inserimento,
-		corrispondenza.timestamp_inserimento,
-		corrispondenza.id_account_aggiornamento,
-		corrispondenza.timestamp_aggiornamento,
-		concat_ws(
-			' ',
-			'da',
-			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			concat( '(', organizzazioni_path( corrispondenza.id_organizzazione_mittente ), ')' ),
-			tipologie_corrispondenza_path( corrispondenza.id_tipologia ),
-			'per',
-			coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' )
-		) AS __label__
-	FROM corrispondenza
-		INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
-		LEFT JOIN formati_tipologie_corrispondenza ON formati_tipologie_corrispondenza.id = corrispondenza.id_formato
-		LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso
-		LEFT JOIN anagrafica ON anagrafica.id = corrispondenza.id_mittente
-		LEFT JOIN anagrafica AS commessi ON commessi.id = corrispondenza.id_commesso
-		LEFT JOIN comuni ON comuni.id = corrispondenza.destinatario_id_comune
-		LEFT JOIN provincie ON provincie.id = coalesce( corrispondenza.destinatario_id_provincia, comuni.id_provincia )
-		LEFT JOIN stati ON stati.id = corrispondenza.destinatario_id_stato
-	WHERE tipologie_corrispondenza.se_corrispondenza = 1
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121259
 
 -- campagne_view
-CREATE OR REPLACE VIEW `campagne_view` AS
-	SELECT
-		campagne.id,
-		campagne.id_genitore,
-		campagne.id_tipologia,
-		tipologie_campagne_path( campagne.id_tipologia ) AS tipologia,
-		campagne.ordine,
-		campagne.codice,
-		campagne.nome,
-		campagne.id_valuta,
-		valute.iso4217 AS valuta,
-		campagne.testo,
-		campagne.note,
-		campagne.budget,
-		campagne.utm_id,
-		campagne.utm_source,
-		campagne.utm_medium,
-		campagne.utm_campaign,
-		campagne.utm_term,
-		campagne.utm_content,
-		campagne.data_inizio,
-		campagne.data_fine,
-		( SELECT count( contatti.id ) FROM contatti WHERE contatti.id_campagna = campagne.id ) AS n_contatti,
-		( SELECT count( carrelli.id ) FROM carrelli WHERE carrelli.id_campagna = campagne.id ) AS n_carrelli,
-		campagne.id_account_proprietario,
-		campagne.id_gruppo_proprietario,
-		campagne.id_diritto_proprietario,
-		campagne.id_diritto_gruppo,
-		campagne.id_diritto_altri,
-		campagne.id_account_inserimento,
-		campagne.id_account_aggiornamento,
-		campagne_path( campagne.id ) AS __label__
-	FROM campagne
-		LEFT JOIN valute ON valute.id = campagne.id_valuta
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121260
 
@@ -2354,100 +1585,18 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 -- | 202611121265
 
 -- mastri_view
-CREATE OR REPLACE VIEW `mastri_view` AS
-	SELECT
-		mastri.id,
-		mastri.id_genitore,
-		mastri.id_tipologia,
-		tipologie_mastri.nome AS tipologia,
-		mastri.codice,
-		mastri.nome,
-		coalesce( mastri.id_anagrafica, anagrafica_indirizzi.id_anagrafica ) AS id_anagrafica,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS anagrafica,
-		mastri.id_account,
-		account.username AS account,
-		mastri.id_progetto,
-		progetti.nome AS progetto,
-		mastri.id_anagrafica_indirizzi,
-		coalesce( mastri.id_indirizzo, anagrafica_indirizzi.id_indirizzo ) AS id_indirizzo,
-		concat_ws(
-			' ',
-			tipologie_indirizzi.nome,
-			indirizzi.indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) AS indirizzo,
-		mastri.id_edificio,
-		mastri.id_immobile,
-		mastri.id_vano,
-		mastri.prefisso_modula,
-		mastri.codice_modula,
-		tipologie_mastri.se_magazzino,
-		tipologie_mastri.se_conto,
-		tipologie_mastri.se_registro,
-		tipologie_mastri.se_credito,
-		mastri.data_archiviazione,
-		mastri.id_account_proprietario,
-		mastri.id_gruppo_proprietario,
-		mastri.id_diritto_proprietario,
-		mastri.id_diritto_gruppo,
-		mastri.id_diritto_altri,
-		mastri.id_account_inserimento,
-		mastri.id_account_aggiornamento,
-		concat_ws( ' ', mastri.codice, mastri_path( mastri.id ) ) AS __label__
-	FROM mastri
-		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
-		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi
-		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_indirizzi.id_anagrafica
-		LEFT JOIN anagrafica AS a2 ON a2.id = mastri.id_anagrafica
-		LEFT JOIN account ON account.id = mastri.id_account
-		LEFT JOIN progetti ON progetti.id = mastri.id_progetto
-		LEFT JOIN indirizzi ON indirizzi.id = coalesce( mastri.id_indirizzo, anagrafica_indirizzi.id_indirizzo )
-		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
-		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
-		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121266
 
 -- asset_view
-CREATE OR REPLACE VIEW `asset_view` AS
-	SELECT
-		asset.id,
-		asset.id_genitore,
-		asset.id_tipologia,
-		tipologie_asset_path( asset.id_tipologia ) AS tipologia,
-		asset.codice,
-		asset.nome,
-		asset.id_condizione,
-		condizioni.nome AS condizione,
-		asset.id_produttore,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
-		asset.modello,
-		asset.targa,
-		asset.hostname,
-		asset.ip_address,
-		asset.cespite,
-		asset.note,
-		asset.data_archiviazione,
-		asset.note_archiviazione,
-		asset.id_account_proprietario,
-		asset.id_gruppo_proprietario,
-		asset.id_diritto_proprietario,
-		asset.id_diritto_gruppo,
-		asset.id_diritto_altri,
-		asset.id_account_inserimento,
-		asset.timestamp_inserimento,
-		asset.id_account_aggiornamento,
-		asset.timestamp_aggiornamento,
-		concat_ws( ' ', concat( '#', asset.codice ), asset_path( asset.id ) ) AS __label__
-	FROM asset
-		LEFT JOIN condizioni ON condizioni.id = asset.id_condizione
-		LEFT JOIN anagrafica AS a1 ON a1.id = asset.id_produttore
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121267
 
@@ -2674,35 +1823,10 @@ CREATE OR REPLACE VIEW `licenze_view` AS
 -- | 202611121270
 
 -- software_view
-CREATE OR REPLACE VIEW software_view AS                                                  --
-  SELECT                                                                                 --
-    software.id,                                                                         --
-    software.id_genitore,                                                                --
-    software.codice,                                                                     --
-    software.nome,                                                                       --
-    software.id_prodotto,                                                                --
-    prodotti.nome AS prodotto,                                                           -- nome del prodotto
-    software.id_articolo,                                                                --
-    concat_ws( ' - ', p2.nome, articoli.nome ) AS articolo,                              -- prodotto e articolo
-    software.json,                                                                       --
-    software.note,                                                                       --
-    software.id_account_proprietario,                                                    --
-    software.id_gruppo_proprietario,                                                     --
-    software.id_diritto_proprietario,                                                    --
-    software.id_diritto_gruppo,                                                          --
-    software.id_diritto_altri,                                                           --
-    software.id_account_inserimento,                                                     --
-    software.id_account_aggiornamento,                                                   --
-    concat_ws(                                                                           --
-      ' ',                                                                               --
-      software.codice,                                                                   --
-      software_path( software.id )                                                       --
-    ) AS __label__                                                                       -- etichetta per le tendine e le liste
-  FROM software                                                                          --
-    LEFT JOIN prodotti ON prodotti.id = software.id_prodotto                             --
-    LEFT JOIN articoli ON articoli.id = software.id_articolo                             --
-    LEFT JOIN prodotti AS p2 ON p2.id = articoli.id_prodotto                             --
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121271
 
@@ -2792,150 +1916,26 @@ CREATE OR REPLACE VIEW `badge_view` AS
 -- | 202611121273
 
 -- organizzazioni_view
-CREATE OR REPLACE VIEW `organizzazioni_view` AS
-	SELECT
-		organizzazioni.id,
-		organizzazioni.id_genitore,
-		organizzazioni.ordine,
-		organizzazioni.nome,
-		organizzazioni.id_anagrafica,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		organizzazioni.note,
-		organizzazioni.id_account_proprietario,
-		organizzazioni.id_gruppo_proprietario,
-		organizzazioni.id_diritto_proprietario,
-		organizzazioni.id_diritto_gruppo,
-		organizzazioni.id_diritto_altri,
-		organizzazioni.id_account_inserimento,
-		organizzazioni.id_account_aggiornamento,
-		organizzazioni_path( organizzazioni.id ) AS __label__
-	FROM organizzazioni
-		LEFT JOIN anagrafica AS a1 ON a1.id = organizzazioni.id_anagrafica
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121274
 
 -- immobili_view
-CREATE OR REPLACE VIEW immobili_view AS
-	SELECT
-		immobili.id,
-		immobili.id_tipologia,
-		tipologie_immobili.nome AS tipologia,
-		immobili.codice,
-		immobili.nome,
-		immobili.id_edificio,
-		edifici.id_indirizzo,
-		concat_ws(
-			' ',
-			tipologie_indirizzi.nome,
-			indirizzi.indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) AS indirizzo,
-		immobili.scala,
-		immobili.piano,
-		immobili.interno,
-		immobili.campanello,
-		immobili.catasto_foglio,
-		immobili.catasto_particella,
-		immobili.catasto_sub,
-		immobili.catasto_categoria,
-		immobili.catasto_classe,
-		immobili.catasto_consistenza,
-		immobili.catasto_superficie,
-		immobili.catasto_rendita,
-		(
-			SELECT group_concat( zone_path( zone_indirizzi.id_zona ) SEPARATOR ' | ' )
-			FROM zone_indirizzi
-			WHERE zone_indirizzi.id_indirizzo = indirizzi.id
-		) AS zone,
-		immobili.id_account_proprietario,
-		immobili.id_gruppo_proprietario,
-		immobili.id_diritto_proprietario,
-		immobili.id_diritto_gruppo,
-		immobili.id_diritto_altri,
-		immobili.id_account_inserimento,
-		immobili.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			tipologie_immobili.nome,
-			coalesce( concat( 'scala ', immobili.scala ), '' ),
-			coalesce( concat( 'piano ', immobili.piano ), '' ),
-			coalesce( concat( 'int. ', immobili.interno ), '' ),
-			tipologie_edifici.nome,
-			edifici.nome,
-			tipologie_indirizzi.nome,
-			indirizzi.indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) AS __label__
-	FROM immobili
-		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
-		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
-		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
-		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
-		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
-		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
-		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121275
 
 -- edifici_view
-CREATE OR REPLACE VIEW edifici_view AS
-	SELECT
-		edifici.id,
-		edifici.id_genitore,
-		edifici.id_tipologia,
-		tipologie_edifici.nome AS tipologia,
-		edifici.codice,
-		edifici.nome,
-		edifici.id_indirizzo,
-		concat_ws(
-			' ',
-			tipologie_indirizzi.nome,
-			indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) AS indirizzo,
-		edifici.piani,
-		edifici.id_account_proprietario,
-		edifici.id_gruppo_proprietario,
-		edifici.id_diritto_proprietario,
-		edifici.id_diritto_gruppo,
-		edifici.id_diritto_altri,
-		edifici.id_account_inserimento,
-		edifici.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			tipologie_edifici.nome,
-			edifici_path( edifici.id ),
-			tipologie_indirizzi.nome,
-			indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) AS __label__
-	FROM edifici
-		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
-		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
-		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
-		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
-		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN regioni ON regioni.id = provincie.id_regione
-		LEFT JOIN stati ON stati.id = regioni.id_stato
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121276
 
@@ -3036,313 +2036,34 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 -- | 202611121278
 
 -- luoghi_view
-CREATE OR REPLACE VIEW `luoghi_view` AS
-	SELECT
-		luoghi.id,
-		luoghi.id_genitore,
-		luoghi.id_tipologia,
-		tipologie_luoghi_path( luoghi.id_tipologia ) AS tipologia,
-		luoghi.nome,
-		luoghi.id_indirizzo,
-		concat_ws(
-			' ',
-			tipologie_indirizzi.nome,
-			indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) AS indirizzo,
-		luoghi.id_edificio,
-		luoghi.id_immobile,
-		luoghi.id_vano,
-		luoghi.url,
-		luoghi.id_account_proprietario,
-		luoghi.id_gruppo_proprietario,
-		luoghi.id_diritto_proprietario,
-		luoghi.id_diritto_gruppo,
-		luoghi.id_diritto_altri,
-		luoghi.id_account_inserimento,
-		luoghi.id_account_aggiornamento,
-		luoghi_path( luoghi.id ) AS __label__
-	FROM luoghi
-		LEFT JOIN indirizzi ON indirizzi.id = luoghi.id_indirizzo
-		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
-		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
-		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121279
 
 -- pagine_view
-CREATE OR REPLACE VIEW pagine_view AS
-	SELECT
-		pagine.id,
-		pagine.id_genitore,
-		pagine.ordine,
-		pagine.codice,
-		pagine.nome,
-		pagine.note,
-		pagine.id_pagina_contenuti,
-		pagine.template,
-		pagine.schema_html,
-		pagine.tema_css,
-		pagine.se_sitemap,
-		pagine.se_cacheable,
-		pagine.id_sito,
-		pagine.data_archiviazione,
-		count( p1.id ) AS figli,
-		pagine.id_account_proprietario,
-		pagine.id_gruppo_proprietario,
-		pagine.id_diritto_proprietario,
-		pagine.id_diritto_gruppo,
-		pagine.id_diritto_altri,
-		pagine.id_account_inserimento,
-		pagine.id_account_aggiornamento,
-		pagine_path( pagine.id ) AS __label__
-	FROM pagine
-		LEFT JOIN pagine AS p1 ON p1.id_genitore = pagine.id
-	GROUP BY pagine.id
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121280
 
 -- prodotti_view
-CREATE OR REPLACE VIEW `prodotti_view` AS
-	SELECT
-		-- PUBBLICAZIONE: SOTTOQUERY, NON JOIN ( 22/10/2026 )
-		--
-		-- prima era una LEFT JOIN su pubblicazioni: un prodotto con piu' pubblicazioni usciva una volta per
-		-- pubblicazione ( su utensilerialughese cinque righe doppie ). Si prende la prima pubblicazione del
-		-- prodotto, come in articoli_view, la prima nell'ordine.
-		( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 ) AS id_tipologia_pubblicazione,
-		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = (
-				SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1
-			) ) AS pubblicazione,
-		prodotti.id,
-		prodotti.id_tipologia,
-		tipologie_prodotti.nome AS tipologia,
-		tipologie_prodotti.se_prodotto,
-		tipologie_prodotti.se_servizio,
-		prodotti.codice,
-		prodotti.nome,
-		prodotti.id_marchio,
-		marchi.nome AS marchio,
-		prodotti.id_produttore,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
-		prodotti.codice_produttore,
-		prodotti.note,
-		prodotti.note_codifica,
-		-- SOTTOQUERY E NON JOIN PIU' GROUP BY: vedi la nota in articoli_view. Misurato
-		-- l'08/09/2026: SELECT * ... WHERE id = ? da 0,81 secondi a 0,011, un elenco di venti
-		-- righe da 0,74 a 0,017.
-		coalesce( ( SELECT group_concat( DISTINCT categorie_prodotti_path( pc.id_categoria ) SEPARATOR ' | ' )
-			FROM prodotti_categorie AS pc
-		   WHERE pc.id_prodotto = prodotti.id
-		), '' ) AS categorie,
-		prodotti.template,
-		prodotti.schema_html,
-		prodotti.tema_css,
-		prodotti.se_sitemap,
-		prodotti.se_cacheable,
-		prodotti.id_sito,
-		prodotti.id_pagina,
-		prodotti.data_archiviazione,
-		prodotti.id_account_proprietario,
-		prodotti.id_gruppo_proprietario,
-		prodotti.id_diritto_proprietario,
-		prodotti.id_diritto_gruppo,
-		prodotti.id_diritto_altri,
-		prodotti.id_account_inserimento,
-		prodotti.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			prodotti.codice,
-			prodotti.nome
-		) AS __label__
-	FROM prodotti
-		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
-		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
-		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121281
 
 -- articoli_view
-CREATE OR REPLACE VIEW `articoli_view` AS
-	SELECT
-		-- PUBBLICAZIONE: SOTTOQUERY, NON JOIN ( 2026-10-04 )
-		--
-		-- prima erano due LEFT JOIN su pubblicazioni ( dell'articolo e del prodotto ): un articolo con
-		-- piu' pubblicazioni usciva una volta per pubblicazione, e su glisweb la vista dava 7.920 righe
-		-- per 132 articoli. La statica, che ha id come chiave primaria, non si riusciva piu' a
-		-- riempire. Si prende la prima pubblicazione dell'articolo, se no la prima del prodotto; la prima e' quella
-		-- che viene prima nell'ordine ( punto 6e ), su qualunque sito.
-		coalesce(
-			( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.ordine IS NULL, pa.ordine, pa.id LIMIT 1 ),
-			( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 )
-		) AS id_tipologia_pubblicazione,
-		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = coalesce(
-				( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.ordine IS NULL, pa.ordine, pa.id LIMIT 1 ),
-				( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 )
-			) ) AS pubblicazione,
-		-- TIPOLOGIA DI VOCE A LISTINO: SOTTOQUERY, NON JOIN
-		--
-		-- prima erano tre LEFT JOIN su articoli_caratteristiche piu' un max( CASE ... ) sotto il
-		-- GROUP BY. Funziona, ma moltiplica le righe per le caratteristiche di ogni articolo, e
-		-- quando quella tabella si riempie la vista non si regge piu': l'08/09/2026, con le 7.580
-		-- righe arrivate dalla migrazione del catalogo, la vista e' passata da meno di un secondo
-		-- a cinque. La sottoquery scalare da' lo stesso valore e non tocca la cardinalita'
-		( SELECT tipo_voce.nome
-			FROM articoli_caratteristiche AS ac_tipo
-			INNER JOIN caratteristiche_prodotti AS tipo_voce ON tipo_voce.id = ac_tipo.id_caratteristica
-			INNER JOIN caratteristiche_prodotti AS radice_tipo ON radice_tipo.id = tipo_voce.id_genitore
-			WHERE ac_tipo.id_articolo = articoli.id
-			AND radice_tipo.nome = 'TIPO DI VOCE A LISTINO'
-			LIMIT 1
-		) AS tipologia_listino,
-		articoli.id,
-		articoli.codice,
-		articoli.id_prodotto,
-		prodotti.nome AS prodotto,
-		articoli.ordine,
-		articoli.ean,
-		articoli.isbn,
-		articoli.codice_produttore,
-		articoli.id_reparto,
-		articoli.id_taglia,
-		articoli.id_colore,
-		articoli.id_periodicita,
-		periodicita.nome AS periodicita,
-		articoli.id_tipologia_rinnovo,
-		tipologie_rinnovi.nome AS tipologia_rinnovo,
-		articoli.larghezza,
-		articoli.lunghezza,
-		articoli.altezza,
-		articoli.id_udm_dimensioni,
-		udm_dimensioni.sigla AS udm_dimensioni,
-		articoli.peso,
-		articoli.id_udm_peso,
-		udm_peso.sigla AS udm_peso,
-		articoli.volume,
-		articoli.id_udm_volume,
-		udm_volume.sigla AS udm_volume,
-		articoli.capacita,
-		articoli.id_udm_capacita,
-		udm_capacita.sigla AS udm_capacita,
-		articoli.durata,
-		articoli.id_udm_durata,
-		udm_durata.sigla AS udm_durata,
-		concat_ws(
-			' ',
-			prodotti.nome,
-			nullif( articoli.nome, prodotti.nome ),
-			coalesce(
-				concat(
-					concat_ws( 'x', articoli.larghezza, articoli.lunghezza, articoli.altezza ),
-					udm_dimensioni.sigla
-				),
-				concat(
-					articoli.peso,
-					udm_peso.sigla
-				),
-				concat(
-					articoli.volume,
-					udm_volume.sigla
-				),
-				concat(
-					articoli.capacita,
-					udm_capacita.sigla
-				),
-				concat(
-					articoli.durata,
-					udm_durata.sigla
-				),
-				''
-			)
-		) AS nome,
-		articoli.note,
-		articoli.note_codifica,
-		-- CATEGORIE E PREZZI: SOTTOQUERY, NON JOIN PIU' GROUP BY
-		--
-		-- stessa ragione della sottoquery di tipologia_listino qui sopra, ma il guasto era peggiore:
-		-- il GROUP BY impedisce all'ottimizzatore di spingere dentro la vista una condizione
-		-- espressa con un SEGNAPOSTO, e il framework interroga sempre con statement preparati.
-		-- Misurato l'08/09/2026: SELECT * ... WHERE id = ? passava da 2,36 secondi a 0,032, e un
-		-- elenco di venti righe da 2,76 a 0,26 - perche' categorie_prodotti_path(), che e' una
-		-- funzione ricorsiva, adesso viene chiamata solo per le righe che si mostrano davvero e
-		-- non per tutte quelle della vista.
-		--
-		-- il coalesce a stringa vuota NON e' pignoleria: con la LEFT JOIN un articolo senza
-		-- categorie dava '' e non NULL, perche' categorie_prodotti_path( NULL ) torna '' e il
-		-- group_concat trovava comunque una riga. id_categorie invece resta NULL come prima.
-		( SELECT group_concat( DISTINCT pc.id_categoria SEPARATOR ' | ' )
-			FROM prodotti_categorie AS pc
-			WHERE pc.id_prodotto = articoli.id_prodotto
-		) AS id_categorie,
-		coalesce( ( SELECT group_concat( DISTINCT categorie_prodotti_path( pc.id_categoria ) SEPARATOR ' | ' )
-			FROM prodotti_categorie AS pc
-			WHERE pc.id_prodotto = articoli.id_prodotto
-		), '' ) AS categorie,
-		coalesce( ( SELECT group_concat( DISTINCT concat_ws( ' ', l.nome, v.iso4217, format( p.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' )
-			FROM prezzi AS p
-			LEFT JOIN listini AS l ON l.id = p.id_listino
-			LEFT JOIN valute AS v ON v.id = l.id_valuta
-			WHERE p.id_articolo = articoli.id
-		), '' ) AS prezzi,
-		coalesce( articoli.data_archiviazione, prodotti.data_archiviazione ) AS data_archiviazione,
-		articoli.note_archiviazione,
-		articoli.id_account_proprietario,                     --
-		articoli.id_gruppo_proprietario,                      --
-		articoli.id_diritto_proprietario,                     --
-		articoli.id_diritto_gruppo,                           --
-		articoli.id_diritto_altri,                            --
-		articoli.id_account_inserimento,                      --
-		articoli.timestamp_inserimento,                       --
-		articoli.id_account_aggiornamento,                    --
-		articoli.timestamp_aggiornamento,                     --
-		concat_ws(
-			' ',
-			articoli.ean,
-			articoli.codice,
-			'/',
-			prodotti.nome,
-			nullif( articoli.nome, prodotti.nome ),
-			coalesce(
-				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
-					udm_dimensioni.sigla
-				),
-				concat(
-					articoli.peso,
-					udm_peso.sigla
-				),
-				concat(
-					articoli.volume,
-					udm_volume.sigla
-				),
-				concat(
-					articoli.capacita,
-					udm_capacita.sigla
-				),
-				concat(
-					articoli.durata,
-					udm_durata.sigla
-				),
-				''
-			)
-		) AS __label__
-	FROM articoli
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
-		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
-		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
-		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
-		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
-		LEFT JOIN periodicita ON periodicita.id = articoli.id_periodicita
-		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = articoli.id_tipologia_rinnovo
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121282
 
@@ -3436,48 +2157,319 @@ CREATE OR REPLACE VIEW `annunci_view` AS
 -- | 202611121285
 
 -- risorse_view
-CREATE OR REPLACE VIEW `risorse_view` AS
-	SELECT
-		risorse.id,
-		risorse.id_tipologia,
-		tipologie_risorse.nome AS tipologia,
-		risorse.codice,
-		risorse.nome,
-		risorse.id_prodotto,
-		risorse.id_articolo,
-		risorse.id_testata,
-		testate.nome AS testata,
-		group_concat( DISTINCT categorie_risorse_path( categorie_risorse.id ) SEPARATOR ' | ' ) AS categorie,
-		risorse.note,
-		risorse.giorno_pubblicazione,
-		risorse.mese_pubblicazione,
-		risorse.anno_pubblicazione,
-		risorse.template,
-		risorse.schema_html,
-		risorse.tema_css,
-		risorse.se_sitemap,
-		risorse.se_cacheable,
-		risorse.id_sito,
-		risorse.id_pagina,
-		risorse.data_archiviazione,
-		risorse.id_account_proprietario,
-		risorse.id_gruppo_proprietario,
-		risorse.id_diritto_proprietario,
-		risorse.id_diritto_gruppo,
-		risorse.id_diritto_altri,
-		risorse.id_account_inserimento,
-		risorse.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			risorse.codice,
-			risorse.nome
-		) AS __label__
-	FROM risorse
-		LEFT JOIN tipologie_risorse ON tipologie_risorse.id = risorse.id_tipologia
-		LEFT JOIN testate ON testate.id = risorse.id_testata
-		LEFT JOIN risorse_categorie ON risorse_categorie.id_risorsa = risorse.id
-		LEFT JOIN categorie_risorse ON categorie_risorse.id = risorse_categorie.id_categoria
-	GROUP BY risorse.id
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
+
+-- | 202611121286
+
+-- le statiche delle 1287-1291 passano dalla procedura, che qui si crea: la 202610041000 non c'e' sui database nati dai
+-- file base, che non la contengono ( 24/11: www2 di bernispa si fermava con 1305 )
+-- la procedura che, se la statica c'e', prova un'istruzione e, se fallisce, lo annota invece di fermare la coda
+CREATE OR REPLACE PROCEDURE `__patch_statiche_forma__`( IN tabella VARCHAR(64), IN istruzione LONGTEXT )
+BEGIN
+
+    DECLARE messaggio TEXT DEFAULT NULL;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+        BEGIN
+            GET DIAGNOSTICS CONDITION 1 messaggio = MESSAGE_TEXT;
+        END;
+
+    IF EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = tabella ) THEN
+
+        SET @statiche_forma_sql = istruzione;
+        PREPARE prova FROM @statiche_forma_sql;
+        IF messaggio IS NULL THEN
+            EXECUTE prova;
+            DEALLOCATE PREPARE prova;
+        END IF;
+
+        IF messaggio IS NOT NULL THEN
+            SET @statiche_forma_note = CONCAT_WS( '\n', @statiche_forma_note, CONCAT( tabella, ': ', messaggio ) );
+        END IF;
+
+    END IF;
+
+END;
+
+-- | 202611121287
+
+-- anagrafica_view_static: le colonne nuove della vista, allo stesso posto
+-- la statica passa dalla procedura delle statiche, creata qui sopra nella 202611121286: dove su un deploy non c'e' si salta
+CALL `__patch_statiche_forma__`( 'anagrafica_view_static', 'ALTER TABLE `anagrafica_view_static`
+	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `data_archiviazione`,
+	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`' );
+
+-- | 202611121288
+
+-- articoli_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
+-- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
+-- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
+-- la statica passa dalla procedura delle statiche, creata qui sopra nella 202611121286: dove su un deploy non c'e' si salta
+CALL `__patch_statiche_forma__`( 'articoli_view_static', 'ALTER TABLE `articoli_view_static`
+	ADD COLUMN IF NOT EXISTS `id_tipologia_pubblicazione` bigint(20) DEFAULT NULL FIRST,
+	ADD COLUMN IF NOT EXISTS `pubblicazione` char(32) DEFAULT NULL AFTER `id_tipologia_pubblicazione`,
+	ADD COLUMN IF NOT EXISTS `tipologia_listino` char(64) DEFAULT NULL AFTER `pubblicazione`,
+	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `id`,
+	ADD COLUMN IF NOT EXISTS `id_prodotto` bigint(20) DEFAULT NULL AFTER `codice`,
+	ADD COLUMN IF NOT EXISTS `prodotto` char(255) DEFAULT NULL AFTER `id_prodotto`,
+	ADD COLUMN IF NOT EXISTS `ordine` int(11) DEFAULT NULL AFTER `prodotto`,
+	ADD COLUMN IF NOT EXISTS `ean` char(32) DEFAULT NULL AFTER `ordine`,
+	ADD COLUMN IF NOT EXISTS `isbn` char(32) DEFAULT NULL AFTER `ean`,
+	ADD COLUMN IF NOT EXISTS `codice_produttore` char(64) DEFAULT NULL AFTER `isbn`,
+	ADD COLUMN IF NOT EXISTS `id_reparto` bigint(20) DEFAULT NULL AFTER `codice_produttore`,
+	ADD COLUMN IF NOT EXISTS `id_taglia` bigint(20) DEFAULT NULL AFTER `id_reparto`,
+	ADD COLUMN IF NOT EXISTS `id_colore` bigint(20) DEFAULT NULL AFTER `id_taglia`,
+	ADD COLUMN IF NOT EXISTS `id_periodicita` bigint(20) DEFAULT NULL AFTER `id_colore`,
+	ADD COLUMN IF NOT EXISTS `periodicita` char(32) DEFAULT NULL AFTER `id_periodicita`,
+	ADD COLUMN IF NOT EXISTS `id_tipologia_rinnovo` bigint(20) DEFAULT NULL AFTER `periodicita`,
+	ADD COLUMN IF NOT EXISTS `tipologia_rinnovo` char(32) DEFAULT NULL AFTER `id_tipologia_rinnovo`,
+	ADD COLUMN IF NOT EXISTS `larghezza` decimal(12,5) DEFAULT NULL AFTER `tipologia_rinnovo`,
+	ADD COLUMN IF NOT EXISTS `lunghezza` decimal(12,5) DEFAULT NULL AFTER `larghezza`,
+	ADD COLUMN IF NOT EXISTS `altezza` decimal(12,5) DEFAULT NULL AFTER `lunghezza`,
+	ADD COLUMN IF NOT EXISTS `id_udm_dimensioni` bigint(20) DEFAULT NULL AFTER `altezza`,
+	ADD COLUMN IF NOT EXISTS `udm_dimensioni` char(32) DEFAULT NULL AFTER `id_udm_dimensioni`,
+	ADD COLUMN IF NOT EXISTS `peso` decimal(12,5) DEFAULT NULL AFTER `udm_dimensioni`,
+	ADD COLUMN IF NOT EXISTS `id_udm_peso` bigint(20) DEFAULT NULL AFTER `peso`,
+	ADD COLUMN IF NOT EXISTS `udm_peso` char(32) DEFAULT NULL AFTER `id_udm_peso`,
+	ADD COLUMN IF NOT EXISTS `volume` decimal(12,5) DEFAULT NULL AFTER `udm_peso`,
+	ADD COLUMN IF NOT EXISTS `id_udm_volume` bigint(20) DEFAULT NULL AFTER `volume`,
+	ADD COLUMN IF NOT EXISTS `udm_volume` char(32) DEFAULT NULL AFTER `id_udm_volume`,
+	ADD COLUMN IF NOT EXISTS `capacita` decimal(12,5) DEFAULT NULL AFTER `udm_volume`,
+	ADD COLUMN IF NOT EXISTS `id_udm_capacita` bigint(20) DEFAULT NULL AFTER `capacita`,
+	ADD COLUMN IF NOT EXISTS `udm_capacita` char(32) DEFAULT NULL AFTER `id_udm_capacita`,
+	ADD COLUMN IF NOT EXISTS `durata` decimal(12,5) DEFAULT NULL AFTER `udm_capacita`,
+	ADD COLUMN IF NOT EXISTS `id_udm_durata` bigint(20) DEFAULT NULL AFTER `durata`,
+	ADD COLUMN IF NOT EXISTS `udm_durata` char(32) DEFAULT NULL AFTER `id_udm_durata`,
+	ADD COLUMN IF NOT EXISTS `nome` varchar(512) DEFAULT NULL AFTER `udm_durata`,
+	ADD COLUMN IF NOT EXISTS `note` text AFTER `nome`,
+	ADD COLUMN IF NOT EXISTS `note_codifica` text AFTER `note`,
+	ADD COLUMN IF NOT EXISTS `id_categorie` char(255) DEFAULT NULL AFTER `note_codifica`,
+	ADD COLUMN IF NOT EXISTS `categorie` char(255) DEFAULT NULL AFTER `id_categorie`,
+	ADD COLUMN IF NOT EXISTS `prezzi` text DEFAULT NULL AFTER `categorie`,
+	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `prezzi`,
+	ADD COLUMN IF NOT EXISTS `note_archiviazione` text AFTER `data_archiviazione`,
+	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `note_archiviazione`,
+	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
+	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
+	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
+	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
+	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
+	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`' );
+
+-- | 202611121289
+
+-- attivita_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
+-- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
+-- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
+-- la statica passa dalla procedura delle statiche, creata qui sopra nella 202611121286: dove su un deploy non c'e' si salta
+CALL `__patch_statiche_forma__`( 'attivita_view_static', 'ALTER TABLE `attivita_view_static`
+	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
+	ADD COLUMN IF NOT EXISTS `tipologia` char(64) DEFAULT NULL AFTER `id_tipologia`,
+	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
+	ADD COLUMN IF NOT EXISTS `id_cliente` bigint(20) DEFAULT NULL AFTER `codice`,
+	ADD COLUMN IF NOT EXISTS `codice_cliente` char(64) DEFAULT NULL AFTER `id_cliente`,
+	ADD COLUMN IF NOT EXISTS `cliente` char(255) DEFAULT NULL AFTER `codice_cliente`,
+	ADD COLUMN IF NOT EXISTS `id_contatto` bigint(20) DEFAULT NULL AFTER `cliente`,
+	ADD COLUMN IF NOT EXISTS `contatto` char(255) DEFAULT NULL AFTER `id_contatto`,
+	ADD COLUMN IF NOT EXISTS `id_indirizzo` bigint(20) DEFAULT NULL AFTER `contatto`,
+	ADD COLUMN IF NOT EXISTS `indirizzo` text AFTER `id_indirizzo`,
+	ADD COLUMN IF NOT EXISTS `id_luogo` bigint(20) DEFAULT NULL AFTER `indirizzo`,
+	ADD COLUMN IF NOT EXISTS `luogo` char(255) DEFAULT NULL AFTER `id_luogo`,
+	ADD COLUMN IF NOT EXISTS `id_messaggio` bigint(20) DEFAULT NULL AFTER `luogo`,
+	ADD COLUMN IF NOT EXISTS `id_asset` bigint(20) DEFAULT NULL AFTER `id_messaggio`,
+	ADD COLUMN IF NOT EXISTS `asset` char(255) DEFAULT NULL AFTER `id_asset`,
+	ADD COLUMN IF NOT EXISTS `data_riferimento` date DEFAULT NULL AFTER `asset`,
+	ADD COLUMN IF NOT EXISTS `ora_inizio_riferimento` time DEFAULT NULL AFTER `data_riferimento`,
+	ADD COLUMN IF NOT EXISTS `ora_fine_riferimento` time DEFAULT NULL AFTER `ora_inizio_riferimento`,
+	ADD COLUMN IF NOT EXISTS `anagrafica_riferimento` char(255) DEFAULT NULL AFTER `ora_fine_riferimento`,
+	ADD COLUMN IF NOT EXISTS `data_scadenza` date DEFAULT NULL AFTER `anagrafica_riferimento`,
+	ADD COLUMN IF NOT EXISTS `ora_scadenza` time DEFAULT NULL AFTER `data_scadenza`,
+	ADD COLUMN IF NOT EXISTS `data_programmazione` date DEFAULT NULL AFTER `ora_scadenza`,
+	ADD COLUMN IF NOT EXISTS `ora_inizio_programmazione` time DEFAULT NULL AFTER `data_programmazione`,
+	ADD COLUMN IF NOT EXISTS `ora_fine_programmazione` time DEFAULT NULL AFTER `ora_inizio_programmazione`,
+	ADD COLUMN IF NOT EXISTS `id_anagrafica_programmazione` bigint(20) DEFAULT NULL AFTER `ora_fine_programmazione`,
+	ADD COLUMN IF NOT EXISTS `anagrafica_programmazione` char(255) DEFAULT NULL AFTER `id_anagrafica_programmazione`,
+	ADD COLUMN IF NOT EXISTS `ore_programmazione` decimal(5,2) DEFAULT NULL AFTER `anagrafica_programmazione`,
+	ADD COLUMN IF NOT EXISTS `se_confermata` tinyint(1) DEFAULT NULL AFTER `ore_programmazione`,
+	ADD COLUMN IF NOT EXISTS `data_attivita` date DEFAULT NULL AFTER `se_confermata`,
+	ADD COLUMN IF NOT EXISTS `giorno_attivita` int(2) DEFAULT NULL AFTER `data_attivita`,
+	ADD COLUMN IF NOT EXISTS `mese_attivita` int(2) DEFAULT NULL AFTER `giorno_attivita`,
+	ADD COLUMN IF NOT EXISTS `anno_attivita` int(4) DEFAULT NULL AFTER `mese_attivita`,
+	ADD COLUMN IF NOT EXISTS `ora_inizio` time DEFAULT NULL AFTER `anno_attivita`,
+	ADD COLUMN IF NOT EXISTS `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL AFTER `ora_inizio`,
+	ADD COLUMN IF NOT EXISTS `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL AFTER `latitudine_ora_inizio`,
+	ADD COLUMN IF NOT EXISTS `data_fine` date DEFAULT NULL AFTER `longitudine_ora_inizio`,
+	ADD COLUMN IF NOT EXISTS `ora_fine` time DEFAULT NULL AFTER `data_fine`,
+	ADD COLUMN IF NOT EXISTS `latitudine_ora_fine` decimal(11,7) DEFAULT NULL AFTER `ora_fine`,
+	ADD COLUMN IF NOT EXISTS `longitudine_ora_fine` decimal(11,7) DEFAULT NULL AFTER `latitudine_ora_fine`,
+	ADD COLUMN IF NOT EXISTS `id_anagrafica` bigint(20) DEFAULT NULL AFTER `longitudine_ora_fine`,
+	ADD COLUMN IF NOT EXISTS `anagrafica` char(255) DEFAULT NULL AFTER `id_anagrafica`,
+	ADD COLUMN IF NOT EXISTS `id_account` bigint(20) DEFAULT NULL AFTER `anagrafica`,
+	ADD COLUMN IF NOT EXISTS `ore` decimal(5,2) DEFAULT NULL AFTER `id_account`,
+	ADD COLUMN IF NOT EXISTS `id_articolo` bigint(20) DEFAULT NULL AFTER `ore`,
+	ADD COLUMN IF NOT EXISTS `quantita_prevista` decimal(9,2) DEFAULT NULL AFTER `id_articolo`,
+	ADD COLUMN IF NOT EXISTS `nome` char(255) DEFAULT NULL AFTER `quantita_prevista`,
+	ADD COLUMN IF NOT EXISTS `id_documento` bigint(20) DEFAULT NULL AFTER `nome`,
+	ADD COLUMN IF NOT EXISTS `documento` char(255) DEFAULT NULL AFTER `id_documento`,
+	ADD COLUMN IF NOT EXISTS `id_corrispondenza` bigint(20) DEFAULT NULL AFTER `documento`,
+	ADD COLUMN IF NOT EXISTS `corrispondenza` char(255) DEFAULT NULL AFTER `id_corrispondenza`,
+	ADD COLUMN IF NOT EXISTS `id_progetto` bigint(20) DEFAULT NULL AFTER `corrispondenza`,
+	ADD COLUMN IF NOT EXISTS `progetto` char(255) DEFAULT NULL AFTER `id_progetto`,
+	ADD COLUMN IF NOT EXISTS `id_contratto` bigint(20) DEFAULT NULL AFTER `progetto`,
+	ADD COLUMN IF NOT EXISTS `contratto` char(255) DEFAULT NULL AFTER `id_contratto`,
+	ADD COLUMN IF NOT EXISTS `discipline` char(255) DEFAULT NULL AFTER `contratto`,
+	ADD COLUMN IF NOT EXISTS `id_matricola` bigint(20) DEFAULT NULL AFTER `discipline`,
+	ADD COLUMN IF NOT EXISTS `id_immobile` bigint(20) DEFAULT NULL AFTER `id_matricola`,
+	ADD COLUMN IF NOT EXISTS `id_step` bigint(20) DEFAULT NULL AFTER `id_immobile`,
+	ADD COLUMN IF NOT EXISTS `step` char(255) DEFAULT NULL AFTER `id_step`,
+	ADD COLUMN IF NOT EXISTS `id_pianificazione` bigint(20) DEFAULT NULL AFTER `step`,
+	ADD COLUMN IF NOT EXISTS `id_todo` bigint(20) DEFAULT NULL AFTER `id_pianificazione`,
+	ADD COLUMN IF NOT EXISTS `todo` char(255) DEFAULT NULL AFTER `id_todo`,
+	ADD COLUMN IF NOT EXISTS `id_mastro_provenienza` bigint(20) DEFAULT NULL AFTER `todo`,
+	ADD COLUMN IF NOT EXISTS `mastro_provenienza` char(64) DEFAULT NULL AFTER `id_mastro_provenienza`,
+	ADD COLUMN IF NOT EXISTS `id_mastro_destinazione` bigint(20) DEFAULT NULL AFTER `mastro_provenienza`,
+	ADD COLUMN IF NOT EXISTS `mastro_destinazione` char(64) DEFAULT NULL AFTER `id_mastro_destinazione`,
+	ADD COLUMN IF NOT EXISTS `codice_archivium` char(32) DEFAULT NULL AFTER `mastro_destinazione`,
+	ADD COLUMN IF NOT EXISTS `token` char(128) DEFAULT NULL AFTER `codice_archivium`,
+	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `token`,
+	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
+	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
+	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
+	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
+	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
+	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `timestamp_aggiornamento`,
+	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `data_archiviazione`' );
+
+-- | 202611121290
+
+-- documenti_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
+-- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
+-- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
+-- la statica passa dalla procedura delle statiche, creata qui sopra nella 202611121286: dove su un deploy non c'e' si salta
+CALL `__patch_statiche_forma__`( 'documenti_view_static', 'ALTER TABLE `documenti_view_static`
+	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
+	ADD COLUMN IF NOT EXISTS `tipologia` char(255) DEFAULT NULL AFTER `id_tipologia`,
+	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
+	ADD COLUMN IF NOT EXISTS `numero` char(32) DEFAULT NULL AFTER `codice`,
+	ADD COLUMN IF NOT EXISTS `sezionale` char(32) DEFAULT NULL AFTER `numero`,
+	ADD COLUMN IF NOT EXISTS `numero_sezionale` varchar(65) DEFAULT NULL AFTER `sezionale`,
+	ADD COLUMN IF NOT EXISTS `data` date DEFAULT NULL AFTER `numero_sezionale`,
+	ADD COLUMN IF NOT EXISTS `nome` char(255) DEFAULT NULL AFTER `data`,
+	ADD COLUMN IF NOT EXISTS `id_emittente` bigint(20) DEFAULT NULL AFTER `nome`,
+	ADD COLUMN IF NOT EXISTS `emittente` varchar(320) DEFAULT NULL AFTER `id_emittente`,
+	ADD COLUMN IF NOT EXISTS `id_referente_emittente` bigint(20) DEFAULT NULL AFTER `emittente`,
+	ADD COLUMN IF NOT EXISTS `id_sede_emittente` bigint(20) DEFAULT NULL AFTER `id_referente_emittente`,
+	ADD COLUMN IF NOT EXISTS `id_destinatario` bigint(20) DEFAULT NULL AFTER `id_sede_emittente`,
+	ADD COLUMN IF NOT EXISTS `destinatario` varchar(320) DEFAULT NULL AFTER `id_destinatario`,
+	ADD COLUMN IF NOT EXISTS `id_sede_destinatario` bigint(20) DEFAULT NULL AFTER `destinatario`,
+	ADD COLUMN IF NOT EXISTS `id_destinatario_spedizione` bigint(20) DEFAULT NULL AFTER `id_sede_destinatario`,
+	ADD COLUMN IF NOT EXISTS `destinatario_spedizione` varchar(320) DEFAULT NULL AFTER `id_destinatario_spedizione`,
+	ADD COLUMN IF NOT EXISTS `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL AFTER `destinatario_spedizione`,
+	ADD COLUMN IF NOT EXISTS `id_condizione_pagamento` bigint(20) DEFAULT NULL AFTER `id_sede_destinatario_spedizione`,
+	ADD COLUMN IF NOT EXISTS `condizione_pagamento` char(32) DEFAULT NULL AFTER `id_condizione_pagamento`,
+	ADD COLUMN IF NOT EXISTS `esigibilita` enum(\'I\',\'D\',\'S\') DEFAULT NULL AFTER `condizione_pagamento`,
+	ADD COLUMN IF NOT EXISTS `cig` char(16) DEFAULT NULL AFTER `esigibilita`,
+	ADD COLUMN IF NOT EXISTS `cup` char(16) DEFAULT NULL AFTER `cig`,
+	ADD COLUMN IF NOT EXISTS `riferimento` char(255) DEFAULT NULL AFTER `cup`,
+	ADD COLUMN IF NOT EXISTS `totale_lordo_finale` decimal(16,2) DEFAULT NULL AFTER `riferimento`,
+	ADD COLUMN IF NOT EXISTS `totale_coupon` decimal(16,2) DEFAULT NULL AFTER `totale_lordo_finale`,
+	ADD COLUMN IF NOT EXISTS `codice_sdi` char(64) DEFAULT NULL AFTER `totale_coupon`,
+	ADD COLUMN IF NOT EXISTS `codice_archivium` char(64) DEFAULT NULL AFTER `codice_sdi`,
+	ADD COLUMN IF NOT EXISTS `progressivo_invio` char(5) DEFAULT NULL AFTER `codice_archivium`,
+	ADD COLUMN IF NOT EXISTS `timestamp_invio` int(11) DEFAULT NULL AFTER `progressivo_invio`,
+	ADD COLUMN IF NOT EXISTS `data_consegna` date DEFAULT NULL AFTER `timestamp_invio`,
+	ADD COLUMN IF NOT EXISTS `id_coupon` bigint(20) DEFAULT NULL AFTER `data_consegna`,
+	ADD COLUMN IF NOT EXISTS `id_carrello` bigint(20) DEFAULT NULL AFTER `id_coupon`,
+	ADD COLUMN IF NOT EXISTS `id_carrelli_articoli` bigint(20) DEFAULT NULL AFTER `id_carrello`,
+	ADD COLUMN IF NOT EXISTS `id_mastro_provenienza` bigint(20) DEFAULT NULL AFTER `id_carrelli_articoli`,
+	ADD COLUMN IF NOT EXISTS `mastro_provenienza` char(64) DEFAULT NULL AFTER `id_mastro_provenienza`,
+	ADD COLUMN IF NOT EXISTS `id_mastro_destinazione` bigint(20) DEFAULT NULL AFTER `mastro_provenienza`,
+	ADD COLUMN IF NOT EXISTS `mastro_destinazione` char(64) DEFAULT NULL AFTER `id_mastro_destinazione`,
+	ADD COLUMN IF NOT EXISTS `id_causale` bigint(20) DEFAULT NULL AFTER `mastro_destinazione`,
+	ADD COLUMN IF NOT EXISTS `id_trasportatore` bigint(20) DEFAULT NULL AFTER `id_causale`,
+	ADD COLUMN IF NOT EXISTS `porto` enum(\'franco\',\'assegnato\',\'-\') DEFAULT NULL AFTER `id_trasportatore`,
+	ADD COLUMN IF NOT EXISTS `id_pianificazione` bigint(20) DEFAULT NULL AFTER `porto`,
+	ADD COLUMN IF NOT EXISTS `id_progetto` bigint(20) DEFAULT NULL AFTER `id_pianificazione`,
+	ADD COLUMN IF NOT EXISTS `documenti_antecedenti` text AFTER `id_progetto`,
+	ADD COLUMN IF NOT EXISTS `documenti_successivi` text AFTER `documenti_antecedenti`,
+	ADD COLUMN IF NOT EXISTS `timestamp_chiusura` int(11) DEFAULT NULL AFTER `documenti_successivi`,
+	ADD COLUMN IF NOT EXISTS `data_ora_chiusura` char(16) DEFAULT NULL AFTER `timestamp_chiusura`,
+	ADD COLUMN IF NOT EXISTS `id_account_archiviazione` bigint(20) DEFAULT NULL AFTER `data_ora_chiusura`,
+	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `id_account_archiviazione`,
+	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `data_archiviazione`,
+	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
+	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
+	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
+	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
+	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
+	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`' );
+
+-- | 202611121291
+
+-- todo_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
+-- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
+-- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
+-- la statica passa dalla procedura delle statiche, creata qui sopra nella 202611121286: dove su un deploy non c'e' si salta
+CALL `__patch_statiche_forma__`( 'todo_view_static', 'ALTER TABLE `todo_view_static`
+	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
+	ADD COLUMN IF NOT EXISTS `tipologia` char(64) DEFAULT NULL AFTER `id_tipologia`,
+	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
+	ADD COLUMN IF NOT EXISTS `se_agenda` tinyint(1) DEFAULT NULL AFTER `codice`,
+	ADD COLUMN IF NOT EXISTS `id_anagrafica` bigint(20) DEFAULT NULL AFTER `se_agenda`,
+	ADD COLUMN IF NOT EXISTS `anagrafica` char(255) DEFAULT NULL AFTER `id_anagrafica`,
+	ADD COLUMN IF NOT EXISTS `id_cliente` bigint(20) DEFAULT NULL AFTER `anagrafica`,
+	ADD COLUMN IF NOT EXISTS `cliente` char(255) DEFAULT NULL AFTER `id_cliente`,
+	ADD COLUMN IF NOT EXISTS `id_indirizzo` bigint(20) DEFAULT NULL AFTER `cliente`,
+	ADD COLUMN IF NOT EXISTS `indirizzo` char(255) DEFAULT NULL AFTER `id_indirizzo`,
+	ADD COLUMN IF NOT EXISTS `id_luogo` bigint(20) DEFAULT NULL AFTER `indirizzo`,
+	ADD COLUMN IF NOT EXISTS `luogo` char(255) DEFAULT NULL AFTER `id_luogo`,
+	ADD COLUMN IF NOT EXISTS `timestamp_apertura` int(11) DEFAULT NULL AFTER `luogo`,
+	ADD COLUMN IF NOT EXISTS `data_scadenza` date DEFAULT NULL AFTER `timestamp_apertura`,
+	ADD COLUMN IF NOT EXISTS `ora_scadenza` time DEFAULT NULL AFTER `data_scadenza`,
+	ADD COLUMN IF NOT EXISTS `data_programmazione` date DEFAULT NULL AFTER `ora_scadenza`,
+	ADD COLUMN IF NOT EXISTS `ora_inizio_programmazione` time DEFAULT NULL AFTER `data_programmazione`,
+	ADD COLUMN IF NOT EXISTS `ora_fine_programmazione` time DEFAULT NULL AFTER `ora_inizio_programmazione`,
+	ADD COLUMN IF NOT EXISTS `anno_programmazione` year(4) DEFAULT NULL AFTER `ora_fine_programmazione`,
+	ADD COLUMN IF NOT EXISTS `settimana_programmazione` int(11) DEFAULT NULL AFTER `anno_programmazione`,
+	ADD COLUMN IF NOT EXISTS `ore_programmazione` decimal(5,2) DEFAULT NULL AFTER `settimana_programmazione`,
+	ADD COLUMN IF NOT EXISTS `data_chiusura` date DEFAULT NULL AFTER `ore_programmazione`,
+	ADD COLUMN IF NOT EXISTS `nome` char(255) DEFAULT NULL AFTER `data_chiusura`,
+	ADD COLUMN IF NOT EXISTS `id_contatto` bigint(20) DEFAULT NULL AFTER `nome`,
+	ADD COLUMN IF NOT EXISTS `id_progetto` bigint(20) DEFAULT NULL AFTER `id_contatto`,
+	ADD COLUMN IF NOT EXISTS `progetto` char(255) DEFAULT NULL AFTER `id_progetto`,
+	ADD COLUMN IF NOT EXISTS `discipline` char(255) DEFAULT NULL AFTER `progetto`,
+	ADD COLUMN IF NOT EXISTS `id_documento` bigint(20) DEFAULT NULL AFTER `discipline`,
+	ADD COLUMN IF NOT EXISTS `documento` char(255) DEFAULT NULL AFTER `id_documento`,
+	ADD COLUMN IF NOT EXISTS `id_documenti_articoli` bigint(20) DEFAULT NULL AFTER `documento`,
+	ADD COLUMN IF NOT EXISTS `documenti_articoli` char(255) DEFAULT NULL AFTER `id_documenti_articoli`,
+	ADD COLUMN IF NOT EXISTS `id_istruzione` bigint(20) DEFAULT NULL AFTER `documenti_articoli`,
+	ADD COLUMN IF NOT EXISTS `istruzione` char(255) DEFAULT NULL AFTER `id_istruzione`,
+	ADD COLUMN IF NOT EXISTS `id_pianificazione` bigint(20) DEFAULT NULL AFTER `istruzione`,
+	ADD COLUMN IF NOT EXISTS `id_immobile` bigint(20) DEFAULT NULL AFTER `id_pianificazione`,
+	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `id_immobile`,
+	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `data_archiviazione`,
+	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
+	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`,
+	ADD COLUMN IF NOT EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL AFTER `id_diritto_altri`,
+	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
+	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
+	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
+	ADD COLUMN IF NOT EXISTS `__label__` text DEFAULT NULL AFTER `timestamp_aggiornamento`' );
 
 -- | FINE
