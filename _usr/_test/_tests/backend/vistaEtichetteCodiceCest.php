@@ -101,4 +101,13 @@
 
         }
 
+        // mastri_articoli_view mostra il codice dell'articolo, nella colonna e nell'etichetta
+        public function mastriArticoliColCodice( BackendTester $I ) {
+
+            $blocco = $this->blocco( 'mastri_articoli_view' );
+            $I->assertNotEmpty( $blocco, 'mastri_articoli_view non trovata nel file base' );
+            $I->assertEquals( 2, substr_count( $blocco, "concat_ws( ' ', coalesce( articoli.codice, articoli.id ), prodotti.nome, articoli.nome )" ) );
+
+        }
+
     }

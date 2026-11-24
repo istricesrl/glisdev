@@ -4660,7 +4660,7 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		mastri_articoli.id_mastro,
 		mastri_path( mastri_articoli.id_mastro ) AS mastro,
 		mastri_articoli.id_articolo,
-		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		concat_ws( ' ', coalesce( articoli.codice, articoli.id ), prodotti.nome, articoli.nome ) AS articolo,
 		mastri_articoli.id_ruolo,
 		ruoli_mastri.nome AS ruolo,
 		mastri_articoli.scorta_minima,
@@ -4673,7 +4673,7 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		concat_ws(
 			' / ',
 			mastri_path( mastri_articoli.id_mastro ),
-			concat_ws( ' ', prodotti.nome, articoli.nome )
+			concat_ws( ' ', coalesce( articoli.codice, articoli.id ), prodotti.nome, articoli.nome )
 		) AS __label__
 	FROM mastri_articoli
 		LEFT JOIN articoli ON articoli.id = mastri_articoli.id_articolo
